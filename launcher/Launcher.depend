@@ -1,0 +1,209 @@
+# depslib dependency file v1.0
+1370114010 source:/media/Projects/Katana/SDK/Source/Launcher/launcher_main.cpp
+	"shared_flags.h"
+	"shared_module.h"
+	"shared_engine.h"
+	"platform_module.h"
+	"platform_window.h"
+
+1370052479 /media/Projects/Katana/SDK/Source/Shared/shared_flags.h
+
+1367676437 /media/Projects/Katana/SDK/Source/Shared/shared_module.h
+
+1370113943 /media/Projects/Katana/SDK/Source/Shared/shared_engine.h
+	"platform.h"
+	"shared_flags.h"
+
+1370104419 /media/Projects/Katana/SDK/Source/Platform/platform.h
+	"shared_flags.h"
+	<stdio.h>
+	<Windows.h>
+	<CommCtrl.h>
+	<unistd.h>
+	<dlfcn.h>
+	<X11/Xlib.h>
+
+1369014019 /media/Projects/Katana/SDK/Source/Platform/platform_module.h
+	"platform.h"
+
+1370119184 /media/Projects/Katana/SDK/Source/Platform/platform_window.h
+	"platform.h"
+
+1389295392 source:/home/hogsy/Projects/Katana/SDK/Source/Launcher/launcher_main.cpp
+	"shared_flags.h"
+	"shared_module.h"
+	"shared_engine.h"
+	"gipl/include/gipl_module.h"
+	"gipl/include/gipl_window.h"
+
+1389268257 /home/hogsy/Projects/Katana/SDK/Source/Shared/shared_flags.h
+
+1382577534 /home/hogsy/Projects/Katana/SDK/Source/Shared/shared_module.h
+
+1379948269 /home/hogsy/Projects/Katana/SDK/Source/Shared/shared_engine.h
+	"gipl/include/gipl.h"
+	"shared_flags.h"
+
+1389269616 /home/hogsy/Projects/Katana/SDK/Source/external/gipl/include/gipl.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<Windows.h>
+	<CommCtrl.h>
+	<direct.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+
+1389269616 /home/hogsy/Projects/Katana/SDK/Source/external/gipl/include/gipl_module.h
+	"gipl.h"
+
+1388241342 /home/hogsy/Projects/Katana/SDK/Source/external/gipl/include/gipl_window.h
+	"gipl.h"
+	<X11/Xlib.h>
+
+1394238112 source:/home/hogsy/katana/SDK/Source/launcher/launcher_main.cpp
+	"platform_module.h"
+	"platform_window.h"
+	"shared_flags.h"
+	"shared_module.h"
+	"shared_engine.h"
+
+1394183578 /home/hogsy/katana/SDK/Source/shared/shared_flags.h
+
+1391914890 /home/hogsy/katana/SDK/Source/shared/shared_module.h
+
+1394207890 /home/hogsy/katana/SDK/Source/shared/shared_engine.h
+	"../platform/include/platform.h"
+	"shared_flags.h"
+
+1391914887 /home/hogsy/katana/SDK/Source/external/gipl/include/gipl.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"gipl_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<Windows.h>
+	<CommCtrl.h>
+	<direct.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+
+1391914887 /home/hogsy/katana/SDK/Source/external/gipl/include/gipl_inttypes.h
+	"gipl_stdint.h"
+
+1391914887 /home/hogsy/katana/SDK/Source/external/gipl/include/gipl_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1391914887 /home/hogsy/katana/SDK/Source/external/gipl/include/gipl_module.h
+	"gipl.h"
+
+1391914887 /home/hogsy/katana/SDK/Source/external/gipl/include/gipl_window.h
+	"gipl.h"
+	<X11/Xlib.h>
+
+1393177208 /home/hogsy/katana/SDK/Source/platform/include/platform_module.h
+	"platform.h"
+
+1394183577 /home/hogsy/katana/SDK/Source/platform/include/platform.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"platform_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<Windows.h>
+	<WindowsX.h>
+	<CommCtrl.h>
+	<direct.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+
+1393177208 /home/hogsy/katana/SDK/Source/platform/include/platform_inttypes.h
+	"platform_stdint.h"
+
+1393177208 /home/hogsy/katana/SDK/Source/platform/include/platform_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1393177208 /home/hogsy/katana/SDK/Source/platform/include/platform_window.h
+	"platform.h"
+	<X11/Xlib.h>
+
+1394327319 source:/home/hogsy/dev/katana/SDK/Source/launcher/launcher_main.cpp
+	"platform_module.h"
+	"platform_window.h"
+	"shared_flags.h"
+	"shared_module.h"
+	"shared_engine.h"
+
+1394327315 /home/hogsy/dev/katana/SDK/Source/platform/include/platform_module.h
+	"platform.h"
+
+1394619213 /home/hogsy/dev/katana/SDK/Source/platform/include/platform.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"platform_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<Windows.h>
+	<WindowsX.h>
+	<CommCtrl.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+
+1394327315 /home/hogsy/dev/katana/SDK/Source/platform/include/platform_inttypes.h
+	"platform_stdint.h"
+
+1394327315 /home/hogsy/dev/katana/SDK/Source/platform/include/platform_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1394327315 /home/hogsy/dev/katana/SDK/Source/platform/include/platform_window.h
+	"platform.h"
+	<X11/Xlib.h>
+
+1394552400 /home/hogsy/dev/katana/SDK/Source/shared/shared_flags.h
+
+1394327315 /home/hogsy/dev/katana/SDK/Source/shared/shared_module.h
+
+1394327315 /home/hogsy/dev/katana/SDK/Source/shared/shared_engine.h
+	"../platform/include/platform.h"
+	"shared_flags.h"
+

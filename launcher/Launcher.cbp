@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Launcher" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="x64">
+				<Option output="../../../OpenKatana.x64" prefix_auto="1" extension_auto="0" />
+				<Option working_dir="../../../../katana" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add directory="../external" />
+					<Add directory="../shared" />
+				</Compiler>
+				<Linker>
+					<Add library="../platform/lib/libplatformx64.a" />
+					<Add library="libdl.a" />
+					<Add library="X11" />
+				</Linker>
+			</Target>
+			<Target title="x86">
+				<Option output="../../../OpenKatana.x86" prefix_auto="1" extension_auto="0" />
+				<Option working_dir="../../../../katana" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-m32" />
+					<Add directory="../external" />
+					<Add directory="../shared" />
+				</Compiler>
+				<Linker>
+					<Add library="../platform/lib/libplatformx86.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-g" />
+			<Add directory="../shared" />
+			<Add directory="../platform/include" />
+		</Compiler>
+		<Linker>
+			<Add library="libdl.a" />
+			<Add library="X11" />
+		</Linker>
+		<Unit filename="launcher_main.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger>
+				<search_path add="../engine/obj/Release" />
+			</debugger>
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
