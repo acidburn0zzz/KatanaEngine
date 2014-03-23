@@ -1,0 +1,24 @@
+﻿Copyright (C) 2011-2014 OldTimes Software
+
+Is KatRenderer.h used anymore? -> No, removed!
+Move GIPL back into Katana repo as "platform". -> Done!
+Merge mxtx with "platform", and mru too!
+Ugh bunch of linker errors with the editor, is this caused by the platform library?
+Input for the editor should be seperate from the engine.
+Switch ed interface over to GTK+
+
+04032014
+Added new gBOOL typedef in platform.
+
+01032014
+Continued work on new model rendering system.
+Cleaned up and renamed hundreds of functions.
+Removed IPX support entirely, deleted net_wipx (.c, .h)
+
+22022014
+Moved crandom and random defines into shared_math as Math_CRandom and Math_Random.
+
+05022014 -> 06022014
+Fixed a bug regarding the loaded path for the game module.
+Made several modifications to the engines file system.
+Revised all paths.
