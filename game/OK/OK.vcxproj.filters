@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Shared">
+      <UniqueIdentifier>{dcc8998b-14dd-4815-8151-01cdecf748e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server">
+      <UniqueIdentifier>{e210e94f-512e-4a86-9fce-11b9b08c50f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Client">
+      <UniqueIdentifier>{47439ad4-1625-4727-b556-0e73e1beeb6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server\OpenKatana">
+      <UniqueIdentifier>{a504febe-cdcf-4ff7-8c3b-146a69d08dfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server\OpenKatana\Monsters">
+      <UniqueIdentifier>{5dbce017-6a68-4e99-9e0c-9bae0a399228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server\OpenKatana\Weapons">
+      <UniqueIdentifier>{3276adad-0873-4f54-aac7-393b2c06f422}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server\Ictus">
+      <UniqueIdentifier>{377af6fa-d857-4038-9d8d-6cc4ac34d647}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server\Ictus\Weapons">
+      <UniqueIdentifier>{1aa568a2-d459-461b-abad-38f6b25528cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server\OpenKatana\Modes">
+      <UniqueIdentifier>{128320bb-06b2-4ea0-a2ca-c74843e4c929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Radiant">
+      <UniqueIdentifier>{ef83c10e-e215-4db9-bd99-453fcd53f6c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Worldcraft">
+      <UniqueIdentifier>{bb2ebb86-9249-4fd5-8f0d-24a7b4c95f0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common">
+      <UniqueIdentifier>{10f81fa7-1d56-44a5-b7b5-ac774c934834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Server\Ictus\Vehicles">
+      <UniqueIdentifier>{7ebfec96-f888-437b-a971-d1a3c2d0c4a8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Radiant\ok.game\data\entities.ent">
+      <Filter>Resource Files\Radiant</Filter>
+    </None>
+    <None Include="..\..\..\openkatana.fgd">
+      <Filter>Resource Files\Worldcraft</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Shared\KatShared.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Server\server_physics.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Server\server_main.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\shared_menu.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Server\OpenKatana\mode_vektar.h">
+      <Filter>Source Files\Server\OpenKatana\Modes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\shared_flags.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Server\server_waypoint.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\shared_math.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\SCRIPLIB.H">
+      <Filter>Source Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Server\server_vehicle.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Server\server_weapon.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Server\server_item.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\shared_client.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\shared_editor.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\shared_engine.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\shared_formats.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\shared_module.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Shared\shared_server.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Server\server_mode.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Client\client_main.h">
+      <Filter>Source Files\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Server\server_player.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\server\server_monster.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\server\server_misc.h">
+      <Filter>Source Files\Server</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Client\cl_player.c">
+      <Filter>Source Files\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\server_physics.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\monster_bot.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\server_main.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\mode_ctf.c">
+      <Filter>Source Files\Server\OpenKatana\Modes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\monster_inmater.c">
+      <Filter>Source Files\Server\OpenKatana\Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\mode_vektar.c">
+      <Filter>Source Files\Server\OpenKatana\Modes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\server_point.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\server_waypoint.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Shared\shared_math.c">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\monster_lasergat.c">
+      <Filter>Source Files\Server\OpenKatana\Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\PlanetShift\weapon_udarnaya.c">
+      <Filter>Source Files\Server\Ictus\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_ballista.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_barrier.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_c4vizatergo.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_crossbow.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_daikatana.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_discus.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_glock.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_greekfire.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_hermes.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_ionblaster.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_kineticore.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_midas.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_pulserifle.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_shockwave.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_shotcycler6.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_sidewinder.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_trident.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_zeus.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_axe.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\SCRIPLIB.C">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\server_vehicle.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\server_weapon.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\cmdlib.C">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\monster_prisoner.c">
+      <Filter>Source Files\Server\OpenKatana\Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\Ictus\vehicle_rover.c">
+      <Filter>Source Files\Server\Ictus\Vehicles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\mode_deathmatch.c">
+      <Filter>Source Files\Server\OpenKatana\Modes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\server_entity.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Client\client_main.c">
+      <Filter>Source Files\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_ionrifle.c">
+      <Filter>Source Files\Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\server_area.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Server\server_player.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\server\server_monster.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\server\server_misc.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\server\server_item.c">
+      <Filter>Source Files\Server</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

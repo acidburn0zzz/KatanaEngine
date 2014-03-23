@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Katana BSP|Win32">
+      <Configuration>Katana BSP</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Katana Editor|Win32">
+      <Configuration>Katana Editor</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{938BFE08-F20E-44FC-8542-58D63F5C5870}</ProjectGuid>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <RootNamespace>OK</RootNamespace>
+    <ProjectName>Game</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v90</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Katana Editor|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Katana BSP|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Katana Editor|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Katana BSP|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;.\..\;..\..\;..\OK;..\Client;..\Server;..\Server\OpenKatana;..\Server\Ictus;..\shared;..\..\external;..\..\Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_AFX_SECURE_NO_WARNINGS;_ATL_SECURE_NO_WARNINGS;OPENKATANA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>..\..\..\..\openkatana\game.dll</OutputFile>
+      <AdditionalDependencies>platform.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\..\..\platform\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Katana Editor|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\..\..\Shared;.\..\shared;.\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;OPENKATANA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>..\..\..\..\data\game.dll</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Katana BSP|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\..\..\Shared;.\..\shared;.\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;OPENKATANA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>..\..\..\..\data\game.dll</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\..\..\openkatana.fgd" />
+    <None Include="..\..\..\Radiant\ok.game\data\entities.ent" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\SCRIPLIB.H" />
+    <ClInclude Include="..\..\Shared\shared_client.h" />
+    <ClInclude Include="..\..\Shared\shared_editor.h" />
+    <ClInclude Include="..\..\Shared\shared_engine.h" />
+    <ClInclude Include="..\..\Shared\shared_flags.h" />
+    <ClInclude Include="..\..\Shared\shared_formats.h" />
+    <ClInclude Include="..\..\Shared\shared_math.h" />
+    <ClInclude Include="..\..\Shared\shared_menu.h" />
+    <ClInclude Include="..\..\Shared\shared_module.h" />
+    <ClInclude Include="..\..\Shared\shared_server.h" />
+    <ClInclude Include="..\Client\client_main.h" />
+    <ClInclude Include="..\Server\OpenKatana\mode_vektar.h" />
+    <ClInclude Include="..\Server\server_item.h" />
+    <ClInclude Include="..\server\server_misc.h" />
+    <ClInclude Include="..\Server\server_mode.h" />
+    <ClInclude Include="..\server\server_monster.h" />
+    <ClInclude Include="..\Server\server_physics.h" />
+    <ClInclude Include="..\Server\server_main.h" />
+    <ClInclude Include="..\Server\server_player.h" />
+    <ClInclude Include="..\Server\server_vehicle.h" />
+    <ClInclude Include="..\Server\server_waypoint.h" />
+    <ClInclude Include="..\Server\server_weapon.h" />
+    <ClInclude Include="..\Shared\KatShared.h" />
+    <ClInclude Include="Game.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\common\cmdlib.C" />
+    <ClCompile Include="..\..\Common\SCRIPLIB.C" />
+    <ClCompile Include="..\..\Shared\shared_math.c" />
+    <ClCompile Include="..\Client\client_main.c" />
+    <ClCompile Include="..\Client\cl_player.c" />
+    <ClCompile Include="..\game_main.c" />
+    <ClCompile Include="..\Server\Ictus\vehicle_rover.c" />
+    <ClCompile Include="..\Server\monster_bot.c" />
+    <ClCompile Include="..\Server\OpenKatana\mode_ctf.c" />
+    <ClCompile Include="..\Server\OpenKatana\mode_deathmatch.c" />
+    <ClCompile Include="..\Server\OpenKatana\mode_vektar.c" />
+    <ClCompile Include="..\Server\OpenKatana\monster_inmater.c" />
+    <ClCompile Include="..\Server\OpenKatana\monster_lasergat.c" />
+    <ClCompile Include="..\Server\OpenKatana\monster_prisoner.c" />
+    <ClCompile Include="..\Server\OpenKatana\weapon_axe.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_ballista.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_barrier.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_c4vizatergo.c" />
+    <ClCompile Include="..\Server\OpenKatana\weapon_crossbow.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_daikatana.c" />
+    <ClCompile Include="..\Server\OpenKatana\weapon_discus.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_glock.c" />
+    <ClCompile Include="..\Server\OpenKatana\weapon_greekfire.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_hermes.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_ionblaster.c" />
+    <ClCompile Include="..\Server\OpenKatana\weapon_ionrifle.c" />
+    <ClCompile Include="..\Server\OpenKatana\weapon_kineticore.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_midas.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_pulserifle.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_shockwave.c" />
+    <ClCompile Include="..\Server\OpenKatana\weapon_shotcycler6.c" />
+    <ClCompile Include="..\Server\OpenKatana\weapon_sidewinder.c" />
+    <ClCompile Include="..\Server\OpenKatana\weapon_trident.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\OpenKatana\weapon_zeus.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Server\PlanetShift\weapon_udarnaya.c" />
+    <ClCompile Include="..\Server\server_area.c" />
+    <ClCompile Include="..\Server\server_entity.c" />
+    <ClCompile Include="..\server\server_item.c" />
+    <ClCompile Include="..\server\server_misc.c" />
+    <ClCompile Include="..\server\server_monster.c" />
+    <ClCompile Include="..\Server\server_physics.c" />
+    <ClCompile Include="..\Server\server_main.c" />
+    <ClCompile Include="..\Server\server_player.c" />
+    <ClCompile Include="..\Server\server_point.c" />
+    <ClCompile Include="..\Server\server_vehicle.c" />
+    <ClCompile Include="..\Server\server_waypoint.c" />
+    <ClCompile Include="..\Server\server_weapon.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
