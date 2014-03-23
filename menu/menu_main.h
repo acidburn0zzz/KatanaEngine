@@ -10,8 +10,7 @@
 #include "shared_module.h"
 #include "shared_math.h"
 #include "shared_engine.h"
-
-#include "KatShared.h"
+#include "shared_game.h"
 
 #define	MENU_BASEPATH	"textures/menu/"
 #define HUD_BASEPATH	"textures/interface/hud/"

@@ -19,7 +19,7 @@
 */
 #include "pr_comp.h"			// defs shared with qcc
 
-#include "KatShared.h"
+#include "shared_game.h"
 
 typedef union eval_s
 {
