@@ -1,0 +1,58 @@
+# depslib dependency file v1.0
+1393883833 source:/home/hogsy/katana/SDK/Source/platform/platform_filesystem.c
+	"platform_filesystem.h"
+
+1393881864 source:/home/hogsy/katana/SDK/Source/platform/platform_input.c
+	"platform.h"
+
+1393177208 source:/home/hogsy/katana/SDK/Source/platform/platform_module.c
+	"platform_module.h"
+
+1393177208 source:/home/hogsy/katana/SDK/Source/platform/platform_net.c
+	"platform.h"
+
+1394183577 source:/home/hogsy/katana/SDK/Source/platform/platform_window.c
+	"platform_window.h"
+
+1393177208 /home/hogsy/katana/SDK/Source/platform/include/platform_module.h
+	"platform.h"
+
+1394183577 /home/hogsy/katana/SDK/Source/platform/include/platform.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"platform_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<Windows.h>
+	<WindowsX.h>
+	<CommCtrl.h>
+	<direct.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+
+1393177208 /home/hogsy/katana/SDK/Source/platform/include/platform_inttypes.h
+	"platform_stdint.h"
+
+1393177208 /home/hogsy/katana/SDK/Source/platform/include/platform_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1393177208 /home/hogsy/katana/SDK/Source/platform/include/platform_window.h
+	"platform.h"
+	<X11/Xlib.h>
+
+1393881980 source:/home/hogsy/katana/SDK/Source/platform/platform.c
+	"platform.h"
+
+1393882535 /home/hogsy/katana/SDK/Source/platform/include/platform_filesystem.h
+	"platform.h"
+

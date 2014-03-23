@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Platform" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="x64">
+				<Option output="lib/platformx64" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add directory="include" />
+				</Compiler>
+			</Target>
+			<Target title="x86">
+				<Option output="lib/platformx86" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-m32" />
+					<Add directory="include" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-g" />
+			<Add option="-fPIC" />
+		</Compiler>
+		<Unit filename="include/platform.h" />
+		<Unit filename="include/platform_filesystem.h" />
+		<Unit filename="include/platform_inttypes.h" />
+		<Unit filename="include/platform_module.h" />
+		<Unit filename="include/platform_stdint.h" />
+		<Unit filename="include/platform_window.h" />
+		<Unit filename="platform.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="platform_filesystem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="platform_input.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="platform_math.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="platform_module.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="platform_net.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="platform_system.h" />
+		<Unit filename="platform_window.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
