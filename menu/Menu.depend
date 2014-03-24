@@ -298,3 +298,79 @@
 1394327315 /home/hogsy/dev/katana/SDK/Source/platform/include/platform_module.h
 	"platform.h"
 
+1395600926 source:/home/hogsy/dev/katana-engine/trunk/menu/menu_button.c
+	"menu_button.h"
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/menu/menu_button.h
+	"menu_main.h"
+
+1395602203 /home/hogsy/dev/katana-engine/trunk/menu/menu_main.h
+	"../platform/include/platform.h"
+	"shared_flags.h"
+	"shared_menu.h"
+	"shared_module.h"
+	"shared_math.h"
+	"shared_engine.h"
+	"shared_game.h"
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"platform_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<Windows.h>
+	<WindowsX.h>
+	<CommCtrl.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_inttypes.h
+	"platform_stdint.h"
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/shared/shared_flags.h
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/shared/shared_menu.h
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/shared/shared_module.h
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/shared/shared_math.h
+	"../platform/include/platform.h"
+	"../platform/include/platform_math.h"
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_math.h
+	"platform.h"
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/shared/shared_engine.h
+	"../platform/include/platform.h"
+	"shared_flags.h"
+
+1394327309 /home/hogsy/dev/katana-engine/trunk/shared/shared_game.h
+	"common.h"
+	"shared_client.h"
+
+1395600906 /home/hogsy/dev/katana-engine/trunk//common.h
+	"shared_flags.h"
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/shared/shared_client.h
+
+1395600926 source:/home/hogsy/dev/katana-engine/trunk/menu/menu_main.c
+	"menu_main.h"
+	"../platform/include/platform_module.h"
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_module.h
+	"platform.h"
+

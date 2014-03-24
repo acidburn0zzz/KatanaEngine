@@ -301,20 +301,17 @@ void R_SetupModelLighting(vec3_t vOrigin)
 void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
 #if 1 // new
-	float				fLerp;
 	int					i,j;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
-	MD2TriangleVertex_t	*verts1,*verts2;
+	MD2TriangleVertex_t	*verts1;
 	MD2Triangle_t		*mtTriangles;
 	MD2Frame_t			*frame1,*frame2;
-	vec3_t				scale1,translate1,scale2,translate2;
+	vec3_t				scale1,translate1,scale2;
 
 	// [20/8/2012] Quick fix ~hogsy
 	// [24/8/2012] Moved ~hogsy
 	if(currententity->scale < 0.1f)
 		currententity->scale = 1.0f;
-
-	fLerp = 1.0f-lLerpData.blend;
 
 	//new version by muff - fixes bug, easier to read, faster (well slightly)
 	frame1 = (MD2Frame_t*)((byte*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_lastpose));
@@ -323,14 +320,12 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	Math_VectorCopy(frame1->scale,scale1);
 	Math_VectorCopy(frame1->translate,translate1);
 	Math_VectorCopy(frame2->scale,scale2);
-	Math_VectorCopy(frame2->translate,translate2);
 
 	// [24/8/2012] Probably not the best way, but it's better than my other method ~hogsy
 	Math_VectorScale(scale1,currententity->scale,scale1);
 	Math_VectorScale(scale2,currententity->scale,scale2);
 
 	verts1 = &frame1->verts[0];
-	verts2 = &frame2->verts[0];
 
 	mtTriangles = (MD2Triangle_t*)((byte*)mModel+mModel->ofs_tris);
 
@@ -346,17 +341,17 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 		}
 
 		for(j = 0; j < 3; j++)
-			voModel[i].vVertex[j] = frame1->verts[mtTriangles->index_xyz[0]].v[j]*scale1[j]+translate1[j];
+			voModel[i].vVertex[j] = verts1[mtTriangles->index_xyz[0]].v[j]*scale1[j]+translate1[j];
 
         i++;
 
 		for(j = 0; j < 3; j++)
-			voModel[i].vVertex[j] = frame1->verts[mtTriangles->index_xyz[1]].v[j]*scale1[j]+translate1[j];
+			voModel[i].vVertex[j] = verts1[mtTriangles->index_xyz[1]].v[j]*scale1[j]+translate1[j];
 
         i++;
 
 		for(j = 0; j < 3; j++)
-            voModel[i].vVertex[j] = frame1->verts[mtTriangles->index_xyz[2]].v[j]*scale1[j]+translate1[j];
+            voModel[i].vVertex[j] = verts1[mtTriangles->index_xyz[2]].v[j]*scale1[j]+translate1[j];
 	}
 
 	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,mModel->numtris,true);
