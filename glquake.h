@@ -30,7 +30,7 @@
 #include <windows.h>
 #endif
 
-#include "../Include/glee/GLee.h"
+#include "glee/GLee.h"
 
 #include <GL/gl.h>
 #include <GL/glu.h>

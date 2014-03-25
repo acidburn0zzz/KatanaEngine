@@ -98,7 +98,7 @@ enum
 	RESOURCE_PARTICLE,	// States that the precache should be used for a particle
 	RESOURCE_FLARE,		// States that the precache should be used for a flare
 	RESOURCE_SOUND,		// States that the precache should be used for a sound
-	RESOURCE_TEXTURE,	// States that the precache should be used for a texture
+    RESOURCE_TEXTURE	// States that the precache should be used for a texture
 };
 
 #define CONTENT_SLIME				-4		// Horrible slime to slow us up!

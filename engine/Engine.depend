@@ -3712,7 +3712,7 @@
 	"crc.h"
 	"glquake.h"
 
-1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform.h
+1395761690 /home/hogsy/dev/katana-engine/trunk/platform/include/platform.h
 	<stdio.h>
 	<stdlib.h>
 	<stdarg.h>
@@ -3748,7 +3748,7 @@
 1395600906 /home/hogsy/dev/katana-engine/trunk/common.h
 	"shared_flags.h"
 
-1395600926 /home/hogsy/dev/katana-engine/trunk/shared/shared_flags.h
+1395748172 /home/hogsy/dev/katana-engine/trunk/shared/shared_flags.h
 
 1395600927 /home/hogsy/dev/katana-engine/trunk/vid.h
 
@@ -3802,7 +3802,7 @@
 
 1395600926 /home/hogsy/dev/katana-engine/trunk/pr_comp.h
 
-1394327309 /home/hogsy/dev/katana-engine/trunk/shared/shared_game.h
+1395751427 /home/hogsy/dev/katana-engine/trunk/shared/shared_game.h
 	"common.h"
 	"shared_client.h"
 
@@ -3833,9 +3833,9 @@
 
 1395600908 /home/hogsy/dev/katana-engine/trunk/crc.h
 
-1395600925 /home/hogsy/dev/katana-engine/trunk/glquake.h
+1395746969 /home/hogsy/dev/katana-engine/trunk/glquake.h
 	<windows.h>
-	"../Include/glee/GLee.h"
+	"glee/GLee.h"
 	<GL/gl.h>
 	<GL/glu.h>
 
@@ -4505,7 +4505,7 @@
 	"engine_console.h"
 	"engine_video.h"
 
-1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_window.h
+1395759569 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_window.h
 	"platform.h"
 	<X11/Xlib.h>
 
@@ -4519,10 +4519,10 @@
 1395600927 source:/home/hogsy/dev/katana-engine/trunk/zone.c
 	"quakedef.h"
 
-1395600908 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_audio.c
+1395747578 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_audio.c
 	"engine_audio.h"
-	"openal/al.h"
-	"openal/alc.h"
+	"openal-soft/include/AL/al.h"
+	"openal-soft/include/AL/alc.h"
 
 1395600904 /home/hogsy/dev/katana-engine/trunk/Include/openal/al.h
 
@@ -4627,7 +4627,7 @@
 1395600908 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_sprite.c
 	"engine_video.h"
 
-1395600908 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_video.c
+1395761837 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_video.c
 	"engine_video.h"
 	"KatEditor.h"
 	"engine_game.h"
@@ -4644,4 +4644,23 @@
 	"KatAlias.h"
 	"KatGL.h"
 	"engine_video.h"
+
+1395600904 /home/hogsy/dev/katana-engine/trunk/external/glee/GLee.h
+	<windows.h>
+	<GL/gl.h>
+	<OpenGL/gl.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<stddef.h>
+
+1355258155 /home/hogsy/dev/katana-engine/trunk/external/openal-soft/include/AL/al.h
+
+1355258155 /home/hogsy/dev/katana-engine/trunk/external/openal-soft/include/AL/alc.h
+
+1395600904 source:/home/hogsy/dev/katana-engine/trunk/external/glee/GLee.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"GLee.h"
+	<Carbon/Carbon.h>
 

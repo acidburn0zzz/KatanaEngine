@@ -57,7 +57,12 @@
 #define gINSTANCE	void *
 #endif
 
+// [25/3/2014] Quickly threw this in so we can add these extensions to modules in a clean way :) ~hogsy
+#if defined(__amd64) || defined(__amd64__)
 #define gPLATFORM_CPU   "x64"
+#else
+#define gPLATFORM_CPU   "x86"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -85,7 +90,11 @@ typedef int	bool;
 
 typedef	bool			gBOOL;
 typedef unsigned int	gUINT;
-typedef	unsigned char	gBYTE;	// TODO: Or just define as uint8_t?
+#if 0
+typedef uint8_t         gBYTE;
+#else
+typedef	unsigned char	gBYTE;
+#endif
 
 extern void	GIPL_ResetError(void);
 extern void	GIPL_SetError(const char *ccMessage,...);

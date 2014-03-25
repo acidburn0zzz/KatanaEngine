@@ -8,7 +8,7 @@
 */
 
 // Platform library
-#include "../platform/include/platform_module.h"
+#include "platform_module.h"
 
 /*	TODO:
 		Get menu elements to be handled like objects.
@@ -80,7 +80,7 @@ int	iMenuElements,
 
 cvar_t	cvShowMenu		= {	"menu_show",		"1",    false,  false,  "Toggle the display of any menu elements."	        };
 cvar_t	cvShowHealth	= {	"menu_showhealth",	"2",	true,   false,  "Toggle the health HUD."	                        };
-cvar_t	cvShowAmmo		= {	"menu_showammo",	"2",	true	false,  "Toggle the ammo HUD."                              };
+cvar_t	cvShowAmmo		= {	"menu_showammo",	"2",	true,	false,  "Toggle the ammo HUD."                              };
 // [2/8/2012] Added menu_debug ~hogsy
 cvar_t	cvDebugMenu		= { "menu_debug",		"0",    false,  false,  "Toggle the display of any debugging information."  };
 

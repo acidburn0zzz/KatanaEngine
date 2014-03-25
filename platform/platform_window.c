@@ -15,8 +15,8 @@ Window  wRootWindow;
 
 gINSTANCE iGlobalInstance;
 
-bool	bShowingCursor	= true,		// Are we showing the cursor?
-		bInitialized	= false;	// Is the window system initialized?
+bool	bShowingCursor	    = true,		// Are we showing the cursor?
+		bWindowInitialized	= false;	// Is the window system initialized?
 
 int	iActive = 0,	// Number of current active windows.
 	iScreen;		// Default screen.
@@ -47,7 +47,7 @@ void gWindow_CreateWindow(GIPLWindow_t *gwWindow)
 		return;
 	}
 	// Make sure that any platform specific window systems are set up.
-	else if(!bInitialized)
+	else if(!bWindowInitialized)
 	{
 #ifdef __linux__
 		dMainDisplay = XOpenDisplay(NULL);
@@ -62,7 +62,7 @@ void gWindow_CreateWindow(GIPLWindow_t *gwWindow)
 #else
 #endif
 
-		bInitialized = true;
+		bWindowInitialized = true;
 	}
 
 #ifdef _WIN32

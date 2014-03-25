@@ -208,9 +208,12 @@ bool Video_CreateWindow(void)
 		Sys_Error("Failed to create window!\n%s\n",SDL_GetError());
 
 	// [6/2/2014] Set the icon for the window ~hogsy
-	sIcon = SDL_LoadBMP("./icon.bmp");
+	// [25/3/2014] Grab the icon from our game directory ~hogsy
+	sIcon = SDL_LoadBMP(va("%s/icon.bmp",com_gamedir));
 	if(sIcon)
 	{
+        // [25/3/2014] Set the transparency key... I have no idea if this is right ~hogsy
+        SDL_SetColorKey(sIcon,true,SDL_MapRGB(sIcon->format,0,0,0));
 		SDL_SetWindowIcon(sMainWindow,sIcon);
 		SDL_FreeSurface(sIcon);
 	}
@@ -386,8 +389,6 @@ void Video_SetTexture(gltexture_t *gTexture)
 */
 void Video_SetBlend(VideoBlend_t voBlendMode)
 {
-    static bool sbIgnoreDepth = false;
-
     if(!sbVideoCleanup)
         Video_EnableCapabilities(VIDEO_BLEND);
 

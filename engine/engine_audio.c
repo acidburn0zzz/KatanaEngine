@@ -5,9 +5,8 @@
 /*
 	Audio System
 */
-
-#include "openal/al.h"
-#include "openal/alc.h"
+#include "openal-soft/include/AL/al.h"
+#include "openal-soft/include/AL/alc.h"
 
 #define AUDIO_NUM_BUFFERS	1
 #define AUDIO_NUM_SOURCES	512

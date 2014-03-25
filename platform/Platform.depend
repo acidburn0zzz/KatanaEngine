@@ -56,3 +56,53 @@
 1393882535 /home/hogsy/katana/SDK/Source/platform/include/platform_filesystem.h
 	"platform.h"
 
+1395600926 source:/home/hogsy/dev/katana-engine/trunk/platform/platform.c
+	"platform.h"
+
+1395761690 /home/hogsy/dev/katana-engine/trunk/platform/include/platform.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"platform_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<Windows.h>
+	<WindowsX.h>
+	<CommCtrl.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_inttypes.h
+	"platform_stdint.h"
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1395600926 source:/home/hogsy/dev/katana-engine/trunk/platform/platform_filesystem.c
+	"platform_filesystem.h"
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_filesystem.h
+	"platform.h"
+
+1395600926 source:/home/hogsy/dev/katana-engine/trunk/platform/platform_input.c
+	"platform.h"
+
+1395600926 source:/home/hogsy/dev/katana-engine/trunk/platform/platform_math.c
+	"include/platform_math.h"
+	<xmmintrin.h>
+
+1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_math.h
+	"platform.h"
+
+1395600926 source:/home/hogsy/dev/katana-engine/trunk/platform/platform_net.c
+	"platform.h"
+
