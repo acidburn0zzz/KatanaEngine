@@ -15,7 +15,6 @@
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
-					<Add option="-DKATANA" />
 					<Add directory="." />
 					<Add directory=".." />
 					<Add directory="../shared" />
@@ -23,14 +22,9 @@
 					<Add directory="../game/shared" />
 					<Add directory="../Include" />
 					<Add directory="../platform/include" />
-					<Add directory="../external" />
 					<Add directory="../external/SDL2/include" />
 				</Compiler>
 				<Linker>
-					<Add option="-lGL" />
-					<Add option="-lGLU" />
-					<Add option="-lopenal" />
-					<Add option="-lX11" />
 					<Add library="../platform/lib/libplatformx64.a" />
 					<Add library="libSDL2" />
 					<Add library="libdl.a" />
@@ -41,11 +35,15 @@
 			<Add option="-Wall" />
 			<Add option="-g" />
 			<Add option="-fPIC" />
+			<Add option="-DKATANA" />
+			<Add directory="../external" />
 		</Compiler>
-		<Unit filename="../Include/glee/GLee.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../Include/glee/GLee.h" />
+		<Linker>
+			<Add option="-lGL" />
+			<Add option="-lGLU" />
+			<Add option="-lopenal" />
+			<Add option="-lX11" />
+		</Linker>
 		<Unit filename="../KatAlias.h" />
 		<Unit filename="../KatEditor.h" />
 		<Unit filename="../KatGL.c">
@@ -72,9 +70,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../client.h" />
-		<Unit filename="../cmd.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../cmd.h" />
 		<Unit filename="../cmdlib.c">
 			<Option compilerVar="CC" />
@@ -94,11 +89,12 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../crc.h" />
-		<Unit filename="../cvar.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../cvar.h" />
 		<Unit filename="../draw.h" />
+		<Unit filename="../external/glee/GLee.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../external/glee/GLee.h" />
 		<Unit filename="../gl_alias.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -191,6 +187,7 @@
 		<Unit filename="../shared/shared_engine.h" />
 		<Unit filename="../shared/shared_flags.h" />
 		<Unit filename="../shared/shared_formats.h" />
+		<Unit filename="../shared/shared_game.h" />
 		<Unit filename="../shared/shared_input.h" />
 		<Unit filename="../shared/shared_math.c">
 			<Option compilerVar="CC" />
@@ -226,9 +223,6 @@
 		<Unit filename="../vid.h" />
 		<Unit filename="../view.h" />
 		<Unit filename="../winquake.h" />
-		<Unit filename="../world.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../world.h" />
 		<Unit filename="../zone.c">
 			<Option compilerVar="CC" />
@@ -243,10 +237,16 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="engine_client.h" />
+		<Unit filename="engine_command.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="engine_console.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="engine_console.h" />
+		<Unit filename="engine_cvar.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="engine_edict.h" />
 		<Unit filename="engine_editor.c">
 			<Option compilerVar="CC" />
@@ -303,6 +303,9 @@
 		</Unit>
 		<Unit filename="engine_video.h" />
 		<Unit filename="engine_view.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="engine_world.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

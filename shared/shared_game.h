@@ -3,10 +3,15 @@
 #ifndef __SHAREDGAME__
 #define __SHAREDGAME__
 
-// [8/5/2013] TODO: Rename to shared_game.h and move into the Shared folder ~hogsy
+#ifndef KATANA
+#include "platform.h"
+#include "shared_math.h"
 
-// [19/5/2013] Needed for link_t ~hogsy
-#include "common.h"
+typedef struct link_s
+{
+	struct link_s	*prev, *next;
+} link_t;
+#endif
 
 typedef struct edict_s edict_t;
 

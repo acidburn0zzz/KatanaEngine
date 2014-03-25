@@ -3,7 +3,7 @@
 #ifndef __MENUMAIN__
 #define __MENUMAIN__
 
-#include "../platform/include/platform.h"
+#include "platform.h"
 
 #include "shared_flags.h"
 #include "shared_menu.h"

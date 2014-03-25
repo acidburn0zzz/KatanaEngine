@@ -304,8 +304,8 @@
 1395600926 /home/hogsy/dev/katana-engine/trunk/menu/menu_button.h
 	"menu_main.h"
 
-1395602203 /home/hogsy/dev/katana-engine/trunk/menu/menu_main.h
-	"../platform/include/platform.h"
+1395767898 /home/hogsy/dev/katana-engine/trunk/menu/menu_main.h
+	"platform.h"
 	"shared_flags.h"
 	"shared_menu.h"
 	"shared_module.h"
@@ -358,8 +358,9 @@
 	"../platform/include/platform.h"
 	"shared_flags.h"
 
-1395751427 /home/hogsy/dev/katana-engine/trunk/shared/shared_game.h
-	"common.h"
+1395769364 /home/hogsy/dev/katana-engine/trunk/shared/shared_game.h
+	"platform.h"
+	"shared_math.h"
 	"shared_client.h"
 
 1395600906 /home/hogsy/dev/katana-engine/trunk//common.h
@@ -367,9 +368,9 @@
 
 1395600926 /home/hogsy/dev/katana-engine/trunk/shared/shared_client.h
 
-1395600926 source:/home/hogsy/dev/katana-engine/trunk/menu/menu_main.c
+1395761854 source:/home/hogsy/dev/katana-engine/trunk/menu/menu_main.c
 	"menu_main.h"
-	"../platform/include/platform_module.h"
+	"platform_module.h"
 
 1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_module.h
 	"platform.h"

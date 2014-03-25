@@ -371,7 +371,7 @@ DynamicLight_t *Light_GetDynamic(vec3_t vPoint)
 	int				i;
 	bool			bStaticLights = true;
 	float			fLightAmount;
-	DynamicLight_t	dlClosestLight = cl_dlights[0];
+	DynamicLight_t	*dlClosestLight = &cl_dlights[0];
 	vec3_t			vLightColour;
 
 	if(!cl.worldmodel->lightdata)
@@ -400,7 +400,7 @@ DynamicLight_t *Light_GetDynamic(vec3_t vPoint)
 			fDistance[0] = cl_dlights[i].radius-Math_Length(vDistance);
 			if(fDistance[0] > 0)
 			{
-				Math_VectorSubtract(dlClosestLight.origin,cl_dlights[i].origin,vDistance);
+				Math_VectorSubtract(dlClosestLight->origin,cl_dlights[i].origin,vDistance);
 
 				fDistance[1] = (cl_dlights[i].radius-Math_Length(vDistance));
 				if(fDistance[1] < fDistance[0])

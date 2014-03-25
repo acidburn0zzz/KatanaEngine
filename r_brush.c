@@ -81,7 +81,6 @@ texture_t *R_TextureAnimation (texture_t *base, int frame)
 
 void DrawGLPoly(glpoly_t *p)
 {
-#if 0
 	float	*v;
 	int		i;
 
@@ -95,14 +94,12 @@ void DrawGLPoly(glpoly_t *p)
 	}
 
 	glEnd();
-#endif
 }
 
 /*	johnfitz -- like DrawGLPoly but for r_showtris
 */
 void DrawGLTriangleFan (glpoly_t *p)
 {
-#if 0
 	float	*v;
 	int		i;
 
@@ -113,7 +110,6 @@ void DrawGLTriangleFan (glpoly_t *p)
 		glVertex3fv(v);
 
 	glEnd();
-#endif
 }
 
 /*

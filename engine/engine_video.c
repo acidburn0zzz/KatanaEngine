@@ -212,7 +212,7 @@ bool Video_CreateWindow(void)
 	sIcon = SDL_LoadBMP(va("%s/icon.bmp",com_gamedir));
 	if(sIcon)
 	{
-        // [25/3/2014] Set the transparency key... I have no idea if this is right ~hogsy
+        // [25/3/2014] Set the transparency key... ~hogsy
         SDL_SetColorKey(sIcon,true,SDL_MapRGB(sIcon->format,0,0,0));
 		SDL_SetWindowIcon(sMainWindow,sIcon);
 		SDL_FreeSurface(sIcon);

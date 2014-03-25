@@ -106,3 +106,10 @@
 1395600926 source:/home/hogsy/dev/katana-engine/trunk/platform/platform_net.c
 	"platform.h"
 
+1395761791 source:/home/hogsy/dev/katana-engine/trunk/platform/platform_window.c
+	"platform_window.h"
+
+1395759569 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_window.h
+	"platform.h"
+	<X11/Xlib.h>
+

@@ -4396,7 +4396,7 @@
 	"GLee.h"
 	<Carbon/Carbon.h>
 
-1395600906 source:/home/hogsy/dev/katana-engine/trunk/KatGL.c
+1395776137 source:/home/hogsy/dev/katana-engine/trunk/KatGL.c
 	"KatGL.h"
 	"KatAlias.h"
 	"KatEditor.h"
@@ -4447,7 +4447,7 @@
 1395600908 /home/hogsy/dev/katana-engine/trunk/engine/engine_edict.h
 	"quakedef.h"
 
-1395600926 source:/home/hogsy/dev/katana-engine/trunk/r_brush.c
+1395776085 source:/home/hogsy/dev/katana-engine/trunk/r_brush.c
 	"quakedef.h"
 	"engine_video.h"
 
@@ -4566,7 +4566,7 @@
 	"engine_input.h"
 	"engine_video.h"
 
-1395600908 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_light.c
+1395775707 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_light.c
 	"engine_video.h"
 
 1395600908 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_loader.c
@@ -4628,7 +4628,7 @@
 1395600908 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_sprite.c
 	"engine_video.h"
 
-1395761837 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_video.c
+1395775922 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_video.c
 	"engine_video.h"
 	"KatEditor.h"
 	"engine_game.h"
@@ -4664,4 +4664,17 @@
 	<string.h>
 	"GLee.h"
 	<Carbon/Carbon.h>
+
+1395773346 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_command.c
+	"quakedef.h"
+	"common/SCRIPLIB.H"
+	"engine_main.h"
+	"engine_console.h"
+	"platform_filesystem.h"
+
+1395600908 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_cvar.c
+	"quakedef.h"
+
+1395600927 source:/home/hogsy/dev/katana-engine/trunk/engine/engine_world.c
+	"quakedef.h"
 

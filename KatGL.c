@@ -323,7 +323,7 @@ void Draw_Shadow(entity_t *ent)
 
 		glPushMatrix();
 
-		Video_ResetCapabilities(false);
+//		Video_ResetCapabilities(false);
 		Video_EnableCapabilities(VIDEO_BLEND);
 		Video_DisableCapabilities(VIDEO_ALPHA_TEST);
 
@@ -336,7 +336,7 @@ void Draw_Shadow(entity_t *ent)
 
 		Video_DrawFill(voShadow);
 
-		Video_ResetCapabilities(true);
+//		Video_ResetCapabilities(true);
 
 		glTranslatef(0,0,lheight+0.1);
 		glDepthMask(true);
@@ -378,7 +378,7 @@ void Draw_Shadow(entity_t *ent)
 		glPushMatrix();
 		glDepthMask(false);
 
-		Video_ResetCapabilities(false);
+//		Video_ResetCapabilities(false);
 		Video_EnableCapabilities(VIDEO_BLEND|VIDEO_STENCIL_TEST);
 		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 
@@ -399,7 +399,7 @@ void Draw_Shadow(entity_t *ent)
 
 		//Video_EnableCapabilities(VIDEO_TEXTURE_2D);
 		//Video_DisableCapabilities(VIDEO_BLEND|VIDEO_STENCIL_TEST);
-		Video_ResetCapabilities(true);
+//		Video_ResetCapabilities(true);
 
 		glDepthMask(true);
 		glPopMatrix();
