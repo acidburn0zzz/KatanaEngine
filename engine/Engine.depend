@@ -3745,7 +3745,7 @@
 	<errno.h>
 	<time.h>
 
-1395600906 /home/hogsy/dev/katana-engine/trunk/common.h
+1395768115 /home/hogsy/dev/katana-engine/trunk/common.h
 	"shared_flags.h"
 
 1395748172 /home/hogsy/dev/katana-engine/trunk/shared/shared_flags.h
@@ -3802,8 +3802,9 @@
 
 1395600926 /home/hogsy/dev/katana-engine/trunk/pr_comp.h
 
-1395751427 /home/hogsy/dev/katana-engine/trunk/shared/shared_game.h
-	"common.h"
+1395769364 /home/hogsy/dev/katana-engine/trunk/shared/shared_game.h
+	"platform.h"
+	"shared_math.h"
 	"shared_client.h"
 
 1395600926 /home/hogsy/dev/katana-engine/trunk/server.h
@@ -3855,7 +3856,7 @@
 	"quakedef.h"
 	"shared_server.h"
 
-1395600926 /home/hogsy/dev/katana-engine/trunk/shared/shared_server.h
+1395768107 /home/hogsy/dev/katana-engine/trunk/shared/shared_server.h
 
 1395600906 source:/home/hogsy/dev/katana-engine/trunk/cl_input.c
 	"quakedef.h"

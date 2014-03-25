@@ -402,9 +402,9 @@ DynamicLight_t *Light_GetDynamic(vec3_t vPoint)
 			{
 				Math_VectorSubtract(dlClosestLight.origin,cl_dlights[i].origin,vDistance);
 
-				fDistance[1] = cl_dlights[i].radius-Math_Length(vDistance);
+				fDistance[1] = (cl_dlights[i].radius-Math_Length(vDistance));
 				if(fDistance[1] < fDistance[0])
-					dlClosestLight = cl_dlights[i];
+					dlClosestLight = &cl_dlights[i];
 			}
 		}
 	}
