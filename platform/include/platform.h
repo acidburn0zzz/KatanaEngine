@@ -57,6 +57,8 @@
 #define gINSTANCE	void *
 #endif
 
+#define gPLATFORM_CPU   "x64"
+
 #ifdef __cplusplus
 extern "C" {
 #else

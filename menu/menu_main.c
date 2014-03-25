@@ -78,11 +78,11 @@ Menu_t	*mMenuElements;
 int	iMenuElements,
 	iMenuSection;
 
-cvar_t	cvShowMenu		= {	"menu_show",		"1"				};
-cvar_t	cvShowHealth	= {	"menu_showhealth",	"2",	true	};
-cvar_t	cvShowAmmo		= {	"menu_showammo",	"2",	true	};
+cvar_t	cvShowMenu		= {	"menu_show",		"1",    false,  false,  "Toggle the display of any menu elements."	        };
+cvar_t	cvShowHealth	= {	"menu_showhealth",	"2",	true,   false,  "Toggle the health HUD."	                        };
+cvar_t	cvShowAmmo		= {	"menu_showammo",	"2",	true	false,  "Toggle the ammo HUD."                              };
 // [2/8/2012] Added menu_debug ~hogsy
-cvar_t	cvDebugMenu		= { "menu_debug",		"0"				};
+cvar_t	cvDebugMenu		= { "menu_debug",		"0",    false,  false,  "Toggle the display of any debugging information."  };
 
 int	screenwidth,screenheight;
 
@@ -474,7 +474,7 @@ void Menu_Draw(void)
 		Engine.DrawPic(MENU_BASEPATH"paused",1.0f,0,0,32,64);
 
 	if((iMenuState & MENU_STATE_HUD) && !(iMenuState & MENU_STATE_SCOREBOARD))
-		Menu_DrawHUD();			
+		Menu_DrawHUD();
 
 	if(iMenuState & MENU_STATE_SCOREBOARD)
 	{

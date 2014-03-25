@@ -46,7 +46,7 @@ void *gModule_Load(gINSTANCE hModule,const char *cPath,const char *cEntryFunctio
 	char	cUpdatedPath[gPLATFORM_MAX_PATH];
 	void	*(*vMain)(void*);
 
-	sprintf(cUpdatedPath,"%s%s",cPath,gMODULE_EXTENSION);
+	sprintf(cUpdatedPath,"%s"gMODULE_EXTENSION,cPath);
 
 	// [19/5/2013] TODO: Automatically handle extensions here ~hogsy
 #ifdef _WIN32
