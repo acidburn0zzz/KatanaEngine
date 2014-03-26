@@ -609,6 +609,8 @@ void Alias_Draw(void)
 	gFullbrightTexture	= mModel->gFullbrightTexture[currententity->skinnum];
 	gSphereTexture		= mModel->gSphereTexture[currententity->skinnum];
 
+	Video_ResetCapabilities(false);
+
 	if(!r_drawflat_cheatsafe)
 	{
 		Video_SetTexture(gDiffuseTexture);
@@ -628,10 +630,9 @@ void Alias_Draw(void)
 			glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
 
 			Video_SetTexture(gSphereTexture);
+			Video_EnableCapabilities(VIDEO_BLEND|VIDEO_TEXTURE_GEN_S|VIDEO_TEXTURE_GEN_T);
 
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD_SIGNED);
-
-			Video_EnableCapabilities(VIDEO_TEXTURE_GEN_S|VIDEO_TEXTURE_GEN_T);
 		}
 		// [20/8/2013] Or fullbright! ~hogsy
 		else if(gFullbrightTexture)
@@ -639,10 +640,9 @@ void Alias_Draw(void)
 			GL_EnableMultitexture();
 
 			Video_SetTexture(gFullbrightTexture);
+			Video_EnableCapabilities(VIDEO_BLEND);
 
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
-
-			Video_EnableCapabilities(VIDEO_BLEND);
 		}
 	}
 	else if(r_drawflat_cheatsafe)
@@ -652,31 +652,19 @@ void Alias_Draw(void)
 
 	if(!r_drawflat_cheatsafe)
 	{
-		if(gSphereTexture)
-		{
-			Video_DisableCapabilities(VIDEO_TEXTURE_GEN_S|VIDEO_TEXTURE_GEN_T);
-
+		if(gSphereTexture || gFullbrightTexture)
 			GL_DisableMultitexture();
-		}
-		else if(gFullbrightTexture)
-		{
-			Video_DisableCapabilities(VIDEO_BLEND);
-
-			GL_DisableMultitexture();
-		}
 
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 	}
 	else
-	{
-		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
-
 		// Restore randomness
 		srand((int)(cl.time*1000));
-	}
 
 	if(r_drawflat_cheatsafe)
 		glShadeModel(GL_SMOOTH);
+
+    Video_ResetCapabilities(true);
 
 	glPopMatrix();
 #else	// Original

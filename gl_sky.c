@@ -720,6 +720,7 @@ void Sky_DrawFaceQuad(glpoly_t *p)
 	{
 		float *c = Fog_GetColor();
 
+        Video_ResetCapabilities(false);
 		Video_EnableCapabilities(VIDEO_BLEND);
 		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 
@@ -732,8 +733,7 @@ void Sky_DrawFaceQuad(glpoly_t *p)
 
 		glColor3f(1.0f,1.0f,1.0f);
 
-		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
-		Video_DisableCapabilities(VIDEO_BLEND);
+        Video_ResetCapabilities(true);
 
 		rs_skypasses++;
 	}

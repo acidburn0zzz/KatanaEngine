@@ -3,8 +3,7 @@
 #ifndef __SERVERMAIN__
 #define __SERVERMAIN__
 
-#include "Game.h"
-
+#include "shared_game.h"
 #include "shared_server.h"
 
 // Base includes

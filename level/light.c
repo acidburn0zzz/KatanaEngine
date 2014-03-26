@@ -1,6 +1,6 @@
 #include "light.h"
 
-#include "..\Shared\shared_editor.h"
+#include "shared_editor.h"
 
 bool	lightvis,
 		relight,
@@ -115,7 +115,9 @@ int LightStyleForTargetname( char *targetname )
 	return numlighttargets - 1 + 32;
 }
 
+#ifndef __linux
 #include <Windows.h>
+#endif
 
 void ParseLightEntities( void )
 {
@@ -131,10 +133,10 @@ void ParseLightEntities( void )
 	{
 		value = ValueForKey(ent,"classname");
 
-		if(strncmp(value,ENTITY_LIGHT,5))
+        if(strncmp(value,"light",5))
 			continue;
 
-		if(!strcmp(value,ENTITY_LIGHT))
+        if(!strcmp(value,"light"))
 			isLight = true;
 		else
 			isLight = false;
@@ -171,7 +173,7 @@ void ParseLightEntities( void )
 			if( sscanf(value,"%lf %lf %lf",&color2[0],&color2[1],&color2[2]) != 3 )
 				Error("error in light at %.0f %.0f %.0f:\ncolor must be given 3 values", l->origin[0], l->origin[1], l->origin[2] );
 
-		value = ValueForKey(ent,ENTITY_LIGHT);
+        value = ValueForKey(ent,"light");
 		if( !value[0] )
 			value = ValueForKey(ent,"_light");
 

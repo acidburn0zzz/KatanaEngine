@@ -30,12 +30,13 @@ SDL_GLContext	sMainContext;
 #define VIDEO_MIN_SAMPLES	0
 
 cvar_t	cvShowModels			= {	"video_showmodels",			"1"				};
-cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",	true	};
+cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",	true,   false,  "Changes the number of samples."	                };
 cvar_t	cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",	true	};
-cvar_t	cvFullscreen			= {	"video_fullscreen",			"0",	true	};
-cvar_t	cvWidth					= {	"video_width",				"640",	true	};
-cvar_t	cvHeight				= {	"video_height",				"480",	true	};
+cvar_t	cvFullscreen			= {	"video_fullscreen",			"0",	true,   false,  "1: Fullscreen, 0: Windowed"	                    };
+cvar_t	cvWidth					= {	"video_width",				"640",	true,   false,  "Sets the width of the window."	                    };
+cvar_t	cvHeight				= {	"video_height",				"480",	true,   false,  "Sets the height of the window."	                };
 cvar_t	cvVerticalSync			= {	"video_verticalsync",		"1",	true	};
+cvar_t  cvVideoDebug            = { "video_debug",              "0",    false,  false,  "Provides debugging information for the renderer."  };
 
 gltexture_t	*gDepthTexture;
 
@@ -55,6 +56,7 @@ void Video_Initialize(void)
 	Video.bActive				=			// Window is intially assumed active.
 	Video.bUnlocked				= true;		// Video mode is initially locked.
 
+    Cvar_RegisterVariable(&cvVideoDebug,NULL);
 	Cvar_RegisterVariable(&cvMultisampleSamples,NULL);
 	Cvar_RegisterVariable(&cvMultisampleBuffers,NULL);
 	Cvar_RegisterVariable(&cvShowModels,NULL);
@@ -386,12 +388,10 @@ void Video_SetTexture(gltexture_t *gTexture)
 }
 
 /*  Changes the active blending mode.
+    This should be used in conjunction with the VIDEO_BLEND mode.
 */
 void Video_SetBlend(VideoBlend_t voBlendMode)
 {
-    if(!sbVideoCleanup)
-        Video_EnableCapabilities(VIDEO_BLEND);
-
 #if 0
     if(!VIDEO_DEPTH_IGNORE)
     {
@@ -453,8 +453,6 @@ void Video_DrawObject(
 
 	if(r_showtris.value > 0)
 	{
-		glColor4f(1.0f,1.0f,1.0f,1.0f);
-
 		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 
 		GL_PolygonOffset(OFFSET_SHOWTRIS);
@@ -522,20 +520,25 @@ void Video_DrawObject(
 
 typedef struct
 {
-	unsigned	int	uiFirst,uiSecond;
+	unsigned	int	    uiFirst,
+                        uiSecond;
+
+	const       char    *ccIdentifier;
 } VideoCapabilities_t;
 
 VideoCapabilities_t	vcCapabilityList[]=
 {
-	{	VIDEO_ALPHA_TEST,		GL_ALPHA_TEST		},
-	{	VIDEO_BLEND,			GL_BLEND			},
-	{	VIDEO_DEPTH_TEST,		GL_DEPTH_TEST		},
-	{	VIDEO_TEXTURE_2D,		GL_TEXTURE_2D		},
-	{	VIDEO_TEXTURE_GEN_S,	GL_TEXTURE_GEN_S	},
-	{	VIDEO_TEXTURE_GEN_T,	GL_TEXTURE_GEN_T	},
-	{	VIDEO_CULL_FACE,		GL_CULL_FACE		},
-	{	VIDEO_STENCIL_TEST,		GL_STENCIL_TEST		},
-	{	VIDEO_NORMALIZE,		GL_NORMALIZE		}
+	{	VIDEO_ALPHA_TEST,		GL_ALPHA_TEST,      "ALPHA_TEST"    },
+	{	VIDEO_BLEND,			GL_BLEND,           "BLEND"			},
+	{	VIDEO_DEPTH_TEST,		GL_DEPTH_TEST,      "DEPTH_TEST"	},
+	{	VIDEO_TEXTURE_2D,		GL_TEXTURE_2D,      "TEXTURE_2D"	},
+	{	VIDEO_TEXTURE_GEN_S,	GL_TEXTURE_GEN_S,   "TEXTURE_GEN_S"	},
+	{	VIDEO_TEXTURE_GEN_T,	GL_TEXTURE_GEN_T,   "TEXTURE_GEN_T"	},
+	{	VIDEO_CULL_FACE,		GL_CULL_FACE,       "CULL_FACE"		},
+	{	VIDEO_STENCIL_TEST,		GL_STENCIL_TEST,    "STENCIL_TEST"	},
+	{	VIDEO_NORMALIZE,		GL_NORMALIZE,		"NORMALIZE"     },
+
+	{   0   }
 };
 
 static unsigned int	iSavedCapabilites[2];
@@ -548,14 +551,22 @@ void Video_EnableCapabilities(unsigned int iCapabilities)
 	int	i;
 
 	for(i = 0; i < sizeof(vcCapabilityList); i++)
+	{
+        if(!vcCapabilityList[i].uiFirst)
+            break;
+
 		if(iCapabilities & vcCapabilityList[i].uiFirst)
 		{
+            if(cvVideoDebug.value)
+                Con_Printf("Enabling: %s\n",vcCapabilityList[i].ccIdentifier);
+
 			glEnable(vcCapabilityList[i].uiSecond);
 
             if(!sbVideoCleanup)
                 // [24/2/2014] Collect up a list of the new capabilities we set ~hogsy
                 iSavedCapabilites[0] |= vcCapabilityList[i].uiFirst;
 		}
+    }
 }
 
 /*	Disables specified capabilities for the current draw.
@@ -565,14 +576,22 @@ void Video_DisableCapabilities(unsigned int iCapabilities)
 	int	i;
 
 	for(i = 0; i < sizeof(vcCapabilityList); i++)
+	{
+        if(!vcCapabilityList[i].uiFirst)
+            break;
+
 		if(iCapabilities & vcCapabilityList[i].uiFirst)
 		{
+            if(cvVideoDebug.value)
+                Con_Printf("Disabling: %s\n",vcCapabilityList[i].ccIdentifier);
+
 			glDisable(vcCapabilityList[i].uiSecond);
 
             if(!sbVideoCleanup)
                 // [24/2/2014] Collect up a list of the new capabilities we disabled ~hogsy
                 iSavedCapabilites[1] |= vcCapabilityList[i].uiFirst;
 		}
+    }
 }
 
 /*	Resets our capabilities.

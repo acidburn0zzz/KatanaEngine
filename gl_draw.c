@@ -29,9 +29,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	BLOCK_WIDTH		256
 #define	BLOCK_HEIGHT	BLOCK_WIDTH
 
-cvar_t		cvConsoleAlpha		= { "screen_consolealpha",	"0.7",						true	}; //johnfitz
-cvar_t		cvConsoleBackground	= { "screen_consoleback",	"",							true	};
-cvar_t		cvConsoleChars		= { "screen_consolechars",	"textures/engine/conchars",	true	};
+cvar_t		cvConsoleAlpha		= { "screen_consolealpha",	"0.7",						true,	false,  "Sets the alpha value for the console background."  }; //johnfitz
+cvar_t		cvConsoleBackground	= { "screen_consoleback",	"",							true,	false,  "Sets the path for the console background."         };
+cvar_t		cvConsoleChars		= { "screen_consolechars",	"textures/engine/conchars",	true,   false,  "Sets the path for the console font."	            };
 
 qpic_t	*draw_backtile;
 qpic_t	*pic_ovr, *pic_ins; //johnfitz -- new cursor handling
@@ -501,7 +501,11 @@ void Draw_Fill(int x,int y,int w,int h,float r,float g,float b,float alpha)
 	Math_Vector4Copy(vColour,voFill[2].vColour);
 	Math_Vector4Copy(vColour,voFill[3].vColour);
 
+    Video_ResetCapabilities(false);
+    Video_EnableCapabilities(VIDEO_BLEND);
+    Video_DisableCapabilities(VIDEO_ALPHA_TEST|VIDEO_TEXTURE_2D);
 	Video_DrawFill(voFill);
+	Video_ResetCapabilities(true);
 }
 
 void Draw_FadeScreen (void)

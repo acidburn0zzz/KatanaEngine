@@ -818,7 +818,7 @@ void SCR_TileClear (void)
 	}
 }
 
-void V_UpdateBlend(void);	// [24/2/2014] See engine_view.c ~hogsy
+void V_UpdateBlend(void);	            // [24/2/2014] See engine_view.c ~hogsy
 
 /*	This is called every frame, and can also be called explicitly to flush
 	text to the screen.

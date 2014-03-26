@@ -3,7 +3,7 @@
 #ifndef BSPFILE_H
 #define BSPFILE_H
 
-#include "..\shared\shared_formats.h"
+#include "shared_formats.h"
 
 #define	MAX_Q1MAP_HULLS			4
 #define	MAX_MAP_MODELS			4096		// was 256
