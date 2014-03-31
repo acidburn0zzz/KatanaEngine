@@ -39,7 +39,8 @@ cvar_t	r_fastsky		= {	"r_fastsky",		"0"		};
 cvar_t	r_sky_quality	= {	"r_sky_quality",	"12"	};
 cvar_t	r_skyalpha		= {	"r_skyalpha",		"1"		};
 cvar_t	r_skyfog		= {	"r_skyfog",			"0.5"	};
-cvar_t	cvDrawClouds	= { "sky_drawclouds",	"1"		};
+cvar_t	cvDrawClouds	    = { "sky_drawclouds",	"1"		};
+cvar_t  cvSkyScrollSpeed    = { "sky_scrollspeed",  "2.0",  true,   false,  "Changes the speed at which the clouds scroll." };
 
 int		skytexorder[6] = {0,2,1,3,4,5}; //for skybox
 
@@ -248,6 +249,7 @@ void Sky_Init(void)
 	Cvar_RegisterVariable (&r_skyalpha, NULL);
 	Cvar_RegisterVariable (&r_skyfog, NULL);
 	Cvar_RegisterVariable(&cvDrawClouds,NULL);
+	Cvar_RegisterVariable(&cvSkyScrollSpeed,NULL);
 
 	Cmd_AddCommand("sky",Sky_SkyCommand_f);
 
@@ -618,8 +620,10 @@ void Sky_DrawSkyBox (void)
 			float *c;
 
 			c = Fog_GetColor();
-			glEnable(GL_BLEND);
-			glDisable(GL_TEXTURE_2D);
+
+			Video_EnableCapabilities(VIDEO_BLEND);
+			Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+
 			glColor4f(c[0],c[1],c[2],CLAMP(0,r_skyfog.value,1.0f));
 
 			glBegin(GL_QUADS);
@@ -630,8 +634,9 @@ void Sky_DrawSkyBox (void)
 			glEnd();
 
 			glColor3f(1.0f,1.0f,1.0f);
-			glEnable(GL_TEXTURE_2D);
-			glDisable(GL_BLEND);
+
+			Video_EnableCapabilities(VIDEO_TEXTURE_2D);
+			Video_DisableCapabilities(VIDEO_BLEND);
 
 			rs_skypasses++;
 		}
@@ -697,13 +702,13 @@ void Sky_DrawFaceQuad(glpoly_t *p)
 	// [12/5/2013] Pwopah blendin' ~hogsy
 	Video_ResetCapabilities(false);
 	Video_EnableCapabilities(VIDEO_BLEND);
-	Video_SetBlend(VIDEO_BLEND_ONE);
+	Video_SetBlend(VIDEO_BLEND_ONE,VIDEO_DEPTH_IGNORE);
 
 	glBegin(GL_QUADS);
 
 	for(i = 0,v = p->verts[0]; i < 4; i++,v += VERTEXSIZE)
 	{
-		Sky_GetTexCoord(v,2.0f,&s,&t);
+		Sky_GetTexCoord(v,cvSkyScrollSpeed.value,&s,&t);
 
 		glTexCoord2f(s,t);
 		glVertex3fv(v);

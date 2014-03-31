@@ -368,7 +368,8 @@ void Video_UpdateWindow(void)
 	vid.conheight	= vid.conwidth*Video.iHeight/Video.iWidth;
 }
 
-static bool sbVideoCleanup = false;
+static bool sbVideoCleanup      = false,
+            sbVideoIgnoreDepth  = true;
 
 /*	Bind our current texture.
 */
@@ -390,17 +391,14 @@ void Video_SetTexture(gltexture_t *gTexture)
 /*  Changes the active blending mode.
     This should be used in conjunction with the VIDEO_BLEND mode.
 */
-void Video_SetBlend(VideoBlend_t voBlendMode)
+void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
 {
-#if 0
-    if(!VIDEO_DEPTH_IGNORE)
+    if(iDepthType != VIDEO_DEPTH_IGNORE)
     {
-        glDepthMask(iDepthMask);
+        glDepthMask(iDepthType);
 
-        if(sbIgnoreDepth)
-            sbIgnoreDepth = false;
+        sbVideoIgnoreDepth = false;
     }
-#endif
 
     switch(voBlendMode)
     {
@@ -608,10 +606,15 @@ void Video_ResetCapabilities(bool bClearActive)
 		Video_DisableCapabilities(iSavedCapabilites[0]);
 		Video_EnableCapabilities(iSavedCapabilites[1]);
 
-		// [12/3/2014] Reset our blend mode too. ~hogsy
-		Video_SetBlend(VIDEO_BLEND_TWO);
+        if(sbVideoIgnoreDepth)
+            Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_IGNORE);
+        else
+            // [12/3/2014] Reset our blend mode too. ~hogsy
+            Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_TRUE);
 
-		sbVideoCleanup = false;
+        // [28/3/2014] Set defau;ts ~hogsy
+        sbVideoIgnoreDepth  = true;
+		sbVideoCleanup      = false;
 	}
 
 	// [24/2/2014] Nullify these ~hogsy

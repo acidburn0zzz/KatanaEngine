@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="x64">
-				<Option output="../bin/engine/engine.x64" prefix_auto="0" extension_auto="1" />
+				<Option output="../bin/engine/engine.x64.so" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="../bin" />
 				<Option object_output="obj/Release/" />
 				<Option type="3" />

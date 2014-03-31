@@ -104,7 +104,7 @@ void Video_Initialize(void);
 void Video_UpdateWindow(void);
 void Video_ClearBuffer(void);
 void Video_SetTexture(gltexture_t *gTexture);
-void Video_SetBlend(VideoBlend_t voBlendMode);
+void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType);
 void Video_EnableCapabilities(unsigned int iCapabilities);
 void Video_DisableCapabilities(unsigned int iCapabilities);
 void Video_ResetCapabilities(bool bClearActive);

@@ -256,11 +256,8 @@ void Draw_Particles(void)
 		rs_particles++;
 	}
 
-	if(!r_showtris.value)
-	{
-		glDepthMask(true);
-		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
-	}
+    glDepthMask(true);
+    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 
 	Video_ResetCapabilities(true);
 }
@@ -329,10 +326,10 @@ void Draw_Shadow(entity_t *ent)
 		Video_EnableCapabilities(VIDEO_BLEND);
 		Video_DisableCapabilities(VIDEO_ALPHA_TEST);
 
-		Video_SetBlend(VIDEO_BLEND_ONE);
+		Video_SetBlend(VIDEO_BLEND_ONE,VIDEO_DEPTH_FALSE);
 
 		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-		glDepthMask(false);
+
 		glTranslatef(ent->origin[0],ent->origin[1],ent->origin[2]);
 		glTranslatef(0,0,-lheight+0.1f);
 
@@ -340,10 +337,9 @@ void Draw_Shadow(entity_t *ent)
 
 		Video_ResetCapabilities(true);
 
-		glTranslatef(0,0,lheight+0.1);
-		glDepthMask(true);
-
 		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+
+		glTranslatef(0,0,lheight+0.1);
 		glPopMatrix();
 	}
 
