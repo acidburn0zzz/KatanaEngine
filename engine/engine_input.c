@@ -14,6 +14,8 @@
 
 #include "engine_video.h"
 
+#include "AntTweakBar.h"
+
 #define INPUT_MAX_CONTROLLERS	3
 #define INPUT_MAX_VIBRATION		65535
 #define INPUT_MAX_ZONE			32767
@@ -253,103 +255,106 @@ static int InputMouseRemap[18]=
 
 void Input_Process(void)
 {
-	static	bool	sbOldMouseState = false;
+	static	bool sbOldMouseState = false;
 
 	while(SDL_PollEvent(&sEvent))
 	{
-		switch(sEvent.type)
-		{
-		case SDL_WINDOWEVENT:
-			switch(sEvent.window.event)
-			{
-			case SDL_WINDOWEVENT_FOCUS_GAINED:
-				Video.bActive = true;
+        if(!TwEventSDL(&sEvent,SDL_MAJOR_VERSION,SDL_MINOR_VERSION))
+        {
+            switch(sEvent.type)
+            {
+            case SDL_WINDOWEVENT:
+                switch(sEvent.window.event)
+                {
+                case SDL_WINDOWEVENT_FOCUS_GAINED:
+                    Video.bActive = true;
 
-				// [6/11/2013] Then restore it :) ~hogsy
-				if(sbOldMouseState)
-					Input_ActivateMouse();
-				else
-					Input_DeactivateMouse();
+                    // [6/11/2013] Then restore it :) ~hogsy
+                    if(sbOldMouseState)
+                        Input_ActivateMouse();
+                    else
+                        Input_DeactivateMouse();
 
-				// [30/7/2013] Window isn't active! Clear states ~hogsy
-				Key_ClearStates();
-				break;
-			case SDL_WINDOWEVENT_FOCUS_LOST:
-				Video.bActive = false;
+                    // [30/7/2013] Window isn't active! Clear states ~hogsy
+                    Key_ClearStates();
+                    break;
+                case SDL_WINDOWEVENT_FOCUS_LOST:
+                    Video.bActive = false;
 
-				// [6/11/2013] Save our old mouse state ~hogsy
-				sbOldMouseState = bMouseActive;
+                    // [6/11/2013] Save our old mouse state ~hogsy
+                    sbOldMouseState = bMouseActive;
 
-				Input_DeactivateMouse();
+                    Input_DeactivateMouse();
 
-				// [30/7/2013] Window isn't active! Clear states ~hogsy
-				Key_ClearStates();
-				break;
-			case SDL_WINDOWEVENT_RESIZED:
-				Video_UpdateWindow();
-				break;
-			case SDL_WINDOWEVENT_CLOSE:
-				Sys_Quit();
-				break;
-			}
-			break;
-		case SDL_KEYDOWN:
-		case SDL_KEYUP:
-			Key_Event(Input_ConvertKey(sEvent.key.keysym.sym),(sEvent.key.state == SDL_PRESSED));
-			break;
-		case SDL_MOUSEMOTION:
-			if(!bMouseActive || bIsDedicated)
-				return;
+                    // [30/7/2013] Window isn't active! Clear states ~hogsy
+                    Key_ClearStates();
+                    break;
+                case SDL_WINDOWEVENT_RESIZED:
+                    Video_UpdateWindow();
+                    break;
+                case SDL_WINDOWEVENT_CLOSE:
+                    Sys_Quit();
+                    break;
+                }
+                break;
+            case SDL_KEYDOWN:
+            case SDL_KEYUP:
+                Key_Event(Input_ConvertKey(sEvent.key.keysym.sym),(sEvent.key.state == SDL_PRESSED));
+                break;
+            case SDL_MOUSEMOTION:
+                if(!bMouseActive || bIsDedicated)
+                    return;
 
-			// [30/7/2013] Originally handled this differently for fullscreen but this works fine apparently ~hogsy
-			if((sEvent.motion.x != (Video.iWidth/2)) || (sEvent.motion.y != (Video.iHeight/2)))
-			{
-				iMousePosition[X]	= sEvent.motion.xrel*5;
-				iMousePosition[Y]	= sEvent.motion.yrel*5;
-				// [22/12/2013] TODO: This currently isn't accounting for any frame-loss... Ugh ~hogsy
-				if(	((unsigned)sEvent.motion.x < Video.iWidth)	||
-					((unsigned)sEvent.motion.x > Video.iWidth)	||
-					((unsigned)sEvent.motion.y < Video.iHeight)	||
-					((unsigned)sEvent.motion.y > Video.iHeight))
-					SDL_WarpMouseInWindow(sMainWindow,Video.iWidth/2,Video.iHeight/2);
-			}
-			break;
-		case SDL_MOUSEBUTTONUP:
-		case SDL_MOUSEBUTTONDOWN:
-			if(sEvent.button.button <= 18)
-				Key_Event(InputMouseRemap[sEvent.button.button-1],(sEvent.button.state == SDL_PRESSED));
-			break;
-		case SDL_MOUSEWHEEL:
-			if(sEvent.wheel.y > 0)
-			{
-				Key_Event(K_MWHEELUP,true);
-				Key_Event(K_MWHEELUP,false);
-			}
-			else
-			{
-				Key_Event(K_MWHEELDOWN,true);
-				Key_Event(K_MWHEELDOWN,false);
-			}
-			break;
-/*
-    Controller Input
-*/
-        case SDL_CONTROLLERBUTTONDOWN:
-		case SDL_JOYAXISMOTION:
-			if((sEvent.jaxis.value > INPUT_MAX_ZONE) || (sEvent.jaxis.value < INPUT_MIN_ZONE))
-			{
-			}
-			break;
-		case SDL_JOYBALLMOTION:
-		case SDL_JOYHATMOTION:
-		case SDL_JOYBUTTONDOWN:
-		case SDL_JOYBUTTONUP:
-			break;
-		case SDL_QUIT:
-			Sys_Quit();
-			break;
-		}
-	}
+                // [30/7/2013] Originally handled this differently for fullscreen but this works fine apparently ~hogsy
+                if((sEvent.motion.x != (Video.iWidth/2)) || (sEvent.motion.y != (Video.iHeight/2)))
+                {
+                    iMousePosition[X]	= sEvent.motion.xrel*5;
+                    iMousePosition[Y]	= sEvent.motion.yrel*5;
+                    // [22/12/2013] TODO: This currently isn't accounting for any frame-loss... Ugh ~hogsy
+                    if(	((unsigned)sEvent.motion.x < Video.iWidth)	||
+                        ((unsigned)sEvent.motion.x > Video.iWidth)	||
+                        ((unsigned)sEvent.motion.y < Video.iHeight)	||
+                        ((unsigned)sEvent.motion.y > Video.iHeight))
+                        SDL_WarpMouseInWindow(sMainWindow,Video.iWidth/2,Video.iHeight/2);
+                }
+                break;
+            case SDL_MOUSEBUTTONUP:
+            case SDL_MOUSEBUTTONDOWN:
+                if(sEvent.button.button <= 18)
+                    Key_Event(InputMouseRemap[sEvent.button.button-1],(sEvent.button.state == SDL_PRESSED));
+                break;
+            case SDL_MOUSEWHEEL:
+                if(sEvent.wheel.y > 0)
+                {
+                    Key_Event(K_MWHEELUP,true);
+                    Key_Event(K_MWHEELUP,false);
+                }
+                else
+                {
+                    Key_Event(K_MWHEELDOWN,true);
+                    Key_Event(K_MWHEELDOWN,false);
+                }
+                break;
+    /*
+        Controller Input
+    */
+            case SDL_CONTROLLERBUTTONDOWN:
+            case SDL_JOYAXISMOTION:
+                if((sEvent.jaxis.value > INPUT_MAX_ZONE) || (sEvent.jaxis.value < INPUT_MIN_ZONE))
+                {
+                }
+                break;
+            case SDL_JOYBALLMOTION:
+            case SDL_JOYHATMOTION:
+            case SDL_JOYBUTTONDOWN:
+            case SDL_JOYBUTTONUP:
+                break;
+            case SDL_QUIT:
+                Sys_Quit();
+                break;
+            }
+        }
+    }
 }
 
 extern cvar_t	cl_maxpitch,

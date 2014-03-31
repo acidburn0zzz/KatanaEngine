@@ -336,7 +336,7 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 
 		if(mModel->gFullbrightTexture[currententity->skinnum])
 		{
-			//glMultiTexCoord2fv(GL_TEXTURE0,frame1->verts[mtTriangles->index_st]);
+			//glMultiTexCoord2fv(VIDEO_TEXTURE0,frame1->verts[mtTriangles->index_st]);
             //glMultiTexCoord2fv(GL_TEXTURE1,(float*)order);
 		}
 
@@ -434,7 +434,7 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 
 			if(mModel->gFullbrightTexture[currententity->skinnum])
 			{
-				glMultiTexCoord2fv(GL_TEXTURE0,(float*)order);
+				glMultiTexCoord2fv(VIDEO_TEXTURE0,(float*)order);
 				glMultiTexCoord2fv(GL_TEXTURE1,(float*)order);
 			}
 			else
@@ -603,7 +603,7 @@ void Alias_Draw(void)
 	R_RotateForEntity(currententity->origin,currententity->angles);
 	R_SetupModelLighting(currententity->origin);
 
-	GL_DisableMultitexture();
+	Video_DisableMultitexture();
 
 	gDiffuseTexture		= mModel->gDiffuseTexture[currententity->skinnum];
 	gFullbrightTexture	= mModel->gFullbrightTexture[currententity->skinnum];
@@ -624,7 +624,7 @@ void Alias_Draw(void)
 		// [20/8/2013] Set us up for sphere mapping! ~hogsy
 		if(gSphereTexture)
 		{
-			GL_EnableMultitexture();
+			Video_EnableMultitexture();
 
 			glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
 			glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
@@ -637,10 +637,9 @@ void Alias_Draw(void)
 		// [20/8/2013] Or fullbright! ~hogsy
 		else if(gFullbrightTexture)
 		{
-			GL_EnableMultitexture();
-
+			Video_EnableMultitexture();
+            Video_EnableCapabilities(VIDEO_BLEND);
 			Video_SetTexture(gFullbrightTexture);
-			Video_EnableCapabilities(VIDEO_BLEND);
 
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
 		}
@@ -653,7 +652,7 @@ void Alias_Draw(void)
 	if(!r_drawflat_cheatsafe)
 	{
 		if(gSphereTexture || gFullbrightTexture)
-			GL_DisableMultitexture();
+			Video_DisableMultitexture();
 
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 	}

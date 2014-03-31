@@ -314,33 +314,36 @@ void R_DrawSequentialPoly(msurface_t *s)
 	{
 		if(Video.bTextureEnvCombine && Video.bMultitexture) //case 1: texture and lightmap in one pass, overbright using texture combiners
 		{
-			GL_DisableMultitexture(); // selects TEXTURE0
-
+			Video_DisableMultitexture(); // selects TEXTURE0
 			Video_SetTexture(t->gltexture);
 
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			GL_EnableMultitexture(); // selects TEXTURE1
+
+			Video_EnableMultitexture(); // selects TEXTURE1
 			Video_SetTexture(lightmap_textures[s->lightmaptexturenum]);
+
 			R_RenderDynamicLightmaps (s);
 			R_UploadLightmap(s->lightmaptexturenum);
+
 			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_EXT);
 			glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB_EXT,GL_MODULATE);
 			glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB_EXT,GL_PREVIOUS_EXT);
 			glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB_EXT,GL_TEXTURE);
 			glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,4);
 			glBegin(GL_POLYGON);
+
 			v = s->polys->verts[0];
 			for (i=0 ; i<s->polys->numverts ; i++, v += VERTEXSIZE)
 			{
-				glMultiTexCoord2fARB(GL_TEXTURE0,v[3],v[4]);
-				glMultiTexCoord2fARB(GL_TEXTURE1,v[5],v[6]);
+				glMultiTexCoord2fARB(VIDEO_TEXTURE0,v[3],v[4]);
+				glMultiTexCoord2fARB(VIDEO_TEXTURE1,v[5],v[6]);
 				glVertex3fv (v);
 			}
 			glEnd();
 			glTexEnvf(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,1.0f);
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 
-			GL_DisableMultitexture ();
+			Video_DisableMultitexture();
 
 			rs_brushpasses++;
 		}
@@ -410,12 +413,12 @@ void R_DrawSequentialPoly(msurface_t *s)
 	{
 		if(Video.bMultitexture) //case 4: texture and lightmap in one pass, regular modulation
 		{
-			GL_DisableMultitexture(); // selects TEXTURE0
+			Video_DisableMultitexture(); // selects TEXTURE0
 			Video_SetTexture(t->gltexture);
 
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-			GL_EnableMultitexture(); // selects TEXTURE1
+			Video_EnableMultitexture(); // selects TEXTURE1
 			Video_SetTexture(lightmap_textures[s->lightmaptexturenum]);
 
 			R_RenderDynamicLightmaps (s);
@@ -427,12 +430,14 @@ void R_DrawSequentialPoly(msurface_t *s)
 			v = s->polys->verts[0];
 			for (i=0 ; i<s->polys->numverts ; i++, v+= VERTEXSIZE)
 			{
-				glMultiTexCoord2fARB(GL_TEXTURE0,v[3],v[4]);
-				glMultiTexCoord2fARB(GL_TEXTURE1,v[5],v[6]);
+				glMultiTexCoord2fARB(VIDEO_TEXTURE0,v[3],v[4]);
+				glMultiTexCoord2fARB(VIDEO_TEXTURE1,v[5],v[6]);
 				glVertex3fv (v);
 			}
 			glEnd ();
-			GL_DisableMultitexture ();
+
+			Video_DisableMultitexture();
+
 			rs_brushpasses++;
 		}
 		else if (entalpha < 1) //case 5: can't do multipass if entity has alpha, so just draw the texture
@@ -629,7 +634,7 @@ void Brush_Draw(entity_t *e)
 	if (r_drawflat_cheatsafe) //johnfitz
 		glEnable(GL_TEXTURE_2D);
 
-	GL_DisableMultitexture(); // selects TEXTURE0
+	Video_DisableMultitexture(); // selects TEXTURE0
 
 	glPopMatrix ();
 }

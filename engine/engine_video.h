@@ -62,7 +62,10 @@ extern SDL_Window	*sMainWindow;
 #define	VIDEO_TEXTURE_GEN_S	32
 #define	VIDEO_CULL_FACE		64
 #define	VIDEO_STENCIL_TEST	128
-#define	VIDEO_NORMALIZE		256	// Normalization for scaled models that are lit.
+#define	VIDEO_NORMALIZE		256	// Normalization for scaled models that are lit
+
+#define VIDEO_TEXTURE0 0x84C0
+#define VIDEO_TEXTURE1 0x84C1
 
 // Primitive Types
 typedef enum
@@ -105,6 +108,8 @@ void Video_UpdateWindow(void);
 void Video_ClearBuffer(void);
 void Video_SetTexture(gltexture_t *gTexture);
 void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType);
+void Video_EnableMultitexture(void);
+void Video_DisableMultitexture(void);
 void Video_EnableCapabilities(unsigned int iCapabilities);
 void Video_DisableCapabilities(unsigned int iCapabilities);
 void Video_ResetCapabilities(bool bClearActive);

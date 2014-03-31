@@ -21,6 +21,8 @@
 
 #include "../platform/include/platform_window.h"
 
+#include "AntTweakBar.h"
+
 SDL_Window		*sMainWindow;
 SDL_GLContext	sMainContext;
 
@@ -237,6 +239,21 @@ bool Video_CreateWindow(void)
 	// [3/6/2013] Added to fix a bug on some systems when calling wglGetExtensionString* ~hogsy
 	GLeeInit();
 
+    // [31/3/2014] Initialize AntTweakBar ~hogsy
+	TwInit(TW_OPENGL,NULL);
+	TwWindowSize(Video.iWidth,Video.iHeight);
+
+	{
+        TwBar *tbTestMenu;
+
+        tbTestMenu = TwNewBar("Test Bar!");
+        if(!tbTestMenu)
+        {
+            Con_Warning("Failed to create menu window!\n");
+            return;
+        }
+	}
+
 	// [13/8/2012] Do we want to check for extensions? ~hogsy
 	if(!COM_CheckParm("-noextensions"))
 	{
@@ -363,6 +380,9 @@ void Video_UpdateWindow(void)
 		// [15/7/2013] Center the window ~hogsy
 		SDL_SetWindowPosition(sMainWindow,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED);
 
+    // [31/3/2014] Keep AntTweakBar informed of our windows size :) ~hogsy
+    TwWindowSize(Video.iWidth,Video.iHeight);
+
 	// [15/7/2013] Update console size ~hogsy
 	vid.conwidth	= Video.iWidth & 0xFFFFFFF8;
 	vid.conheight	= vid.conwidth*Video.iHeight/Video.iWidth;
@@ -414,6 +434,62 @@ void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
     default:
         Sys_Error("Unknown blend mode! (%i)\n",voBlendMode);
     }
+}
+
+int iCurrentTexture = -1; // to avoid unnecessary texture sets
+
+bool bMultitextureEnabled = false;
+
+void Video_SelectTexture(unsigned int uiTarget)
+{
+	static  unsigned    int uiCurrentTarget;
+	static  int             ct0,ct1;
+
+	if(uiTarget == uiCurrentTarget)
+		return;
+
+	glActiveTextureARB(uiTarget);
+
+	if(uiTarget == VIDEO_TEXTURE0)
+	{
+		ct1 = iCurrentTexture;
+		iCurrentTexture = ct0;
+	}
+	else
+	{
+		ct0 = iCurrentTexture;
+		iCurrentTexture = ct1;
+	}
+
+	uiCurrentTarget = uiTarget;
+}
+
+void Video_DisableMultitexture(void)
+{
+    if(!Video.bMultitexture)
+        return;
+
+	if(bMultitextureEnabled)
+	{
+		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+		Video_SelectTexture(VIDEO_TEXTURE0);
+
+		bMultitextureEnabled = false;
+	}
+}
+
+void Video_EnableMultitexture(void)
+{
+    if(!Video.bMultitexture)
+        return;
+
+	if(!bMultitextureEnabled)
+	{
+        Video_EnableCapabilities(VIDEO_TEXTURE_2D);
+		Video_SelectTexture(VIDEO_TEXTURE1);
+
+		bMultitextureEnabled = true;
+	}
 }
 
 /*
@@ -485,7 +561,7 @@ void Video_DrawObject(
 		{
 			if(bMultiTexture)
 			{
-				glMultiTexCoord2fv(GL_TEXTURE0,voObject[i].vTextureCoord[0]);
+				glMultiTexCoord2fv(VIDEO_TEXTURE0,voObject[i].vTextureCoord[0]);
 				glMultiTexCoord2fv(GL_TEXTURE1,voObject[i].vTextureCoord[1]);
 			}
 			else
@@ -639,7 +715,7 @@ void Video_ProcessShader(int iType)
     else
         uiShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    glShaderSource(uiShader,1,&uiShader,NULL);
+//    glShaderSource(uiShader,1,&uiShader,NULL);
     glCompileShader(uiShader);
 
     glGetShaderiv(uiShader,GL_COMPILE_STATUS,&iState);
@@ -666,6 +742,9 @@ void Video_Process(void)
 {
 #ifndef KATANA_VIDEO_NEXT	// Legacy renderer
 	SCR_UpdateScreen();
+
+    // [31/3/2014] Draw any ATB windows ~hogsy
+	TwDraw();
 #else	// New renderer
 	static vec4_t vLight =
 	{	0,	10.0f,	20.0f,	1.0f	};
@@ -694,7 +773,7 @@ void Video_Process(void)
 
 		Video_ClearBuffer();
 
-		glActiveTextureARB(GL_TEXTURE0_ARB);
+		glActiveTextureARB(VIDEO_TEXTURE0);
 		glEnable(GL_TEXTURE_2D);
 
 		glDrawBuffers(3,gBuffers);
@@ -721,6 +800,8 @@ void Video_Shutdown(void)
 {
 	if(!Video.bInitialized)
 		return;
+
+    TwTerminate();
 
 	// [6/12/2012] Delete our context ~hogsy
 	if(sMainContext)

@@ -93,7 +93,3 @@ void TexMgr_ReloadNobrightImages (void);
 int TexMgr_Pad(int s);
 int TexMgr_SafeTextureSize (int s);
 int TexMgr_PadConditional (int s);
-
-// TEXTURE BINDING & TEXTURE UNIT SWITCHING
-void GL_DisableMultitexture (void); //selects texture unit 0
-void GL_EnableMultitexture (void); //selects texture unit 1

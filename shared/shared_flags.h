@@ -24,7 +24,7 @@
 	when a build is released publically.	*/
 #define ENGINE_RELEASE		1	// 30/6/2012
 #define ENGINE_MILESTONE	2
-#define ENGINE_BUILD		638	// 31/3/2014
+#define ENGINE_BUILD		639	// 1/4/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"

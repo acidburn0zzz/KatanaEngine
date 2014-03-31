@@ -392,8 +392,8 @@ void View_PolyBlend(void)
 	if(!gl_polyblend.value || !vViewBlend[3])
 		return;
 
-	GL_DisableMultitexture();
-
+    Video_ResetCapabilities(false);
+	Video_DisableMultitexture();
 	Video_DisableCapabilities(VIDEO_DEPTH_TEST);
 
 	glMatrixMode(GL_PROJECTION);
@@ -413,6 +413,8 @@ void View_PolyBlend(void)
 
 		Video_DrawFill(voScreenPoly);
 	}
+
+	Video_ResetCapabilities(true);
 }
 
 /*

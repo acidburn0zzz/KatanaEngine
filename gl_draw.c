@@ -707,8 +707,7 @@ void GL_DrawSpriteModel(entity_t *e)
 
 	glColor3f (1,1,1);
 
-	GL_DisableMultitexture();
-
+	Video_DisableMultitexture();
 	Video_SetTexture(frame->gltexture);
 
 	glEnable (GL_ALPHA_TEST);
