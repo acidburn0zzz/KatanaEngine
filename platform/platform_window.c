@@ -234,7 +234,7 @@ void gWindow_MessageBox(const char *ccTitle,const char *ccMessage,...)
 			1,
 			BlackPixel(dMessageDisplay,iDefaultScreen),
 			WhitePixel(dMessageDisplay,iDefaultScreen));
-
+        XStoreName(dMessageDisplay,wMessageWindow,ccTitle);
 		XSelectInput(dMessageDisplay,wMessageWindow,ExposureMask|KeyPressMask);
 		XMapWindow(dMessageDisplay,wMessageWindow);
 
