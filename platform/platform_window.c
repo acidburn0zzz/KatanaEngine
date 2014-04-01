@@ -230,7 +230,7 @@ void gWindow_MessageBox(const char *ccTitle,const char *ccMessage,...)
 			dMessageDisplay,
 			RootWindow(dMessageDisplay,iDefaultScreen),
 			50,50,
-			256,128,
+			512,64,
 			1,
 			BlackPixel(dMessageDisplay,iDefaultScreen),
 			WhitePixel(dMessageDisplay,iDefaultScreen));
@@ -244,8 +244,8 @@ void gWindow_MessageBox(const char *ccTitle,const char *ccMessage,...)
 
 			if(xEvent.type == Expose)
 			{
-				XFillRectangle(dMessageDisplay,wMessageWindow,DefaultGC(dMessageDisplay,iDefaultScreen),50,50,10,10);
 				XDrawString(dMessageDisplay,wMessageWindow,DefaultGC(dMessageDisplay,iDefaultScreen),10,10,cOut,strlen(cOut));
+				XDrawString(dMessageDisplay,wMessageWindow,DefaultGC(dMessageDisplay,iDefaultScreen),10,54,"Press any key to continue...",32);
 			}
 			else if(xEvent.type == KeyPress)
 				break;
