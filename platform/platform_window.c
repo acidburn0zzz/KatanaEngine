@@ -163,13 +163,13 @@ void gWindow_CreateWindow(GIPLWindow_t *gwWindow)
 bool gWindow_ChooseColor(GIPLWindow_t *gwParent,int *iRed,int *iGreen,int *iBlue)
 {
 #ifdef _WIN32
-	byte					bColour[3];
+	gBYTE					bColour[3];
 	CHOOSECOLOR				ccColour;
 	static		COLORREF	scCustomColours[16];
 
-	bColour[0]	= *iRed;
-	bColour[1]	= *iGreen;
-	bColour[2]	= *iBlue;
+	bColour[0]	= (gBYTE)*iRed;
+	bColour[1]	= (gBYTE)*iGreen;
+	bColour[2]	= (gBYTE)*iBlue;
 
 	memset(&ccColour,0,sizeof(CHOOSECOLOR));
 
@@ -234,7 +234,7 @@ void gWindow_MessageBox(const char *ccTitle,const char *ccMessage,...)
 			1,
 			BlackPixel(dMessageDisplay,iDefaultScreen),
 			WhitePixel(dMessageDisplay,iDefaultScreen));
-        XStoreName(dMessageDisplay,wMessageWindow,ccTitle);
+		XStoreName(dMessageDisplay,wMessageWindow,ccTitle);
 		XSelectInput(dMessageDisplay,wMessageWindow,ExposureMask|KeyPressMask);
 		XMapWindow(dMessageDisplay,wMessageWindow);
 

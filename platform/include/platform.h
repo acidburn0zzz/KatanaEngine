@@ -19,35 +19,36 @@
 #include <ctype.h>
 #include <math.h>
 #include <setjmp.h>
+#include <errno.h>
+
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #define PLATFORM_SYSTEM_HEADERS // temp
 
-#ifdef _WINDOWS
+#ifdef _WIN32
 #ifdef PLATFORM_SYSTEM_HEADERS
 #include <Windows.h>
 #include <WindowsX.h>
 #include <CommCtrl.h>
 #endif
 
-// [4/3/2014] TODO: At some point, ditch these in the main header since it's the opposite of what this library should be doing! ~hogsy
-#ifdef _WIN32   // x32
-// Platform information
-#define	gPLATFORM_NAME	    "WIN32"	// Platform name.
 #define	gPLATFORM_MAX_PATH	260		// Maximum path length.
 
 #define gINSTANCE	HINSTANCE       // Instance definition.
-#else   // x64
-#define gPLATFORM_NAME  "WIN64"
+
+// [4/3/2014] TODO: At some point, ditch these in the main header since it's the opposite of what this library should be doing! ~hogsy
+#ifdef _WIN64
+// Platform information
+#define	gPLATFORM_NAME	    "WIN64"	// Platform name.
+#else
+#define gPLATFORM_NAME  "WIN32"
 #endif
 #else	// Linux
 #ifdef PLATFORM_SYSTEM_HEADERS
 #include <dirent.h>
 #include <unistd.h>
 #include <dlfcn.h>
-#include <errno.h>
-
-#include <sys/stat.h>
-#include <sys/types.h>
 #endif
 
 // Platform information
