@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="brush.c" />
+    <ClCompile Include="bsp2prt.c" />
+    <ClCompile Include="bspfile.c" />
+    <ClCompile Include="bspinfo.c" />
+    <ClCompile Include="cmdlib.c" />
+    <ClCompile Include="csg4.c" />
+    <ClCompile Include="faces.c" />
+    <ClCompile Include="light.c" />
+    <ClCompile Include="light_face.c" />
+    <ClCompile Include="light_trace.c" />
+    <ClCompile Include="map.c" />
+    <ClCompile Include="mathlib.c" />
+    <ClCompile Include="mem.c" />
+    <ClCompile Include="outside.c" />
+    <ClCompile Include="portals.c" />
+    <ClCompile Include="scriptlib.c" />
+    <ClCompile Include="solidbsp.c" />
+    <ClCompile Include="threads.c" />
+    <ClCompile Include="tjunc.c" />
+    <ClCompile Include="tree.c" />
+    <ClCompile Include="vis.c" />
+    <ClCompile Include="vis_flow.c" />
+    <ClCompile Include="vis_sound.c" />
+    <ClCompile Include=".\bsp_wad.c" />
+    <ClCompile Include="winding.c" />
+    <ClCompile Include="writebsp.c" />
+    <ClCompile Include="level_main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bsp5.h" />
+    <ClInclude Include="bspfile.h" />
+    <ClInclude Include="cmdlib.h" />
+    <ClInclude Include="light.h" />
+    <ClInclude Include="map.h" />
+    <ClInclude Include="mathlib.h" />
+    <ClInclude Include="mem.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="threads.h" />
+    <ClInclude Include="vis.h" />
+    <ClInclude Include="winding.h" />
+    <ClInclude Include="..\shared\shared_formats.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{aba33d6d-3c15-4cf5-9fad-0e760e335f39}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
