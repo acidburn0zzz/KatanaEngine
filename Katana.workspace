@@ -9,5 +9,6 @@
 			<Depends filename="menu/Menu.cbp" />
 		</Project>
 		<Project filename="platform/Platform.cbp" />
+		<Project filename="level/Level.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

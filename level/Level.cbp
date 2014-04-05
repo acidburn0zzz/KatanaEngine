@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Level" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="x64">
+				<Option output="../bin/Level.x64" prefix_auto="1" extension_auto="0" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-lpthread" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-g" />
+			<Add directory="../shared" />
+		</Compiler>
+		<Unit filename="brush.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="bsp2prt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="bsp5.h" />
+		<Unit filename="bsp_wad.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="bspfile.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="bspfile.h" />
+		<Unit filename="bspinfo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cmdlib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cmdlib.h" />
+		<Unit filename="csg4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="faces.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="level_main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="light.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="light.h" />
+		<Unit filename="light_face.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="light_trace.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="map.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="map.h" />
+		<Unit filename="mathlib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="mathlib.h" />
+		<Unit filename="mem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="mem.h" />
+		<Unit filename="outside.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="portals.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="resource.h" />
+		<Unit filename="scriptlib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="solidbsp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="threads.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="threads.h" />
+		<Unit filename="tjunc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vis.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vis.h" />
+		<Unit filename="vis_flow.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vis_sound.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="winding.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="winding.h" />
+		<Unit filename="writebsp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
