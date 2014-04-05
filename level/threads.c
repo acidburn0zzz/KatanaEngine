@@ -154,11 +154,6 @@ void ThreadUnlock (void)
 	LeaveCriticalSection (&crit);
 }
 
-/*
-=============
-RunThreadsOn
-=============
-*/
 void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
 {
 	DWORD	threadid[MAX_THREADS];
@@ -287,14 +282,14 @@ void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
 		Error ("pthread_attr_create failed");
 	if (pthread_attr_setstacksize (&attrib, 0x100000) == -1)
 		Error ("pthread_attr_setstacksize failed");
-	
+
 	for (i=0 ; i<numthreads ; i++)
 	{
 		if (pthread_create(&work_threads[i], attrib
 		, (pthread_startroutine_t)func, (pthread_addr_t)i) == -1)
 			Error ("pthread_create failed");
 	}
-		
+
 	for (i=0 ; i<numthreads ; i++)
 	{
 		if (pthread_join (work_threads[i], &status) == -1)
@@ -319,7 +314,7 @@ IRIX
 ===================================================================
 */
 
-#ifdef _MIPS_ISA 
+#ifdef _MIPS_ISA
 #define	USED
 
 #include <task.h>
@@ -387,9 +382,9 @@ void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
 			Error ("sproc failed");
 		}
 	}
-		
+
 	func(i);
-			
+
 	for (i=0 ; i<numthreads-1 ; i++)
 		wait (NULL);
 
@@ -448,7 +443,7 @@ void ThreadLock(void)
 	return;
 
   pthread_mutex_lock(&pt_mutex->a_mutex);
-  if(pthread_equal(pthread_self(), (pthread_t)&pt_mutex->owner)) 
+  if(pthread_equal(pthread_self(), (pthread_t)&pt_mutex->owner))
 	pt_mutex->lock++;
   else
   {
@@ -477,32 +472,32 @@ void ThreadLock(void)
 void ThreadUnlock(void)
 {
   pt_mutex_t *pt_mutex = &global_lock;
-  
+
   if(!threaded)
 	return;
 
   pthread_mutex_lock(&pt_mutex->a_mutex);
   pt_mutex->lock--;
-  
+
   if(pt_mutex->lock == 0)
   {
 	pt_mutex->owner = NULL;
 	pthread_cond_signal(&pt_mutex->cond);
   }
-  
+
   pthread_mutex_unlock(&pt_mutex->a_mutex);
 }
 
 void recursive_mutex_init(pthread_mutexattr_t attribs)
 {
   pt_mutex_t *pt_mutex = &global_lock;
-  
+
   pt_mutex->owner = NULL;
   if(pthread_mutex_init(&pt_mutex->a_mutex, &attribs) != 0)
 	Error("pthread_mutex_init failed\n");
   if(pthread_cond_init(&pt_mutex->cond, NULL) != 0)
 	Error("pthread_cond_init failed\n");
-  
+
   pt_mutex->lock = 0;
 }
 
@@ -515,24 +510,24 @@ void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
 {
   pthread_mutexattr_t         mattrib;
   pthread_t work_threads[MAX_THREADS];
-  
+
   int		start, end;
   int		status=0;
   size_t   i=0;
-  
+
   start     = I_DoubleTime();
   pacifier  = showpacifier;
-  
+
   dispatch  = 0;
   oldf      = -1;
   workcount = workcnt;
-  
+
   if(numthreads == 1)
 	func(0);
   else
-  {    
+  {
 	threaded  = true;
-	  
+
 	if(pacifier)
 	  setbuf(stdout, NULL);
 
@@ -560,7 +555,7 @@ void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
 	pthread_mutexattr_destroy(&mattrib);
 	threaded = false;
   }
-  
+
   end = I_DoubleTime();
   if (pacifier)
 	printf (" (%i)\n", end-start);
@@ -607,7 +602,7 @@ void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
 	workcount = workcnt;
 	oldf = -1;
 	pacifier = showpacifier;
-	start = I_DoubleTime (); 
+	start = I_DoubleTime ();
 #ifdef NeXT
 	if (pacifier)
 		setbuf (stdout, NULL);

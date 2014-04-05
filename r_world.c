@@ -343,8 +343,8 @@ void R_DrawTextureChains_Multitexture (void)
 				v = s->polys->verts[0];
 				for(j = 0; j < s->polys->numverts; j++,v += VERTEXSIZE)
 				{
-					glMultiTexCoord2fv(VIDEO_TEXTURE0,v+3);
-					glMultiTexCoord2fv(VIDEO_TEXTURE1,v+5);
+					glMultiTexCoord2fv(GL_TEXTURE0,v+3);
+					glMultiTexCoord2fv(GL_TEXTURE1,v+5);
 					glVertex3fv(v);
 				}
 

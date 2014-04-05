@@ -121,7 +121,7 @@ int SubdivideFace( face_t *f, face_t **prevptr )
 		return 0;
 
 	subdivides = 0;
-	for( axis = 0; axis < 2 ; axis++ ) 
+	for( axis = 0; axis < 2 ; axis++ )
 	{
 		for(;;)
 		{
@@ -129,7 +129,7 @@ int SubdivideFace( face_t *f, face_t **prevptr )
 			maxs = -BOGUS_RANGE;
 
 			w = f->winding;
-			for( i = 0; i < w->numpoints; i++ ) 
+			for( i = 0; i < w->numpoints; i++ )
 			{
 				v = DotProduct( w->points[i], tex->vecs[axis] );
 				if( v < mins )
@@ -406,11 +406,6 @@ static unsigned HashVec( vec3_t vec )
 
 //============================================================================
 
-/*
-=============
-GetVertex
-=============
-*/
 static int GetVertex( vec3_t in, int planenum )
 {
 	int			i;
@@ -496,11 +491,6 @@ static int EmitFaceEdge( vec3_t p1, vec3_t p2, face_t *f )
 	return i;
 }
 
-/*
-==============
-EmitNodeFaces_r
-==============
-*/
 static void EmitNodeFaces_r( node_t *node )
 {
 	int			i;
@@ -542,11 +532,6 @@ static void EmitNodeFaces_r( node_t *node )
 	EmitNodeFaces_r( node->children[1] );
 }
 
-/*
-================
-EmitNodeFaces
-================
-*/
 void EmitNodeFaces( node_t *headnode )
 {
 	vec_t	radius;

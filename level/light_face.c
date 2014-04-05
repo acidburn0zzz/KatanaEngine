@@ -87,7 +87,7 @@ static void CalcFaceVectors( lightinfo_t *l, const vec3_t faceorg )
 		printf( "Texture axis perpendicular to face at location %f %f %f\n", l->facemid[0], l->facemid[1], l->facemid[2] );
 		distscale = 1;
 	}
-	if( distscale < 0 ) 
+	if( distscale < 0 )
 	{
 		distscale = -distscale;
 		VectorNegate( texnormal, texnormal );
@@ -97,7 +97,7 @@ static void CalcFaceVectors( lightinfo_t *l, const vec3_t faceorg )
 	// the distance along the plane normal
 	distscale = 1.0 / distscale;
 
-	for( i = 0; i < 2; i++ ) 
+	for( i = 0; i < 2; i++ )
 	{
 		len = 1.0 / VectorLength( l->worldtotex[i] );
 		len *= len;
@@ -136,7 +136,7 @@ static void CalcFaceExtents( lightinfo_t *l, const vec3_t faceorg )
 	maxs[0] = maxs[1] = -BOGUS_RANGE;
 
 	l->facemid[0] = l->facemid[1] = l->facemid[2] = 0;
-	for( i = 0; i < s->numedges; i++ ) 
+	for( i = 0; i < s->numedges; i++ )
 	{
 		e = dsurfedges[s->firstedge + i];
 		if( e >= 0 )
@@ -145,7 +145,7 @@ static void CalcFaceExtents( lightinfo_t *l, const vec3_t faceorg )
 			v = dvertexes + dedges[-e].v[1];
 		VectorAdd(l->facemid, v->fPoint, l->facemid);
 
-		for( j = 0; j < 2; j++ ) 
+		for( j = 0; j < 2; j++ )
 		{
 			val = DotProduct(v->fPoint,tex->vecs[j])+tex->vecs[j][3];
 			if( val < mins[j] )
@@ -179,14 +179,14 @@ static void CalcSamples( lightinfo_t *l )
 	if( l->numsamples > SINGLEMAP )
 		Error( "Bad lightmap size: %i", l->numsamples );
 
-	if( l->numsamples > l->maxsamples ) 
+	if( l->numsamples > l->maxsamples )
 	{
 		l->maxsamples = l->numsamples;
 		if( l->point )
 			qfree( l->point );
 		l->point = (lightpoint_t*)qmalloc( sizeof( lightpoint_t ) * l->maxsamples * (1<<extrasamplesbit)*(1<<extrasamplesbit) );
 
-		for( mapnum = 0; mapnum < MAXLIGHTMAPS; mapnum++ ) 
+		for( mapnum = 0; mapnum < MAXLIGHTMAPS; mapnum++ )
 		{
 			if( l->sample[mapnum] )
 				qfree( l->sample[mapnum] );
@@ -203,18 +203,10 @@ static void CalcSamples( lightinfo_t *l )
 static void CalcPoints( lightinfo_t *l )
 {
 	int j, s, t, w, h, realw, realh, stepbit;
-	vec_t starts, startt, us, ut, mids, midt;
+	vec_t starts, startt, us, ut;
 	vec3_t facemid, base;
 	lightTrace_t tr;
 	lightpoint_t *point;
-
-//
-// fill in point array
-// the points are biased towards the center of the surface
-// to help avoid edge cases just inside walls
-//
-	mids = (l->exactmaxs[0] + l->exactmins[0]) * 0.5;
-	midt = (l->exactmaxs[1] + l->exactmins[1]) * 0.5;
 
 	// put the base and facemid a little above the surface
 	VectorMA( l->texorg, (1.0 / 32.0), l->facenormal, base );
@@ -230,7 +222,7 @@ static void CalcPoints( lightinfo_t *l )
 	w = realw << extrasamplesbit;
 	h = realh << extrasamplesbit;
 
-	if( stepbit < 4 ) 
+	if( stepbit < 4 )
 	{
 		starts -= 1 << stepbit;
 		startt -= 1 << stepbit;
@@ -238,9 +230,9 @@ static void CalcPoints( lightinfo_t *l )
 
 	point = l->point;
 	l->numpoints = w * h;
-	for( t = 0; t < h; t++ ) 
+	for( t = 0; t < h; t++ )
 	{
-		for( s = 0; s < w; s++, point++ ) 
+		for( s = 0; s < w; s++, point++ )
 		{
 			us = starts + (s << stepbit);
 			ut = startt + (t << stepbit);
@@ -265,7 +257,7 @@ static void CalcPoints( lightinfo_t *l )
 				// (which is nudged out of the impact surface by 1/32 already)
 				VectorCopy( tr.impact, point->v );
 
-				if( Light_PointContents( point->v ) == BSP_CONTENTS_SOLID ) 
+				if( Light_PointContents( point->v ) == BSP_CONTENTS_SOLID )
 				{
 					c_occluded++;
 					point->occluded = true;
@@ -279,12 +271,12 @@ static int SingleLightFace_FindMapNum( lightinfo_t *l, int style )
 {
 	int mapnum;
 
-	for( mapnum = 0; mapnum < MAXLIGHTMAPS; mapnum++ ) 
+	for( mapnum = 0; mapnum < MAXLIGHTMAPS; mapnum++ )
 	{
 		if( l->lightstyles[mapnum] == style )
 			break;
 
-		if( l->lightstyles[mapnum] == 255 ) 
+		if( l->lightstyles[mapnum] == 255 )
 		{
 			if( relight )
 				return MAXLIGHTMAPS;
@@ -362,7 +354,7 @@ static void SingleLightFace( const directlight_t *light, lightinfo_t *l )
 	lightsample_t	*sample;
 	lightTrace_t	tr;
 
-	if( light->type == LIGHTTYPE_SUN ) 
+	if( light->type == LIGHTTYPE_SUN )
 	{
 		SingleLightFace_Sun( light, l );
 		return;
@@ -379,7 +371,7 @@ static void SingleLightFace( const directlight_t *light, lightinfo_t *l )
 
 	iradius = 1.0 / light->radius;
 
-	for( i = 0, point = l->point; i < l->numpoints; i++, point++ ) 
+	for( i = 0, point = l->point; i < l->numpoints; i++, point++ )
 	{
 		if( point->occluded )
 			continue;
@@ -465,7 +457,7 @@ void LightFace( dface_t *f, const lightchain_t *lightchain, const directlight_t 
 	l.face = f;
 
 	// some surfaces don't need lightmaps
-	if( relight ) 
+	if( relight )
 	{
 		if( f->lightofs == -1 )
 			return;
@@ -489,7 +481,7 @@ void LightFace( dface_t *f, const lightchain_t *lightchain, const directlight_t 
 	VectorCopy( dplanes[f->planenum].normal, l.facenormal );
 	l.facedist = dplanes[f->planenum].dist;
 
-	if( f->side ) 
+	if( f->side )
 	{
 		VectorNegate( l.facenormal, l.facenormal );
 		l.facedist = -l.facedist;
@@ -514,7 +506,7 @@ void LightFace( dface_t *f, const lightchain_t *lightchain, const directlight_t 
 			l.lightstyles[i] = f->styles[i];
 
 	// cast all lights
-	while( lightchain ) 
+	while( lightchain )
 	{
 		SingleLightFace( lightchain->light, &l );
 		lightchain = lightchain->next;
@@ -561,7 +553,7 @@ void LightFace( dface_t *f, const lightchain_t *lightchain, const directlight_t 
 	}
 
 	// save out the values
-	if( relight ) 
+	if( relight )
 	{
 		// relighting an existing map without changing it's lightofs table
 		for( i = 0; i < MAXLIGHTMAPS && f->styles[i] != 255; i++ );
@@ -569,8 +561,8 @@ void LightFace( dface_t *f, const lightchain_t *lightchain, const directlight_t 
 		size = l.numsamples * i;
 		if( f->lightofs < 0 || f->lightofs + size > lightdatasize )
 			Error( "LightFace: Error while trying to relight map: invalid lightofs value, %i must be >= 0 && < %i\n", f->lightofs, lightdatasize );
-	} 
-	else 
+	}
+	else
 	{
 		// creating lightofs table from scratch
 		for( i = 0; i < MAXLIGHTMAPS && l.lightstyles[i] != 255; i++ );
@@ -579,9 +571,9 @@ void LightFace( dface_t *f, const lightchain_t *lightchain, const directlight_t 
 		if( !size )
 			return;	// no light styles
 
-		if( lightdatasize + size > MAX_MAP_LIGHTING ) 
+		if( lightdatasize + size > MAX_MAP_LIGHTING )
 		{
-			if( !ranout ) 
+			if( !ranout )
 			{
 				printf( "LightFace: ran out of lightmap dataspace" );
 				ranout = true;
@@ -617,9 +609,9 @@ void LightFace( dface_t *f, const lightchain_t *lightchain, const directlight_t 
 	VectorNormalize(tangentvectors[0]);
 	VectorNormalize(tangentvectors[1]);
 
-	for( i = 0; i < MAXLIGHTMAPS && f->styles[i] != 255; i++ ) 
+	for( i = 0; i < MAXLIGHTMAPS && f->styles[i] != 255; i++ )
 	{
-		for( j = 0, sample = l.sample[i]; j < l.numsamples; j++, sample++ ) 
+		for( j = 0, sample = l.sample[i]; j < l.numsamples; j++, sample++ )
 		{
 			int red, green, blue, white, tn[3];
 			vec3_t n;

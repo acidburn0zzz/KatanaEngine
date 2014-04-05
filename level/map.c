@@ -76,7 +76,7 @@ int	FindTexinfo( texinfo_t *t )
 		t->flags |= TEX_SPECIAL;
 
 	tex = texinfo;
-	for( i = 0; i < numtexinfo; i++, tex++ ) 
+	for( i = 0; i < numtexinfo; i++, tex++ )
 	{
 		if( t->miptex != tex->miptex )
 			continue;
@@ -116,10 +116,11 @@ brushtype_t;
 
 void ParseBrushFace (entity_t *ent, mbrush_t **brushpointer, brushtype_t brushtype)
 {
-	int			i, j, hltexdef, facecontents, faceflags, facevalue, q2brushface, q3brushface, bpface, brushplane;
+	int			i,j,
+                hltexdef,bpface,brushplane;
 	vec_t		planepts[3][3], t1[3], t2[3], d, rotate, scale[2], vecs[2][4], ang, sinv, cosv, bp[2][3];
 	mface_t		*f, *f2;
-	plane_t	plane;
+	plane_t	    plane;
 	texinfo_t	tx;
 	mbrush_t	*b;
 
@@ -280,27 +281,13 @@ void ParseBrushFace (entity_t *ent, mbrush_t **brushpointer, brushtype_t brushty
 		bp[1][1] = 1;
 		bp[1][2] = 0;
 	}
+
 	// q3 .map properties, currently unused but parsed
-	facecontents = 0;
-	faceflags = 0;
-	facevalue = 0;
-	q2brushface = false;
-	q3brushface = false;
 	if (GetToken (false))
-	{
-		q2brushface = true;
-		facecontents = atoi(token);
-		if (GetToken (false))
-		{
-			faceflags = atoi(token);
+		if(GetToken (false))
 			if (GetToken (false))
-			{
-				q2brushface = false;
-				q3brushface = true;
-				facevalue = atoi(token);
-			}
-		}
-	}
+			{}
+
 	// skip trailing info (the 3 q3 .map parameters for example)
 	while (GetToken (false));
 
@@ -355,7 +342,7 @@ void ParseBrushFace (entity_t *ent, mbrush_t **brushpointer, brushtype_t brushty
 		// fake proper texture vectors from QuakeEd style
 
 		// texture rotation around the plane normal
-		if(rotate ==  0) 
+		if(rotate ==  0)
 		{
 			sinv = 0;
 			cosv = 1;
@@ -536,7 +523,7 @@ bool ParseEntity (void)
 	ent = &entities[num_entities++];
 	ent->epairs = NULL;
 
-	do 
+	do
 	{
 		fflush( stdout );
 
@@ -554,7 +541,7 @@ bool ParseEntity (void)
 		}
 	} while( 1 );
 
-	if(!strcmp( ValueForKey(ent,"classname"),"func_group")) 
+	if(!strcmp( ValueForKey(ent,"classname"),"func_group"))
 	{
 		MoveEntityBrushesIntoWorld( ent );
 
