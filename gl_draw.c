@@ -401,9 +401,8 @@ void Draw_Character(int x,int y,int num)
 	}
 }
 
-void Draw_Pic (int x, int y, qpic_t *pic)
+void Draw_Pic(int x,int y,qpic_t *pic)
 {
-#if 1
 	glpic_t	*gl;
 
 	if(scrap_dirty)
@@ -413,17 +412,18 @@ void Draw_Pic (int x, int y, qpic_t *pic)
 
 	Video_SetTexture(gl->gltexture);
 
-	glBegin (GL_QUADS);
-	glTexCoord2f (gl->sl, gl->tl);
-	glVertex2f (x, y);
-	glTexCoord2f (gl->sh, gl->tl);
-	glVertex2f (x+pic->width, y);
-	glTexCoord2f (gl->sh, gl->th);
-	glVertex2f (x+pic->width, y+pic->height);
-	glTexCoord2f (gl->sl, gl->th);
-	glVertex2f (x, y+pic->height);
-	glEnd();
-#endif
+    // [1/4/2014] Use new rendering system ~hogsy
+	{
+        VideoObject_t voPicture	[]=
+		{
+			{	{	x,		        y,		        0	},	{	{	0,		0		}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	},
+			{	{	x+pic->width,	y,		        0	},	{	{	1.0f,	0		}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	},
+			{	{	x+pic->width,   y+pic->height,	0	},	{	{	1.0f,	1.0f	}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	},
+			{	{	x,		        y+pic->height,  0	},	{	{	0,		1.0f	}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	}
+		};
+
+        Video_DrawFill(voPicture);
+    }
 }
 
 /*	Only used for the player color selection menu

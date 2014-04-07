@@ -58,6 +58,8 @@
 #define	MAX_SCOREBOARD		64
 #define	MAX_SCOREBOARDNAME	32
 
+#include "shared_flags.h"
+
 #include "cmdlib.h"
 #include "common.h"
 #include "vid.h"

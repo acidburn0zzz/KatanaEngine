@@ -109,7 +109,7 @@ void Con_ToggleConsole_f (void)
 			key_linepos				= 1;
 			con_backscroll			= 0; //johnfitz -- toggleconsole should return you to the bottom of the scrollback
 			history_line			= edit_line; //johnfitz -- it should also return you to the bottom of the command history
-		
+
 			Input_ActivateMouse();
 		}
 		else
@@ -860,7 +860,7 @@ void Con_DrawConsole(int lines,bool drawinput)
 
 	// Draw version number in bottom right
 	y += 8;
-	sprintf(ver,"Katana %i",ENGINE_BUILD);
+	sprintf(ver,"Katana %i",ENGINE_VERSION_BUILD);
 	for(x = 0; x < (signed)strlen(ver); x++)
 		Draw_Character((con_linewidth-strlen(ver)+x+2)<<3,y,ver[x]);
 }
@@ -894,4 +894,3 @@ void Con_NotifyBox(char *text)
 	key_dest = key_game;
 	realtime = 0;				// put the cursor back to invisible
 }
-

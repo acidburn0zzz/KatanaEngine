@@ -472,7 +472,7 @@ void Host_Status_f (void)
 		print = SV_ClientPrintf;
 
 	print("host:    %s\n", Cvar_VariableString ("hostname"));
-	print("Version: %i\n",ENGINE_BUILD);
+	print("Version: %i\n",ENGINE_VERSION_BUILD);
 	if (tcpipAvailable)
 		print ("tcp/ip:  %s\n", my_tcpip_address);
 	print("map:     %s\n", sv.name);
@@ -1145,10 +1145,10 @@ void Host_Name_f (void)
 
 void Host_Version(void)
 {
-	Con_Printf("Katana %i ("gPLATFORM_NAME")\nRelease %i, Milestone %i\n",
-		ENGINE_BUILD,
-		ENGINE_RELEASE,
-		ENGINE_MILESTONE);
+	Con_Printf("Katana %i.%i.%i ("gPLATFORM_NAME")\n",
+		ENGINE_VERSION_MAJOR,
+		ENGINE_VERSION_MINOR,
+		ENGINE_VERSION_BUILD);
 	Con_Printf("Compiled: "__TIME__" "__DATE__"\n");
 }
 

@@ -7,14 +7,13 @@
 
 	TODO:
 		Somewhat merge this with the platform library so it's more unified here...
-		Add in XInput support again...
+		Add in XInput support again for windows.
 
 	Credits to raynorpat for his example.
 */
 
 #include "engine_video.h"
-
-#include "AntTweakBar.h"
+#include "engine_menu.h"
 
 #define INPUT_MAX_CONTROLLERS	3
 #define INPUT_MAX_VIBRATION		65535
@@ -22,8 +21,8 @@
 #define INPUT_MIN_ZONE			3000
 
 // [29/7/2012] Changing mouselook over to a cvar ~hogsy
-cvar_t	cvMouseLook		= {	"input_mouselook",		"1",	true,   false,  "Enables and disables the ability to use the mouse to look around."	};
-cvar_t	cvMouseFilter	= {	"input_mousefilter",	"0",	true,   false,  "Filters out mouse input so it responds more smoothly."	            };
+cvar_t	cvInputMouseLook	= {	"input_mouselook",		"1",	true,   false,  "Enables and disables the ability to use the mouse to look around."	};
+cvar_t	cvInputMouseFilter	= {	"input_mousefilter",	"0",	true,   false,  "Filters out mouse input so it responds more smoothly."	            };
 
 extern cvar_t	joy_pitchsensitivity;
 
@@ -49,6 +48,8 @@ extern SDL_Window	*sMainWindow;
 
 SDL_Event	sEvent;
 
+void Input_OpenTweakMenu(void);
+
 void Input_Initialize(void)
 {
 	int i;
@@ -56,8 +57,10 @@ void Input_Initialize(void)
 	Con_Printf("Initializing input...\n");
 
 	// [29/7/2012] Register input cvars ~hogsy
-	Cvar_RegisterVariable(&cvMouseLook,NULL);
-	Cvar_RegisterVariable(&cvMouseFilter,NULL);
+	Cvar_RegisterVariable(&cvInputMouseLook,NULL);
+	Cvar_RegisterVariable(&cvInputMouseFilter,NULL);
+
+	Cmd_AddCommand("input_tweak",Input_OpenTweakMenu);
 
 	if(SDL_Init(SDL_INIT_JOYSTICK) < 0)
 	{
@@ -100,36 +103,11 @@ void Input_Initialize(void)
     }
 }
 
-#if 0
-typedef struct
-{
-	int	iFirst,iSecond;
-} InputConvert_t;
-
-InputConvert_t	icConversionTable[]=
-{
-	{	SDLK_PAGEUP,	K_PGUP		},
-	{	SDLK_PAGEDOWN,	K_PGDN		},
-	{	SDLK_HOME,		K_HOME		},
-	{	SDLK_END,		K_END		},
-	{	SDLK_LEFT,		K_LEFTARROW	}
-};
-#endif
-
 /*	Convert the given key over to what our engine uses.
 	This is copied straight from raynorpat's example...
 */
 int Input_ConvertKey(int iKey)
 {
-#if 0	// Table-based check (probably slower)
-	int	i;
-
-	for(i = 0; i < sizeof(icConversionTable); i++)
-		if(icConversionTable[i].iFirst == iKey)
-			return icConversionTable[i].iSecond;
-
-	return iKey;
-#else
 	switch(iKey)
 	{
 		case SDLK_PAGEUP:		return K_PGUP;
@@ -237,11 +215,37 @@ int Input_ConvertKey(int iKey)
 		case SDLK_SLASH:		return '/';
 		default:    			return iKey;
 	}
-#endif
 
 	// [9/1/2013] We'd never reach here but compiler complain anyway ~hogsy
 	return 0;
 }
+
+/*
+    Input Tweaking Menu
+*/
+
+TwBar   *tbInputOptions;
+
+void Input_OpenTweakMenu(void)
+{
+    static  bool bOpen = false;
+
+    if(bOpen)
+    {
+
+
+        bOpen = false;
+        return;
+    }
+
+    tbInputOptions = TwNewBar("Input Options");
+    TwAddVarRW(tbInputOptions,cvInputMouseFilter.name,TW_TYPE_FLOAT,&cvInputMouseFilter.value,"");
+    TwAddButton(tbInputOptions,"Close",Input_OpenTweakMenu,NULL,"");
+
+    bOpen = true;
+}
+
+/**/
 
 // [13/7/2013] Ripped from Raynorpat's code ~hogsy
 static int InputMouseRemap[18]=
@@ -259,8 +263,6 @@ void Input_Process(void)
 
 	while(SDL_PollEvent(&sEvent))
 	{
-        if(!TwEventSDL(&sEvent,SDL_MAJOR_VERSION,SDL_MINOR_VERSION))
-        {
             switch(sEvent.type)
             {
             case SDL_WINDOWEVENT:
@@ -305,6 +307,9 @@ void Input_Process(void)
                 if(!bMouseActive || bIsDedicated)
                     return;
 
+                // [5/4/2014] Do this manually, since it doesn't seem to work well with SDL2 ~hogsy
+                TwMouseMotion(sEvent.motion.x,sEvent.motion.y);
+
                 // [30/7/2013] Originally handled this differently for fullscreen but this works fine apparently ~hogsy
                 if((sEvent.motion.x != (Video.iWidth/2)) || (sEvent.motion.y != (Video.iHeight/2)))
                 {
@@ -318,8 +323,8 @@ void Input_Process(void)
                         SDL_WarpMouseInWindow(sMainWindow,Video.iWidth/2,Video.iHeight/2);
                 }
                 break;
-            case SDL_MOUSEBUTTONUP:
             case SDL_MOUSEBUTTONDOWN:
+            case SDL_MOUSEBUTTONUP:
                 if(sEvent.button.button <= 18)
                     Key_Event(InputMouseRemap[sEvent.button.button-1],(sEvent.button.state == SDL_PRESSED));
                 break;
@@ -335,10 +340,15 @@ void Input_Process(void)
                     Key_Event(K_MWHEELDOWN,false);
                 }
                 break;
-    /*
-        Controller Input
-    */
+            /*
+                Controller Input
+            */
             case SDL_CONTROLLERBUTTONDOWN:
+            case SDL_CONTROLLERBUTTONUP:
+                break;
+            /*
+                Joystick Input
+            */
             case SDL_JOYAXISMOTION:
                 if((sEvent.jaxis.value > INPUT_MAX_ZONE) || (sEvent.jaxis.value < INPUT_MIN_ZONE))
                 {
@@ -354,7 +364,6 @@ void Input_Process(void)
                 break;
             }
         }
-    }
 }
 
 extern cvar_t	cl_maxpitch,
@@ -369,10 +378,10 @@ void Input_ProcessClient(usercmd_t *ucCommand)
 	if(!bMouseActive)
 		return;
 
-	if(cvMouseFilter.value)
+	if(cvInputMouseFilter.value)
 	{
-		iMousePosition[X] += iOldMousePosition[X]*cvMouseFilter.value;
-		iMousePosition[Y] += iOldMousePosition[Y]*cvMouseFilter.value;
+		iMousePosition[X] += iOldMousePosition[X]*cvInputMouseFilter.value;
+		iMousePosition[Y] += iOldMousePosition[Y]*cvInputMouseFilter.value;
 
 		iOldMousePosition[X]	= iMousePosition[X];
 		iOldMousePosition[Y]	= iMousePosition[Y];
@@ -381,7 +390,7 @@ void Input_ProcessClient(usercmd_t *ucCommand)
 	iMousePosition[X] *= sensitivity.value;
 	iMousePosition[Y] *= sensitivity.value;
 
-	if(!cvMouseLook.value)
+	if(!cvInputMouseLook.value)
 	{
 		// [13/7/2013] Copied from Raynorpat's code ~hogsy
 		if(in_strafe.state & 1)

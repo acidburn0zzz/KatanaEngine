@@ -15,11 +15,12 @@ extern cvar_t	cvShowModels,	// Should we draw models?
 
 typedef struct
 {
-	float			fMaxAnisotropy,		// Max anisotropy amount allowed by the hardware.
+	float			fMaxAnisotropy,		        // Max anisotropy amount allowed by the hardware.
 					fBitsPerPixel;
 
-	unsigned	int	iCurrentTexture;	// Current/last binded texture.
-	int				iSamples,			// Current number of samples set for AA.
+	unsigned	int	iCurrentTexture,            // Current/last binded texture.
+                    uiSecondaryTexture;         // Current/last secondary texture.
+	int				iSamples,			        // Current number of samples set for AA.
 					iBuffers;
 
 	unsigned	int	iWidth,
@@ -77,6 +78,7 @@ typedef enum
 // Blending Modes
 typedef enum
 {
+    VIDEO_BLEND_IGNORE, // Don't bother changing blend mode.
     VIDEO_BLEND_ONE,    // ONE ONE
     VIDEO_BLEND_TWO,    // RENAME!!!
 

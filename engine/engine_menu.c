@@ -2,53 +2,21 @@
 */
 #include "engine_menu.h"
 
-#include "KatGL.h"
 #include "engine_video.h"
 #include "engine_client.h"
+#include "KatGL.h"
 
 #include "shared_module.h"
 
-#include "../platform/include/platform_window.h"
-#include "../platform/include/platform_module.h"
+#include "platform_window.h"
+#include "platform_module.h"
 
 gINSTANCE	hMenuInstance;
 
-int	Menu_GetScreenWidth(void)
-{
-	return Video.iWidth;
-}
-
-int Menu_GetScreenHeight(void)
-{
-	return Video.iHeight;
-}
-
-/*	Toggles whether the menu is active or not.
-*/
-void Menu_Toggle(void)
-{
-	if(Menu->GetState() & MENU_STATE_MENU)
-		Menu->RemoveState(MENU_STATE_MENU);
-	else
-		Menu->AddState(MENU_STATE_MENU);
-}
-
-int Menu_GetState(MenuType_t mtType)
-{
-	switch(mtType)
-	{
-	case MENU_TYPE_HUD:
-		break;
-	case MENU_TYPE_MENU:
-		break;
-	default:
-		Con_Warning("Unknown menu type! (%i)\n",mtType);
-	}
-
-	return 0;
-}
-
 void Game_AddCommand(char *c,void *f);	// [21/5/2013] TEMP: See engine_game.c ~hogsy
+
+int	Menu_GetScreenWidth(void);
+int Menu_GetScreenHeight(void);
 
 void Menu_Initialize(void)
 {
@@ -91,4 +59,53 @@ void Menu_Initialize(void)
 
 		Sys_Error("Failed to load %s/%s"gMODULE_EXTENSION"!\n",com_gamedir,MODULE_MENU);
 	}
+}
+
+/*
+    Export Functions
+*/
+
+/*  Gets the width of the current viewport.
+*/
+int	Menu_GetScreenWidth(void)
+{
+	return Video.iWidth;
+}
+
+/*  Gets the height of the current viewport.
+*/
+int Menu_GetScreenHeight(void)
+{
+	return Video.iHeight;
+}
+
+/*
+    Import Functions
+*/
+
+/*	Toggles whether the menu is active or not.
+*/
+void Menu_Toggle(void)
+{
+	if(Menu->GetState() & MENU_STATE_MENU)
+		Menu->RemoveState(MENU_STATE_MENU);
+	else
+		Menu->AddState(MENU_STATE_MENU);
+}
+
+/*  Gets the state of the selected menu type.
+*/
+int Menu_GetState(MenuType_t mtType)
+{
+	switch(mtType)
+	{
+	case MENU_TYPE_HUD:
+		break;
+	case MENU_TYPE_MENU:
+		break;
+	default:
+		Con_Warning("Unknown menu type! (%i)\n",mtType);
+	}
+
+	return 0;
 }

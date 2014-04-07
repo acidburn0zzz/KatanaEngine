@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2013 OldTimes Software
+	Copyright (C) 2011-2014 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -26,11 +26,9 @@
 
 cvar_t	*cConsoleVariables;
 
-//==============================================================================
-//
-//  USER COMMANDS
-//
-//==============================================================================
+/*
+    User Commands
+*/
 
 void Cvar_Reset (char *name); //johnfitz
 

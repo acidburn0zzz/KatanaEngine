@@ -300,13 +300,15 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 1 // new
+#if 0 // new
 	int					i,j;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
-	MD2TriangleVertex_t	*verts1;
+	MD2TriangleVertex_t	*mtvVertices,
+                        *mtvVertices2;
 	MD2Triangle_t		*mtTriangles;
 	MD2Frame_t			*frame1,*frame2;
-	vec3_t				scale1,translate1,scale2;
+	vec3_t				scale1,translate1,
+                        scale2,vTranslate2;
 
 	// [20/8/2012] Quick fix ~hogsy
 	// [24/8/2012] Moved ~hogsy
@@ -320,12 +322,14 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	Math_VectorCopy(frame1->scale,scale1);
 	Math_VectorCopy(frame1->translate,translate1);
 	Math_VectorCopy(frame2->scale,scale2);
+	Math_VectorCopy(frame2->translate,vTranslate2);
 
 	// [24/8/2012] Probably not the best way, but it's better than my other method ~hogsy
 	Math_VectorScale(scale1,currententity->scale,scale1);
 	Math_VectorScale(scale2,currententity->scale,scale2);
 
-	verts1 = &frame1->verts[0];
+	mtvVertices     = &frame1->verts[0];
+	mtvVertices2    = &frame2->verts[0];
 
 	mtTriangles = (MD2Triangle_t*)((byte*)mModel+mModel->ofs_tris);
 
@@ -334,24 +338,23 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
         if(!mtTriangles)
             break;
 
-		if(mModel->gFullbrightTexture[currententity->skinnum])
-		{
-			//glMultiTexCoord2fv(VIDEO_TEXTURE0,frame1->verts[mtTriangles->index_st]);
-            //glMultiTexCoord2fv(GL_TEXTURE1,(float*)order);
-		}
+        Math_VectorCopy(mtTriangles->index_st,voModel[i].vTextureCoord[0]);
+        Math_VectorCopy(vec3_origin,voModel[i].vColour);
+
+        voModel[i].vColour[3] = 1.0f;
 
 		for(j = 0; j < 3; j++)
-			voModel[i].vVertex[j] = verts1[mtTriangles->index_xyz[0]].v[j]*scale1[j]+translate1[j];
+			voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[0]].v[j]*scale1[j]+translate1[j]);
 
         i++;
 
 		for(j = 0; j < 3; j++)
-			voModel[i].vVertex[j] = verts1[mtTriangles->index_xyz[1]].v[j]*scale1[j]+translate1[j];
+			voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[1]].v[j]*scale1[j]+translate1[j]);
 
         i++;
 
 		for(j = 0; j < 3; j++)
-            voModel[i].vVertex[j] = verts1[mtTriangles->index_xyz[2]].v[j]*scale1[j]+translate1[j];
+			voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[2]].v[j]*scale1[j]+translate1[j]);
 	}
 
 	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,mModel->numtris,true);
@@ -435,7 +438,7 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 			if(mModel->gFullbrightTexture[currententity->skinnum])
 			{
 				glMultiTexCoord2fv(VIDEO_TEXTURE0,(float*)order);
-				glMultiTexCoord2fv(GL_TEXTURE1,(float*)order);
+				glMultiTexCoord2fv(VIDEO_TEXTURE1,(float*)order);
 			}
 			else
 				glTexCoord2fv((float*)order);
@@ -595,6 +598,10 @@ void Alias_Draw(void)
 	Alias_SetupFrame(mModel,&lLerpData);
 	Alias_SetupEntityTransform(&lLerpData);
 
+    gDiffuseTexture		= mModel->gDiffuseTexture[currententity->skinnum];
+	gFullbrightTexture	= mModel->gFullbrightTexture[currententity->skinnum];
+	gSphereTexture		= mModel->gSphereTexture[currententity->skinnum];
+
 	glPushMatrix();
 
 	if(r_drawflat_cheatsafe)
@@ -603,13 +610,8 @@ void Alias_Draw(void)
 	R_RotateForEntity(currententity->origin,currententity->angles);
 	R_SetupModelLighting(currententity->origin);
 
+    Video_ResetCapabilities(false);
 	Video_DisableMultitexture();
-
-	gDiffuseTexture		= mModel->gDiffuseTexture[currententity->skinnum];
-	gFullbrightTexture	= mModel->gFullbrightTexture[currententity->skinnum];
-	gSphereTexture		= mModel->gSphereTexture[currententity->skinnum];
-
-	Video_ResetCapabilities(false);
 
 	if(!r_drawflat_cheatsafe)
 	{
@@ -711,7 +713,7 @@ void Alias_Draw(void)
 	rs_aliaspolys += mModel->numtris;
 
 	// Set up textures
-	GL_DisableMultitexture();
+	Video_DisableMultitexture();
 
 	tx = mModel->gDiffuseTexture[currententity->skinnum];
 	if(gl_fullbrights.value)
@@ -779,7 +781,7 @@ void Alias_Draw(void)
 		R_SetupModelLighting(currententity->origin);
 
 		// [27/1/2013] BUG: Seems to fuck up with some compressed textures... Needs looking into ~hogsy
-		if(Video.bTextureEnvCombine && gl_mtexable && Video.bTextureEnvAdd && fb) //case 1: everything in one pass
+		if(Video.bTextureEnvCombine && Video.bTextureEnvAdd && fb) //case 1: everything in one pass
 		{
 			Video_SetTexture(tx);
 
@@ -789,7 +791,7 @@ void Alias_Draw(void)
 			glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB_EXT,GL_PRIMARY_COLOR_EXT);
 			glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,1);
 
-			GL_EnableMultitexture(); // selects TEXTURE1
+			Video_EnableMultitexture(); // selects TEXTURE1
 
 			Video_SetTexture(fb);
 
@@ -800,7 +802,7 @@ void Alias_Draw(void)
 
 			glDisable(GL_BLEND);
 
-			GL_DisableMultitexture();
+			Video_DisableMultitexture();
 
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		}

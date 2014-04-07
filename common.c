@@ -23,9 +23,7 @@
 	Misc functions used in client and server.
 */
 
-#include "shared_flags.h"
-
-#include "platform/include/platform_filesystem.h"
+#include "platform_filesystem.h"
 
 #define NUM_SAFE_ARGVS  7
 

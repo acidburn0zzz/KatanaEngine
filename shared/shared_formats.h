@@ -48,23 +48,23 @@ typedef struct
 
 typedef struct
 {
-	int			ident;
-	int			version;
-	int			skinwidth;
-	int			skinheight;
-	int			framesize;							// Byte size of each frame.
-	int			num_skins;
-	int			num_xyz;
-	int			num_st;								// Greater than num_xyz for seams.
-	int			numtris;
-	int			num_glcmds;							// Dwords in strip/fan command list.
-	int			num_frames;
-	int			ofs_skins;							// Each skin is a MAX_SKINNAME string.
-	int			ofs_st;								// Byte offset from start for stverts.
-	int			ofs_tris;							// Offset for dtriangles.
-	int			ofs_frames;							// Offset for first frame.
-	int			ofs_glcmds;
-	int			ofs_end;							// End of file.
+	int			    ident;
+	int			    version;
+	unsigned    int	skinwidth;
+	unsigned    int	skinheight;
+	int			    framesize;							// Byte size of each frame.
+	int			    num_skins;
+	int			    num_xyz;
+	int			    num_st;								// Greater than num_xyz for seams.
+	int			    numtris;
+	int			    num_glcmds;							// Dwords in strip/fan command list.
+	int			    num_frames;
+	int			    ofs_skins;							// Each skin is a MAX_SKINNAME string.
+	int			    ofs_st;								// Byte offset from start for stverts.
+	int			    ofs_tris;							// Offset for dtriangles.
+	int			    ofs_frames;							// Offset for first frame.
+	int			    ofs_glcmds;
+	int			    ofs_end;							// End of file.
 
 	struct gltexture_s	*gDiffuseTexture[MD2_MAX_SKINS],	// Diffuse texture.
 						*gFullbrightTexture[MD2_MAX_SKINS],	// Texture used for fullbright layer.
@@ -179,7 +179,7 @@ typedef struct
 	float	fXYRadius,fRadius;
 } IQMBounds_t;
 
-/*	
+/*
 	BSP Format
 */
 
@@ -218,7 +218,7 @@ enum
 	LUMP_EDGES,
 	LUMP_SURFEDGES,
 	LUMP_MODELS,
-	
+
 	HEADER_LUMPS
 };
 

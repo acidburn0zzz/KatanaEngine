@@ -1,7 +1,5 @@
-#ifndef	__KATPROTOCOL__
-#define	__KATPROTOCOL__
-
-#include "shared_flags.h"
+#ifndef	__ENGINEPROTOCOL__
+#define	__ENGINEPROTOCOL__
 
 // if the high bit of the servercmd is set, the low bits are fast update flags:
 #define	U_MOREBITS		(1<<0)

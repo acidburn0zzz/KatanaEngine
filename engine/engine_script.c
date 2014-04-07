@@ -159,7 +159,7 @@ SKIPSPACE:
 		if(bCrossline)
 			Error("Line is incomplete! (%i)",iScriptLine);
 
-		while(*cScriptParse++ != '*/')	//cScriptParse[0] && !(cScriptParse[0] == '*' && cScriptParse[1] == '/'))
+		while((*cScriptParse++ != '*'))	//cScriptParse[0] && !(cScriptParse[0] == '*' && cScriptParse[1] == '/'))
 			if(!*cScriptParse)
 			{
 				if(!bCrossline)

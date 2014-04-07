@@ -19,9 +19,7 @@
 #include "engine_input.h"
 #include "engine_menu.h"
 
-#include "../platform/include/platform_window.h"
-
-#include "AntTweakBar.h"
+#include "platform_window.h"
 
 SDL_Window		*sMainWindow;
 SDL_GLContext	sMainContext;
@@ -31,13 +29,13 @@ SDL_GLContext	sMainContext;
 #define VIDEO_MAX_SAMPLES	16
 #define VIDEO_MIN_SAMPLES	0
 
-cvar_t	cvShowModels			= {	"video_showmodels",			"1"				};
+cvar_t	cvShowModels			= {	"video_showmodels",			"1",    false,  false,  "Toggles models."                                   };
 cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",	true,   false,  "Changes the number of samples."	                };
-cvar_t	cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",	true	};
+cvar_t	cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",	true	                                                            };
 cvar_t	cvFullscreen			= {	"video_fullscreen",			"0",	true,   false,  "1: Fullscreen, 0: Windowed"	                    };
 cvar_t	cvWidth					= {	"video_width",				"640",	true,   false,  "Sets the width of the window."	                    };
 cvar_t	cvHeight				= {	"video_height",				"480",	true,   false,  "Sets the height of the window."	                };
-cvar_t	cvVerticalSync			= {	"video_verticalsync",		"1",	true	};
+cvar_t	cvVerticalSync			= {	"video_verticalsync",		"1",	true	                                                            };
 cvar_t  cvVideoDebug            = { "video_debug",              "0",    false,  false,  "Provides debugging information for the renderer."  };
 
 gltexture_t	*gDepthTexture;
@@ -243,17 +241,6 @@ bool Video_CreateWindow(void)
 	TwInit(TW_OPENGL,NULL);
 	TwWindowSize(Video.iWidth,Video.iHeight);
 
-	{
-        TwBar *tbTestMenu;
-
-        tbTestMenu = TwNewBar("Test Bar!");
-        if(!tbTestMenu)
-        {
-            Con_Warning("Failed to create menu window!\n");
-            return;
-        }
-	}
-
 	// [13/8/2012] Do we want to check for extensions? ~hogsy
 	if(!COM_CheckParm("-noextensions"))
 	{
@@ -420,23 +407,28 @@ void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
         sbVideoIgnoreDepth = false;
     }
 
-    switch(voBlendMode)
+    if(voBlendMode != VIDEO_BLEND_IGNORE)
     {
-    case VIDEO_BLEND_ZERO:
-        glBlendFunc(GL_ZERO,GL_ZERO);
-        break;
-    case VIDEO_BLEND_ONE:
-        glBlendFunc(GL_ONE,GL_ONE);
-        break;
-    case VIDEO_BLEND_TWO:
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-        break;
-    default:
-        Sys_Error("Unknown blend mode! (%i)\n",voBlendMode);
+        switch(voBlendMode)
+        {
+        case VIDEO_BLEND_ZERO:
+            glBlendFunc(GL_ZERO,GL_ZERO);
+            break;
+        case VIDEO_BLEND_ONE:
+            glBlendFunc(GL_ONE,GL_ONE);
+            break;
+        case VIDEO_BLEND_TWO:
+            glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+            break;
+        default:
+            Sys_Error("Unknown blend mode! (%i)\n",voBlendMode);
+        }
     }
 }
 
-int iCurrentTexture = -1; // to avoid unnecessary texture sets
+/*
+    Multitexturing Management
+*/
 
 bool bMultitextureEnabled = false;
 
@@ -446,19 +438,19 @@ void Video_SelectTexture(unsigned int uiTarget)
 	static  int             ct0,ct1;
 
 	if(uiTarget == uiCurrentTarget)
-		return;
+        return;
 
 	glActiveTextureARB(uiTarget);
 
 	if(uiTarget == VIDEO_TEXTURE0)
 	{
-		ct1 = iCurrentTexture;
-		iCurrentTexture = ct0;
+		ct1 = Video.uiSecondaryTexture;
+		Video.uiSecondaryTexture = ct0;
 	}
 	else
 	{
-		ct0 = iCurrentTexture;
-		iCurrentTexture = ct1;
+		ct0 = Video.uiSecondaryTexture;
+		Video.uiSecondaryTexture = ct1;
 	}
 
 	uiCurrentTarget = uiTarget;
@@ -466,16 +458,18 @@ void Video_SelectTexture(unsigned int uiTarget)
 
 void Video_DisableMultitexture(void)
 {
-    if(!Video.bMultitexture)
+    if(!bMultitextureEnabled)
         return;
 
-	if(bMultitextureEnabled)
-	{
-		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
-		Video_SelectTexture(VIDEO_TEXTURE0);
+#if 0
+    Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+#else
+    glDisable(GL_TEXTURE_2D);
+#endif
 
-		bMultitextureEnabled = false;
-	}
+    Video_SelectTexture(VIDEO_TEXTURE0);
+
+    bMultitextureEnabled = false;
 }
 
 void Video_EnableMultitexture(void)
@@ -483,13 +477,15 @@ void Video_EnableMultitexture(void)
     if(!Video.bMultitexture)
         return;
 
-	if(!bMultitextureEnabled)
-	{
-        Video_EnableCapabilities(VIDEO_TEXTURE_2D);
-		Video_SelectTexture(VIDEO_TEXTURE1);
+    Video_SelectTexture(VIDEO_TEXTURE1);
 
-		bMultitextureEnabled = true;
-	}
+#if 0
+    Video_EnableCapabilities(VIDEO_TEXTURE_2D);
+#else
+    glEnable(GL_TEXTURE_2D);
+#endif
+
+    bMultitextureEnabled = true;
 }
 
 /*
@@ -632,7 +628,7 @@ void Video_EnableCapabilities(unsigned int iCapabilities)
 		if(iCapabilities & vcCapabilityList[i].uiFirst)
 		{
             if(cvVideoDebug.value)
-                Con_Printf("Enabling: %s\n",vcCapabilityList[i].ccIdentifier);
+                Con_Printf("Video: Enabling %s\n",vcCapabilityList[i].ccIdentifier);
 
 			glEnable(vcCapabilityList[i].uiSecond);
 
@@ -657,7 +653,7 @@ void Video_DisableCapabilities(unsigned int iCapabilities)
 		if(iCapabilities & vcCapabilityList[i].uiFirst)
 		{
             if(cvVideoDebug.value)
-                Con_Printf("Disabling: %s\n",vcCapabilityList[i].ccIdentifier);
+                Con_Printf("Video: Disabling %s\n",vcCapabilityList[i].ccIdentifier);
 
 			glDisable(vcCapabilityList[i].uiSecond);
 
@@ -674,13 +670,29 @@ void Video_DisableCapabilities(unsigned int iCapabilities)
 */
 void Video_ResetCapabilities(bool bClearActive)
 {
+    if(cvVideoDebug.value)
+        Con_Printf("Video: Resetting capabilities...\n");
+
 	if(bClearActive)
 	{
-        sbVideoCleanup = true;
+        if(cvVideoDebug.value)
+            Con_Printf("Video: Clearing active capabilities...\n");
 
-		// [25/2/2014] Flipped these around ~hogsy
-		Video_DisableCapabilities(iSavedCapabilites[0]);
-		Video_EnableCapabilities(iSavedCapabilites[1]);
+        sbVideoCleanup = true;
+#if 0
+        if(!iSavedCapabilites[0] && !iSavedCapabilites[1])
+            Sys_Error("Attempted to reset video capabilities when no capabilities have been set!\n");
+        else
+        {
+#endif
+            if(iSavedCapabilites[0])
+                Video_DisableCapabilities(iSavedCapabilites[0]);
+
+            if(iSavedCapabilites[1])
+                Video_EnableCapabilities(iSavedCapabilites[1]);
+#if 0
+        }
+#endif
 
         if(sbVideoIgnoreDepth)
             Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_IGNORE);
@@ -691,10 +703,14 @@ void Video_ResetCapabilities(bool bClearActive)
         // [28/3/2014] Set defau;ts ~hogsy
         sbVideoIgnoreDepth  = true;
 		sbVideoCleanup      = false;
+
+		if(cvVideoDebug.value)
+            Con_Printf("Video: Finished clearing capabilities.\n");
 	}
 
-	// [24/2/2014] Nullify these ~hogsy
-	memset(iSavedCapabilites,0,sizeof(iSavedCapabilites));
+	if(iSavedCapabilites)
+        // [24/2/2014] Nullify these ~hogsy
+        memset(iSavedCapabilites,0,sizeof(iSavedCapabilites));
 }
 
 /*
@@ -745,6 +761,8 @@ void Video_Process(void)
 
     // [31/3/2014] Draw any ATB windows ~hogsy
 	TwDraw();
+
+	GL_EndRendering();
 #else	// New renderer
 	static vec4_t vLight =
 	{	0,	10.0f,	20.0f,	1.0f	};

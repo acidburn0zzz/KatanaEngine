@@ -21,9 +21,10 @@
 #include "engine_input.h"
 #include "KatGL.h"			// [14/10/2013] TODO: Obsolete! ~hogsy
 #include "engine_console.h"
+#include "engine_menu.h"
 
-#include "../platform/include/platform_module.h"
-#include "../platform/include/platform_filesystem.h"
+#include "platform_module.h"
+#include "platform_filesystem.h"
 
 gINSTANCE hToolInstance;
 
@@ -49,6 +50,8 @@ typedef enum
 	EDITOR_SELECT_VERTEX,
 	EDITOR_SELECT_EDGE
 } EditorSelect_t;
+
+TwBar   *tbMainMenu;
 
 void Editor_Launch(void);
 
@@ -102,6 +105,15 @@ void Editor_Launch(void)
 		Con_Printf(" Loading textures: \n");
 
 		gFileSystem_ScanDirectory(va("./%s/textures/",com_gamedir),Editor_LoadTexture);
+	}
+
+    // [6/4/2014] Set up the editor interface ~hogsy
+	{
+        tbMainMenu = TwNewBar("Editor Menu");
+        if(!tbMainMenu)
+            Sys_Error("Failed to create editor window!\n");
+
+        TwAddButton(tbMainMenu,"Quit",Host_Shutdown,NULL,"Quits the game.");
 	}
 
 #if 0
@@ -176,6 +188,8 @@ void Editor_Draw(void)
 		glDepthFunc(GL_LEQUAL);
 	}
 #endif
+
+    GL_SetCanvas(CANVAS_DEFAULT);
 
 	Draw_Fill(0,0,Video.iWidth,20,0,0,0,1.0f);
 	R_DrawString(10,10,va("Camera: origin(%i %i %i), angles(%i %i %i)",

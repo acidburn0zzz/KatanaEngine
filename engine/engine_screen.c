@@ -314,9 +314,6 @@ void SCR_LoadPics (void)
 	Client_PrecacheResource(RESOURCE_TEXTURE,"textures/sprites/crosshair");
 	Client_PrecacheResource(RESOURCE_TEXTURE,"textures/sprites/disc");
 	Client_PrecacheResource(RESOURCE_TEXTURE,"textures/interface/net");
-
-//	scr_net = Draw_PicFromWad ("net",WADFILENAME);
-//	scr_turtle = Draw_PicFromWad ("turtle",WADFILENAME);
 }
 
 void Screen_ResetFPS(void);
@@ -914,7 +911,4 @@ void SCR_UpdateScreen (void)
 	}
 
 	V_UpdateBlend(); //johnfitz -- V_UpdatePalette cleaned up and renamed
-
-	GL_EndRendering();
 }
-

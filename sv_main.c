@@ -159,7 +159,7 @@ void SV_SendServerinfo(client_t *client)
 	int		i; //johnfitz
 
 	MSG_WriteByte(&client->message,svc_print);
-	sprintf(message,"%c\n%s Server\n   Release %i\n   Build %i\n",2,Game->Name,ENGINE_RELEASE,ENGINE_BUILD); //johnfitz -- include fitzquake version
+	sprintf(message,"%c\n%s Server\n   Release %i\n   Build %i\n",2,Game->Name,ENGINE_VERSION_MAJOR,ENGINE_VERSION_BUILD); //johnfitz -- include fitzquake version
 	MSG_WriteString(&client->message,message);
 
 	MSG_WriteByte(&client->message,svc_serverinfo);
@@ -1057,7 +1057,7 @@ void SV_SpawnServer(char *server)
 	// Let's not have any servers with no name
 	if(hostname.string[0] == 0)
 		// [19/3/2013] Updated so this isn't specific for OpenKatana anymore ~hogsy
-		Cvar_Set("hostname",va("%s %f (%i) Server",Game->Name,ENGINE_RELEASE,ENGINE_BUILD));
+		Cvar_Set("hostname",va("%s %f (%i) Server",Game->Name,ENGINE_VERSION_MAJOR,ENGINE_VERSION_BUILD));
 
 	scr_centertime_off = 0;
 
@@ -1172,4 +1172,3 @@ void SV_SpawnServer(char *server)
 
 	Con_DPrintf("Server spawned.\n");
 }
-
