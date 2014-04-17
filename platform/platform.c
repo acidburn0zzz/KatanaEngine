@@ -7,7 +7,7 @@
 	error handling.
 */
 
-char	cErrorMessage[2084] = "null",
+char	cErrorMessage[2048] = "null",
 		cLastFunction[1024]	= "null";
 
 /*	Sets the name of the currently entered function.
@@ -38,7 +38,7 @@ void GIPL_SetError(const char *ccMessage,...)
 	vsprintf(cOut,ccMessage,vlArguments);
 	va_end(vlArguments);
 
-//	sprintf(cErrorMessage,cOut);
+	sprintf(cErrorMessage,cOut);
 
 	// [9/10/2013] TEMP: Bleh just print the fucking thing to console ~hogsy
 	printf("Error: %s",cOut);
