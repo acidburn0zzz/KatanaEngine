@@ -17,12 +17,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\common\SCRIPLIB.C">
-      <Filter>Source Files\Shared\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\common\cmdlib.C">
-      <Filter>Source Files\Shared\Common</Filter>
-    </ClCompile>
     <ClCompile Include="menu_script.c">
       <Filter>Source Files</Filter>
     </ClCompile>
