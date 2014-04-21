@@ -14,16 +14,6 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
-				<Compiler>
-					<Add directory="." />
-					<Add directory=".." />
-					<Add directory="../shared" />
-					<Add directory="../common" />
-					<Add directory="../game/shared" />
-					<Add directory="../Include" />
-					<Add directory="../platform/include" />
-					<Add directory="../external/SDL2/include" />
-				</Compiler>
 				<Linker>
 					<Add library="../platform/lib/libplatformx64.a" />
 					<Add library="libSDL2" />
@@ -36,13 +26,23 @@
 			<Add option="-g" />
 			<Add option="-fPIC" />
 			<Add option="-DKATANA" />
+			<Add directory="." />
+			<Add directory=".." />
 			<Add directory="../external" />
+			<Add directory="../shared" />
+			<Add directory="../common" />
+			<Add directory="../game/shared" />
+			<Add directory="../Include" />
+			<Add directory="../platform/include" />
+			<Add directory="../external/SDL2/include" />
+			<Add directory="../external/AntTweakBar/include" />
 		</Compiler>
 		<Linker>
 			<Add option="-lGL" />
 			<Add option="-lGLU" />
 			<Add option="-lopenal" />
 			<Add option="-lX11" />
+			<Add library="../external/AntTweakBar/lib/libAntTweakBar.a" />
 		</Linker>
 		<Unit filename="../KatAlias.h" />
 		<Unit filename="../KatEditor.h" />
