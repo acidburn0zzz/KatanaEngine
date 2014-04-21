@@ -95,7 +95,7 @@ void Cbuf_AddText (char *text)
 */
 void Cbuf_InsertText (char *text)
 {
-	char	*temp;
+	char	*temp = NULL;
 	int		templen;
 
 	// Copy off any commands still remaining in the exec buffer
@@ -106,8 +106,6 @@ void Cbuf_InsertText (char *text)
 		Q_memcpy (temp, cmd_text.data, templen);
 		SZ_Clear (&cmd_text);
 	}
-	else
-		temp = NULL;	// shut up compiler
 
 	// Add the entire text of the file
 	Cbuf_AddText (text);
@@ -153,7 +151,7 @@ void Cbuf_Execute (void)
 		{
 			i++;
 			cmd_text.cursize -= i;
-			memcpy(text,text+i,cmd_text.cursize);
+			Q_memcpy(text,text+i,cmd_text.cursize);
 		}
 
 		// Execute the command line
