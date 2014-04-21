@@ -4685,3 +4685,982 @@
 	<string>
 	<string>
 
+1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/chase.c
+	"quakedef.h"
+
+1398122236 /home/hogsy/dev/ProjectKatana/trunk/quakedef.h
+	"platform/include/platform.h"
+	"shared_flags.h"
+	"cmdlib.h"
+	"common.h"
+	"vid.h"
+	"sys.h"
+	"zone.h"
+	"shared_math.h"
+	"shared_client.h"
+	"shared_engine.h"
+	"shared_formats.h"
+	"bspfile.h"
+	"draw.h"
+	"cvar.h"
+	"screen.h"
+	"net.h"
+	"protocol.h"
+	"cmd.h"
+	"sbar.h"
+	"sound.h"
+	"render.h"
+	"client.h"
+	"progs.h"
+	"server.h"
+	"gl_model.h"
+	"image.h"
+	"gl_texmgr.h"
+	"world.h"
+	"keys.h"
+	"console.h"
+	"view.h"
+	"menu.h"
+	"crc.h"
+	"glquake.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"platform_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<Windows.h>
+	<WindowsX.h>
+	<CommCtrl.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_inttypes.h
+	"platform_stdint.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1398122236 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
+
+1398120592 /home/hogsy/dev/ProjectKatana/trunk/cmdlib.h
+	"platform/include/platform.h"
+	<errno.h>
+	<time.h>
+
+1398120592 /home/hogsy/dev/ProjectKatana/trunk/common.h
+	"shared_flags.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/vid.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/sys.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/zone.h
+
+1398122236 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_math.h
+	"../platform/include/platform.h"
+	"../platform/include/platform_math.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_math.h
+	"platform.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_client.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_engine.h
+	"../platform/include/platform.h"
+	"shared_flags.h"
+
+1398122236 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_formats.h
+
+1398120592 /home/hogsy/dev/ProjectKatana/trunk/bspfile.h
+
+1398120595 /home/hogsy/dev/ProjectKatana/trunk/draw.h
+	"screen.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/screen.h
+
+1398120595 /home/hogsy/dev/ProjectKatana/trunk/cvar.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/net.h
+
+1398122236 /home/hogsy/dev/ProjectKatana/trunk/protocol.h
+
+1398120592 /home/hogsy/dev/ProjectKatana/trunk/cmd.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/sbar.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/sound.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/render.h
+	"shared_client.h"
+
+1398120592 /home/hogsy/dev/ProjectKatana/trunk/client.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/progs.h
+	"pr_comp.h"
+	"shared_game.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/pr_comp.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_game.h
+	"platform.h"
+	"shared_math.h"
+	"shared_client.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/server.h
+	"shared_flags.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/gl_model.h
+	"shared_formats.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/image.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/gl_texmgr.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/world.h
+	"shared_flags.h"
+	"shared_game.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/keys.h
+	"shared_input.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_input.h
+
+1398120595 /home/hogsy/dev/ProjectKatana/trunk/console.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/view.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/menu.h
+
+1398120595 /home/hogsy/dev/ProjectKatana/trunk/crc.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/glquake.h
+	<windows.h>
+	"glee/GLee.h"
+	<GL/gl.h>
+	<GL/glu.h>
+
+1398120599 /home/hogsy/dev/ProjectKatana/trunk/external/glee/GLee.h
+	<windows.h>
+	<GL/gl.h>
+	<OpenGL/gl.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<stddef.h>
+
+1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/cl_demo.c
+	"quakedef.h"
+	"engine_server.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_server.h
+	"quakedef.h"
+	"shared_server.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_server.h
+
+1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/cl_input.c
+	"quakedef.h"
+
+1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/cl_main.c
+	"quakedef.h"
+	"engine_game.h"
+	"engine_input.h"
+	"engine_menu.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_game.h
+	"quakedef.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_input.h
+	"quakedef.h"
+
+1398122235 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_menu.h
+	"quakedef.h"
+	"shared_menu.h"
+	"AntTweakBar.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_menu.h
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/external/AntTweakBar/include/AntTweakBar.h
+	<stddef.h>
+	<string>
+	<string>
+
+1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/cl_parse.c
+	"quakedef.h"
+	"engine_client.h"
+	"engine_console.h"
+	"engine_menu.h"
+	"shared_server.h"
+	"engine_game.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_client.h
+	"quakedef.h"
+	"shared_client.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_console.h
+	"quakedef.h"
+
+1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/cl_tent.c
+	"quakedef.h"
+	"KatGL.h"
+
+1398120591 /home/hogsy/dev/ProjectKatana/trunk/KatGL.h
+	"quakedef.h"
+	"engine_client.h"
+
+1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/cmdlib.c
+	"cmdlib.h"
+	<sys/types.h>
+	<sys/stat.h>
+	<direct.h>
+	"common.h"
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/common.c
+	"quakedef.h"
+	"platform_filesystem.h"
+	"engine_script.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_filesystem.h
+	"platform.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_script.h
+	"quakedef.h"
+	"common/SCRIPLIB.H"
+
+1398120592 /home/hogsy/dev/ProjectKatana/trunk/common/SCRIPLIB.H
+	"cmdlib.h"
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/console.c
+	<unistd.h>
+	<fcntl.h>
+	"quakedef.h"
+	<stdio.h>
+	"engine_console.h"
+	"KatGL.h"
+	"engine_input.h"
+	"engine_video.h"
+
+1398122235 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_video.h
+	"quakedef.h"
+	<SDL.h>
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_assert.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_haptic.h"
+	"SDL_hints.h"
+	"SDL_loadso.h"
+	"SDL_log.h"
+	"SDL_messagebox.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_render.h"
+	"SDL_rwops.h"
+	"SDL_system.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_config.h
+	"SDL_platform.h"
+	"SDL_config_windows.h"
+	"SDL_config_macosx.h"
+	"SDL_config_iphoneos.h"
+	"SDL_config_android.h"
+	"SDL_config_psp.h"
+	"SDL_config_minimal.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/begin_code.h
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/close_code.h
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_config_windows.h
+	"SDL_platform.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_config_macosx.h
+	"SDL_platform.h"
+	<AvailabilityMacros.h>
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_config_iphoneos.h
+	"SDL_platform.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_config_android.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_config_psp.h
+	"SDL_platform.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_config_minimal.h
+	"SDL_platform.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_assert.h
+	"SDL_config.h"
+	"begin_code.h"
+	<signal.h>
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	<intrin.h>
+	<libkern/OSAtomic.h>
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_atomic.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_cpuinfo.h
+	"SDL_stdinc.h"
+	<intrin.h>
+	<intrin.h>
+	<altivec.h>
+	<mmintrin.h>
+	<mm3dnow.h>
+	<xmmintrin.h>
+	<emmintrin.h>
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_quit.h"
+	"SDL_gesture.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_pixels.h
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_blendmode.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_blendmode.h
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keycode.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_keycode.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_scancode.h
+	"SDL_stdinc.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_gamecontroller.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_gesture.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_touch.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_haptic.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_hints.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_log.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_messagebox.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_render.h
+	"SDL_stdinc.h"
+	"SDL_rect.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_system.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120598 /home/hogsy/dev/ProjectKatana/trunk/external/SDL2/include/SDL_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1398120595 source:/home/hogsy/dev/ProjectKatana/trunk/crc.c
+	"quakedef.h"
+	"crc.h"
+
+1398120599 source:/home/hogsy/dev/ProjectKatana/trunk/external/glee/GLee.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"GLee.h"
+	<Carbon/Carbon.h>
+
+1398122236 source:/home/hogsy/dev/ProjectKatana/trunk/gl_draw.c
+	"quakedef.h"
+	"KatGL.h"
+	"engine_console.h"
+	"engine_video.h"
+	"engine_client.h"
+
+1398122236 source:/home/hogsy/dev/ProjectKatana/trunk/gl_fog.c
+	"quakedef.h"
+
+1398122236 source:/home/hogsy/dev/ProjectKatana/trunk/gl_model.c
+	"quakedef.h"
+	"engine_console.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_refrag.c
+	"quakedef.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_rmain.c
+	"quakedef.h"
+	"KatEditor.h"
+	"engine_console.h"
+	"KatGL.h"
+	"engine_video.h"
+	"KatAlias.h"
+
+1398120591 /home/hogsy/dev/ProjectKatana/trunk/KatEditor.h
+	"quakedef.h"
+	"shared_module.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_module.h
+
+1398120591 /home/hogsy/dev/ProjectKatana/trunk/KatAlias.h
+	"quakedef.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_rmisc.c
+	"quakedef.h"
+	"KatGL.h"
+	"engine_video.h"
+	"engine_client.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_sky.c
+	"quakedef.h"
+	"engine_video.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_texmgr.c
+	"quakedef.h"
+	"platform/include/platform_filesystem.h"
+	"engine_console.h"
+	"engine_video.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_vidnt.c
+	"quakedef.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_warp.c
+	"quakedef.h"
+	"engine_video.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/host.c
+	"quakedef.h"
+	"engine_main.h"
+	"engine_console.h"
+	"engine_game.h"
+	"engine_menu.h"
+	"KatEditor.h"
+	"engine_input.h"
+	"engine_video.h"
+	"engine_physics.h"
+	"engine_client.h"
+	"engine_audio.h"
+	"shared_server.h"
+	"platform/include/platform_filesystem.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_main.h
+	"quakedef.h"
+	"shared_module.h"
+	"shared_engine.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_physics.h
+	"quakedef.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_audio.h
+	"quakedef.h"
+
+1398122236 source:/home/hogsy/dev/ProjectKatana/trunk/host_cmd.c
+	"quakedef.h"
+	"engine_game.h"
+	"engine_server.h"
+	"engine_input.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/image.c
+	"quakedef.h"
+	"platform/include/platform_filesystem.h"
+	"shared_png.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_png.h
+	<string.h>
+	<vector>
+	<string>
+	"lodepng.h"
+	<iostream>
+	"lodepng.h"
+
+1398120591 source:/home/hogsy/dev/ProjectKatana/trunk/KatGL.c
+	"KatGL.h"
+	"KatAlias.h"
+	"KatEditor.h"
+	"engine_console.h"
+	"engine_client.h"
+	"engine_video.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/keys.c
+	"quakedef.h"
+	"engine_video.h"
+	"engine_menu.h"
+	"KatEditor.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/net_dgrm.c
+	<windows.h>
+	<sys/socket.h>
+	<arpa/inet.h>
+	"quakedef.h"
+	"net_dgrm.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/net_dgrm.h
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/net_loop.c
+	"quakedef.h"
+	"net_loop.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/net_loop.h
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/net_main.c
+	"quakedef.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/pr_edict.c
+	"engine_edict.h"
+	"engine_game.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_edict.h
+	"quakedef.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/r_brush.c
+	"quakedef.h"
+	"engine_video.h"
+
+1398122236 source:/home/hogsy/dev/ProjectKatana/trunk/r_world.c
+	"quakedef.h"
+	"engine_video.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/shared/shared_math.c
+	"shared_math.h"
+	<xmmintrin.h>
+	"quakedef.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/shared/shared_png.c
+	"shared_png.h"
+	<stdio.h>
+	<stdlib.h>
+	<fstream>
+
+1398122236 source:/home/hogsy/dev/ProjectKatana/trunk/snd_dma.c
+	"quakedef.h"
+	"winquake.h"
+	"sound.h"
+
+1398122236 /home/hogsy/dev/ProjectKatana/trunk/winquake.h
+	<windows.h>
+	<dsound.h>
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/snd_mem.c
+	"quakedef.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/snd_mix.c
+	"quakedef.h"
+	"winquake.h"
+
+1398122236 source:/home/hogsy/dev/ProjectKatana/trunk/sv_main.c
+	"quakedef.h"
+	"engine_game.h"
+	"engine_physics.h"
+	"engine_edict.h"
+	"shared_server.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/sv_user.c
+	"quakedef.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/zone.c
+	"quakedef.h"
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_audio.c
+	"engine_audio.h"
+	"openal-soft/include/AL/al.h"
+	"openal-soft/include/AL/alc.h"
+
+1398120600 /home/hogsy/dev/ProjectKatana/trunk/external/openal-soft/include/AL/al.h
+
+1398120600 /home/hogsy/dev/ProjectKatana/trunk/external/openal-soft/include/AL/alc.h
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_client.c
+	"engine_client.h"
+	"engine_console.h"
+	"KatGL.h"
+	"engine_video.h"
+	"shared_server.h"
+	"shared_menu.h"
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_command.c
+	"quakedef.h"
+	"common/SCRIPLIB.H"
+	"engine_main.h"
+	"engine_console.h"
+	"platform_filesystem.h"
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_console.c
+	"engine_console.h"
+	<fcntl.h>
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_cvar.c
+	"quakedef.h"
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_editor.c
+	"KatEditor.h"
+	"engine_video.h"
+	"engine_input.h"
+	"KatGL.h"
+	"engine_console.h"
+	"engine_menu.h"
+	"platform_module.h"
+	"platform_filesystem.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
+	"platform.h"
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_game.c
+	"engine_game.h"
+	"engine_console.h"
+	"KatGL.h"
+	"engine_menu.h"
+	"engine_server.h"
+	"shared_module.h"
+	"../platform/include/platform_module.h"
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_input.c
+	"engine_input.h"
+	"engine_video.h"
+	"engine_menu.h"
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_light.c
+	"engine_video.h"
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_loader.c
+	"engine_loader.h"
+
+1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_loader.h
+	"quakedef.h"
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_main.c
+	"engine_main.h"
+	"engine_video.h"
+	"../platform/include/platform_module.h"
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_masterserver.c
+	"quakedef.h"
+	<assert.h>
+	<WS2tcpip.h>
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_menu.c
+	"engine_menu.h"
+	"engine_video.h"
+	"engine_client.h"
+	"KatGL.h"
+	"shared_module.h"
+	"platform_window.h"
+	"platform_module.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_window.h
+	"platform.h"
+	<X11/Xlib.h>
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_network.c
+	"quakedef.h"
+	"net_loop.h"
+	"net_dgrm.h"
+	"net_ser.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/net_ser.h
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_physics.c
+	"engine_physics.h"
+	"engine_game.h"
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_screen.c
+	"quakedef.h"
+	"../platform/include/platform_filesystem.h"
+	"engine_menu.h"
+	"KatEditor.h"
+	"KatGL.h"
+	"engine_video.h"
+	"engine_input.h"
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_script.c
+	"engine_script.h"
+	"engine_game.h"
+	"Python.h"
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_server.c
+	"engine_server.h"
+	"KatGL.h"
+	"engine_console.h"
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_sprite.c
+	"engine_video.h"
+
+1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_video.c
+	"engine_video.h"
+	"KatEditor.h"
+	"engine_game.h"
+	"engine_input.h"
+	"engine_menu.h"
+	"platform_window.h"
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_view.c
+	"quakedef.h"
+	"engine_video.h"
+	"shared_math.h"
+
+1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_world.c
+	"quakedef.h"
+
+1398122683 source:/home/hogsy/dev/ProjectKatana/trunk/gl_alias.c
+	"KatAlias.h"
+	"KatGL.h"
+	"engine_video.h"
+
+1398122631 source:/home/hogsy/dev/ProjectKatana/trunk/menu.c
+	"quakedef.h"
+	"winquake.h"
+	"engine_video.h"
+	"KatEditor.h"
+	"engine_game.h"
+	"engine_menu.h"
+
+1398122644 source:/home/hogsy/dev/ProjectKatana/trunk/sbar.c
+	"quakedef.h"
+	"KatGL.h"
+	"engine_video.h"
+
+1398122664 source:/home/hogsy/dev/ProjectKatana/trunk/sys_win.c
+	"quakedef.h"
+	<SDL.h>
+	"platform/include/platform_window.h"
+	"winquake.h"
+	"conproc.h"
+	"errno.h"
+	"resource.h"
+	"engine_main.h"
+	"KatEditor.h"
+	"engine_console.h"
+	"engine_video.h"
+
+1398120595 /home/hogsy/dev/ProjectKatana/trunk/conproc.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/resource.h
+

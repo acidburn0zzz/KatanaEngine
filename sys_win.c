@@ -350,18 +350,19 @@ void Sys_InitFloatTime (void)
 	lastcurtime = curtime;
 }
 
-
 char *Sys_ConsoleInput (void)
 {
+    // [17/4/2014] Moved up here; don't worry about console input on Linux either, unless we're dedicated! ~hogsy
+    if(!bIsDedicated)
+		return NULL;
+
 #ifdef __WIN32__
+    {
 	static char	    text[256];
 	static int		len;
 	INPUT_RECORD	recs[1024];
 	int		        dummy,
 					ch,numread,numevents;
-
-	if (!bIsDedicated)
-		return NULL;
 
 	for(;;)
 	{
@@ -422,7 +423,9 @@ char *Sys_ConsoleInput (void)
 			}
 		}
 	}
+	}
 #else
+    {
 	static char	con_text[256];
 	static int	textlen;
 	char		c;
@@ -470,6 +473,7 @@ char *Sys_ConsoleInput (void)
 			Sys_Printf("\nConsole input too long!\n");
 			break;
 		}
+	}
 	}
 #endif
 

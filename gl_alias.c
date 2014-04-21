@@ -269,7 +269,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 			}
 		}
 
-#ifndef LIGHTHACK
+#if 1
 	// Minimum light value on players (8)
 	if(currententity > cl_entities && currententity <= cl_entities + cl.maxclients)
 	{
@@ -300,7 +300,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 0 // new
+#if 1 // new
 	int					i,j;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
 	MD2TriangleVertex_t	*mtvVertices,
@@ -339,8 +339,11 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
             break;
 
         Math_VectorCopy(mtTriangles->index_st,voModel[i].vTextureCoord[0]);
-        Math_VectorCopy(vec3_origin,voModel[i].vColour);
+        Math_VectorCopy(mtTriangles->index_st,voModel[i].vTextureCoord[1]);
 
+        voModel[i].vColour[0] = shadedots[mtvVertices[mtTriangles->index_xyz[0]].lightnormalindex];
+        voModel[i].vColour[1] = shadedots[mtvVertices[mtTriangles->index_xyz[1]].lightnormalindex];
+        voModel[i].vColour[2] = shadedots[mtvVertices[mtTriangles->index_xyz[2]].lightnormalindex];
         voModel[i].vColour[3] = 1.0f;
 
 		for(j = 0; j < 3; j++)
@@ -390,18 +393,6 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	verts2 = &frame2->verts[0];
 
 	order = (int*)((byte*)mModel+mModel->ofs_glcmds);
-
-#ifdef LIGHTHACK
-	if(bShading && !r_drawflat_cheatsafe)
-	{
-		glEnable(GL_LIGHTING);
-
-		for(i = 0; i < iLightCount; i++)
-			glEnable(GL_LIGHT0+i);
-
-		//glEnable(GL_COLOR_MATERIAL);
-	}
-#endif
 
 	for(;;)
 	{
@@ -453,20 +444,6 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 
 		glEnd();
 	}
-
-#ifdef LIGHTHACK
-	if(bShading && !r_drawflat_cheatsafe)
-	{
-		int i;
-
-		//glDisable(GL_COLOR_MATERIAL);
-
-		for(i = 0; i < iLightCount+1; i++)
-			glDisable(GL_LIGHT0+i);
-
-		glDisable(GL_LIGHTING);
-	}
-#endif
 #endif
 }
 

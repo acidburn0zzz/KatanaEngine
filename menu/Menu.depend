@@ -375,3 +375,77 @@
 1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_module.h
 	"platform.h"
 
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/menu/menu_button.c
+	"menu_button.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/menu/menu_button.h
+	"menu_main.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/menu/menu_main.h
+	"platform.h"
+	"shared_flags.h"
+	"shared_menu.h"
+	"shared_module.h"
+	"shared_math.h"
+	"shared_engine.h"
+	"shared_game.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"platform_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<Windows.h>
+	<WindowsX.h>
+	<CommCtrl.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_inttypes.h
+	"platform_stdint.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1398122236 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_menu.h
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_module.h
+
+1398122236 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_math.h
+	"../platform/include/platform.h"
+	"../platform/include/platform_math.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_math.h
+	"platform.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_engine.h
+	"../platform/include/platform.h"
+	"shared_flags.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_game.h
+	"platform.h"
+	"shared_math.h"
+	"shared_client.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_client.h
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/menu/menu_main.c
+	"menu_main.h"
+	"platform_module.h"
+
+1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
+	"platform.h"
+
