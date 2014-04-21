@@ -18,8 +18,11 @@ typedef struct
 	float			fMaxAnisotropy,		        // Max anisotropy amount allowed by the hardware.
 					fBitsPerPixel;
 
+    // Texture Management
 	unsigned	int	iCurrentTexture,            // Current/last binded texture.
-                    uiSecondaryTexture;         // Current/last secondary texture.
+                    uiActiveUnit,
+                    uiSecondaryUnit;            // Current/last secondary texture.
+
 	int				iSamples,			        // Current number of samples set for AA.
 					iBuffers;
 

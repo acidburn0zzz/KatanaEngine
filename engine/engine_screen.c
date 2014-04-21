@@ -88,15 +88,15 @@ cvar_t	scr_conwidth		= {"scr_conwidth", "0", TRUE};
 cvar_t	scr_conscale		= {"scr_conscale", "1", TRUE};
 cvar_t	scr_crosshairscale	= {"scr_crosshairscale", "1", TRUE};
 cvar_t	scr_showfps			= {"scr_showfps", "0"};
-cvar_t	scr_fps_rate		= {"scr_fps_rate","0.37",TRUE};
-cvar_t	scr_clock			= {"scr_clock", "0"};
-cvar_t	scr_viewsize		= {"viewsize","100", TRUE};
+cvar_t	scr_fps_rate		= { "scr_fps_rate","0.37",TRUE};
+cvar_t	scr_clock			= { "scr_clock", "0"};
+cvar_t	scr_viewsize		= { "viewsize","120", true};
 cvar_t	scr_fov				= {	"fov",	"90",	true	};	// 10 - 170
 cvar_t	scr_conspeed		= {"scr_conspeed","300"};
 cvar_t	scr_centertime		= {"scr_centertime","2"};
 cvar_t	scr_showram			= {"showram","1"};
-cvar_t	scr_showturtle		= {"showturtle","0"};
-cvar_t	scr_showpause		= {"showpause","1"};
+cvar_t	scr_showturtle		= { "showturtle",   "0" };
+cvar_t	scr_showpause		= { "showpause",    "1" };
 cvar_t	scr_printspeed		= {"scr_printspeed","8"};
 
 extern	cvar_t	crosshair;

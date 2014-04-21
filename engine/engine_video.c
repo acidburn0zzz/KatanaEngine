@@ -444,13 +444,13 @@ void Video_SelectTexture(unsigned int uiTarget)
 
 	if(uiTarget == VIDEO_TEXTURE0)
 	{
-		ct1 = Video.uiSecondaryTexture;
-		Video.uiSecondaryTexture = ct0;
+		ct1 = Video.uiSecondaryUnit;
+		Video.uiSecondaryUnit = ct0;
 	}
 	else
 	{
-		ct0 = Video.uiSecondaryTexture;
-		Video.uiSecondaryTexture = ct1;
+		ct0 = Video.uiSecondaryUnit;
+		Video.uiSecondaryUnit = ct1;
 	}
 
 	uiCurrentTarget = uiTarget;

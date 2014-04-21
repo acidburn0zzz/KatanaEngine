@@ -232,7 +232,7 @@ void Input_OpenTweakMenu(void)
 
     if(bOpen)
     {
-
+        TwDeleteBar(tbInputOptions);
 
         bOpen = false;
         return;
@@ -240,7 +240,7 @@ void Input_OpenTweakMenu(void)
 
     tbInputOptions = TwNewBar("Input Options");
     TwAddVarRW(tbInputOptions,cvInputMouseFilter.name,TW_TYPE_FLOAT,&cvInputMouseFilter.value,"");
-    TwAddButton(tbInputOptions,"Close",Input_OpenTweakMenu,NULL,"");
+    TwAddButton(tbInputOptions,"Close",(TwButtonCallback)Input_OpenTweakMenu,NULL,"");
 
     bOpen = true;
 }
@@ -304,11 +304,14 @@ void Input_Process(void)
                 Key_Event(Input_ConvertKey(sEvent.key.keysym.sym),(sEvent.key.state == SDL_PRESSED));
                 break;
             case SDL_MOUSEMOTION:
-                if(!bMouseActive || bIsDedicated)
+                if(bIsDedicated)
                     return;
-
-                // [5/4/2014] Do this manually, since it doesn't seem to work well with SDL2 ~hogsy
-                TwMouseMotion(sEvent.motion.x,sEvent.motion.y);
+                else if(!bMouseActive)
+                {
+                    // [5/4/2014] Do this manually, since it doesn't seem to work well with SDL2 ~hogsy
+                    TwMouseMotion(sEvent.motion.x,sEvent.motion.y);
+                    return;
+                }
 
                 // [30/7/2013] Originally handled this differently for fullscreen but this works fine apparently ~hogsy
                 if((sEvent.motion.x != (Video.iWidth/2)) || (sEvent.motion.y != (Video.iHeight/2)))
@@ -325,8 +328,9 @@ void Input_Process(void)
                 break;
             case SDL_MOUSEBUTTONDOWN:
             case SDL_MOUSEBUTTONUP:
-                if(sEvent.button.button <= 18)
-                    Key_Event(InputMouseRemap[sEvent.button.button-1],(sEvent.button.state == SDL_PRESSED));
+                if(!TwMouseButton(sEvent.button.state,TW_MOUSE_LEFT))
+                    if(sEvent.button.button <= 18)
+                        Key_Event(InputMouseRemap[sEvent.button.button-1],(sEvent.button.state == SDL_PRESSED));
                 break;
             case SDL_MOUSEWHEEL:
                 if(sEvent.wheel.y > 0)
