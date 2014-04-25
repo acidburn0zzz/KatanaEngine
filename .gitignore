@@ -25,3 +25,4 @@ viewer/msvc/Release/md2viewer.res
 engine/Release/Engine.bsc
 *.exp
 engine/Release/OpenKatana.lib
+bin/engine/scripts/paths.script
