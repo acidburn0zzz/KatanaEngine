@@ -86,14 +86,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_AFX_SECURE_NO_WARNINGS;_ATL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;.\..\;.\..\external;.\..\Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <OutputFile>..\..\..\OpenKatana.exe</OutputFile>
-      <AdditionalDependencies>platform.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>..\bin\Launcher.x86.exe</OutputFile>
+      <AdditionalDependencies>platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\platform\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>

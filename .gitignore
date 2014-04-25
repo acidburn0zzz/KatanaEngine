@@ -17,3 +17,8 @@ engine/Debug/Engine.log
 *.unsuccessfulbuild
 engine/Release/OpenKatana.Build.CppClean.log
 engine/Release/Engine.log
+*.log
+viewer/msvc/Release/RCa08556
+*.db
+*.crf
+viewer/msvc/Release/md2viewer.res

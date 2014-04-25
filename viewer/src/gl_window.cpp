@@ -62,8 +62,8 @@ GlWindow::GlWindow (mxWindow *parent, int x, int y, int w, int h, const char *la
 	setGridColor (0.4f, 0.4f, 0.4f);
 	setBrightness (5);
 
-	loadTexture ("data/textures/#water1.tga", TEXTURE_WATER);
-	loadTexture ("data/textures/sky/skyart.tga", TEXTURE_BACKGROUND);
+//	loadTexture ("data/textures/#water1.tga", TEXTURE_WATER);
+//	loadTexture ("data/textures/sky/skyart.tga", TEXTURE_BACKGROUND);
 
 	glCullFace (GL_FRONT);
 
@@ -73,10 +73,12 @@ GlWindow::GlWindow (mxWindow *parent, int x, int y, int w, int h, const char *la
 GlWindow::~GlWindow ()
 {
 	mx::setIdleWindow (0);
+
 	loadTexture (0, TEXTURE_MODEL);
 	loadTexture (0, TEXTURE_OVERLAY);
 	loadTexture (0, TEXTURE_BACKGROUND);
 	loadTexture (0, TEXTURE_WATER);
+
 	loadModel (0, 0);
 	loadModel (0, 1);
 }
@@ -156,8 +158,7 @@ GlWindow::handleEvent (mxEvent *event)
 	return 1;
 }
 
-void
-GlWindow::draw ()
+void GlWindow::draw ()
 {
 	glClearColor (d_bgColor[0], d_bgColor[1], d_bgColor[2], 0.0f);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -409,6 +410,7 @@ GlWindow::draw ()
 			d_currFrame2 < d_models[1]->header.numFrames)
 			md2_drawModel (d_models[1], d_currFrame, d_currFrame2, d_pol);
 	}
+
 	if (d_models[1] && d_models[0])
 	{
 		if ((!d_textureNames[TEXTURE_MODEL] && !d_textureNames[TEXTURE_OVERLAY]) && (d_renderMode == RM_TEXTURED || d_renderMode == RM_TEXTUREDFLAT) )
@@ -530,8 +532,7 @@ GlWindow::draw ()
 	glPopMatrix ();
 }
 
-void
-GlWindow::DumpModelInfo(md2_model_t *model, const char *filename)
+void GlWindow::DumpModelInfo(md2_model_t *model, const char *filename)
 {
 	char path[256];
 	strncat (path, filename, strlen(filename) -  4);
@@ -561,8 +562,7 @@ GlWindow::DumpModelInfo(md2_model_t *model, const char *filename)
 	}
 }
 
-md2_model_t *
-GlWindow::loadModel (const char *filename, int pos)
+md2_model_t *GlWindow::loadModel (const char *filename, int pos)
 {
 	if (d_models[pos] != 0)
 	{
@@ -601,9 +601,7 @@ int GlWindow::loadTexture (const char *filename, int name)
 	if (!filename || !strlen (filename))
 	{
 		if (d_textureNames[name])
-		{
 			d_textureNames[name] = 0;
-		}
 
 #ifdef WIN32
 		if (name == TEXTURE_MODEL)
@@ -739,30 +737,26 @@ GlWindow::setFrameInfo (int startFrame, int endFrame)
 	d_pol = 0;
 }
 
-void
-GlWindow::setPitch (float pitch)
+void GlWindow::setPitch (float pitch)
 {
 	d_pitch = pitch;
 	if (d_pitch < 0.0f)
 		d_pitch = 0.0f;
 }
 
-void
-GlWindow::setFoV (int fov)
+void GlWindow::setFoV (int fov)
 {
 	d_fov = fov;
 }
 
-void
-GlWindow::setBGColor (float r, float g, float b)
+void GlWindow::setBGColor (float r, float g, float b)
 {
 	d_bgColor[0] = r;
 	d_bgColor[1] = g;
 	d_bgColor[2] = b;
 }
 
-void
-GlWindow::setFGColor (float r, float g, float b)
+void GlWindow::setFGColor (float r, float g, float b)
 {
 	d_fgColor[0] = r;
 	d_fgColor[1] = g;
@@ -804,22 +798,20 @@ GlWindow::setFlag (int flag, bool enable)
 	md2_setStyle ((int) getFlag (F_GLCOMMANDS), (int) getFlag (F_INTERPOLATE));
 }
 
-void
-GlWindow::setBrightness (int value)
+void GlWindow::setBrightness (int value)
 {
 	d_bias = (float) value / 100.0f;
-	redraw ();
+	redraw();
 }
 
-void
-GlWindow::setTexScale (float scale)
+void GlWindow::setTexScale (float scale)
 {
 	textureScale = scale / 100.0f;
 	if (textureScale < 0.0f)
 		textureScale = 0.0f;
 }
-void
-GlWindow::setTexAlpha (float alpha)
+
+void GlWindow::setTexAlpha (float alpha)
 {
 	textureAlpha = alpha / 100.0f;
 	if (textureAlpha < 0.0f)

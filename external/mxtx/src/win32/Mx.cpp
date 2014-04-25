@@ -20,18 +20,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <ostream.h>
-
 
 #define CLASSNAME "MXTK::CLASSNAME"
 
 extern HACCEL g_hAccel;
 
-
-
 void mxTab_resizeChild (HWND hwnd);
-
-
 
 mxWindow *g_mainWindow = 0;
 //static mxLinkedList *g_widgetList = 0;
@@ -42,10 +36,7 @@ static HWND g_hwndToolTipControl = 0;
 static bool isClosing = false;
 static HWND g_CurrentHWND = 0;
 
-
-
-HWND
-mx_CreateToolTipControl ()
+HWND mx_CreateToolTipControl()
 {
 	if (!g_hwndToolTipControl)
 	{
@@ -59,8 +50,6 @@ mx_CreateToolTipControl ()
 
 	return g_hwndToolTipControl;
 }
-
-
 
 static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
 {
@@ -84,17 +73,17 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 			{
 				CHAR className[128];
 				GetClassName (hwndCtrl, className, 128);
-				if (!strcmpi (className, "edit"))
+				if (!_strcmpi (className, "edit"))
 				{
 					if (wNotifyCode != EN_CHANGE)
 						break;
 				}
-				else if (!strcmpi (className, "combobox"))
+				else if (!_strcmpi (className, "combobox"))
 				{
 					if (wNotifyCode != CBN_SELCHANGE)
 						break;
 				}
-				else if (!strcmpi (className, "listbox"))
+				else if (!_strcmpi (className, "listbox"))
 				{
 					if (wNotifyCode != LBN_SELCHANGE)
 						break;
@@ -117,7 +106,6 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		}
 	}
 	break;
-
 	case WM_NOTIFY:
 	{
 		if (isClosing)
@@ -260,7 +248,6 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		}
 	}
 	break;
-
 	case WM_ERASEBKGND:
 	{
 		if (isClosing)
@@ -274,7 +261,6 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		}
 	}
 	break;
-
 	case WM_HSCROLL:
 	case WM_VSCROLL:
 	{

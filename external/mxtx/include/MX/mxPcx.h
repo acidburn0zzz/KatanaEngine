@@ -14,13 +14,9 @@
 #ifndef INCLUDED_MXPCX
 #define INCLUDED_MXPCX
 
-
-
 #ifndef INCLUDED_MXIMAGE
 #include <mx/mxImage.h>
 #endif
-
-
 
 typedef struct
 {
@@ -52,11 +48,6 @@ typedef struct
     byte filler[54];     /* set all to 0 */
 } mxPcxHeader;
 
-
-
 mxImage *mxPcxRead (const char *filename);
-bool mxPcxWrite (const char *filename, mxImage *image);
-
-
 
 #endif // INCLUDED_MXPCX

@@ -1,24 +1,19 @@
-//
-//                 mxToolKit (c) 1999 by Mete Ciragan
-//
-// file:           mxPcx.cpp
-// implementation: all
-// last modified:  Apr 15 1999, Mete Ciragan
-// copyright:      The programs and associated files contained in this
-//                 distribution were developed by Mete Ciragan. The programs
-//                 are not in the public domain, but they are freely
-//                 distributable without licensing fees. These programs are
-//                 provided without guarantee or warrantee expressed or
-//                 implied.
-//
+/*	Copyright (C) 1999 Mete Ciragan
+	Copyright (C) 2011-2014 OldTimes Software
+
+	The programs and associated files contained in this
+	distribution were developed by Mete Ciragan. The programs
+	are not in the public domain, but they are freely
+	distributable without licensing fees. These programs are
+	provided without guarantee or warrantee expressed or
+	implied.
+*/
 #include <mx/mxPcx.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
-mxImage *
-mxPcxRead (const char *filename)
+mxImage *mxPcxRead (const char *filename)
 {
     FILE *file = fopen (filename, "rb");
     if (!file)
@@ -30,20 +25,7 @@ mxPcxRead (const char *filename)
         fclose (file);
         return 0;
     }
-/*
-    if (header.bitsPerPixel != 8 ||
-		header.version != 5)
-	{
-        fclose (file);
-        return 0;
-    }
 
-    (void) fseek (file, -769, SEEK_END);
-    if (fgetc (file) != 12) {
-        fclose (file);
-        return NULL;
-    }
-*/
 	(void) fseek (file, -768, SEEK_END);
 
     int w = header.xmax - header.xmin + 1;
@@ -87,12 +69,4 @@ mxPcxRead (const char *filename)
     fclose(file);
 
 	return image;
-}
-
-
-
-bool
-mxPcxWrite (const char *filename, mxImage *image)
-{
-	return false;
 }

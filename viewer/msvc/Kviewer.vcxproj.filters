@@ -10,6 +10,9 @@
     <ClCompile Include="..\src\gl_model.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\shared\shared_png.c">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\anorms.h">
@@ -37,6 +40,9 @@
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{7d66fe7b-98eb-4530-b6d1-606a83f8d545}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shared">
+      <UniqueIdentifier>{3f0d6232-9ec2-4999-b08c-4e870dbaf912}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

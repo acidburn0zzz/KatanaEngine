@@ -60,9 +60,6 @@
     <ClCompile Include="engine_physics.c">
       <Filter>Server</Filter>
     </ClCompile>
-    <ClCompile Include="engine_network.c">
-      <Filter>Server</Filter>
-    </ClCompile>
     <ClCompile Include="..\chase.c" />
     <ClCompile Include="..\cl_demo.c" />
     <ClCompile Include="..\cl_input.c" />
@@ -124,5 +121,6 @@
     <ClCompile Include="..\external\glee\GLee.c">
       <Filter>Client\Video</Filter>
     </ClCompile>
+    <ClCompile Include="..\net_wins.c" />
   </ItemGroup>
 </Project>

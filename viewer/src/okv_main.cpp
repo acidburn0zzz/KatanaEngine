@@ -361,19 +361,17 @@ int KatanaViewer::handleEvent (mxEvent *event)
 				mxMessageBox (this, "Error loading texture.", kAppTitle, MX_MB_OK | MX_MB_ERROR);
 		}
 		break;
-#ifdef WIN32
 		case IDC_SKIN_SCREENSHOT:
 		{
 			char *ptr = (char *) mxGetSaveFileName (this, "", "*.tga");
 			if (ptr)
 			{
-				if (!strstr (ptr, ".tga"))
-					strcat (ptr, ".tga");
-				makeScreenShot (ptr);
+				if (!strstr(ptr, ".tga"))
+					strcat(ptr, ".tga");
+				makeScreenShot(ptr);
 			}
 		}
 		break;
-#endif
 		case IDC_OPTIONS_BGCOLOR:
 		case IDC_OPTIONS_FGCOLOR:
 		case IDC_OPTIONS_WFCOLOR:
@@ -421,20 +419,17 @@ int KatanaViewer::handleEvent (mxEvent *event)
 			glw->redraw ();
 		}
 		break;
-
 		case IDC_OPTIONS_FILTERTEXTURES:
 			bFilterTextures = !mb->isChecked (IDC_OPTIONS_FILTERTEXTURES);
 			mb->setChecked (IDC_OPTIONS_FILTERTEXTURES, bFilterTextures);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, bFilterTextures ? GL_LINEAR:GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, bFilterTextures ? GL_LINEAR:GL_NEAREST);
 			break;
-
 #ifdef WIN32
 		case IDC_HELP_GOTOHOMEPAGE:
 			ShellExecute (0, "open", "http://oldtimes-software.com/", 0, 0, SW_SHOW);
 			break;
 #endif
-
 		case IDC_HELP_ABOUT:
 			mxMessageBox (this,
 				kAppTitle " 1.0\n\n"
@@ -465,12 +460,10 @@ int KatanaViewer::handleEvent (mxEvent *event)
 		case IDC_BRIGHTNESS:
 			glw->setBrightness (((mxSlider *) event->widget)->getValue ());
 			break;
-
 		case IDC_GRID:
 			glw->setFlag (F_GRID, ((mxCheckBox *) event->widget)->isChecked ());
 			glw->redraw ();
 			break;
-
 		case IDC_BACKGROUND:
 			glw->setFlag (F_BACKGROUND, ((mxCheckBox *) event->widget)->isChecked ());
 			glw->redraw ();
@@ -479,7 +472,6 @@ int KatanaViewer::handleEvent (mxEvent *event)
 			glw->setFlag (F_DRAWTEXTURE, ((mxCheckBox *) event->widget)->isChecked ());
 			glw->redraw ();
 			break;
-
 		case IDC_ANIMATION:
 		{
 			int index = cAnim->getSelectedIndex ();
@@ -499,7 +491,6 @@ int KatanaViewer::handleEvent (mxEvent *event)
 			}
 		}
 		break;
-
 		case IDC_INTERPOLATE:
 			glw->setFlag (F_INTERPOLATE, ((mxCheckBox *) event->widget)->isChecked ());
 			break;
@@ -660,9 +651,11 @@ void
 KatanaViewer::redraw ()
 {
 	mxEvent event;
-	event.event = mxEvent::Size;
-	event.width = w2 ();
-	event.height = h2 ();
+
+	event.event		= mxEvent::Size;
+	event.width		= w2();
+	event.height	= h2();
+
 	handleEvent (&event);
 }
 
@@ -677,25 +670,9 @@ KatanaViewer::makeScreenShot (const char *filename)
 	mxImage *image = new mxImage ();
 	if (image->create (w, h, 24))
 	{
-#if 1
 		glReadBuffer (GL_FRONT);
 		glReadPixels (0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, image->data);
-#else
-		HDC hdc = GetDC ((HWND) getHandle ());
-		byte *data = (byte *) image->data;
-		int i = 0;
-		for (int y = 0; y < h; y++)
-		{
-			for (int x = 0; x < w; x++)
-			{
-				COLORREF cref = GetPixel (hdc, x, y);
-				data[i++] = (byte) ((cref >> 0)& 0xff);
-				data[i++] = (byte) ((cref >> 8) & 0xff);
-				data[i++] = (byte) ((cref >> 16) & 0xff);
-			}
-		}
-		ReleaseDC ((HWND) getHandle (), hdc);
-#endif
+
 		if (!mxTgaWrite (filename, image))
 			mxMessageBox (this, "Error writing screenshot.", kAppTitle, MX_MB_OK | MX_MB_ERROR);
 
@@ -744,8 +721,7 @@ KatanaViewer::centerModel ()
 	}
 }
 
-bool
-KatanaViewer::loadModel (const char *ptr, int pos)
+bool KatanaViewer::loadModel (const char *ptr, int pos)
 {
 	md2_model_t *model = glw->loadModel (ptr,  pos);
 	if (!model)
@@ -764,8 +740,8 @@ KatanaViewer::loadModel (const char *ptr, int pos)
 	strcpy (path, mx_getpath (ptr));
 	mx_setcwd (path);
 
-	strncat (texname, ptr, strlen(ptr) -  4);
-	sprintf(texname, "%s.tga", texname);
+	strncat(texname,ptr,strlen(ptr)-4);
+	sprintf(texname,"%s.tga", texname);
 
 	if (pos == 0)
 	{	

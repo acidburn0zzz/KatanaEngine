@@ -506,6 +506,7 @@
     <ClCompile Include="..\net_loop.c" />
     <ClCompile Include="..\net_main.c" />
     <ClCompile Include="..\net_win.c" />
+    <ClCompile Include="..\net_wins.c" />
     <ClCompile Include="..\pr_edict.c" />
     <ClCompile Include="..\r_brush.c" />
     <ClCompile Include="..\r_world.c" />
@@ -530,7 +531,6 @@
     <ClCompile Include="engine_main.c" />
     <ClCompile Include="engine_masterserver.c" />
     <ClCompile Include="engine_menu.c" />
-    <ClCompile Include="engine_network.c" />
     <ClCompile Include="engine_physics.c" />
     <ClCompile Include="engine_screen.c" />
     <ClCompile Include="engine_script.c" />

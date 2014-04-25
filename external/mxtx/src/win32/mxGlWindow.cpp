@@ -14,19 +14,13 @@
 #include <mx/mxGlWindow.h>
 #include <windows.h>
 
-
-
 void MsLog (const char *fmt, ...)
 {
 }
 
-
-
 static int g_formatMode = mxGlWindow::FormatDouble;
 static int g_formatColorBits = 32;
 static int g_formatDepthBits = 24;
-
-
 
 class mxGlWindow_i
 {
@@ -34,7 +28,6 @@ public:
 	HDC hdc;
 	HGLRC hglrc;
 };
-
 
 void DumpPfd (int nIndex, PIXELFORMATDESCRIPTOR *ppfd)
 {
@@ -111,7 +104,6 @@ void DumpPfd (int nIndex, PIXELFORMATDESCRIPTOR *ppfd)
 	MsLog (" dwVisibleMask = %d", ppfd->dwVisibleMask);
 	MsLog (" dwDamageMask = %d", ppfd->dwDamageMask);
 }
-
 
 mxGlWindow::mxGlWindow (mxWindow *parent, int x, int y, int w, int h, const char *label, int style)
 : mxWindow (parent, x, y, w, h, label, style)
