@@ -1,0 +1,13 @@
+*.user
+Katana.sln.docstates.suo
+*.tlog
+*.obj
+*.idb
+*.pdb
+level/Debug/Level.Build.CppClean.log
+*.ilk
+*.sdf
+*.suo
+*.suo
+*.opensdf
+level/Debug/Level.log

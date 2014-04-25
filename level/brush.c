@@ -9,11 +9,6 @@ entity_t *CurrentEntity;
 
 //============================================================================
 
-/*
-===========
-AllocBrush
-===========
-*/
 brush_t *AllocBrush( void )
 {
 	brush_t	*b;
@@ -24,11 +19,6 @@ brush_t *AllocBrush( void )
 	return b;
 }
 
-/*
-===========
-FreeBrush
-===========
-*/
 void FreeBrush( brush_t *b ) {
 	qfree( b );
 }

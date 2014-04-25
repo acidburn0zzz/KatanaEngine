@@ -1,2 +1,2 @@
-@"%~dp0\Katana Level.exe" -vis %1
+@"%~dp0\Level.x86.exe" -vis %1
 pause
