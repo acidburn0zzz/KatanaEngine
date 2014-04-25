@@ -27,3 +27,4 @@ engine/Release/Engine.bsc
 engine/Release/OpenKatana.lib
 bin/engine/scripts/paths.script
 bin/log.txt
+Release/Menu.lib
