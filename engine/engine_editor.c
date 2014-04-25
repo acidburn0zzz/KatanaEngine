@@ -112,8 +112,6 @@ void Editor_Launch(void)
         tbMainMenu = TwNewBar("Editor Menu");
         if(!tbMainMenu)
             Sys_Error("Failed to create editor window!\n");
-
-        TwAddButton(tbMainMenu,"Quit",Host_Shutdown,NULL,"Quits the game.");
 	}
 
 #if 0

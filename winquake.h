@@ -23,16 +23,7 @@
 #include <windows.h>
 
 #ifndef SERVERONLY
-#include <dsound.h>
-#endif
-
-#ifndef SERVERONLY
-
-extern LPDIRECTSOUND		pDS;
-extern LPDIRECTSOUNDBUFFER	pDSBuf;
-
 extern DWORD gSndBufSize;
-
 #endif
 
 extern bool	winsock_lib_initialized;

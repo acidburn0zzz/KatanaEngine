@@ -7,6 +7,9 @@
     <Filter Include="Server">
       <UniqueIdentifier>{1213c085-ae12-4d64-81eb-ecf414d94fc4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Client\Video">
+      <UniqueIdentifier>{77ea4c2d-fc29-4aeb-bb27-3c33e9606552}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine_audio.c">
@@ -27,9 +30,6 @@
     <ClCompile Include="engine_input.c">
       <Filter>Client</Filter>
     </ClCompile>
-    <ClCompile Include="engine_light.c">
-      <Filter>Client</Filter>
-    </ClCompile>
     <ClCompile Include="engine_loader.c">
       <Filter>Client</Filter>
     </ClCompile>
@@ -37,18 +37,6 @@
       <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="engine_menu.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_screen.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_sprite.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_video.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_view.c">
       <Filter>Client</Filter>
     </ClCompile>
     <ClCompile Include="engine_world.c">
@@ -107,7 +95,6 @@
     <ClCompile Include="..\net_loop.c" />
     <ClCompile Include="..\net_main.c" />
     <ClCompile Include="..\net_win.c" />
-    <ClCompile Include="..\net_wins.c" />
     <ClCompile Include="..\pr_edict.c" />
     <ClCompile Include="..\r_brush.c" />
     <ClCompile Include="..\r_world.c" />
@@ -119,5 +106,23 @@
     <ClCompile Include="..\sv_user.c" />
     <ClCompile Include="..\sys_win.c" />
     <ClCompile Include="..\zone.c" />
+    <ClCompile Include="engine_screen.c">
+      <Filter>Client\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_view.c">
+      <Filter>Client\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_video.c">
+      <Filter>Client\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_light.c">
+      <Filter>Client\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_sprite.c">
+      <Filter>Client\Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\glee\GLee.c">
+      <Filter>Client\Video</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

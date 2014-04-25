@@ -26,11 +26,7 @@
 #pragma warning(disable : 4051)     // ALPHA
 #endif
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
-#include "glee/GLee.h"
+#include "GLee.h"
 
 #include <GL/gl.h>
 #include <GL/glu.h>
