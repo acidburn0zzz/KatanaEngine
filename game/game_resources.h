@@ -26,6 +26,8 @@
 */
 #define	DAIKATANA_MODEL_WORLD	"models/w_daikatana.md2"
 #define	DAIKATANA_MODEL_VIEW	"models/weapons/v_daikatana.md2"
+#elif GAME_EXAMPLE
+#endif
 
 /*	MODEL:	models/physics/
 	SOUND:	physics/
@@ -68,7 +70,5 @@
 #define WAYPOINT_MODEL_SPAWN	"models/debug/waypoint_spawn.md2"
 #define WAYPOINT_MODEL_SWIM		"models/debug/waypoint_swim.md2"
 #define WAYPOINT_MODEL_WEAPON	"models/debug/waypoint_weapon.md2"
-#elif GAME_EXAMPLE
-#endif
 
 #endif

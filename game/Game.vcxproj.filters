@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\Shared\shared_client.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\shared_math.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\shared_menu.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="game_main.h" />
+    <ClInclude Include="game_resources.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{75d3350d-3a8a-4fb4-b211-7dc71e4f5475}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{52fdec07-0ec0-4f02-9099-041d1f667b05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server\Example">
+      <UniqueIdentifier>{c7c0d33a-3705-452f-8d49-a163b900df72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Client">
+      <UniqueIdentifier>{f867c180-f6d1-4f11-80a3-99d52582592c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Shared\shared_math.c">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="game_main.c" />
+    <ClCompile Include="server\monster_bot.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_area.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_deco.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_entity.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_item.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_main.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_misc.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_monster.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_physics.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_player.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_point.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_vehicle.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_waypoint.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server_weapon.c">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="client\client_main.c">
+      <Filter>Client</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -8,10 +8,8 @@
 
 #include "platform_module.h"
 
-#include "server/server_player.h"
-#include "server/server_physics.h"
-
-#include "client/client_main.h"
+#include "server\server_main.h"
+#include "client\client_main.h"
 
 ModuleExport_t	Export;	// Game exports.
 ModuleImport_t	Engine;	// Engine imports.
@@ -107,38 +105,6 @@ trace_t Traceline(edict_t *ent,vec3_t vStart,vec3_t vEnd,int type)
 void Sound(edict_t *ent,int channel,char *sound,int volume,float attenuation)
 {
 	Engine.Sound(ent,channel,sound,volume,attenuation);
-
-	/* TODO
-	// [21/3/2012] Revised ~hogsy
-	#define SOUND_DEFAULT	0
-	#define SOUND_REFERENCE	1
-
-	edict_t *sound;
-
-	if(type)
-		sound = Spawn();
-	else
-		return;
-
-	switch(type)
-	{
-	case SOUND_REFERENCE:
-		if(volume >= 0.5f)
-		{
-			sound->v.cClassname = "sound_reference";
-
-			SetOrigin(sound,ent->v.origin);
-
-			sound->v.think		= RemoveEntity(ref);
-			sound->v.dNextThink	= (Server.time+0.01)*volume;
-		}
-		else
-			RemoveEntity(sound);
-		break;
-	default:
-		RemoveEntity(sound);
-	}
-	*/
 }
 
 void Flare(vec3_t org,float r,float g,float b,float a,float scale,char *texture)
@@ -185,7 +151,6 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 		Entity_Remove(ent);
 		break;
 	case SERVER_STARTFRAME:
-		Deathmatch_Frame();
 		break;
 	case SERVER_SETCHANGEPARMS:
 		if(ent->v.iHealth <= 0)
@@ -207,48 +172,48 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 	return true;
 }
 
-GIPL_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
+gMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 {
-	Engine.Con_Printf		= Import->Con_Printf;
-	Engine.Con_DPrintf		= Import->Con_DPrintf;
-	Engine.Con_Warning		= Import->Con_Warning;
-	Engine.Sys_Error		= Import->Sys_Error;
-	Engine.SetMessageEntity		= Import->SetMessageEntity;
-	Engine.SetModel			= Import->SetModel;
-	Engine.Sound			= Import->Sound;
-	Engine.LinkEntity		= Import->LinkEntity;
-	Engine.FreeEntity		= Import->FreeEntity;
-	Engine.DrawPic			= Import->DrawPic;
-	Engine.Spawn			= Import->Spawn;
+	Engine.Con_Printf				= Import->Con_Printf;
+	Engine.Con_DPrintf				= Import->Con_DPrintf;
+	Engine.Con_Warning				= Import->Con_Warning;
+	Engine.Sys_Error				= Import->Sys_Error;
+	Engine.SetMessageEntity			= Import->SetMessageEntity;
+	Engine.SetModel					= Import->SetModel;
+	Engine.Sound					= Import->Sound;
+	Engine.LinkEntity				= Import->LinkEntity;
+	Engine.FreeEntity				= Import->FreeEntity;
+	Engine.DrawPic					= Import->DrawPic;
+	Engine.Spawn					= Import->Spawn;
 	Engine.Cvar_RegisterVariable	= Import->Cvar_RegisterVariable;
-	Engine.Cvar_SetValue		= Import->Cvar_SetValue;
-	Engine.ReadByte			= Import->ReadByte;
-	Engine.ReadCoord		= Import->ReadCoord;
-	Engine.WriteByte		= Import->WriteByte;
-	Engine.WriteCoord		= Import->WriteCoord;
+	Engine.Cvar_SetValue			= Import->Cvar_SetValue;
+	Engine.ReadByte					= Import->ReadByte;
+	Engine.ReadCoord				= Import->ReadCoord;
+	Engine.WriteByte				= Import->WriteByte;
+	Engine.WriteCoord				= Import->WriteCoord;
 	// [28/7/2012] Added WriteAngle ~hogsy
-	Engine.WriteAngle		= Import->WriteAngle;
+	Engine.WriteAngle				= Import->WriteAngle;
 	// [28/7/2012] Added WriteEntity ~hogsy
-	Engine.WriteEntity		= Import->WriteEntity;
-	Engine.MakeVectors		= Import->MakeVectors;
-	Engine.Server_Move		= Import->Server_Move;
-	Engine.LightStyle		= Import->LightStyle;
-	Engine.Aim			= Import->Aim;
-	Engine.Particle			= Import->Particle;
-	Engine.Flare			= Import->Flare;
-	Engine.CenterPrint		= Import->CenterPrint;
-	Engine.Cmd_AddCommand		= Import->Cmd_AddCommand;
-	Engine.GetLightSample		= Import->GetLightSample;
+	Engine.WriteEntity				= Import->WriteEntity;
+	Engine.MakeVectors				= Import->MakeVectors;
+	Engine.Server_Move				= Import->Server_Move;
+	Engine.LightStyle				= Import->LightStyle;
+	Engine.Aim						= Import->Aim;
+	Engine.Particle					= Import->Particle;
+	Engine.Flare					= Import->Flare;
+	Engine.CenterPrint				= Import->CenterPrint;
+	Engine.Cmd_AddCommand			= Import->Cmd_AddCommand;
+	Engine.GetLightSample			= Import->GetLightSample;
 
-	Engine.Client_GetEffect		= Import->Client_GetEffect;
+	Engine.Client_GetEffect			= Import->Client_GetEffect;
 	Engine.Client_AllocateDlight	= Import->Client_AllocateDlight;
 	Engine.Client_AllocateParticle	= Import->Client_AllocateParticle;
 	Engine.Client_PrecacheResource	= Import->Client_PrecacheResource;
 
 	Engine.Server_PointContents		= Import->Server_PointContents;
 	Engine.Server_MakeStatic		= Import->Server_MakeStatic;
-	Engine.Server_PrecacheResource		= Import->Server_PrecacheResource;
-	Engine.Server_BroadcastPrint		= Import->Server_BroadcastPrint;
+	Engine.Server_PrecacheResource	= Import->Server_PrecacheResource;
+	Engine.Server_BroadcastPrint	= Import->Server_BroadcastPrint;
 	Engine.Server_SinglePrint		= Import->Server_SinglePrint;
 	Engine.Server_FindRadius		= Import->Server_FindRadius;
 	Engine.Server_FindEntity		= Import->Server_FindEntity;
@@ -256,29 +221,32 @@ GIPL_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Engine.Server_ChangeLevel		= Import->Server_ChangeLevel;
 	Engine.Server_AmbientSound		= Import->Server_AmbientSound;
 
-	Export.Version				= MODULE_VERSION2;
+	Export.Version						= MODULE_VERSION2;
+	Export.Name							=
 #ifdef GAME_EXAMPLE
-	Export.Name				= "Example Game";
+		"Example Game";
+#elif GAME_OPENKATANA
+		"OpenKatana";
 #else
-	Export.Name				= "Katana";
+		"Katana";
 #endif
-	Export.Server_SpawnEntity		= Server_SpawnEntity;
+	Export.Server_SpawnEntity			= Server_SpawnEntity;
 	Export.Server_CheckWaterTransition	= Server_CheckWaterTransition;
-	Export.Server_CheckVelocity		= Server_CheckVelocity;
-	Export.Server_EntityFrame		= Server_EntityFrame;
-	Export.Server_KillClient		= Server_KillClient;
-	Export.Server_SetSizeVector		= Entity_SetSizeVector;
-	Export.Server_SpawnPlayer		= Player_Spawn;
-	Export.ChangeYaw			= ChangeYaw;
-	Export.SetSize				= Entity_SetSize;
-	Export.Draw				= Client_Draw;
-	Export.Game_Init			= Game_Init;
+	Export.Server_CheckVelocity			= Server_CheckVelocity;
+	Export.Server_EntityFrame			= Server_EntityFrame;
+	Export.Server_KillClient			= Server_KillClient;
+	Export.Server_SetSizeVector			= Entity_SetSizeVector;
+	Export.Server_SpawnPlayer			= Player_Spawn;
+	Export.ChangeYaw					= ChangeYaw;
+	Export.SetSize						= Entity_SetSize;
+	//Export.Draw						= Client_Draw;
+	Export.Game_Init					= Game_Init;
 
 	Export.Client_RelinkEntities		= Client_RelinkEntities;
-	Export.Client_Initialize		= Client_Initialize;
+	Export.Client_Initialize			= Client_Initialize;
 	Export.Client_ParseTemporaryEntity	= Client_ParseTemporaryEntity;
 
-	Export.Server_Initialize		= Server_Initialize;
+	Export.Server_Initialize			= Server_Initialize;
 
 	return &Export;
 }

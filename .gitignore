@@ -28,3 +28,4 @@ engine/Release/OpenKatana.lib
 bin/engine/scripts/paths.script
 bin/log.txt
 Release/Menu.lib
+Release/Example Game.lib

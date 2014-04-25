@@ -22,23 +22,23 @@ extern ModuleImport_t	Engine;
 
 typedef struct
 {
-	bool		bActive;                // Is the server active?
+	bool	bActive;                // Is the server active?
 
-	double		dTime,			// Server time.
+	double	dTime,					// Server time.
 			dWaypointSpawnDelay;	// Delay before spawning another waypoint.
 
-	edict_t		*eEntity,		// Current player.
+	edict_t	*eEntity,				// Current player.
 			*eWorld;
 
-	char		*cMapAuthor,            // Map author.
+	char	*cMapAuthor,            // Map author.
 			*cMapTitle;             // Map title.
 
 	int		iLastGameMode,          // The last active gamemode.
 			iClients;               // Number of connected clients.
 
 	// Gamemode
-	bool		bRoundStarted,		// Has the round started yet?
-			bPlayersSpawned;	// Have the players been spawned for the current mode?
+	bool	bRoundStarted,			// Has the round started yet?
+			bPlayersSpawned;		// Have the players been spawned for the current mode?
 } GameServer_t;
 
 typedef struct
