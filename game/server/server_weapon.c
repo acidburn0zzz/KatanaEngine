@@ -5,7 +5,6 @@
 */
 
 #include "server_item.h"
-#include "server_player.h"
 #include "server_monster.h"
 
 Weapon_t Weapons[] =

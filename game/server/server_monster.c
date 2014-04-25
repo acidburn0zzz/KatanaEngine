@@ -9,8 +9,6 @@
 	in both OpenKatana and future projects.
 */
 
-#include "server_player.h"
-
 /*	TODO:
 		- Move out player specific code
 		- Parse a document to find waypoints in the map

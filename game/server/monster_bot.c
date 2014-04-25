@@ -20,11 +20,8 @@
 	~hogsy
 */
 
-#include "server_monster.h"
-
 #include "server_waypoint.h"
 #include "server_weapon.h"
-#include "server_player.h"
 
 #define	BOT_MAX_HEALTH	100
 #define	BOT_MAX_SIGHT	900.0f

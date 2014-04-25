@@ -6,7 +6,6 @@
 
 #include "server_waypoint.h"
 #include "server_vehicle.h"
-#include "server_physics.h"
 
 enum
 {
