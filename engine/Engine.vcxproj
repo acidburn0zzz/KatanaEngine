@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -39,45 +39,50 @@
     <SccLocalPath />
     <ProjectName>Engine</ProjectName>
     <ProjectGuid>{5588B942-90A0-63A2-3369-523F456D79C5}</ProjectGuid>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release With Debug Info|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release With Debug Info|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CLRSupport>false</CLRSupport>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CLRSupport>false</CLRSupport>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Editor|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -248,7 +253,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_AFX_SECURE_NO_WARNINGS;_ATL_SECURE_NO_WARNINGS;KATANA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
       <BrowseInformation>true</BrowseInformation>
-      <PrecompiledHeaderOutputFile>.\Release\Fitzquake.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderOutputFile>.\Release\Engine.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\Release\</ObjectFileName>
       <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
       <CompileAs>Default</CompileAs>
@@ -265,17 +270,16 @@
     </ResourceCompile>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Release\Fitzquake.bsc</OutputFile>
+      <OutputFile>.\Release\Engine.bsc</OutputFile>
     </Bscmake>
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <OutputFile>..\bin\engine\engine.x86.dll</OutputFile>
-      <AdditionalDependencies>openal32.lib;dxguid.lib;xinput.lib;opengl32.lib;comctl32.lib;winmm.lib;wsock32.lib;SDL2.lib;python27.lib;platform.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\Lib;.\external\SDL2\lib\x86;.\external\Python27\libs;.\platform\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libOpenAL32.dll.a;opengl32.lib;comctl32.lib;winmm.lib;wsock32.lib;SDL2.lib;anttweakbar.lib;platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\platform\lib;..\external\sdl2\lib\x86;..\external\openal-soft\lib\win32;..\external\anttweakbar\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>
     </Link>
@@ -511,6 +515,8 @@
     <ClCompile Include="..\r_brush.c" />
     <ClCompile Include="..\r_world.c" />
     <ClCompile Include="..\sbar.c" />
+    <ClCompile Include="..\shared\shared_math.c" />
+    <ClCompile Include="..\shared\shared_png.c" />
     <ClCompile Include="..\snd_dma.c" />
     <ClCompile Include="..\snd_mem.c" />
     <ClCompile Include="..\snd_mix.c" />
@@ -529,8 +535,10 @@
     <ClCompile Include="engine_light.c" />
     <ClCompile Include="engine_loader.c" />
     <ClCompile Include="engine_main.c" />
-    <ClCompile Include="engine_masterserver.c" />
     <ClCompile Include="engine_menu.c" />
+    <ClCompile Include="engine_network.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="engine_physics.c" />
     <ClCompile Include="engine_screen.c" />
     <ClCompile Include="engine_script.c" />
@@ -539,6 +547,20 @@
     <ClCompile Include="engine_video.c" />
     <ClCompile Include="engine_view.c" />
     <ClCompile Include="engine_world.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\shared\shared_client.h" />
+    <ClInclude Include="..\shared\shared_editor.h" />
+    <ClInclude Include="..\shared\shared_engine.h" />
+    <ClInclude Include="..\shared\shared_flags.h" />
+    <ClInclude Include="..\shared\shared_formats.h" />
+    <ClInclude Include="..\shared\shared_game.h" />
+    <ClInclude Include="..\shared\shared_input.h" />
+    <ClInclude Include="..\shared\shared_math.h" />
+    <ClInclude Include="..\shared\shared_menu.h" />
+    <ClInclude Include="..\shared\shared_module.h" />
+    <ClInclude Include="..\shared\shared_png.h" />
+    <ClInclude Include="..\shared\shared_server.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

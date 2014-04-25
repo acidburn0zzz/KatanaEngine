@@ -11,8 +11,8 @@
 //#define   PARANOID    // Speed sapping error checking.
 //#define	KATANA_VIDEO_NEXT		// New renderer.
 #define	KATANA_PHYSICS_ODE		// ODE physics support.
+#define KATANA_AUDIO_OPENAL
 #ifndef _WIN32	// [21/1/2013] Only Linux release is currently using this... ~hogsy
-#define KATANA_AUDIO_OPENAL		// New sound system.
 #define	KATANA_NETWORK_NEXT	// New network system.
 #endif
 #define	LIGHTHACK	// Rushed in lighting method thrown up using OpenGL's built-in features.

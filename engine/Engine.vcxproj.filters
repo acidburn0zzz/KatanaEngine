@@ -1,65 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Client">
-      <UniqueIdentifier>{71892364-8ce5-4514-a0f7-63051f5f8b22}</UniqueIdentifier>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{214bfd5b-5bbf-456a-aea5-11a0d707dd8e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Server">
-      <UniqueIdentifier>{1213c085-ae12-4d64-81eb-ecf414d94fc4}</UniqueIdentifier>
+    <Filter Include="Networking">
+      <UniqueIdentifier>{0f885fe7-9a55-4712-8eed-3387acba73a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Client\Video">
+    <Filter Include="Video">
       <UniqueIdentifier>{77ea4c2d-fc29-4aeb-bb27-3c33e9606552}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="engine_audio.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_client.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_console.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_editor.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_game.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_input.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_loader.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_main.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_menu.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_world.c">
-      <Filter>Client</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_cvar.c">
-      <Filter>Server</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_command.c">
-      <Filter>Server</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_masterserver.c">
-      <Filter>Server</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_server.c">
-      <Filter>Server</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_script.c">
-      <Filter>Server</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_physics.c">
-      <Filter>Server</Filter>
-    </ClCompile>
     <ClCompile Include="..\chase.c" />
     <ClCompile Include="..\cl_demo.c" />
     <ClCompile Include="..\cl_input.c" />
@@ -71,30 +23,12 @@
     <ClCompile Include="..\conproc.c" />
     <ClCompile Include="..\console.c" />
     <ClCompile Include="..\crc.c" />
-    <ClCompile Include="..\gl_alias.c" />
-    <ClCompile Include="..\gl_draw.c" />
-    <ClCompile Include="..\gl_fog.c" />
-    <ClCompile Include="..\gl_model.c" />
-    <ClCompile Include="..\gl_refrag.c" />
-    <ClCompile Include="..\gl_rmain.c" />
-    <ClCompile Include="..\gl_rmisc.c" />
-    <ClCompile Include="..\gl_sky.c" />
-    <ClCompile Include="..\gl_texmgr.c" />
-    <ClCompile Include="..\gl_vidnt.c" />
-    <ClCompile Include="..\gl_warp.c" />
     <ClCompile Include="..\host.c" />
     <ClCompile Include="..\host_cmd.c" />
     <ClCompile Include="..\image.c" />
-    <ClCompile Include="..\KatGL.c" />
     <ClCompile Include="..\keys.c" />
     <ClCompile Include="..\menu.c" />
-    <ClCompile Include="..\net_dgrm.c" />
-    <ClCompile Include="..\net_loop.c" />
-    <ClCompile Include="..\net_main.c" />
-    <ClCompile Include="..\net_win.c" />
     <ClCompile Include="..\pr_edict.c" />
-    <ClCompile Include="..\r_brush.c" />
-    <ClCompile Include="..\r_world.c" />
     <ClCompile Include="..\sbar.c" />
     <ClCompile Include="..\snd_dma.c" />
     <ClCompile Include="..\snd_mem.c" />
@@ -104,23 +38,141 @@
     <ClCompile Include="..\sys_win.c" />
     <ClCompile Include="..\zone.c" />
     <ClCompile Include="engine_screen.c">
-      <Filter>Client\Video</Filter>
+      <Filter>Video</Filter>
     </ClCompile>
     <ClCompile Include="engine_view.c">
-      <Filter>Client\Video</Filter>
+      <Filter>Video</Filter>
     </ClCompile>
     <ClCompile Include="engine_video.c">
-      <Filter>Client\Video</Filter>
+      <Filter>Video</Filter>
     </ClCompile>
     <ClCompile Include="engine_light.c">
-      <Filter>Client\Video</Filter>
+      <Filter>Video</Filter>
     </ClCompile>
     <ClCompile Include="engine_sprite.c">
-      <Filter>Client\Video</Filter>
+      <Filter>Video</Filter>
     </ClCompile>
     <ClCompile Include="..\external\glee\GLee.c">
-      <Filter>Client\Video</Filter>
+      <Filter>Video</Filter>
     </ClCompile>
-    <ClCompile Include="..\net_wins.c" />
+    <ClCompile Include="..\shared\shared_math.c">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\shared_png.c">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_warp.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_vidnt.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_texmgr.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_sky.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_rmisc.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_rmain.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_refrag.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_model.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_fog.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_draw.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\gl_alias.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\KatGL.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\r_brush.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\r_world.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_network.c">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\net_dgrm.c">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\net_loop.c">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\net_main.c">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\net_win.c">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\net_wins.c">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_audio.c" />
+    <ClCompile Include="engine_client.c" />
+    <ClCompile Include="engine_editor.c" />
+    <ClCompile Include="engine_console.c" />
+    <ClCompile Include="engine_game.c" />
+    <ClCompile Include="engine_input.c" />
+    <ClCompile Include="engine_loader.c" />
+    <ClCompile Include="engine_main.c" />
+    <ClCompile Include="engine_menu.c" />
+    <ClCompile Include="engine_world.c" />
+    <ClCompile Include="engine_server.c" />
+    <ClCompile Include="engine_script.c" />
+    <ClCompile Include="engine_physics.c" />
+    <ClCompile Include="engine_cvar.c" />
+    <ClCompile Include="engine_command.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\shared\shared_client.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_editor.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_engine.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_flags.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_formats.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_game.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_input.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_math.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_menu.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_module.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_png.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_server.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

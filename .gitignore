@@ -22,3 +22,6 @@ viewer/msvc/Release/RCa08556
 *.db
 *.crf
 viewer/msvc/Release/md2viewer.res
+engine/Release/Engine.bsc
+*.exp
+engine/Release/OpenKatana.lib
