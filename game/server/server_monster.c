@@ -54,7 +54,7 @@
 // [28/6/2013] Global relationship table ~hogsy
 MonsterRelationship_t MonsterRelationship[]=
 {
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	// LaserGat
 	{	MONSTER_LASERGAT,	MONSTER_LASERGAT,	RELATIONSHIP_LIKE		},
 	{	MONSTER_LASERGAT,	MONSTER_PLAYER,		RELATIONSHIP_HATE		},

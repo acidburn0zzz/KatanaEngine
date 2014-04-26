@@ -8,7 +8,6 @@
 	for physics.
 */
 
-#include "server_monster.h"
 #include "server_waypoint.h"
 #include "server_vehicle.h"
 #include "server_weapon.h"

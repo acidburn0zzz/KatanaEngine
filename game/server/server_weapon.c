@@ -5,11 +5,10 @@
 */
 
 #include "server_item.h"
-#include "server_monster.h"
 
 Weapon_t Weapons[] =
 {
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	{
 		WEAPON_KATANA,
 		DAIKATANA_MODEL_VIEW,
