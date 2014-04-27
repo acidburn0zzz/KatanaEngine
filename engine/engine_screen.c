@@ -19,7 +19,7 @@
 */
 #include "quakedef.h"
 
-#include "../platform/include/platform_filesystem.h"
+#include "platform_filesystem.h"
 
 #include "engine_menu.h"
 #include "KatEditor.h"

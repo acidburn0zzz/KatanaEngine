@@ -1659,24 +1659,21 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 
 	Model_LoadTextures(mMD2Model);
 
-#if 1
+#if 0
 	for (i=0; i<3;i++)
 	{
 		loadmodel->mins[i] = loadmodel->ymins[i] = loadmodel->rmins[i] = -32.0f;
 		loadmodel->maxs[i] = loadmodel->ymaxs[i] = loadmodel->rmaxs[i] = 32.0f;
 	}
 #else
-	for(i = 0; i < 3; i++)
-	{
-		loadmodel->mins[i] = 999999.0f;
-		loadmodel->maxs[i] = -999999.0f;
-	}
+	Math_VectorSet(999999.0f,loadmodel->mins);
+	Math_VectorSet(-999999.0f,loadmodel->maxs);
 
 	for(i = 0; i < mMD2Model->num_xyz; i++)
 	{
 		MD2TriangleVertex_t *mVertex = (MD2TriangleVertex_t*)((int)mMD2Model+mMD2Model->ofs_frames+mMD2Model->framesize);
 
-#if 0
+#if 1
 		if(mVertex->v[X] < vMin[X])
 			vMin[X] = mVertex->v[X];
 		else if(mVertex->v[X] > vMax[X])
@@ -1694,8 +1691,8 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 #else
 		for(j = 0; j < 3; j++)
 		{
-			loadmodel->mins[j] = loadmodel->ymins[i] = loadmodel->rmins[i] = Math_Min(loadmodel->mins[j],mVertex->v[j]);
-			loadmodel->maxs[j] = loadmodel->ymaxs[i] = loadmodel->rmaxs[i] = Math_Max(loadmodel->maxs[j],mVertex->v[j]);
+			loadmodel->mins[j] = loadmodel->ymins[j] = loadmodel->rmins[j] = Math_Min(loadmodel->mins[j],mVertex->v[j]);
+			loadmodel->maxs[j] = loadmodel->ymaxs[j] = loadmodel->rmaxs[j] = Math_Max(loadmodel->maxs[j],mVertex->v[j]);
 		}
 #endif
 	}

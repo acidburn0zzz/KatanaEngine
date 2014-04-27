@@ -4752,7 +4752,7 @@
 	<limits.h>
 	<wchar.h>
 
-1398122236 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
+1398260953 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
 
 1398120592 /home/hogsy/dev/ProjectKatana/trunk/cmdlib.h
 	"platform/include/platform.h"
@@ -5591,9 +5591,9 @@
 	"engine_physics.h"
 	"engine_game.h"
 
-1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_screen.c
+1398260963 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_screen.c
 	"quakedef.h"
-	"../platform/include/platform_filesystem.h"
+	"platform_filesystem.h"
 	"engine_menu.h"
 	"KatEditor.h"
 	"KatGL.h"
@@ -5629,7 +5629,7 @@
 1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_world.c
 	"quakedef.h"
 
-1398122683 source:/home/hogsy/dev/ProjectKatana/trunk/gl_alias.c
+1398200832 source:/home/hogsy/dev/ProjectKatana/trunk/gl_alias.c
 	"KatAlias.h"
 	"KatGL.h"
 	"engine_video.h"

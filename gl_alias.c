@@ -300,7 +300,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 1 // new
+#if 0 // new
 	int					i,j;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
 	MD2TriangleVertex_t	*mtvVertices,
