@@ -39,10 +39,13 @@ EntityField_t	EntityFields[] =
 	{	"health",		FIELD(v.iHealth),			EV_INTEGER	},
 	{	"spawnflags",	FIELD(v.spawnflags),		EV_INTEGER	},
 	{	"bTakeDamage",	FIELD(v.bTakeDamage),		EV_BOOLEAN	},
-	{	"mass",			FIELD(Physics.fMass),		EV_FLOAT	},
-	{	"gravity",		FIELD(Physics.fGravity),	EV_FLOAT	},
 	{	"scale",		FIELD(Model.fScale),		EV_FLOAT	},
 	{	"alpha",		FIELD(alpha),				EV_FLOAT	},
+
+	// Physical properties
+	{	"physics_solid",	FIELD(Physics.iSolid),		EV_INTEGER	},
+	{	"physics_mass",		FIELD(Physics.fMass),		EV_FLOAT	},
+	{	"physics_gravity",	FIELD(Physics.fGravity),	EV_FLOAT	},
 
 	// Local (move these at some point)
 	{	"sound",			FIELD(local.sound),				EV_STRING	},
@@ -115,6 +118,7 @@ void Server_ParseEntityField(char *cKey,char *cValue,edict_t *eEntity)
 					break;
 				case EV_DOUBLE:
 					*(double*)((byte*)eEntity+eField->iOffset) = strtod(cValue,NULL);
+					break;
 				case EV_BOOLEAN:
 					if(!Q_strcasecmp(cValue,"true"))
 						cValue = "1";

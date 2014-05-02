@@ -30,8 +30,8 @@ float	r_avertexnormals[NUMVERTEXNORMALS][3] =
 	{	0.295242,	0.000000,	0.955423	},
 	{	0.442863,	0.238856,	0.864188	},
 	{	0.162460,	0.262866,	0.951056	},
-	{-0.681718, 0.147621, 0.716567},
-	{-0.809017, 0.309017, 0.500000},
+	{	-0.681718,	0.147621,	0.716567	},
+	{	-0.809017,	0.309017,	0.500000	},
 	{	-0.587785,	0.425325,	0.688191	},
 	{	-0.850651,	0.525731,	0.000000	},
 	{	-0.864188,	0.442863,	0.238856	},
@@ -287,7 +287,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 		Math_VectorSet(1.0f,vLightColour);
 
 	for(i = 0; i < NUMVERTEXNORMALS; i++)
-		shadedots = r_avertexnormal_dots[((int)((SHADEDOT_QUANT/360.0f))) & (SHADEDOT_QUANT-1)];
+		shadedots = r_avertexnormal_dots[((int)(vOrigin[0]*(SHADEDOT_QUANT/360.0f))) & (SHADEDOT_QUANT-1)];
 
 	Math_VectorScale(vLightColour,1.0f/200.0f,vLightColour);
 #else
@@ -300,7 +300,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 0 // new
+#if 1 // new
 	int					i,j;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
 	MD2TriangleVertex_t	*mtvVertices,
@@ -331,33 +331,32 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	mtvVertices     = &frame1->verts[0];
 	mtvVertices2    = &frame2->verts[0];
 
-	mtTriangles = (MD2Triangle_t*)((byte*)mModel+mModel->ofs_tris);
-
-	for(i = 0; i < mModel->numtris; i++,mtTriangles++)
 	{
-        if(!mtTriangles)
-            break;
+		mtTriangles	= (MD2Triangle_t*)((byte*)mModel+mModel->ofs_tris);
 
-        Math_VectorCopy(mtTriangles->index_st,voModel[i].vTextureCoord[0]);
-        Math_VectorCopy(mtTriangles->index_st,voModel[i].vTextureCoord[1]);
+		for(i = 0; i < mModel->numtris; i++,mtTriangles++)
+		{
+			if(!mtTriangles)
+				break;
 
-        voModel[i].vColour[0] = shadedots[mtvVertices[mtTriangles->index_xyz[0]].lightnormalindex];
-        voModel[i].vColour[1] = shadedots[mtvVertices[mtTriangles->index_xyz[1]].lightnormalindex];
-        voModel[i].vColour[2] = shadedots[mtvVertices[mtTriangles->index_xyz[2]].lightnormalindex];
-        voModel[i].vColour[3] = 1.0f;
+			voModel[i].vColour[0] = shadedots[mtvVertices[mtTriangles->index_xyz[0]].lightnormalindex];
+			voModel[i].vColour[1] = shadedots[mtvVertices[mtTriangles->index_xyz[1]].lightnormalindex];
+			voModel[i].vColour[2] = shadedots[mtvVertices[mtTriangles->index_xyz[2]].lightnormalindex];
+			voModel[i].vColour[3] = 1.0f;
 
-		for(j = 0; j < 3; j++)
-			voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[0]].v[j]*scale1[j]+translate1[j]);
+			for(j = 0; j < 3; j++)
+				voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[0]].v[j]*scale1[j]+translate1[j]);
 
-        i++;
+			i++;
 
-		for(j = 0; j < 3; j++)
-			voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[1]].v[j]*scale1[j]+translate1[j]);
+			for(j = 0; j < 3; j++)
+				voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[1]].v[j]*scale1[j]+translate1[j]);
 
-        i++;
+			i++;
 
-		for(j = 0; j < 3; j++)
-			voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[2]].v[j]*scale1[j]+translate1[j]);
+			for(j = 0; j < 3; j++)
+				voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[2]].v[j]*scale1[j]+translate1[j]);
+		}
 	}
 
 	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,mModel->numtris,true);

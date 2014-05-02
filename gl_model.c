@@ -1659,7 +1659,7 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 
 	Model_LoadTextures(mMD2Model);
 
-#if 0
+#if 1
 	for (i=0; i<3;i++)
 	{
 		loadmodel->mins[i] = loadmodel->ymins[i] = loadmodel->rmins[i] = -32.0f;

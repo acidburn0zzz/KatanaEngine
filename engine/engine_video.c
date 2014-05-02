@@ -558,7 +558,7 @@ void Video_DrawObject(
 			if(bMultiTexture)
 			{
 				glMultiTexCoord2fv(VIDEO_TEXTURE0,voObject[i].vTextureCoord[0]);
-				glMultiTexCoord2fv(GL_TEXTURE1,voObject[i].vTextureCoord[1]);
+				glMultiTexCoord2fv(VIDEO_TEXTURE1,voObject[i].vTextureCoord[1]);
 			}
 			else
 				glTexCoord2fv(voObject[i].vTextureCoord[0]);
@@ -581,7 +581,7 @@ void Video_DrawObject(
 	}
 
 	// [20/10/2013] Reset colour value ~hogsy
-	glColor3f(1.0f,1.0f,1.0f);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
 }
 
 /*

@@ -48,6 +48,11 @@ typedef struct
 
 typedef struct
 {
+	short	S,T;
+} MD2TextureCoordinate_t;
+
+typedef struct
+{
 	int			    ident;
 	int			    version;
 	unsigned    int	skinwidth;
