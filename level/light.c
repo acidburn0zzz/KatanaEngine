@@ -71,7 +71,7 @@ void Light_CalculateTextureReflectivity(void)
 		// [1/8/2012] TODO: Load our texture ~hogsy
 
 		texels = LittleLong(mt->width)*LittleLong(mt->height);
-		
+
 		VectorClear(vColor);
 
 		// [1/8/2012] TODO: How to do for 32bpp images :/ ~hogsy
@@ -103,7 +103,7 @@ int LightStyleForTargetname( char *targetname )
 {
 	int		i;
 
-	for( i = 0; i < numlighttargets; i++ ) 
+	for( i = 0; i < numlighttargets; i++ )
 		if( !strcmp( lighttargets[i], targetname ) )
 			return 32 + i;
 
@@ -129,7 +129,7 @@ void ParseLightEntities( void )
 	BOOL isLight;
 
 	num_directlights = 0;
-	for( i = 0, ent = entities; i < num_entities; i++, ent++ ) 
+	for( i = 0, ent = entities; i < num_entities; i++, ent++ )
 	{
 		value = ValueForKey(ent,"classname");
 
@@ -177,11 +177,11 @@ void ParseLightEntities( void )
 		if( !value[0] )
 			value = ValueForKey(ent,"_light");
 
-		if( value[0] ) 
+		if( value[0] )
 		{
 			j = sscanf(value,"%lf %lf %lf %lf",&vec[0],&vec[1],&vec[2],&vec[3]);
 
-			switch( j ) 
+			switch( j )
 			{
 				case 4:// HalfLife light
 					l->color[0] = vec[0];
@@ -251,7 +251,7 @@ void ParseLightEntities( void )
 		if (vec[0])
 			l->clampradius = vec[0];
 
-		if( isLight ) 
+		if( isLight )
 		{
 			value = ValueForKey( ent, "targetname" );
 
@@ -275,13 +275,13 @@ void ParseLightEntities( void )
 			continue;
 		}
 
-		for( j = 0; j < num_entities; j++ ) 
+		for( j = 0; j < num_entities; j++ )
 		{
 			if( i == j )
 				continue;
 
 			targetname = ValueForKey(&entities[j],"targetname");
-			if(!strcmp(targetname,value)) 
+			if(!strcmp(targetname,value))
 			{
 				vec3_t origin;
 
@@ -299,7 +299,7 @@ void ParseLightEntities( void )
 			}
 		}
 
-		if( j == num_entities )	
+		if( j == num_entities )
 		{
 			printf( "warning in light at %.0f %.0f %.0f:\nunmatched spotlight target\n", l->origin[0], l->origin[1], l->origin[2]);
 			if (l->type == LIGHTTYPE_SUN)
@@ -357,14 +357,14 @@ void LightWorld( void )
 	// LordHavoc: find the right leaf for each entity
 	lightvisibilitydone = 0;
 	oldtime = time( NULL );
-	for( i = 0, light = directlights; i < num_directlights; i++, light++ ) 
+	for( i = 0, light = directlights; i < num_directlights; i++, light++ )
 	{
 		lightcount++;
 		alllight[alllights++] = light;
 		leaf = Light_PointInLeaf(light->origin);
 		ignorevis = false;
 
-		switch( leaf->contents ) 
+		switch( leaf->contents )
 		{
 			case BSP_CONTENTS_EMPTY:
 				emptycount++;
@@ -376,7 +376,7 @@ void LightWorld( void )
 			case BSP_CONTENTS_WATER:
 				watercount++;
 				break;
-			case CONTENTS_SLIME:
+			case BSP_CONTENTS_SLIME:
 				slimecount++;
 				break;
 			case CONTENTS_LAVA:
@@ -394,18 +394,18 @@ void LightWorld( void )
 		if( ignorevis )
 			printf( "light at origin '%f %f %f' is in solid or sky, ignoring vis\n", light->origin[0], light->origin[1], light->origin[2] );
 
-		if( leaf->visofs == -1 || ignorevis || !lightvis || light->type == LIGHTTYPE_SUN ) 
+		if( leaf->visofs == -1 || ignorevis || !lightvis || light->type == LIGHTTYPE_SUN )
 		{
 			castcount += numfaces;
 			novislight[novislights++] = light;
-		} 
-		else 
+		}
+		else
 		{
 			DecompressVis( dvisdata + leaf->visofs, currentvis, (dmodels[0].visleafs + 7) >> 3 );
 			memset( surfacehit, 0, numfaces );
 
-			for( n = 0, leaf = dleafs + 1; n < numleafs; n++, leaf++ ) 
-			{	
+			for( n = 0, leaf = dleafs + 1; n < numleafs; n++, leaf++ )
+			{
 				// leafs begin at 1
 				if( !leaf->nummarksurfaces )
 					continue;
@@ -415,7 +415,7 @@ void LightWorld( void )
 				if( (lightchainbufindex + leaf->nummarksurfaces) > LIGHTCHAINS )
 					Error( "LightWorld: ran out of light chains!  complain to maintainer of hlight\n" );
 
-				for( m = 0, mark = dmarksurfaces + leaf->firstmarksurface; m < leaf->nummarksurfaces; m++, mark++ ) 
+				for( m = 0, mark = dmarksurfaces + leaf->firstmarksurface; m < leaf->nummarksurfaces; m++, mark++ )
 				{
 					if( surfacehit[*mark] )
 						continue;
@@ -440,7 +440,7 @@ void LightWorld( void )
 	printf( "%4i lights, %4i air, %4i solid, %4i water, %4i slime, %4i lava, %4i sky, %4i unknown\n", lightcount, emptycount, solidcount, watercount, slimecount, lavacount, skycount, misccount );
 
 	i = 0;
-	for( m = 0; m < numfaces; m++ ) 
+	for( m = 0; m < numfaces; m++ )
 		if( surfacelightchain[m] )
 			i++;
 
@@ -480,10 +480,10 @@ void LightWorld( void )
 
 	c_occluded = 0;
 	// LordHavoc: light bmodels
-	for( k = 1; k < nummodels; k++ ) 
+	for( k = 1; k < nummodels; k++ )
 	{
 		newtime = time( NULL );
-		if( newtime != oldtime ) 
+		if( newtime != oldtime )
 		{
 			m = k;
 			count = nummodels;
@@ -530,9 +530,9 @@ int Light_Main( int argc, char **argv )
 	defaultlighttype = LIGHTTYPE_MINUSX;
 	overridelighttypes = false;
 
-	for( i = 1; i < argc; i++ ) 
+	for( i = 1; i < argc; i++ )
 	{
-		if( !strcmp( argv[i],"-extra" ) ) 
+		if( !strcmp( argv[i],"-extra" ) )
 		{
 			i++;
 			if(i >= argc)
@@ -545,8 +545,8 @@ int Light_Main( int argc, char **argv )
 		{
 			printf( "use of vis data to optimize lighting disabled\n" );
 			lightvis = false;
-		} 
-		else if( !strcmp( argv[i],"-intensity" ) ) 
+		}
+		else if( !strcmp( argv[i],"-intensity" ) )
 		{
 			i++;
 			if( i >= argc )
@@ -554,7 +554,7 @@ int Light_Main( int argc, char **argv )
 			globallightscale = atof( argv[i] );
 			if( globallightscale < 0.01 )
 				globallightscale = 0.01;
-		} 
+		}
 		else if( !strcmp( argv[i],"-radiusscale" ) )
 		{
 			i++;
@@ -563,8 +563,8 @@ int Light_Main( int argc, char **argv )
 			globallightradiusscale = atof( argv[i] );
 			if( globallightradiusscale < 0.01 )
 				globallightradiusscale = 0.01;
-		} 
-		else if( !strcmp( argv[i],"-minlight" ) ) 
+		}
+		else if( !strcmp( argv[i],"-minlight" ) )
 		{
 			i++;
 			if( i >= argc )
@@ -572,7 +572,7 @@ int Light_Main( int argc, char **argv )
 			minlight = atof( argv[i] );
 			if( minlight < 0 )
 				minlight = 0;
-		} 
+		}
 		else if( !strcmp( argv[i], "-ambientlight" ) )
 		{
 			i++;
@@ -581,8 +581,8 @@ int Light_Main( int argc, char **argv )
 			ambientlight = atof( argv[i] );
 			if( ambientlight < 0 )
 				ambientlight = 0;
-		} 
-		else if( !strcmp( argv[i],"-defaulttype" ) ) 
+		}
+		else if( !strcmp( argv[i],"-defaulttype" ) )
 		{
 			i++;
 			if( i >= argc )
@@ -591,8 +591,8 @@ int Light_Main( int argc, char **argv )
 			if( defaultlighttype < 0 || defaultlighttype >= LIGHTTYPE_TOTAL )
 				Error( "invalid value given to -defaulttype\n" );
 			printf( "defaulting all lights to type %i\n", defaultlighttype);
-		} 
-		else if( !strcmp( argv[i],"-overridetypes" ) ) 
+		}
+		else if( !strcmp( argv[i],"-overridetypes" ) )
 		{
 			printf( "overriding all light types with current default (%i)\n", defaultlighttype );
 			overridelighttypes = true;
@@ -656,7 +656,7 @@ int Light_Main( int argc, char **argv )
 	memset(dlightdata,0,sizeof(dlightdata));
 	memset(drgblightdata,0,sizeof(drgblightdata));
 
-	if( !visdatasize ) 
+	if( !visdatasize )
 	{
 		printf( "no visibility data found (run -vis before -light to compile faster)\n" );
 		lightvis = false;

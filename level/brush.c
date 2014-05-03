@@ -549,7 +549,7 @@ brush_t *LoadBrush (mbrush_t *mb, int brushnum, int hullnum)
 		if(!Q_strncasecmp(name+1,"lava",4))
 			contents = CONTENTS_LAVA;
 		else if(!Q_strncasecmp(name+1,"slime",5))
-			contents = CONTENTS_SLIME;
+			contents = BSP_CONTENTS_SLIME;
 		else
 			contents = BSP_CONTENTS_WATER;
 	}

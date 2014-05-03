@@ -262,7 +262,7 @@ void V_SetContentsColor(int contents)
 	case CONTENTS_LAVA:
 		cl.cshifts[CSHIFT_CONTENTS] = cshift_lava;
 		break;
-	case CONTENTS_SLIME:
+	case BSP_CONTENTS_SLIME:
 		cl.cshifts[CSHIFT_CONTENTS] = cshift_slime;
 		break;
 	case BSP_CONTENTS_WATER:

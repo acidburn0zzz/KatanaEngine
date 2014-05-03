@@ -58,7 +58,6 @@ typedef struct
 	int		type;		// PLANE_X - PLANE_ANYZ ?remove? trivial to regenerate
 } dplane_t;
 
-#define	CONTENTS_SLIME			-4
 #define	CONTENTS_LAVA			-5
 #define	CONTENTS_SKY			-6
 #define	CONTENTS_ORIGIN			-7		// removed at csg time
@@ -93,6 +92,7 @@ typedef struct texinfo_s
 	int			miptex;
 	int			flags;
 } texinfo_t;
+
 #define	TEX_SPECIAL		1		// sky or slime, no lightmap or 256 subdivision
 #define TEX_MISSING		2		// johnfitz -- this texinfo does not have a texture
 

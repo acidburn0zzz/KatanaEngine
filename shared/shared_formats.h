@@ -205,6 +205,7 @@ typedef struct
 #define	BSP_CONTENTS_EMPTY	-1	// Empty space.
 #define	BSP_CONTENTS_SOLID	-2	// Solid brush.
 #define	BSP_CONTENTS_WATER	-3	// Water
+#define BSP_CONTENTS_SLIME  -4
 
 enum
 {

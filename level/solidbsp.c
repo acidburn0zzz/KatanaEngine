@@ -23,7 +23,7 @@ node_t *AllocNode( void )
 	return n;
 }
 
-void FreeNode( node_t *n ) 
+void FreeNode( node_t *n )
 {
 	qfree( n );
 }
@@ -38,7 +38,7 @@ surface_t *ChooseMidPlaneFromList( surface_t *surfaces, vec3_t mins, vec3_t maxs
 	surface_t	*p, *bestsurface;
 	vec_t		bestvalue, value, dist;
 	plane_t		*plane;
-	
+
 	// pick the plane that splits the least
 	bestvalue = 8*(double)BOGUS_RANGE*(double)BOGUS_RANGE;
 	bestsurface = NULL;
@@ -336,9 +336,9 @@ void LinkConvexFaces( surface_t *planelist, node_t *leafnode )
 	leafnode->planenum = -1;
 
 	count = 0;
-	for( surf = planelist; surf; surf = surf->next ) 
+	for( surf = planelist; surf; surf = surf->next )
 	{
-		for( f = surf->faces; f; f = f->next ) 
+		for( f = surf->faces; f; f = f->next )
 		{
 			count++;
 			if( !leafnode->contents )
@@ -361,7 +361,7 @@ void LinkConvexFaces( surface_t *planelist, node_t *leafnode )
 		case BSP_CONTENTS_WATER:
 			c_water++;
 			break;
-		case CONTENTS_SLIME:
+		case BSP_CONTENTS_SLIME:
 			c_slime++;
 			break;
 		case CONTENTS_LAVA:
@@ -377,10 +377,10 @@ void LinkConvexFaces( surface_t *planelist, node_t *leafnode )
 	// write the list of faces, and free the originals
 	leaffaces += count;
 	leafnode->markfaces = (face_t**)qmalloc( sizeof(face_t *) * (count + 1) );
-	for( i = 0, surf = planelist; surf; surf = pnext ) 
+	for( i = 0, surf = planelist; surf; surf = pnext )
 	{
 		pnext = surf->next;
-		for( f = surf->faces; f; f = next, i++ ) 
+		for( f = surf->faces; f; f = next, i++ )
 		{
 			next = f->next;
 			leafnode->markfaces[i] = f->original;
@@ -401,7 +401,7 @@ face_t *LinkNodeFaces( surface_t *surface )
 
 	// subdivide
 	prevptr = &surface->faces;
-	for(;;) 
+	for(;;)
 	{
 		f = *prevptr;
 		if(!f)
@@ -430,7 +430,7 @@ void PartitionSurfaces( surface_t *surfaces, node_t *node )
 	surface_t	*frontlist, *backlist;
 	surface_t	*frontfrag, *backfrag;
 	plane_t		*splitplane;
-	
+
 	split = SelectPartition (surfaces);
 	if( !split )  {	// this is a leaf node
 		node->planenum = PLANENUM_LEAF;
