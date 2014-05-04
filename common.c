@@ -1485,7 +1485,7 @@ void FileSystem_Initialize(void)
 			else
 				Q_strcpy(search->filename,com_argv[i]);
 
-			search->next = com_searchpaths;
+			search->next    = com_searchpaths;
 			com_searchpaths = search;
 		}
 	}

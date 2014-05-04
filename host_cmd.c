@@ -247,13 +247,10 @@ void ExtraMaps_Add (char *name)
 	}
 }
 
-void ExtraMaps_Init (void) //TODO: move win32 specific stuff to sys_win.c
+void ExtraMaps_Init(void)
 {
-#ifdef _WIN32
-	WIN32_FIND_DATA	FindFileData;
-	HANDLE			Find;
-	char			filestring[MAX_OSPATH],
-					mapname[128],
+    char            *cMapName[128],
+                    filestring[MAX_OSPATH],
 					ignorepakdir[32];
 	searchpath_t    *search;
 	pack_t          *pak;
@@ -266,17 +263,48 @@ void ExtraMaps_Init (void) //TODO: move win32 specific stuff to sys_win.c
 	{
 		if(*search->filename) //directory
 		{
-			sprintf(filestring,"%s/maps/*.bsp",search->filename);
+#ifdef _WIN32
+            {
+                WIN32_FIND_DATA	FindFileData;
+                HANDLE			Find;
 
-			Find = FindFirstFile(filestring,&FindFileData);
-			if(Find == INVALID_HANDLE_VALUE)
-				continue;
+                sprintf(filestring,"%s/maps/*.bsp",search->filename);
 
-			do
-			{
-				COM_StripExtension(FindFileData.cFileName,mapname);
-				ExtraMaps_Add(mapname);
-			} while(FindNextFile(Find,&FindFileData));
+                Find = FindFirstFile(filestring,&FindFileData);
+                if(Find == INVALID_HANDLE_VALUE)
+                    continue;
+
+                do
+                {
+                    COM_StripExtension(FindFileData.cFileName,cMapName);
+
+                    ExtraMaps_Add(cMapName);
+                } while(FindNextFile(Find,&FindFileData));
+			}
+#else // linux
+            {
+                DIR             *dDirectory;
+                struct  dirent  *dEntry;
+
+                sprintf(filestring,"%s/maps",search->filename);
+
+                dDirectory = opendir(filestring);
+                if(dDirectory)
+                {
+                    while((dEntry = readdir(dDirectory)))
+                    {
+                        if(strstr(dEntry->d_name,".bsp"))
+                        {
+                            COM_StripExtension(dEntry->d_name,cMapName);
+
+                            ExtraMaps_Add(cMapName);
+                        }
+                    }
+
+                    closedir(dDirectory);
+                }
+            }
+#endif
 		}
 		else //pakfile
 		{
@@ -285,12 +313,11 @@ void ExtraMaps_Init (void) //TODO: move win32 specific stuff to sys_win.c
 					if(strstr(pak->files[i].name,".bsp"))
 						if(pak->files[i].filelen > 32*1024) // Don't list files under 32k (ammo boxes etc)
 						{
-							COM_StripExtension(pak->files[i].name+5,mapname);
-							ExtraMaps_Add(mapname);
+							COM_StripExtension(pak->files[i].name+5,cMapName);
+							ExtraMaps_Add(cMapName);
 						}
 		}
 	}
-#endif
 }
 
 void ExtraMaps_Clear (void)

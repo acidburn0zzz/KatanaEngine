@@ -76,7 +76,6 @@ typedef struct
 	int		type;		// PLANE_X - PLANE_ANYZ ?remove? trivial to regenerate
 } dplane_t;
 
-#define	CONTENTS_SLIME		-4
 #define	CONTENTS_LAVA		-5
 #define	CONTENTS_SKY		-6
 

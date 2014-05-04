@@ -118,7 +118,6 @@ void gFileSystem_ScanDirectory(const char *ccPath,void (*vFunction)(const char *
 
 	FindClose(hFile);
 #else	// Linux
-
 #endif
 }
 
