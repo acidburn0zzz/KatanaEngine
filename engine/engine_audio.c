@@ -52,8 +52,8 @@ void Audio_Initialize(void)
 	alGetError();
 
 	// [8/10/2012] Set the initial listener position ~hogsy
-	alListener3f(AL_POSITION,vec3_origin[X],vec3_origin[Y],vec3_origin[Z]);
-	alListener3f(AL_ORIENTATION,vec3_origin[X],vec3_origin[Y],vec3_origin[Z]);
+	alListenerfv(AL_POSITION,vec3_origin);
+	alListenerfv(AL_ORIENTATION,vec3_origin);
 
 	bAudioInitialized = true;
 }
@@ -85,21 +85,12 @@ void Audio_PlaySound(AudioSound_t *asSample)
 	alSourcei(aAudioSource[0],AL_BUFFER,Audio.iAudioBuffer);
 
 	Audio.iAudioSource++;
+
+	alSourcePlay(Audio.iAudioSource);
 #endif
 }
 
-#if 0
-void Audio_LoadSound(
-	char *cSound,
-	// [9/1/2013] Various parms that can be set ~hogsy
-	float	fPitch,
-	float	fGain,
-	vec3_t	vPosition,
-	vec3_t	vVelocity,
-	BOOL	bLoop)
-#else
 sfxcache_t *Audio_LoadSound(sfx_t *sSoundEffect)
-#endif
 {
 	byte		*bData,
 				bStackBuffer[1*1024];
@@ -144,14 +135,20 @@ void Audio_Process(void)
 	}
 
 	// [5/8/2013] Update listener position ~hogsy
-	alListener3f(AL_POSITION,vPosition[X],vPosition[Y],vPosition[Z]);
-	alListener3f(AL_ORIENTATION,vOrientation[X],vOrientation[Y],vOrientation[Z]);
+	alListenerfv(AL_POSITION,vPosition);
+	alListenerfv(AL_ORIENTATION,vOrientation);
 }
 
 void Audio_Shutdown(void)
 {
+	int i;
+
 	if(!bAudioInitialized)
 		return;
+
+	// [4/9/2014] Stop all active sources ~hogsy
+	for(i = 0; i < Audio.iAudioSource; i++)
+		alSourceStop(i);
 
 	aAudioContext = alcGetCurrentContext();
 	if(!aAudioContext)

@@ -10,6 +10,9 @@
     <Filter Include="Video">
       <UniqueIdentifier>{77ea4c2d-fc29-4aeb-bb27-3c33e9606552}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{756baf0d-9c64-4827-ba82-fcc905b86cbe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\chase.c" />
@@ -30,9 +33,6 @@
     <ClCompile Include="..\menu.c" />
     <ClCompile Include="..\pr_edict.c" />
     <ClCompile Include="..\sbar.c" />
-    <ClCompile Include="..\snd_dma.c" />
-    <ClCompile Include="..\snd_mem.c" />
-    <ClCompile Include="..\snd_mix.c" />
     <ClCompile Include="..\sv_main.c" />
     <ClCompile Include="..\sv_user.c" />
     <ClCompile Include="..\sys_win.c" />
@@ -121,7 +121,6 @@
     <ClCompile Include="..\net_wins.c">
       <Filter>Networking</Filter>
     </ClCompile>
-    <ClCompile Include="engine_audio.c" />
     <ClCompile Include="engine_client.c" />
     <ClCompile Include="engine_editor.c" />
     <ClCompile Include="engine_console.c" />
@@ -136,6 +135,18 @@
     <ClCompile Include="engine_physics.c" />
     <ClCompile Include="engine_cvar.c" />
     <ClCompile Include="engine_command.c" />
+    <ClCompile Include="engine_audio.c">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\snd_mix.c">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\snd_mem.c">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\snd_dma.c">
+      <Filter>Audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\shared_client.h">

@@ -32,7 +32,7 @@
 
 #include "shared_server.h"
 
-#include "platform/include/platform_filesystem.h"
+#include "platform_filesystem.h"
 
 /*	A server can allways be started, even if the system started out as a client
 	to a remote system.
@@ -612,13 +612,7 @@ void _Host_Frame (float time)
 		time2 = Sys_FloatTime ();
 
 	if(cls.signon == SIGNONS)
-	{
-		S_Update(r_origin,vpn,vright,vup);
-
 		CL_DecayLights();
-	}
-	else
-		S_Update(vec3_origin,vec3_origin,vec3_origin,vec3_origin);
 
 	if (host_speeds.value)
 	{

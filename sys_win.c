@@ -249,7 +249,7 @@ void Sys_Error(char *error, ...)
 
 	Console_WriteToLog("log.txt","Error: %s",text);
 
-	if (bIsDedicated)
+	if(bIsDedicated)
 	{
 		//sprintf(text2,"ERROR: %s\n",text);
 
