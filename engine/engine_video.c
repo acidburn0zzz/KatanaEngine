@@ -14,7 +14,6 @@
 		- Move all/most API-specific code here.
 */
 
-#include "KatEditor.h"
 #include "engine_game.h"
 #include "engine_input.h"
 #include "engine_menu.h"
@@ -31,7 +30,7 @@ SDL_GLContext	sMainContext;
 
 cvar_t	cvShowModels			= {	"video_showmodels",			"1",    false,  false,  "Toggles models."                                   };
 cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",	true,   false,  "Changes the number of samples."	                };
-cvar_t	cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",	true	                                                            };
+cvar_t	cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",	true,   false,  "Changes the number of buffers."                    };
 cvar_t	cvFullscreen			= {	"video_fullscreen",			"0",	true,   false,  "1: Fullscreen, 0: Windowed"	                    };
 cvar_t	cvWidth					= {	"video_width",				"640",	true,   false,  "Sets the width of the window."	                    };
 cvar_t	cvHeight				= {	"video_height",				"480",	true,   false,  "Sets the height of the window."	                };
@@ -434,26 +433,26 @@ bool bMultitextureEnabled = false;
 
 void Video_SelectTexture(unsigned int uiTarget)
 {
-	static  unsigned    int uiCurrentTarget;
-	static  int             ct0,ct1;
+	unsigned int uiUnit;
 
-	if(uiTarget == uiCurrentTarget)
+	if(uiTarget == Video.uiActiveUnit)
         return;
 
-	glActiveTextureARB(uiTarget);
+    switch(uiTarget)
+    {
+    case 0:
+        uiUnit = GL_TEXTURE0;
+        break;
+    case 1:
+        uiUnit = GL_TEXTURE1;
+        break;
+    default:
+        Sys_Error("Unknown texture unit! (%i)\n",uiTarget);
+    }
 
-	if(uiTarget == VIDEO_TEXTURE0)
-	{
-		ct1 = Video.uiSecondaryUnit;
-		Video.uiSecondaryUnit = ct0;
-	}
-	else
-	{
-		ct0 = Video.uiSecondaryUnit;
-		Video.uiSecondaryUnit = ct1;
-	}
+	glActiveTextureARB(uiUnit);
 
-	uiCurrentTarget = uiTarget;
+	Video.uiActiveUnit = uiTarget;
 }
 
 void Video_DisableMultitexture(void)
@@ -461,13 +460,9 @@ void Video_DisableMultitexture(void)
     if(!bMultitextureEnabled)
         return;
 
-#if 0
     Video_DisableCapabilities(VIDEO_TEXTURE_2D);
-#else
-    glDisable(GL_TEXTURE_2D);
-#endif
 
-    Video_SelectTexture(VIDEO_TEXTURE0);
+    Video_SelectTexture(0);
 
     bMultitextureEnabled = false;
 }
@@ -477,13 +472,9 @@ void Video_EnableMultitexture(void)
     if(!Video.bMultitexture)
         return;
 
-    Video_SelectTexture(VIDEO_TEXTURE1);
+    Video_SelectTexture(1);
 
-#if 0
     Video_EnableCapabilities(VIDEO_TEXTURE_2D);
-#else
-    glEnable(GL_TEXTURE_2D);
-#endif
 
     bMultitextureEnabled = true;
 }
@@ -557,8 +548,8 @@ void Video_DrawObject(
 		{
 			if(bMultiTexture)
 			{
-				glMultiTexCoord2fv(VIDEO_TEXTURE0,voObject[i].vTextureCoord[0]);
-				glMultiTexCoord2fv(VIDEO_TEXTURE1,voObject[i].vTextureCoord[1]);
+				glMultiTexCoord2fv(GL_TEXTURE0,voObject[i].vTextureCoord[0]);
+				glMultiTexCoord2fv(GL_TEXTURE1,voObject[i].vTextureCoord[1]);
 			}
 			else
 				glTexCoord2fv(voObject[i].vTextureCoord[0]);
@@ -611,7 +602,7 @@ VideoCapabilities_t	vcCapabilityList[]=
 	{   0   }
 };
 
-static unsigned int	iSavedCapabilites[2];
+static unsigned int	iSavedCapabilites[4][2];
 
 /*	Set rendering capabilities for current draw.
 	Cleared using Video_DisableCapabilities.
@@ -630,11 +621,12 @@ void Video_EnableCapabilities(unsigned int iCapabilities)
             if(cvVideoDebug.value)
                 Con_Printf("Video: Enabling %s\n",vcCapabilityList[i].ccIdentifier);
 
-			glEnable(vcCapabilityList[i].uiSecond);
-
             if(!sbVideoCleanup)
+
                 // [24/2/2014] Collect up a list of the new capabilities we set ~hogsy
-                iSavedCapabilites[0] |= vcCapabilityList[i].uiFirst;
+                iSavedCapabilites[][0] |= vcCapabilityList[i].uiFirst;
+
+			glEnable(vcCapabilityList[i].uiSecond);
 		}
     }
 }
@@ -655,11 +647,11 @@ void Video_DisableCapabilities(unsigned int iCapabilities)
             if(cvVideoDebug.value)
                 Con_Printf("Video: Disabling %s\n",vcCapabilityList[i].ccIdentifier);
 
-			glDisable(vcCapabilityList[i].uiSecond);
-
             if(!sbVideoCleanup)
                 // [24/2/2014] Collect up a list of the new capabilities we disabled ~hogsy
                 iSavedCapabilites[1] |= vcCapabilityList[i].uiFirst;
+
+			glDisable(vcCapabilityList[i].uiSecond);
 		}
     }
 }
@@ -679,20 +671,13 @@ void Video_ResetCapabilities(bool bClearActive)
             Con_Printf("Video: Clearing active capabilities...\n");
 
         sbVideoCleanup = true;
-#if 0
-        if(!iSavedCapabilites[0] && !iSavedCapabilites[1])
-            Sys_Error("Attempted to reset video capabilities when no capabilities have been set!\n");
-        else
-        {
-#endif
-            if(iSavedCapabilites[0])
-                Video_DisableCapabilities(iSavedCapabilites[0]);
 
-            if(iSavedCapabilites[1])
-                Video_EnableCapabilities(iSavedCapabilites[1]);
-#if 0
-        }
-#endif
+        {
+        if(iSavedCapabilites[0][0])
+            Video_DisableCapabilities(iSavedCapabilites[0][0]);
+
+        if(iSavedCapabilites[0][1])
+            Video_EnableCapabilities(iSavedCapabilites[1]);
 
         if(sbVideoIgnoreDepth)
             Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_IGNORE);

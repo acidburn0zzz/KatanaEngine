@@ -15,6 +15,7 @@
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-fPIC" />
+					<Add option="-DGAME_OPENKATANA" />
 					<Add directory="../" />
 					<Add directory="../shared" />
 					<Add directory="../game/shared" />
@@ -34,6 +35,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="menu_button.h" />
+		<Unit filename="menu_input.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="menu_main.c">
 			<Option compilerVar="CC" />
 		</Unit>

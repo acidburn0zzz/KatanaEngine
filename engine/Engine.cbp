@@ -36,6 +36,7 @@
 			<Add directory="../platform/include" />
 			<Add directory="../external/SDL2/include" />
 			<Add directory="../external/AntTweakBar/include" />
+			<Add directory="../external/glee" />
 		</Compiler>
 		<Linker>
 			<Add option="-lGL" />

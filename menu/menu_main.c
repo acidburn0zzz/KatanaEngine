@@ -84,7 +84,7 @@ cvar_t	cvShowAmmo		= {	"menu_showammo",	"2",	true,	false,  "Toggle the ammo HUD.
 // [2/8/2012] Added menu_debug ~hogsy
 cvar_t	cvDebugMenu		= { "menu_debug",		"0",    false,  false,  "Toggle the display of any debugging information."  };
 
-int	screenwidth,screenheight;
+int	iScreenWidth,screenheight;
 
 // [13/8/2013] Fixed ~hogsy
 int	iMousePosition[2];
@@ -105,10 +105,10 @@ char *va(char *format,...)
 	return string;
 }
 
-#if 0
 void Input_ToggleMenu(void);		// menu_input.c
 void Input_ToggleScoreboard(void);	// menu_input.c
-#endif
+
+void Menu_GetScreenSize(void);
 
 void Menu_Initialize(void)
 {
@@ -124,13 +124,12 @@ void Menu_Initialize(void)
 	// [2/8/2012] Added menu_debug ~hogsy
 	Engine.Cvar_RegisterVariable(&cvDebugMenu,NULL);
 
-#if 0
 	Engine.Cmd_AddCommand("menu_togglescores",Input_ToggleScoreboard);
 	Engine.Cmd_AddCommand("menu_toggle",Input_ToggleMenu);
-#endif
 
 //	Script_Initialize();
 
+#ifdef GAME_OPENKATANA
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"topbar");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"topclose");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"loading");
@@ -140,13 +139,15 @@ void Menu_Initialize(void)
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"messenger");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"cross");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"armor");
+#elif GAME_ADAMAS
+    Engine.Client_PrecacheResource(RESOURCE_TEXTURE,"textures/sprites/healthicon");
+#endif
 
 	// [2/8/2012] Precache all the HUD digits ~hogsy
 	for(i = 0; i < 10; i++)
 		Engine.Client_PrecacheResource(RESOURCE_TEXTURE,va(HUD_BASEPATH"num%i",i));
 
-	screenwidth		= Engine.GetScreenWidth();
-	screenheight	= Engine.GetScreenHeight();
+	Menu_GetScreenSize();
 
 #if 0
 	{
@@ -203,7 +204,7 @@ void Menu_Initialize(void)
 // [29/8/2012] Temporary function to deal with screensize changes. Should add Menu_UpdateState (called from engine upon display change). ~hogsy
 void Menu_GetScreenSize(void)
 {
-	screenwidth		= Engine.GetScreenWidth();
+	iScreenWidth	= Engine.GetScreenWidth();
 	screenheight	= Engine.GetScreenHeight();
 }
 
@@ -363,27 +364,27 @@ void Menu_DrawHUD(void)
 			iNSize[WIDTH]	= 24;
 			iNSize[HEIGHT]	= 16;
 
-			Engine.DrawPic(HUD_BASEPATH"ammo",1.0f,screenwidth-iHSize[WIDTH],screenheight-iHSize[HEIGHT]+20,iHSize[WIDTH],iHSize[HEIGHT]);
+			Engine.DrawPic(HUD_BASEPATH"ammo",1.0f,iScreenWidth-iHSize[WIDTH],screenheight-iHSize[HEIGHT]+20,iHSize[WIDTH],iHSize[HEIGHT]);
 
 			if(ammo > 0)
 			{
 				if (ammo >= 100)
 				{
 					iAmmo[0] = ammo/100;
-					Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[0]),1.0f,screenwidth-134,screenheight-69+20,iNSize[WIDTH],iNSize[HEIGHT]);
+					Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[0]),1.0f,iScreenWidth-134,screenheight-69+20,iNSize[WIDTH],iNSize[HEIGHT]);
 				}
 
 				if(ammo >= 10)
 				{
 					iAmmo[1] = (ammo % 100)/10;
-					Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[1]),1.0f,screenwidth-96,screenheight-69+20,iNSize[WIDTH],iNSize[HEIGHT]);
+					Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[1]),1.0f,iScreenWidth-96,screenheight-69+20,iNSize[WIDTH],iNSize[HEIGHT]);
 				}
 
 				iAmmo[2] = ammo % 10;
-				Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[2]),1.0f,screenwidth-57,screenheight-69+20,iNSize[WIDTH],iNSize[HEIGHT]);
+				Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[2]),1.0f,iScreenWidth-57,screenheight-69+20,iNSize[WIDTH],iNSize[HEIGHT]);
 			}
 			else
-				Engine.DrawPic(va(HUD_BASEPATH"num0"),1.0f,screenwidth-57,screenheight-69+20,iNSize[WIDTH],iNSize[HEIGHT]);
+				Engine.DrawPic(va(HUD_BASEPATH"num0"),1.0f,iScreenWidth-57,screenheight-69+20,iNSize[WIDTH],iNSize[HEIGHT]);
 
 		}
 		else if(cvShowAmmo.value == 2)
@@ -395,17 +396,17 @@ void Menu_DrawHUD(void)
 			if(ammo >= 100)
 			{
 				iAmmo[0] = ammo/100;
-				Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[0]),1.0f,screenwidth-94,screenheight-40,iNSize[WIDTH],iNSize[HEIGHT]);
+				Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[0]),1.0f,iScreenWidth-94,screenheight-40,iNSize[WIDTH],iNSize[HEIGHT]);
 			}
 
 			if(ammo >= 10)
 			{
 				iAmmo[1] = (ammo % 100)/10;
-				Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[1]),1.0f,screenwidth-70,screenheight-40,iNSize[WIDTH],iNSize[HEIGHT]);
+				Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[1]),1.0f,iScreenWidth-70,screenheight-40,iNSize[WIDTH],iNSize[HEIGHT]);
 			}
 
 			iAmmo[2] = ammo % 10;
-			Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[2]),1.0f,screenwidth-46,screenheight-40,iNSize[WIDTH],iNSize[HEIGHT]);
+			Engine.DrawPic(va(HUD_BASEPATH"num%i",iAmmo[2]),1.0f,iScreenWidth-46,screenheight-40,iNSize[WIDTH],iNSize[HEIGHT]);
 		}
 	}
 
@@ -468,7 +469,7 @@ void Menu_Draw(void)
 #if 1
 	if(iMenuState & MENU_STATE_LOADING)
 		// [21/5/2013] TODO: Switch to element ~hogsy
-		Engine.DrawPic(MENU_BASEPATH"loading",1.0f,(screenwidth-256)/2,(screenheight-32)/2,256,32);
+		Engine.DrawPic(MENU_BASEPATH"loading",1.0f,(iScreenWidth-256)/2,(screenheight-32)/2,256,32);
 
 	if(iMenuState & MENU_STATE_PAUSED)
 		Engine.DrawPic(MENU_BASEPATH"paused",1.0f,0,0,32,64);
@@ -479,7 +480,7 @@ void Menu_Draw(void)
 	if(iMenuState & MENU_STATE_SCOREBOARD)
 	{
 		// [10/11/2013] TEMP: Added for MP test ~hogsy
-		Engine.DrawFill((screenwidth/2),(screenheight/2),128,35,0,0,0,0.7f);
+		Engine.DrawFill((iScreenWidth/2),(screenheight/2),128,35,0,0,0,0.7f);
 		Engine.DrawString(255,10,"Player Score:");
 		Engine.DrawString(270,20,va("%d",Engine.Client_GetStat(STAT_FRAGS)));
 	}

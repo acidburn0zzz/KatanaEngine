@@ -453,7 +453,7 @@ void LightWorld( void )
 
 	// LordHavoc: let there be light
 	count = dmodels[0].numfaces;
-	org[0] = org[1] = org[2] = 0;
+	VectorClear(org);
 	oldtime = time( NULL );
 
 	c_occluded = 0;
@@ -520,15 +520,15 @@ int Light_Main( int argc, char **argv )
 	double start, end;
 	int i;
 
-	extrasamplesbit = 0;
-	lightvis = true;
-	relight = false;
-	globallightscale = 1.0;
-	globallightradiusscale = 1.0;
-	minlight = 0;
-	ambientlight = 0;
-	defaultlighttype = LIGHTTYPE_MINUSX;
-	overridelighttypes = false;
+	extrasamplesbit         = 0;
+	lightvis                = true;
+	relight                 = false;
+	globallightscale        = 1.0;
+	globallightradiusscale  = 1.0;
+	minlight                = 0;
+	ambientlight            = 0;
+	defaultlighttype        = LIGHTTYPE_MINUSX;
+	overridelighttypes      = false;
 
 	for( i = 1; i < argc; i++ )
 	{

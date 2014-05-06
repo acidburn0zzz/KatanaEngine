@@ -381,7 +381,7 @@
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/menu/menu_button.h
 	"menu_main.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/menu/menu_main.h
+1399370599 /home/hogsy/dev/ProjectKatana/trunk/menu/menu_main.h
 	"platform.h"
 	"shared_flags.h"
 	"shared_menu.h"
@@ -442,10 +442,13 @@
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_client.h
 
-1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/menu/menu_main.c
+1399372234 source:/home/hogsy/dev/ProjectKatana/trunk/menu/menu_main.c
 	"menu_main.h"
 	"platform_module.h"
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
 	"platform.h"
+
+1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/menu/menu_input.c
+	"menu_main.h"
 

@@ -89,25 +89,10 @@ void DrawGLPoly(glpoly_t *p)
 	v = p->verts[0];
 	for(i = 0; i < p->numverts; i++, v += VERTEXSIZE)
 	{
-		glTexCoord2f(v[3],v[4]);
+        if(!r_showtris.value)
+            glTexCoord2f(v[3],v[4]);
 		glVertex3fv(v);
 	}
-
-	glEnd();
-}
-
-/*	johnfitz -- like DrawGLPoly but for r_showtris
-*/
-void DrawGLTriangleFan (glpoly_t *p)
-{
-	float	*v;
-	int		i;
-
-	glBegin(GL_TRIANGLE_FAN);
-
-	v = p->verts[0];
-	for (i=0 ; i<p->numverts ; i++, v+= VERTEXSIZE)
-		glVertex3fv(v);
 
 	glEnd();
 }
@@ -684,9 +669,9 @@ void R_DrawBrushModel_ShowTris (entity_t *e)
 		{
 			if ((psurf->flags & SURF_DRAWTURB) && r_oldwater.value)
 				for (p = psurf->polys->next; p; p = p->next)
-					DrawGLTriangleFan (p);
+					DrawGLPoly(p);
 			else
-				DrawGLTriangleFan (psurf->polys);
+				DrawGLPoly(psurf->polys);
 		}
 	}
 

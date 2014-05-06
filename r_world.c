@@ -221,13 +221,13 @@ void R_DrawTextureChains_ShowTris (void)
 			for (s = t->texturechain; s; s = s->texturechain)
 				if (!s->culled)
 					for (p = s->polys->next; p; p = p->next)
-						DrawGLTriangleFan (p);
+						DrawGLPoly (p);
 		}
 		else
 		{
 			for (s = t->texturechain; s; s = s->texturechain)
 				if (!s->culled)
-					DrawGLTriangleFan (s->polys);
+					DrawGLPoly (s->polys);
 		}
 	}
 }

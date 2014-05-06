@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="Katana">
-		<Project filename="engine/Engine.cbp" />
+		<Project filename="engine/Engine.cbp">
+			<Depends filename="platform/Platform.cbp" />
+		</Project>
 		<Project filename="game/Game.cbp" />
 		<Project filename="menu/Menu.cbp" />
 		<Project filename="launcher/Launcher.cbp">

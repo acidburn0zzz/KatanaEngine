@@ -338,10 +338,7 @@ void View_CalculateBlend(void)
 		vColor[BLUE]	= vColor[BLUE]*(1-vColor[ALPHA])+cl.cshifts[j].destcolor[2]*vColor[ALPHA];
 	}
 
-	vColor[RED]		/= 255.0f;
-	vColor[GREEN]	/= 255.0f;
-	vColor[BLUE]	/= 255.0f;
-
+	Math_VectorDivide(vColor,255.0f,vColor);
 	Math_VectorCopy(vColor,vViewBlend);
 
 	if(vViewBlend[3] > 1.0f)

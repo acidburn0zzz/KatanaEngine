@@ -59,13 +59,14 @@ bool gFileSystem_CreateDirectory(const char *ccPath)
 */
 void gFileSystem_GetUserName(char *cOut)
 {
-	char	cUser[128] = "user";
+	char	*cUser = "user";
 #ifdef _WIN32
 	DWORD	dName = sizeof(cUser);
 
 	if(GetUserName(cUser,&dName))
 #else   // Linux
-	if(getlogin_r(cUser,sizeof(cUser)))
+    cUser = getenv("LOGNAME");
+	if(strcasecmp(cUser,"user"))
 #endif
 	{
 		int	i		= 0,

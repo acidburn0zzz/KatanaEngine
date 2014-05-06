@@ -11,11 +11,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Compiler>
-					<Add option="-O2" />
-				</Compiler>
 				<Linker>
-					<Add option="-s" />
 					<Add option="-lpthread" />
 				</Linker>
 			</Target>

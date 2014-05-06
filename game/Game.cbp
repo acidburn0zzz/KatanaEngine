@@ -41,9 +41,6 @@
 		<Unit filename="../shared/shared_menu.h" />
 		<Unit filename="../shared/shared_module.h" />
 		<Unit filename="../shared/shared_server.h" />
-		<Unit filename="client/cl_player.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="client/client_main.c">
 			<Option compilerVar="CC" />
 		</Unit>

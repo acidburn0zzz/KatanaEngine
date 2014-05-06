@@ -24,7 +24,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	662	// 3/5/2014
+#define ENGINE_VERSION_BUILD	665	// 6/5/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"
@@ -43,8 +43,7 @@
 #define	EXTENSION_MAP	".map"
 #define EXTENSION_MODEL	".md2"
 
-// [1/3/2013] Rewritten ~hogsy
-// [19/5/2013] Moved here from cmdlib.h ~hogsy
+// [6/5/2014] TODO: This needs to die already ~hogsy
 #ifndef __cplusplus
 #define qboolean	bool
 #endif

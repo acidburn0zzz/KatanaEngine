@@ -12,7 +12,7 @@
 #include "shared_engine.h"
 #include "shared_game.h"
 
-#define	MENU_BASEPATH	"textures/menu/"
+#define	MENU_BASEPATH	"textures/sprites/menu/"
 #define HUD_BASEPATH	"textures/interface/hud/"
 #define EDITOR_BASEPATH	MENU_BASEPATH"editor/"
 
