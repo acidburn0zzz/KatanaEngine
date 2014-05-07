@@ -113,6 +113,8 @@ void R_DrawSequentialPoly(msurface_t *s)
 	float		entalpha;
 	int			i;
 
+	return;
+
 	t = R_TextureAnimation (s->texinfo->texture, currententity->frame);
 	entalpha = ENTALPHA_DECODE(currententity->alpha);
 
@@ -601,8 +603,10 @@ void Brush_Draw(entity_t *e)
 	// draw it
 	//
 
+    Video_ResetCapabilities(false);
+
 	if (r_drawflat_cheatsafe) //johnfitz
-		glDisable(GL_TEXTURE_2D);
+		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 
 	for (i=0 ; i<clmodel->nummodelsurfaces ; i++, psurf++)
 	{
@@ -616,10 +620,7 @@ void Brush_Draw(entity_t *e)
 		}
 	}
 
-	if (r_drawflat_cheatsafe) //johnfitz
-		glEnable(GL_TEXTURE_2D);
-
-	Video_DisableMultitexture(); // selects TEXTURE0
+	Video_ResetCapabilities(true);
 
 	glPopMatrix ();
 }

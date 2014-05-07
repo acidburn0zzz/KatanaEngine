@@ -573,23 +573,24 @@ void World_Draw(void)
 {
 	if (!r_drawworld_cheatsafe)
 		return;
-	else if(r_drawflat_cheatsafe)
+
+    Video_ResetCapabilities(false);
+
+	if(r_drawflat_cheatsafe)
 	{
-		glDisable (GL_TEXTURE_2D);
+		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 
 		R_DrawTextureChains_Drawflat();
 
-		glEnable (GL_TEXTURE_2D);
-
+		Video_ResetCapabilities(true);
 		return;
 	}
 	else if(r_fullbright_cheatsafe)
 	{
 		R_DrawTextureChains_TextureOnly ();
 
-		glDepthMask(false);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE,GL_ONE);
+        Video_EnableCapabilities(VIDEO_BLEND);
+		Video_SetBlend(VIDEO_BLEND_ONE,VIDEO_DEPTH_FALSE);
 
 		Fog_StartAdditive();
 
@@ -597,10 +598,7 @@ void World_Draw(void)
 
 		Fog_StopAdditive();
 
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		glDisable(GL_BLEND);
-		glDepthMask(true);
-
+		Video_ResetCapabilities(true);
 		return;
 	}
 	else if(r_lightmap_cheatsafe)
@@ -609,6 +607,7 @@ void World_Draw(void)
 		R_DrawLightmapChains();
 		R_DrawTextureChains_White();
 
+		Video_ResetCapabilities(true);
 		return;
 	}
 

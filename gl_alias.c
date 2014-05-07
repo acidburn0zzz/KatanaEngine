@@ -587,7 +587,6 @@ void Alias_Draw(void)
 	R_SetupModelLighting(currententity->origin);
 
     Video_ResetCapabilities(false);
-	Video_DisableMultitexture();
 
 	if(!r_drawflat_cheatsafe)
 	{

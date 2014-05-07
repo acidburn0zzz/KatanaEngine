@@ -71,6 +71,9 @@ extern SDL_Window	*sMainWindow;
 #define VIDEO_TEXTURE0 0x84C0
 #define VIDEO_TEXTURE1 0x84C1
 
+#define VIDEO_STATE_ENABLE   0
+#define VIDEO_STATE_DISABLE  1
+
 // Primitive Types
 typedef enum
 {

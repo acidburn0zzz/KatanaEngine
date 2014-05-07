@@ -318,11 +318,12 @@ void Draw_Shadow(entity_t *ent)
 			{	{	-fShadowScale[0],	-fShadowScale[1],	0	},	{	{	0,		1.0f	}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	}
 		};
 
+		Video_ResetCapabilities(false);
+
 		Video_SetTexture(gShadow);
 
 		glPushMatrix();
 
-		Video_ResetCapabilities(false);
 		Video_EnableCapabilities(VIDEO_BLEND);
 		Video_DisableCapabilities(VIDEO_ALPHA_TEST);
 

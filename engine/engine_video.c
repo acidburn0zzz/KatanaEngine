@@ -374,6 +374,8 @@ void Video_UpdateWindow(void)
 	vid.conheight	= vid.conwidth*Video.iHeight/Video.iWidth;
 }
 
+/**/
+
 static bool sbVideoCleanup      = false,
             sbVideoIgnoreDepth  = true;
 
@@ -392,6 +394,9 @@ void Video_SetTexture(gltexture_t *gTexture)
 	gTexture->visframe = r_framecount;
 
 	glBindTexture(GL_TEXTURE_2D,gTexture->texnum);
+
+	if(cvVideoDebug.value)
+        Con_Printf("Video: Bound texture (%s) (%i)\n",gTexture->name,Video.uiActiveUnit);
 }
 
 /*  Changes the active blending mode.
@@ -453,30 +458,21 @@ void Video_SelectTexture(unsigned int uiTarget)
 	glActiveTextureARB(uiUnit);
 
 	Video.uiActiveUnit = uiTarget;
+
+	if(cvVideoDebug.value)
+        Con_Printf("Video: Texture Unit %i\n",Video.uiActiveUnit);
 }
 
 void Video_DisableMultitexture(void)
 {
-    if(!bMultitextureEnabled)
-        return;
-
-    Video_DisableCapabilities(VIDEO_TEXTURE_2D);
-
+//  Video_DisableCapabilities(VIDEO_TEXTURE_2D);
     Video_SelectTexture(0);
-
-    bMultitextureEnabled = false;
 }
 
 void Video_EnableMultitexture(void)
 {
-    if(!Video.bMultitexture)
-        return;
-
     Video_SelectTexture(1);
-
     Video_EnableCapabilities(VIDEO_TEXTURE_2D);
-
-    bMultitextureEnabled = true;
 }
 
 /*
@@ -611,6 +607,9 @@ void Video_EnableCapabilities(unsigned int iCapabilities)
 {
 	int	i;
 
+	if(!iCapabilities)
+        return;
+
 	for(i = 0; i < sizeof(vcCapabilityList); i++)
 	{
         if(!vcCapabilityList[i].uiFirst)
@@ -622,9 +621,8 @@ void Video_EnableCapabilities(unsigned int iCapabilities)
                 Con_Printf("Video: Enabling %s\n",vcCapabilityList[i].ccIdentifier);
 
             if(!sbVideoCleanup)
-
                 // [24/2/2014] Collect up a list of the new capabilities we set ~hogsy
-                iSavedCapabilites[][0] |= vcCapabilityList[i].uiFirst;
+                iSavedCapabilites[Video.uiActiveUnit][VIDEO_STATE_ENABLE] |= vcCapabilityList[i].uiFirst;
 
 			glEnable(vcCapabilityList[i].uiSecond);
 		}
@@ -636,6 +634,9 @@ void Video_EnableCapabilities(unsigned int iCapabilities)
 void Video_DisableCapabilities(unsigned int iCapabilities)
 {
 	int	i;
+
+	if(!iCapabilities)
+        return;
 
 	for(i = 0; i < sizeof(vcCapabilityList); i++)
 	{
@@ -649,7 +650,7 @@ void Video_DisableCapabilities(unsigned int iCapabilities)
 
             if(!sbVideoCleanup)
                 // [24/2/2014] Collect up a list of the new capabilities we disabled ~hogsy
-                iSavedCapabilites[1] |= vcCapabilityList[i].uiFirst;
+                iSavedCapabilites[Video.uiActiveUnit][VIDEO_STATE_DISABLE] |= vcCapabilityList[i].uiFirst;
 
 			glDisable(vcCapabilityList[i].uiSecond);
 		}
@@ -672,12 +673,18 @@ void Video_ResetCapabilities(bool bClearActive)
 
         sbVideoCleanup = true;
 
+        // [7/5/2014] Disable/Enable old states by unit... Ugh ~hogsy
         {
-        if(iSavedCapabilites[0][0])
-            Video_DisableCapabilities(iSavedCapabilites[0][0]);
+            Video_SelectTexture(1);
 
-        if(iSavedCapabilites[0][1])
-            Video_EnableCapabilities(iSavedCapabilites[1]);
+            Video_DisableCapabilities(iSavedCapabilites[1][0]);
+            Video_EnableCapabilities(iSavedCapabilites[1][1]);
+
+            Video_SelectTexture(0);
+
+            Video_DisableCapabilities(iSavedCapabilites[0][0]);
+            Video_EnableCapabilities(iSavedCapabilites[0][1]);
+        }
 
         if(sbVideoIgnoreDepth)
             Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_IGNORE);
@@ -693,9 +700,11 @@ void Video_ResetCapabilities(bool bClearActive)
             Con_Printf("Video: Finished clearing capabilities.\n");
 	}
 
-	if(iSavedCapabilites)
-        // [24/2/2014] Nullify these ~hogsy
-        memset(iSavedCapabilites,0,sizeof(iSavedCapabilites));
+    // [7/5/2014] Clear out capability list ~hogsy
+    iSavedCapabilites[1][0] =
+    iSavedCapabilites[1][1] =
+    iSavedCapabilites[0][0] =
+    iSavedCapabilites[0][1] = 0;
 }
 
 /*
@@ -742,12 +751,24 @@ void Video_ProcessShader(int iType)
 void Video_Process(void)
 {
 #ifndef KATANA_VIDEO_NEXT	// Legacy renderer
+    if(cvVideoDebug.value)
+        Con_Printf("Video: Start of frame\n");
+
 	SCR_UpdateScreen();
+
+//	Menu->Draw();
 
     // [31/3/2014] Draw any ATB windows ~hogsy
 	TwDraw();
 
 	GL_EndRendering();
+
+    if(cvVideoDebug.value)
+    {
+        Con_Printf("Video: End of frame\n");
+        if(cvVideoDebug.value != 2)
+            Cvar_SetValue("video_debug",0);
+    }
 #else	// New renderer
 	static vec4_t vLight =
 	{	0,	10.0f,	20.0f,	1.0f	};
