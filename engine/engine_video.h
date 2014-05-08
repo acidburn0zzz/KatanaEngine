@@ -87,6 +87,7 @@ typedef enum
     VIDEO_BLEND_IGNORE, // Don't bother changing blend mode.
     VIDEO_BLEND_ONE,    // ONE ONE
     VIDEO_BLEND_TWO,    // RENAME!!!
+    VIDEO_BLEND_THREE,  // GL_DST_COLOR, GL_SRC_COLOR
 
     VIDEO_BLEND_ZERO    // ZERO ZERO
 } VideoBlend_t;

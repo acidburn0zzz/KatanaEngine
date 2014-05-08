@@ -39,6 +39,8 @@ cvar_t  cvVideoDebug            = { "video_debug",              "0",    false,  
 
 gltexture_t	*gDepthTexture;
 
+bool bVideoIgnoreCapabilities = false;
+
 /*	Initialize the renderer
 */
 void Video_Initialize(void)
@@ -424,6 +426,9 @@ void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
         case VIDEO_BLEND_TWO:
             glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
             break;
+        case VIDEO_BLEND_THREE:
+            glBlendFunc(GL_DST_COLOR,GL_SRC_COLOR);
+            break;
         default:
             Sys_Error("Unknown blend mode! (%i)\n",voBlendMode);
         }
@@ -508,6 +513,9 @@ void Video_DrawObject(
     else if(!uiTriangles)
         Sys_Error("Invalid number of triangles for video object!\n");
 
+    // [8/5/2014] Ignore any additional changes ~hogsy
+    bVideoIgnoreCapabilities = true;
+
 	if(r_showtris.value > 0)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
@@ -515,7 +523,7 @@ void Video_DrawObject(
 		GL_PolygonOffset(OFFSET_SHOWTRIS);
 
 		// [29/10/2013] Disable crap for tris view ~hogsy
-		Video_DisableCapabilities(VIDEO_TEXTURE_2D|VIDEO_BLEND);
+		Video_DisableCapabilities(VIDEO_TEXTURE_2D/*|VIDEO_BLEND*/);
 	}
 
     // [11/3/2014] Support different primitive types; TODO: Move into its own function? ~hogsy
@@ -566,6 +574,8 @@ void Video_DrawObject(
 
 		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
 	}
+
+	bVideoIgnoreCapabilities = false;
 
 	// [20/10/2013] Reset colour value ~hogsy
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
@@ -620,7 +630,7 @@ void Video_EnableCapabilities(unsigned int iCapabilities)
             if(cvVideoDebug.value)
                 Con_Printf("Video: Enabling %s\n",vcCapabilityList[i].ccIdentifier);
 
-            if(!sbVideoCleanup)
+            if(!sbVideoCleanup && !bVideoIgnoreCapabilities)
                 // [24/2/2014] Collect up a list of the new capabilities we set ~hogsy
                 iSavedCapabilites[Video.uiActiveUnit][VIDEO_STATE_ENABLE] |= vcCapabilityList[i].uiFirst;
 
@@ -648,7 +658,7 @@ void Video_DisableCapabilities(unsigned int iCapabilities)
             if(cvVideoDebug.value)
                 Con_Printf("Video: Disabling %s\n",vcCapabilityList[i].ccIdentifier);
 
-            if(!sbVideoCleanup)
+            if(!sbVideoCleanup && !bVideoIgnoreCapabilities)
                 // [24/2/2014] Collect up a list of the new capabilities we disabled ~hogsy
                 iSavedCapabilites[Video.uiActiveUnit][VIDEO_STATE_DISABLE] |= vcCapabilityList[i].uiFirst;
 

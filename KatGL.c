@@ -219,6 +219,7 @@ void Draw_Particles(void)
     glDepthMask(false);
 
     Video_EnableCapabilities(VIDEO_BLEND);
+    Video_DisableCapabilities(VIDEO_ALPHA_TEST);
 
 	for(pParticle = active_particles; pParticle; pParticle = pParticle->next)
 	{
@@ -336,12 +337,12 @@ void Draw_Shadow(entity_t *ent)
 
 		Video_DrawFill(voShadow);
 
-		Video_ResetCapabilities(true);
-
 		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 
 		glTranslatef(0,0,lheight+0.1);
 		glPopMatrix();
+
+		Video_ResetCapabilities(true);
 	}
 
 	// TODO: Texture projection (RTT)

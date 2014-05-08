@@ -640,9 +640,8 @@ void World_Draw(void)
 
 		Fog_EnableGFog();
 
-		glDepthMask(false);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_DST_COLOR,GL_SRC_COLOR); //2x modulate
+		Video_EnableCapabilities(VIDEO_BLEND);
+		Video_SetBlend(VIDEO_BLEND_THREE,VIDEO_DEPTH_FALSE);
 
 		Fog_StartAdditive();
 
@@ -652,7 +651,8 @@ void World_Draw(void)
 
 		if(Fog_GetDensity() > 0)
 		{
-			glBlendFunc(GL_ONE, GL_ONE); //add
+			Video_SetBlend(VIDEO_BLEND_ONE,VIDEO_DEPTH_IGNORE);
+
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 			glColor3f(0,0,0);
 
@@ -661,9 +661,7 @@ void World_Draw(void)
 			glColor3f(1,1,1);
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		}
-
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDisable(GL_BLEND);
-		glDepthMask(true);
 	}
+
+	Video_ResetCapabilities(true);
 }
