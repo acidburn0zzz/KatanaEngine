@@ -5,21 +5,35 @@
 
 /*
 	Sprite Management
-	Based around original Quake code.
 */
+
+typedef struct
+{
+    bool    bFullbright;    // If set to true, the sprite isn't effected by lighting.
+} Sprite_t;
+
+Sprite_t *sSprites;
+
+/*  Allocate a new sprite.
+*/
+Sprite_t *Sprite_Allocate()
+{
+    Sprite_t    *sAllocated;
+
+}
+
+void Sprite_Process(void)
+{}
 
 void Sprite_Draw(entity_t *eEntity)
 {
-#if 0
-	int				iCapabilities =
-		VIDEO_ALPHA_TEST;
 	VideoObject_t	voSprite[4];
 
-	Video_EnableCapabilities(iCapabilities);
+    Video_ResetCapabilities(false);
 
 	voSprite[0].vTextureCoord[0][0]	= 0;
-	//voSprite[0].vTextureCoord[0][1]	= texsize;
 
-	Video_DisableCapabilities(iCapabilities);
-#endif
+	Video_DrawFill(voSprite);
+
+	Video_ResetCapabilities(true);
 }

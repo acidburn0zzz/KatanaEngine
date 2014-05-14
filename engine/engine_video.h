@@ -137,6 +137,12 @@ void Draw_Particles(void);
 void Draw_ResetCanvas(void);
 
 /*
+    Sprite
+*/
+
+void Sprite_Draw(entity_t *eEntity);
+
+/*
 	Sky
 */
 

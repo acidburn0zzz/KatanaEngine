@@ -160,6 +160,8 @@ void Client_CreateParticleEffect(
 
 vec3_t	avelocities[NUMVERTEXNORMALS],avelocity = {23, 7, 3};
 
+float	beamlength = 16;
+
 void Client_EntityParticles(entity_t *ent)
 {
 	int			i;

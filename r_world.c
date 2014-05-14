@@ -353,7 +353,7 @@ void R_DrawTextureChains_Multitexture (void)
 				rs_brushpasses++;
 			}
 
-		Video_DisableMultitexture(); // selects TEXTURE0
+		Video_SelectTexture(0);
 	}
 }
 
@@ -571,7 +571,7 @@ void R_DrawLightmapChains (void)
 
 void World_Draw(void)
 {
-	if (!r_drawworld_cheatsafe)
+	if(!r_drawworld_cheatsafe)
 		return;
 
     Video_ResetCapabilities(false);

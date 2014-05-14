@@ -74,7 +74,6 @@ cvar_t	r_nocull				= {	"r_nocull",				"0"					};
 cvar_t	gl_finish				= {	"gl_finish",			"0"					};
 cvar_t	gl_cull					= {	"gl_cull",				"1"					};
 cvar_t	gl_smoothmodels			= {	"gl_smoothmodels",		"1"					};
-cvar_t	gl_affinemodels			= {	"gl_affinemodels",		"0"					};
 cvar_t	gl_polyblend			= {	"gl_polyblend",			"1"					};
 cvar_t	gl_flashblend			= {	"gl_flashblend",		"0"					};
 cvar_t	r_stereo				= {	"r_stereo",				"0"					};
@@ -292,6 +291,8 @@ void R_Mirror(void)
 
 	R_RenderScene();
 
+	Video_ResetCapabilities(false);
+
 	Video_EnableCapabilities(VIDEO_BLEND);
 
 	glDepthRange(0,1);
@@ -307,9 +308,8 @@ void R_Mirror(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(r_base_world_matrix);
 	glColor4f(1.0f,1.0f,1.0f,r_mirroralpha.value);
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
 
-	Video_DisableCapabilities(VIDEO_BLEND);
+	Video_ResetCapabilities(true);
 }
 
 void R_MarkSurfaces(void);          // [25/11/2013] See r_world.c ~hogsy
@@ -406,6 +406,8 @@ void R_DrawEntitiesOnList(bool bAlphaPass) //johnfitz -- added parameter
 				Brush_Draw(currententity);
 				break;
 			case MODEL_SPRITE:
+                Sprite_Draw(currententity);
+                break;
 			default:
 				Console_ErrorMessage(false,currententity->model->name,"Unrecognised model type.");
 		}
@@ -563,7 +565,8 @@ void R_ShowTris(void)
 
 	GL_PolygonOffset(OFFSET_SHOWTRIS);
 
-	glDisable(GL_TEXTURE_2D);
+	Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+
 	glColor3f(1.0f,1.0f,1.0f);
 
 	if(r_drawworld.value)

@@ -20,8 +20,6 @@ cvar_t	cvDrawParticles	= {	"video_particles",		"1",                        true,
 cvar_t	cvLitParticles	= {	"video_particles_lit",	"0",	                    true,   false,  "Sets whether or not particles are lit by dynamic lights."	};
 cvar_t	cvShadowPath	= {	"video_shadows_path",	"textures/engine/shadow",   false,  false,  "Changes the texture path used for blob shadows."	        };
 
-float	beamlength = 16;
-
 gltexture_t	/**gRenderTarget,*/*gShadow;
 
 extern vec3_t	lightspot;
@@ -182,28 +180,6 @@ void R_DrawFlares(void)
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	glColor3f(1,1,1);
 	glEnable(GL_DEPTH_TEST);
-
-	if(r_showtris.value)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		GL_PolygonOffset(OFFSET_SHOWTRIS);
-		glDisable(GL_TEXTURE_2D);
-		glColor3f(1,1,1);
-		for(f=active_flares;f;f=f->next)
-		{
-			glBegin(GL_TRIANGLE_FAN);
-			glVertex3fv(f->org);
-			Math_VectorMA(f->org,f->scale,up,f_up);
-			glVertex3fv(f_up);
-			Math_VectorMA(f_up,f->scale,right,f_upright);
-			glVertex3fv(f_upright);
-			Math_VectorMA(f->org,f->scale,right,f_right);
-			glVertex3fv(f_right);
-			glEnd();
-		}
-		glEnable(GL_TEXTURE_2D);
-		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-	}
 }
 
 void Draw_Particles(void)
@@ -393,7 +369,7 @@ void Draw_Shadow(entity_t *ent)
 		glRotatef(ent->angles[2],1,0,0);
 		glStencilOp(GL_KEEP,GL_KEEP,GL_INCR);
 
-		GL_DrawModelFrame(pmd2,lerpdata);
+		Alias_DrawModelFrame(pmd2,lerpdata);
 
 		glColor3f(1.0f,1.0f,1.0f);
 

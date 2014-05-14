@@ -249,7 +249,7 @@ void ExtraMaps_Add (char *name)
 
 void ExtraMaps_Init(void)
 {
-    char            *cMapName[128],
+    char            cMapName[128],
                     filestring[MAX_OSPATH],
 					ignorepakdir[32];
 	searchpath_t    *search;

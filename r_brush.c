@@ -113,8 +113,6 @@ void R_DrawSequentialPoly(msurface_t *s)
 	float		entalpha;
 	int			i;
 
-	return;
-
 	t = R_TextureAnimation (s->texinfo->texture, currententity->frame);
 	entalpha = ENTALPHA_DECODE(currententity->alpha);
 
@@ -608,21 +606,21 @@ void Brush_Draw(entity_t *e)
 	if (r_drawflat_cheatsafe) //johnfitz
 		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 
-	for (i=0 ; i<clmodel->nummodelsurfaces ; i++, psurf++)
+	for(i = 0; i < clmodel->nummodelsurfaces; i++,psurf++)
 	{
 		pplane = psurf->plane;
 		dot = Math_DotProduct (modelorg, pplane->normal) - pplane->dist;
 		if (((psurf->flags & SURF_PLANEBACK) && (dot < -BACKFACE_EPSILON)) ||
 			(!(psurf->flags & SURF_PLANEBACK) && (dot > BACKFACE_EPSILON)))
 		{
-			R_DrawSequentialPoly (psurf);
+			R_DrawSequentialPoly(psurf);
 			rs_brushpolys++;
 		}
 	}
 
-	Video_ResetCapabilities(true);
+	glPopMatrix();
 
-	glPopMatrix ();
+	Video_ResetCapabilities(true);
 }
 
 void R_DrawBrushModel_ShowTris (entity_t *e)

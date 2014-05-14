@@ -54,7 +54,7 @@ int main(int argc,char *argv[])
 		gModule_Unload(hEngineInstance);
 		return -1;
 	}
-
+	
 	// [8/11/2012] Initialize the engine and begin our main loop ~hogsy
 	Engine->Initialize(argc,argv);
 

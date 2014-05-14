@@ -269,7 +269,6 @@ void R_SetupModelLighting(vec3_t vOrigin)
 			}
 		}
 
-#if 1
 	// Minimum light value on players (8)
 	if(currententity > cl_entities && currententity <= cl_entities + cl.maxclients)
 	{
@@ -290,21 +289,14 @@ void R_SetupModelLighting(vec3_t vOrigin)
 		shadedots = r_avertexnormal_dots[((int)(vOrigin[0]*(SHADEDOT_QUANT/360.0f))) & (SHADEDOT_QUANT-1)];
 
 	Math_VectorScale(vLightColour,1.0f/200.0f,vLightColour);
-#else
-	Math_VectorScale(vLightColour,1.0f/255.0f,vLightColour);
-	Math_VectorCopy(vLightColour,vParameters);
-
-//	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,vParameters);
-#endif
 }
 
-void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
+void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 0 // new
-	int					i,j;
+#if 1 // new
+	int					i,j,k;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
-	MD2TriangleVertex_t	*mtvVertices,
-                        *mtvVertices2;
+	MD2TriangleVertex_t	*mtvVertices;
 	MD2Triangle_t		*mtTriangles;
 	MD2Frame_t			*frame1,*frame2;
 	vec3_t				scale1,translate1,
@@ -328,8 +320,9 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	Math_VectorScale(scale1,currententity->scale,scale1);
 	Math_VectorScale(scale2,currententity->scale,scale2);
 
-	mtvVertices     = &frame1->verts[0];
-	mtvVertices2    = &frame2->verts[0];
+	memset(voModel,0,sizeof(voModel));
+
+	mtvVertices = &frame1->verts[0];
 
 	{
 		mtTriangles	= (MD2Triangle_t*)((byte*)mModel+mModel->ofs_tris);
@@ -339,23 +332,20 @@ void GL_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 			if(!mtTriangles)
 				break;
 
-			voModel[i].vColour[0] = shadedots[mtvVertices[mtTriangles->index_xyz[0]].lightnormalindex];
-			voModel[i].vColour[1] = shadedots[mtvVertices[mtTriangles->index_xyz[1]].lightnormalindex];
-			voModel[i].vColour[2] = shadedots[mtvVertices[mtTriangles->index_xyz[2]].lightnormalindex];
-			voModel[i].vColour[3] = 1.0f;
+            for(k = 0; k < 3; k++)
+            {
+                for(j = 0; j < 3; j++)
+                {
+                    voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+translate1[j]);
+                    voModel[i].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])*0.5f;
+                }
 
-			for(j = 0; j < 3; j++)
-				voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[0]].v[j]*scale1[j]+translate1[j]);
+                voModel[i].vColour[3] = 1.0f;
 
-			i++;
-
-			for(j = 0; j < 3; j++)
-				voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[1]].v[j]*scale1[j]+translate1[j]);
-
-			i++;
-
-			for(j = 0; j < 3; j++)
-				voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[2]].v[j]*scale1[j]+translate1[j]);
+                // Hacky!
+                if(k < 2)
+                    i++;
+            }
 		}
 	}
 
@@ -564,7 +554,7 @@ void Alias_Draw(void)
 
 	// [27/6/2013] Set defaults ~hogsy
 	bShading	= true;
-	entalpha	= 1.0f;	// TEMP: Wont worry about this for now...
+	entalpha    = ENTALPHA_DECODE(currententity->alpha);
 
 	mModel = (MD2_t*)Mod_Extradata(currententity->model);
 
@@ -624,15 +614,10 @@ void Alias_Draw(void)
 	else if(r_drawflat_cheatsafe)
 		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 
-	GL_DrawModelFrame(mModel,lLerpData);
+	Alias_DrawModelFrame(mModel,lLerpData);
 
 	if(!r_drawflat_cheatsafe)
-	{
-		if(gSphereTexture || gFullbrightTexture)
-			Video_DisableMultitexture();
-
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
-	}
 	else
 		// Restore randomness
 		srand((int)(cl.time*1000));
@@ -640,9 +625,9 @@ void Alias_Draw(void)
 	if(r_drawflat_cheatsafe)
 		glShadeModel(GL_SMOOTH);
 
-    Video_ResetCapabilities(true);
-
 	glPopMatrix();
+
+    Video_ResetCapabilities(true);
 #else	// Original
 	gltexture_t	*tx,*fb = NULL;
 	lerpdata_t	lLerpData;
@@ -927,7 +912,7 @@ void Alias_Draw(void)
 
 				Fog_StartAdditive();
 
-				GL_DrawModelFrame(mModel,lLerpData);
+				Alias_DrawModelFrame(mModel,lLerpData);
 
 				Fog_StopAdditive();
 
@@ -975,7 +960,7 @@ void R_DrawAliasModel_ShowTris(entity_t *e)
 
 	glColor3f(1.0f,1.0f,1.0f);
 
-	GL_DrawModelFrame(mModel,lerpdata);
+	Alias_DrawModelFrame(mModel,lerpdata);
 
 	glPopMatrix();
 }

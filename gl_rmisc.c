@@ -167,7 +167,6 @@ void R_Init (void)
 	Cvar_RegisterVariable (&gl_finish, NULL);
 	Cvar_RegisterVariable (&gl_cull, NULL);
 	Cvar_RegisterVariable (&gl_smoothmodels, NULL);
-	Cvar_RegisterVariable (&gl_affinemodels, NULL);
 	Cvar_RegisterVariable (&gl_polyblend, NULL);
 	Cvar_RegisterVariable (&gl_flashblend, NULL);
 	Cvar_RegisterVariable (&r_stereo, NULL);
