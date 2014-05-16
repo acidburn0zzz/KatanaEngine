@@ -13,7 +13,7 @@ Display *dMainDisplay;
 Window  wRootWindow;
 #endif
 
-gINSTANCE iGlobalInstance;
+pINSTANCE iGlobalInstance;
 
 bool	bShowingCursor	    = true,		// Are we showing the cursor?
 		bWindowInitialized	= false;	// Is the window system initialized?

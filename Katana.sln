@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F8F2B76F-AEE3-4130-9A78-94BF985EACC2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Launcher", "launcher\Launcher.vcxproj", "{0D435709-1C21-446A-BE4E-A41438087A4D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2} = {DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Level", "level\Level.vcxproj", "{9E7DC621-0D2D-803C-AAD4-6DDFA9C191E1}"
 EndProject
@@ -21,6 +24,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mxToolKit Win32", "external\mxtx\msvc\mxToolKit Win32.vcxproj", "{91D40B93-1C1E-E4D2-8C8F-255471CCA0EC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "engine\Engine.vcxproj", "{5588B942-90A0-63A2-3369-523F456D79C5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0D435709-1C21-446A-BE4E-A41438087A4D} = {0D435709-1C21-446A-BE4E-A41438087A4D}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Platform", "platform\Platform.vcxproj", "{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}"
 EndProject

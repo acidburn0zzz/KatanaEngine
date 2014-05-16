@@ -6,7 +6,7 @@
 	Module System
 */
 
-void *gModule_FindFunction(gINSTANCE hModule,const char *cEntryFunction)
+void *pModule_FindFunction(pINSTANCE hModule,const char *cEntryFunction)
 {
 	if(hModule)
 	{
@@ -26,7 +26,7 @@ void *gModule_FindFunction(gINSTANCE hModule,const char *cEntryFunction)
 	return (NULL);
 }
 
-void gModule_Unload(gINSTANCE hModule)
+void pModule_Unload(pINSTANCE hModule)
 {
 	if(hModule)
 	{
@@ -41,12 +41,12 @@ void gModule_Unload(gINSTANCE hModule)
 	}
 }
 
-void *gModule_Load(gINSTANCE hModule,const char *cPath,const char *cEntryFunction,void *vPoint)
+void *pModule_Load(pINSTANCE hModule,const char *cPath,const char *cEntryFunction,void *vPoint)
 {
 	char	cUpdatedPath[gPLATFORM_MAX_PATH];
 	void	*(*vMain)(void*);
 
-	sprintf(cUpdatedPath,"%s."gPLATFORM_CPU""gMODULE_EXTENSION,cPath);
+	sprintf(cUpdatedPath,"%s."PLATFORM_CPU""pMODULE_EXTENSION,cPath);
 
 	// [19/5/2013] TODO: Automatically handle extensions here ~hogsy
 #ifdef _WIN32
@@ -65,7 +65,7 @@ void *gModule_Load(gINSTANCE hModule,const char *cPath,const char *cEntryFunctio
 		return NULL;
 	}
 
-	vMain = (void*(*)(void*))gModule_FindFunction(hModule,cEntryFunction);
+	vMain = (void*(*)(void*))pModule_FindFunction(hModule,cEntryFunction);
 	if(!vMain)
 	{
 		GIPL_SetError("Failed to find entry function! (%s)\n",cEntryFunction);

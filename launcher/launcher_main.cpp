@@ -20,7 +20,7 @@
 EngineExport_t	*Engine;
 EngineImport_t	*Launcher;
 
-gINSTANCE hEngineInstance;
+pINSTANCE hEngineInstance;
 
 /*	TODO:
 		Handle problems as gracefully as possible.
@@ -35,7 +35,7 @@ gINSTANCE hEngineInstance;
 
 int main(int argc,char *argv[])
 {
-	Engine = (EngineExport_t*)gModule_Load(
+	Engine = (EngineExport_t*)pModule_Load(
 		hEngineInstance,
 		"./"PATH_ENGINE"/"MODULE_ENGINE,
 		"Engine_Main",
@@ -51,7 +51,7 @@ int main(int argc,char *argv[])
 		// [1/6/2013] Updated to use new Platform function ~hogsy
 		gWindow_MessageBox("Launcher","Launcher is outdated, please rebuild!");
 
-		gModule_Unload(hEngineInstance);
+		pModule_Unload(hEngineInstance);
 		return -1;
 	}
 	
@@ -59,7 +59,7 @@ int main(int argc,char *argv[])
 	Engine->Initialize(argc,argv);
 
 	// [8/11/2012] Because the loop is within the initialize function ~hogsy
-	gModule_Unload(hEngineInstance);
+	pModule_Unload(hEngineInstance);
 
 	return -1;
 }

@@ -172,7 +172,7 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 	return true;
 }
 
-gMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
+pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 {
 	Engine.Con_Printf				= Import->Con_Printf;
 	Engine.Con_DPrintf				= Import->Con_DPrintf;

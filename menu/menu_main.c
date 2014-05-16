@@ -782,7 +782,7 @@ void Menu_Shutdown(void)
 	//	free(mMenuElements);
 }
 
-GIPL_EXPORT MenuExport_t *Menu_Main(ModuleImport_t *Import)
+pMODULE_EXPORT MenuExport_t *Menu_Main(ModuleImport_t *Import)
 {
 	Engine.Con_DPrintf				= Import->Con_DPrintf;
 	Engine.Con_Printf				= Import->Con_Printf;

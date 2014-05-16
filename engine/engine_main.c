@@ -30,7 +30,7 @@ bool Engine_Initialize(int argc,char *argv[])
 // [8/3/2014] Oops, this didn't match! Fixed ~hogsy
 bool System_Main(int iArgumentCount,char *cArguments[]);
 
-GIPL_EXPORT EngineExport_t *Engine_Main(EngineImport_t *mImport)
+pMODULE_EXPORT EngineExport_t *Engine_Main(EngineImport_t *mImport)
 {
 	Launcher.iVersion	= mImport->iVersion;
 

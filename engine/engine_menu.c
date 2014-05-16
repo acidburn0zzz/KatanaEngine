@@ -11,7 +11,7 @@
 #include "platform_window.h"
 #include "platform_module.h"
 
-gINSTANCE	hMenuInstance;
+pINSTANCE	hMenuInstance;
 
 void Game_AddCommand(char *c,void *f);	// [21/5/2013] TEMP: See engine_game.c ~hogsy
 
@@ -24,7 +24,7 @@ void Menu_Initialize(void)
 	ModuleImport_t	mImport;
 
 	if(Menu)
-		gModule_Unload(hMenuInstance);
+		pModule_Unload(hMenuInstance);
 
 	mImport.Con_Printf				= Con_Printf;
 	mImport.Con_DPrintf				= Con_DPrintf;
@@ -44,7 +44,7 @@ void Menu_Initialize(void)
 	mImport.Client_PrecacheResource	= Client_PrecacheResource;
 	mImport.Client_SetMenuCanvas	= GL_SetCanvas;
 
-	Menu = (MenuExport_t*)gModule_Load(hMenuInstance,va("%s/%s",com_gamedir,MODULE_MENU),"Menu_Main",&mImport);
+	Menu = (MenuExport_t*)pModule_Load(hMenuInstance,va("%s/%s",com_gamedir,MODULE_MENU),"Menu_Main",&mImport);
 	if(!Menu)
 		Con_Warning(GIPL_GetError(),com_gamedir,MODULE_MENU);
 	else if(Menu->iVersion != MODULE_VERSION)
@@ -55,9 +55,9 @@ void Menu_Initialize(void)
 	if(!bMenuLoaded)
 	{
 		// [4/5/2013] Unload our module ~hogsy
-		gModule_Unload(hMenuInstance);
+		pModule_Unload(hMenuInstance);
 
-		Sys_Error("Failed to load %s/%s"gMODULE_EXTENSION"!\n",com_gamedir,MODULE_MENU);
+		Sys_Error("Failed to load %s/%s"pMODULE_EXTENSION"!\n",com_gamedir,MODULE_MENU);
 	}
 }
 

@@ -1172,7 +1172,7 @@ void Host_Name_f (void)
 
 void Host_Version(void)
 {
-	Con_Printf("Katana %i.%i.%i ("gPLATFORM_NAME")\n",
+	Con_Printf("Katana %i.%i.%i ("PLATFORM_NAME""PLATFORM_CPU")\n",
 		ENGINE_VERSION_MAJOR,
 		ENGINE_VERSION_MINOR,
 		ENGINE_VERSION_BUILD);

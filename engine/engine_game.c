@@ -19,7 +19,7 @@
 		Move Server_ functions into KatServer
 */
 
-gINSTANCE hGameInstance;
+pINSTANCE hGameInstance;
 
 ModuleExport_t *Game;
 
@@ -571,7 +571,7 @@ void Game_Initialize(void)
 
 	if(Game)
 		// [4/5/2013] Oops forgot to put this here ~hogsy
-		gModule_Unload(hGameInstance);
+		pModule_Unload(hGameInstance);
 
 	Import.Con_Printf				= Con_Printf;
 	Import.Con_DPrintf				= Con_DPrintf;
@@ -627,7 +627,7 @@ void Game_Initialize(void)
 	Import.Server_ChangeLevel		= Server_ChangeLevel;
 	Import.Server_AmbientSound		= Game_AmbientSound;
 
-	Game = (ModuleExport_t*)gModule_Load(hGameInstance,va("%s/"MODULE_GAME,com_gamedir),"Game_Main",&Import);
+	Game = (ModuleExport_t*)pModule_Load(hGameInstance,va("%s/"MODULE_GAME,com_gamedir),"Game_Main",&Import);
 	if(!Game)
 		Con_Warning("Failed to find %s/"MODULE_GAME"!\n",com_gamedir,MODULE_GAME);
 	else if(Game->Version != MODULE_VERSION2)
@@ -637,7 +637,7 @@ void Game_Initialize(void)
 
 	if(!bGameLoaded)
 	{
-		gModule_Unload(hGameInstance);
+		pModule_Unload(hGameInstance);
 
 		// [10/5/2013] Simplified the path given here for simplicity sake ~hogsy
 		Sys_Error("Failed to load %s/"MODULE_GAME"!\n",com_gamedir);

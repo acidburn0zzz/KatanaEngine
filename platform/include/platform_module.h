@@ -10,22 +10,18 @@ extern "C" {
 #include "platform.h"
 
 #ifdef _WIN32
-#define	gMODULE_EXTENSION	".dll"
-#define	gMODULE_EXPORT		__declspec(dllexport)
-#define gMODULE_IMPORT		__declspec(dllimport)
+#define	pMODULE_EXTENSION	".dll"
+#define	pMODULE_EXPORT		__declspec(dllexport)
+#define pMODULE_IMPORT		__declspec(dllimport)
 #else   // Linux
-#define	gMODULE_EXTENSION	".so"
-#define gMODULE_EXPORT		__attribute__((visibility("default")))
-#define gMODULE_IMPORT		__attribute__((visibility("hidden")))
+#define	pMODULE_EXTENSION	".so"
+#define pMODULE_EXPORT		__attribute__((visibility("default")))
+#define pMODULE_IMPORT		__attribute__((visibility("hidden")))
 #endif
 
-extern void *gModule_FindFunction(gINSTANCE hModule,const char *cEntryFunction);
-extern void gModule_Unload(gINSTANCE hModule);
-extern void *gModule_Load(gINSTANCE hModule,const char *cPath,const char *cEntryFunction,void *vPoint);
-
-// Defines for legacy functions.     
-#define	GIPL_EXPORT	gMODULE_EXPORT
-#define GIPL_IMPORT	gMODULE_IMPORT
+extern void *pModule_FindFunction(pINSTANCE hModule,const char *cEntryFunction);
+extern void pModule_Unload(pINSTANCE hModule);
+extern void *pModule_Load(pINSTANCE hModule,const char *cPath,const char *cEntryFunction,void *vPoint);
 
 #ifdef __cplusplus
 }

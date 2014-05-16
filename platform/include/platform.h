@@ -3,7 +3,18 @@
 #ifndef __PLATFORM__
 #define __PLATFORM__
 
-#define gVERSION	"0.4"
+/*
+	Platform Library
+	Version 0.5
+
+	This library includes standard platform headers,
+	gives you some standard functions to interact with
+	the system and defines for basic data-types that
+	you can use in your applications for easier multi-platform
+	support.
+*/
+
+#define gVERSION	"0.5"
 
 // Shared headers
 #include <stdio.h>
@@ -24,50 +35,42 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#define PLATFORM_SYSTEM_HEADERS // temp
-
 #ifdef _WIN32
-#ifdef PLATFORM_SYSTEM_HEADERS
-#include <Windows.h>
-#include <WindowsX.h>
-#include <CommCtrl.h>
-#endif
+	// Windows Headers
+	#include <Windows.h>
+	#include <WindowsX.h>
+	#include <CommCtrl.h>
+	#include <direct.h>
 
-#define	gPLATFORM_MAX_PATH	260		// Maximum path length.
+	#define	gPLATFORM_MAX_PATH	260		// Maximum path length.
 
-#define gINSTANCE	HINSTANCE       // Instance definition.
+	// Platform information
+	#define	PLATFORM_NAME	"WINDOWS"	// Platform name.
 
-// [4/3/2014] TODO: At some point, ditch these in the main header since it's the opposite of what this library should be doing! ~hogsy
-#ifdef _WIN64
-// Platform information
-#define	gPLATFORM_NAME	    "WIN64"	// Platform name.
-#else
-#define gPLATFORM_NAME  "WIN32"
-#endif
+	// Other
+	#define pINSTANCE	HINSTANCE       // Instance definition.
 #else	// Linux
-#ifdef PLATFORM_SYSTEM_HEADERS
-#include <dirent.h>
-#include <unistd.h>
-#include <dlfcn.h>
-#endif
+	// Linux Headers
+	#include <dirent.h>
+	#include <unistd.h>
+	#include <dlfcn.h>
 
-// Platform information
-#define	gPLATFORM_NAME		"LINUX" // Platform name.
-#define	gPLATFORM_MAX_PATH	256		// Maximum path length.
+	// Platform information
+	#define	PLATFORM_NAME		"LINUX" // Platform name.
+	#define	gPLATFORM_MAX_PATH	256		// Maximum path length.
 
-#define gINSTANCE	void *
+	// Other
+	#define pINSTANCE	void *
 #endif
 
 // [25/3/2014] Quickly threw this in so we can add these extensions to modules in a clean way :) ~hogsy
 #if defined(__amd64) || defined(__amd64__)
-#define gPLATFORM_CPU   "x64"
+	#define PLATFORM_CPU   "x64"
 #else
-#define gPLATFORM_CPU   "x86"
+	#define PLATFORM_CPU   "x86"
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#else
+#ifndef __cplusplus
 typedef int	bool;
 
 #define	true	1
@@ -77,24 +80,22 @@ typedef int	bool;
 #ifndef BOOL
 #define BOOL    bool
 #endif
-
 #ifndef TRUE
 #define	TRUE	true
 #endif
-
 #ifndef FALSE
 #define FALSE	false
 #endif
 
-#define gTRUE   true
-#define gFALSE  false
+#define	pBOOL	bool
+#define pTRUE   true
+#define pFALSE  false
 
-typedef	bool			gBOOL;
-typedef unsigned int	gUINT;
-#if 0
-typedef uint8_t         gBYTE;
-#else
-typedef	unsigned char	gBYTE;
+typedef unsigned int	pUINT;
+typedef	unsigned char	pBYTE;
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 extern void	GIPL_ResetError(void);
