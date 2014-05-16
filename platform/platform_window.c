@@ -8,6 +8,8 @@
 	Window Manager
 */
 
+#include "platform_system.h"
+
 #ifdef __linux__
 Display *dMainDisplay;
 Window  wRootWindow;
@@ -25,7 +27,7 @@ GIPLWindow_t *gWindow_Allocate(void)
 {
 	GIPLWindow_t *pwAllocated;
 
-	gError_SetFunction("gWindow_Allocate");
+	pERROR_UPDATE;
 
 	pwAllocated = (GIPLWindow_t*)malloc(sizeof(GIPLWindow_t));
 	memset(pwAllocated,0,sizeof(GIPLWindow_t));
@@ -37,13 +39,12 @@ GIPLWindow_t *gWindow_Allocate(void)
 */
 void gWindow_CreateWindow(GIPLWindow_t *gwWindow)
 {
-	gError_SetFunction("gWindow_CreateWindow");
+	pERROR_UPDATE;
 
 	// Make sure the window has been initialized.
 	if(!gwWindow)
 	{
-		GIPL_SetError("Window has not been allocated!\n");
-
+		pError_Set("Window has not been allocated!\n");
 		return;
 	}
 	// Make sure that any platform specific window systems are set up.
@@ -53,8 +54,7 @@ void gWindow_CreateWindow(GIPLWindow_t *gwWindow)
 		dMainDisplay = XOpenDisplay(NULL);
 		if(!dMainDisplay)
 		{
-			GIPL_SetError("Failed to open display!\n");
-
+			pError_Set("Failed to open display!\n");
 			return;
 		}
 
@@ -97,7 +97,7 @@ void gWindow_CreateWindow(GIPLWindow_t *gwWindow)
 
 		if(!RegisterClassEx(&wWindowClass))
 		{
-			GIPL_SetError("Failed to register window class!\n");
+			pError_Set("Failed to register window class!\n");
 			return;
 		}
 
@@ -115,7 +115,7 @@ void gWindow_CreateWindow(GIPLWindow_t *gwWindow)
 			NULL);
 		if(!gwWindow->hWindow)
 		{
-			GIPL_SetError("Failed to create window!\n");
+			pError_Set("Failed to create window!\n");
 			return;
 		}
 
@@ -142,7 +142,7 @@ void gWindow_CreateWindow(GIPLWindow_t *gwWindow)
 			WhitePixel(dMainDisplay,iScreen));
 		if(!gwWindow->wInstance)
 		{
-			GIPL_SetError("Failed to create window!\n");
+			pError_Set("Failed to create window!\n");
 			return;
 		}
 
@@ -201,7 +201,7 @@ void gWindow_MessageBox(const char *ccTitle,const char *ccMessage,...)
 	char	cOut[2048];
 	va_list	vlArguments;
 
-	gError_SetFunction("gWindow_MessageBox");
+	pERROR_UPDATE;
 
 	va_start(vlArguments,ccMessage);
 	vsprintf(cOut,ccMessage,vlArguments);
@@ -220,7 +220,7 @@ void gWindow_MessageBox(const char *ccTitle,const char *ccMessage,...)
 		dMessageDisplay = XOpenDisplay(NULL);
 		if(!dMessageDisplay)
 		{
-			GIPL_SetError("Failed to open display!\n");
+			pError_Set("Failed to open display!\n");
 			return;
 		}
 

@@ -104,7 +104,7 @@ void Editor_Launch(void)
 	{
 		Con_Printf(" Loading textures: \n");
 
-		gFileSystem_ScanDirectory(va("./%s/textures/",com_gamedir),Editor_LoadTexture);
+		pFileSystem_ScanDirectory(va("./%s/textures/",com_gamedir),Editor_LoadTexture);
 	}
 
     // [6/4/2014] Set up the editor interface ~hogsy

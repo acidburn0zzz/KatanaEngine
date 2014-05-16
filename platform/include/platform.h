@@ -5,7 +5,7 @@
 
 /*
 	Platform Library
-	Version 0.5
+	Version 0.6
 
 	This library includes standard platform headers,
 	gives you some standard functions to interact with
@@ -14,7 +14,7 @@
 	support.
 */
 
-#define gVERSION	"0.5"
+#define gVERSION	"0.6"
 
 // Shared headers
 #include <stdio.h>
@@ -22,9 +22,9 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #ifdef _MSC_VER	// [14/1/2014] MSVC doesn't support stdint, great... ~hogsy
-#include "platform_inttypes.h"
+#	include "platform_inttypes.h"
 #else
-#include <stdint.h>
+#	include <stdint.h>
 #endif
 #include <string.h>
 #include <ctype.h>
@@ -36,7 +36,6 @@
 #include <sys/types.h>
 
 #ifdef _WIN32
-	// Windows Headers
 #	include <Windows.h>
 #	include <WindowsX.h>
 #	include <CommCtrl.h>
@@ -60,8 +59,8 @@
 #	define	PLATFORM_MAX_PATH	256		// Maximum path length.
 
 	// Other
-#	define	pINSTANCE	void *	// Instance definition.
-#	define	pFARPROC	void *	// Function pointer.
+#	define	pINSTANCE	void *		// Instance definition.
+#	define	pFARPROC	void *		// Function pointer.
 #endif
 
 // [25/3/2014] Quickly threw this in so we can add these extensions to modules in a clean way :) ~hogsy
@@ -88,9 +87,14 @@ typedef int	bool;
 #	define FALSE	false
 #endif
 
-#define	pBOOL	bool
-#define pTRUE   true
-#define pFALSE  false
+#define	pBOOL		bool
+#define pTRUE		true
+#define pFALSE		false
+#ifdef _MSC_VER	// [15/5/2014] MSVC doesn't support __func__ either... ~hogsy
+#	define	pFUNCTION	__FUNCTION__	// Returns the active function.
+#else
+#	define	pFUNCTION	__func__		// Returns the active function.
+#endif
 
 typedef unsigned int	pUINT;
 typedef	unsigned char	pBYTE;
@@ -99,11 +103,11 @@ typedef	unsigned char	pBYTE;
 extern "C" {
 #endif
 
-extern void	GIPL_ResetError(void);
-extern void	GIPL_SetError(const char *ccMessage,...);
-extern void gError_SetFunction(const char *ccFunction,...);
+extern	void	pError_Reset(void);
+extern	void	pError_Set(const char *ccMessage,...);
+extern	void	pError_SetFunction(const char *ccFunction,...);
 
-extern char	*GIPL_GetError(void);
+extern char	*pError_Get(void);
 
 #ifdef __cplusplus
 }

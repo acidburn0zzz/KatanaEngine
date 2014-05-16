@@ -6,8 +6,12 @@
 	Module System
 */
 
+#include "platform_system.h"
+
 pFARPROC pModule_FindFunction(pINSTANCE hModule,const char *cEntryFunction)
 {
+	pERROR_UPDATE;
+
 	if(hModule)
 	{
 		pFARPROC fFunc;
@@ -26,6 +30,8 @@ pFARPROC pModule_FindFunction(pINSTANCE hModule,const char *cEntryFunction)
 
 void pModule_Unload(pINSTANCE hModule)
 {
+	pERROR_UPDATE;
+
 	if(hModule)
 	{
 #ifdef _WIN32
@@ -44,6 +50,8 @@ void *pModule_Load(pINSTANCE hModule,const char *cPath,const char *cEntryFunctio
 	char	cUpdatedPath[PLATFORM_MAX_PATH];
 	void	*(*vMain)(void*);
 
+	pERROR_UPDATE;
+
 	sprintf(cUpdatedPath,"%s."PLATFORM_CPU""pMODULE_EXTENSION,cPath);
 
 	// [19/5/2013] TODO: Automatically handle extensions here ~hogsy
@@ -54,7 +62,7 @@ void *pModule_Load(pINSTANCE hModule,const char *cPath,const char *cEntryFunctio
 #endif
 	if(!hModule)
 	{
-		GIPL_SetError("Failed to load library! (%s)\n",
+		pError_Set("Failed to load library! (%s)\n",
 #ifdef _WIN32
 			cUpdatedPath);
 #else
@@ -66,7 +74,7 @@ void *pModule_Load(pINSTANCE hModule,const char *cPath,const char *cEntryFunctio
 	vMain = (void*(*)(void*))pModule_FindFunction(hModule,cEntryFunction);
 	if(!vMain)
 	{
-		GIPL_SetError("Failed to find entry function! (%s)\n",cEntryFunction);
+		pError_Set("Failed to find entry function! (%s)\n",cEntryFunction);
 		return NULL;
 	}
 

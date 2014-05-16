@@ -224,7 +224,7 @@ void Host_InitLocal (void)
 		Cvar_SetValue("developer",1.0f);
 
 	// [28/6/2013] Set the global username ~hogsy
-	gFileSystem_GetUserName(Global.cLocalName);
+	pFileSystem_GetUserName(Global.cLocalName);
 
 	Host_FindMaxClients();
 

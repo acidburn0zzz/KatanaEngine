@@ -1039,7 +1039,7 @@ void FileSystem_WriteFile(const char *ccFileName,void *data,int len)
 	int             handle;
 	char    name[MAX_OSPATH];
 
-	if(!gFileSystem_CreateDirectory(com_gamedir)) //johnfitz -- if we've switched to a nonexistant gamedir, create it now so we don't crash
+	if(!pFileSystem_CreateDirectory(com_gamedir)) //johnfitz -- if we've switched to a nonexistant gamedir, create it now so we don't crash
 		Sys_Error("Failed to create directory!\n");
 
 	sprintf (name,"%s/%s",com_gamedir,ccFileName);
@@ -1066,7 +1066,7 @@ void FileSystem_CreatePath(char *path)
 		{
 			// create the directory
 			*ofs = 0;
-			if(!gFileSystem_CreateDirectory(path))
+			if(!pFileSystem_CreateDirectory(path))
 				Sys_Error("Failed to create directory!\n");
 			*ofs = '/';
 		}

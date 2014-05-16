@@ -640,8 +640,8 @@ void SCR_ScreenShot_f (void)
 	char	tganame[32],checkname[MAX_OSPATH];
 	int		i;
 
-	if(!gFileSystem_CreateDirectory(va("%s/screenshots",FileSystem_SkipPath(com_gamedir))))
-		Sys_Error("Failed to create directory!\n");
+	if(!pFileSystem_CreateDirectory(va("%s/screenshots",FileSystem_SkipPath(com_gamedir))))
+		Sys_Error("Failed to create directory!\n%s",pError_Get());
 
 	// find a file name to save it to
 	for (i = 0; i < 10000; i++)

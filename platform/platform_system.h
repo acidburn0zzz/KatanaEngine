@@ -9,4 +9,6 @@
 
 #endif
 
+#define	pERROR_UPDATE	pError_SetFunction(pFUNCTION)
+
 #endif // __PLATFORMSYSTEM__

@@ -109,7 +109,7 @@ bool Image_WriteTGA(char *name,byte *data,int width,int height,int bpp,bool upsi
 	char	pathname[MAX_OSPATH];
 	byte	header[TARGAHEADERSIZE];
 
-	if(!gFileSystem_CreateDirectory(com_gamedir)) //if we've switched to a nonexistant gamedir, create it now so we don't crash
+	if(!pFileSystem_CreateDirectory(com_gamedir)) //if we've switched to a nonexistant gamedir, create it now so we don't crash
 		Sys_Error("Failed to create directory!\n");
 	sprintf (pathname, "%s/%s", com_gamedir, name);
 	handle = Sys_FileOpenWrite (pathname);

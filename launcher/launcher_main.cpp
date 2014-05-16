@@ -43,7 +43,7 @@ int main(int argc,char *argv[])
 	if(!Engine)
 	{
 		// [1/6/2013] Updated to use new Platform function ~hogsy
-		gWindow_MessageBox("Launcher",GIPL_GetError());
+		gWindow_MessageBox("Launcher",pError_Get());
 		return -1;
 	}
 	else if(Engine->iVersion != ENGINE_INTERFACE)

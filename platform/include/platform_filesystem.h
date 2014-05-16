@@ -9,11 +9,11 @@ extern "C" {
 
 #include "platform.h"
 
-extern void gFileSystem_GetUserName(char *cOut);
-extern void gFileSystem_ScanDirectory(const char *ccPath,void (*vFunction)(const char *ccFile));
-extern void gFileSystem_GetWorkingDirectory(char *cOutput);
+extern	void	pFileSystem_GetUserName(char *cOut);
+extern	void	pFileSystem_ScanDirectory(const char *ccPath,void (*vFunction)(const char *ccFile));
+extern	void	pFileSystem_GetWorkingDirectory(char *cOut);
 
-extern bool gFileSystem_CreateDirectory(const char *ccPath);
+extern	bool	pFileSystem_CreateDirectory(const char *ccPath);
 
 #ifdef __cplusplus
 }

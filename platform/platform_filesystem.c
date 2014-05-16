@@ -9,19 +9,21 @@
 		A package system?
 */
 
+#include "platform_system.h"
+
 /*  Creates a folder at the given path.
 */
-bool gFileSystem_CreateDirectory(const char *ccPath)
+bool pFileSystem_CreateDirectory(const char *ccPath)
 {
-	gError_SetFunction("gFileSystem_CreateDirectory");
+	pERROR_UPDATE;
 
 #ifdef _WIN32
 	if(CreateDirectory(ccPath,NULL) || (GetLastError() == ERROR_ALREADY_EXISTS))
 		return true;
 	else if(GetLastError() == ERROR_PATH_NOT_FOUND)
-		GIPL_SetError("Failed to find an intermediate directory! (%s)\n",ccPath);
+		pError_Set("Failed to find an intermediate directory! (%s)\n",ccPath);
 	else    // Assume it already exists.
-		GIPL_SetError("Unknown error! (%s)\n",ccPath);
+		pError_Set("Unknown error! (%s)\n",ccPath);
 #else
 	{
 		struct stat ssBuffer;
@@ -35,13 +37,13 @@ bool gFileSystem_CreateDirectory(const char *ccPath)
 				switch(errno)
 				{
 				case EACCES:
-					GIPL_SetError("Failed to get permission! (%s)\n",ccPath);
+					pError_Set("Failed to get permission! (%s)\n",ccPath);
 				case EROFS:
-					GIPL_SetError("File system is read only! (%s)\n",ccPath);
+					pError_Set("File system is read only! (%s)\n",ccPath);
 				case ENAMETOOLONG:
-					GIPL_SetError("Path is too long! (%s)\n",ccPath);
+					pError_Set("Path is too long! (%s)\n",ccPath);
 				default:
-					GIPL_SetError("Failed to create directory! (%s)\n",ccPath);
+					pError_Set("Failed to create directory! (%s)\n",ccPath);
 				}
 			}
 		}
@@ -57,11 +59,17 @@ bool gFileSystem_CreateDirectory(const char *ccPath)
 /*	Returns the name of the systems
 	current user.
 */
-void gFileSystem_GetUserName(char *cOut)
+void pFileSystem_GetUserName(char *cOut)
 {
-	char	*cUser = "user";
+	char	*cUser;
 #ifdef _WIN32
-	DWORD	dName = sizeof(cUser);
+	DWORD	dName;
+
+	pERROR_UPDATE;
+
+	// [16/5/2014] Set these AFTER we update active function ~hogsy
+	cUser	= "user";
+	dName	= sizeof(cUser);
 
 	if(GetUserName(cUser,&dName))
 #else   // Linux
@@ -93,7 +101,7 @@ void gFileSystem_GetUserName(char *cOut)
 		Better error management.
 		Finish Linux implementation.
 */
-void gFileSystem_ScanDirectory(const char *ccPath,void (*vFunction)(const char *ccFile))
+void pFileSystem_ScanDirectory(const char *ccPath,void (*vFunction)(const char *ccFile))
 {
 #ifdef _WIN32
 	WIN32_FIND_DATA	wfdData;
@@ -102,12 +110,12 @@ void gFileSystem_ScanDirectory(const char *ccPath,void (*vFunction)(const char *
 	hFile = FindFirstFile(ccPath,&wfdData);
 	if(hFile == INVALID_HANDLE_VALUE)
 	{
-		GIPL_SetError("Recieved invalid handle! (%s)\n",ccPath);
+		pError_Set("Recieved invalid handle! (%s)\n",ccPath);
 		return;
 	}
 	else if(GetLastError() == ERROR_FILE_NOT_FOUND)
 	{
-		GIPL_SetError("Failed to find first file! (%s)\n",ccPath);
+		pError_Set("Failed to find first file! (%s)\n",ccPath);
 		return;
 	}
 
@@ -124,27 +132,27 @@ void gFileSystem_ScanDirectory(const char *ccPath,void (*vFunction)(const char *
 
 /*  Based on Q_getwd.
 */
-void gFileSystem_GetWorkingDirectory(char *cOutput)
+void pFileSystem_GetWorkingDirectory(char *cOut)
 {
-    gError_SetFunction("gFileSystem_GetWorkingDirectory");
+    pERROR_UPDATE;
 
 #ifdef _WIN32
-    _getcwd(cOutput,256);
+    _getcwd(cOut,256);
 #else   // Linux
-    if(!getcwd(cOutput,256))
+    if(!getcwd(cOut,256))
     {
         // [3/3/2014] Simple error handling. ~hogsy
         switch(errno)
         {
         case ERANGE:
         case EINVAL:
-            GIPL_SetError("Invalid size!\n");
+            pError_Set("Invalid size!\n");
         case EACCES:
-            GIPL_SetError("Permission was denied!\n");
+            pError_Set("Permission was denied!\n");
         }
         return;
     }
 #endif
 
-    strcat(cOutput,"\\");
+    strcat(cOut,"\\");
 }

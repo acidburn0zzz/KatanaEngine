@@ -204,7 +204,7 @@ void TexMgr_Imagedump_f(void)
 
 	// Create directory
 	sprintf(dirname, "%s/imagedump", com_gamedir);
-	if(!gFileSystem_CreateDirectory(dirname))
+	if(!pFileSystem_CreateDirectory(dirname))
 		Sys_Error("Failed to create directory!\n");
 
 	// Loop through textures

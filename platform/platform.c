@@ -12,7 +12,7 @@ char	cErrorMessage[2048] = "null",
 
 /*	Sets the name of the currently entered function.
 */
-void gError_SetFunction(const char *ccFunction,...)
+void pError_SetFunction(const char *ccFunction,...)
 {
 	char	cOut[2048];
 	va_list vlArguments;
@@ -24,12 +24,12 @@ void gError_SetFunction(const char *ccFunction,...)
 	strcpy(cLastFunction,ccFunction);
 }
 
-void GIPL_ResetError(void)
+void pError_Reset(void)
 {
 	sprintf(cErrorMessage,"null");
 }
 
-void GIPL_SetError(const char *ccMessage,...)
+void pError_Set(const char *ccMessage,...)
 {
 	char	cOut[2048];
 	va_list	vlArguments;
@@ -44,7 +44,7 @@ void GIPL_SetError(const char *ccMessage,...)
 	printf("Error: %s",cOut);
 }
 
-char *GIPL_GetError(void)
+char *pError_Get(void)
 {
 	return cErrorMessage;
 }
