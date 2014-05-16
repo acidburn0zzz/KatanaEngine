@@ -6,21 +6,19 @@
 	Module System
 */
 
-void *pModule_FindFunction(pINSTANCE hModule,const char *cEntryFunction)
+pFARPROC pModule_FindFunction(pINSTANCE hModule,const char *cEntryFunction)
 {
 	if(hModule)
 	{
+		pFARPROC fFunc;
+
 #ifdef _WIN32
-		FARPROC vFunc;
-
-		vFunc = GetProcAddress(hModule,cEntryFunction);
+		fFunc = GetProcAddress(hModule,cEntryFunction);
 #else   // Linux
-		void *vFunc;
-
-		vFunc = dlsym(hModule,cEntryFunction);
+		fFunc = dlsym(hModule,cEntryFunction);
 #endif
-		if(vFunc)
-			return (void*)vFunc;
+		if(fFunc)
+			return fFunc;
 	}
 
 	return (NULL);
@@ -43,7 +41,7 @@ void pModule_Unload(pINSTANCE hModule)
 
 void *pModule_Load(pINSTANCE hModule,const char *cPath,const char *cEntryFunction,void *vPoint)
 {
-	char	cUpdatedPath[gPLATFORM_MAX_PATH];
+	char	cUpdatedPath[PLATFORM_MAX_PATH];
 	void	*(*vMain)(void*);
 
 	sprintf(cUpdatedPath,"%s."PLATFORM_CPU""pMODULE_EXTENSION,cPath);

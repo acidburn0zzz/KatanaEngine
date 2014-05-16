@@ -163,13 +163,13 @@ void gWindow_CreateWindow(GIPLWindow_t *gwWindow)
 bool gWindow_ChooseColor(GIPLWindow_t *gwParent,int *iRed,int *iGreen,int *iBlue)
 {
 #ifdef _WIN32
-	gBYTE					bColour[3];
+	pBYTE					bColour[3];
 	CHOOSECOLOR				ccColour;
 	static		COLORREF	scCustomColours[16];
 
-	bColour[0]	= (gBYTE)*iRed;
-	bColour[1]	= (gBYTE)*iGreen;
-	bColour[2]	= (gBYTE)*iBlue;
+	bColour[0]	= (pBYTE)*iRed;
+	bColour[1]	= (pBYTE)*iGreen;
+	bColour[2]	= (pBYTE)*iBlue;
 
 	memset(&ccColour,0,sizeof(CHOOSECOLOR));
 

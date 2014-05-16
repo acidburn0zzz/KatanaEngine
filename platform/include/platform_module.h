@@ -19,9 +19,10 @@ extern "C" {
 #define pMODULE_IMPORT		__attribute__((visibility("hidden")))
 #endif
 
-extern void *pModule_FindFunction(pINSTANCE hModule,const char *cEntryFunction);
-extern void pModule_Unload(pINSTANCE hModule);
-extern void *pModule_Load(pINSTANCE hModule,const char *cPath,const char *cEntryFunction,void *vPoint);
+extern	pFARPROC	pModule_FindFunction(pINSTANCE hModule,const char *cEntryFunction);
+
+extern	void	pModule_Unload(pINSTANCE hModule);
+extern	void	*pModule_Load(pINSTANCE hModule,const char *cPath,const char *cEntryFunction,void *vPoint);
 
 #ifdef __cplusplus
 }

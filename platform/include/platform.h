@@ -37,37 +37,38 @@
 
 #ifdef _WIN32
 	// Windows Headers
-	#include <Windows.h>
-	#include <WindowsX.h>
-	#include <CommCtrl.h>
-	#include <direct.h>
-
-	#define	gPLATFORM_MAX_PATH	260		// Maximum path length.
+#	include <Windows.h>
+#	include <WindowsX.h>
+#	include <CommCtrl.h>
+#	include <direct.h>
 
 	// Platform information
-	#define	PLATFORM_NAME	"WINDOWS"	// Platform name.
+#	define	PLATFORM_NAME		"WINDOWS"	// Platform name.
+#	define	PLATFORM_MAX_PATH	260			// Maximum path length.
 
 	// Other
-	#define pINSTANCE	HINSTANCE       // Instance definition.
+#	define	pINSTANCE	HINSTANCE       // Instance definition.
+#	define	pFARPROC	FARPROC			// Function pointer.
 #else	// Linux
 	// Linux Headers
-	#include <dirent.h>
-	#include <unistd.h>
-	#include <dlfcn.h>
+#	include <dirent.h>
+#	include <unistd.h>
+#	include <dlfcn.h>
 
 	// Platform information
-	#define	PLATFORM_NAME		"LINUX" // Platform name.
-	#define	gPLATFORM_MAX_PATH	256		// Maximum path length.
+#	define	PLATFORM_NAME		"LINUX" // Platform name.
+#	define	PLATFORM_MAX_PATH	256		// Maximum path length.
 
 	// Other
-	#define pINSTANCE	void *
+#	define	pINSTANCE	void *	// Instance definition.
+#	define	pFARPROC	void *	// Function pointer.
 #endif
 
 // [25/3/2014] Quickly threw this in so we can add these extensions to modules in a clean way :) ~hogsy
 #if defined(__amd64) || defined(__amd64__)
-	#define PLATFORM_CPU   "x64"
+#	define PLATFORM_CPU   "x64"
 #else
-	#define PLATFORM_CPU   "x86"
+#	define PLATFORM_CPU   "x86"
 #endif
 
 #ifndef __cplusplus
@@ -78,13 +79,13 @@ typedef int	bool;
 #endif
 
 #ifndef BOOL
-#define BOOL    bool
+#	define BOOL    bool
 #endif
 #ifndef TRUE
-#define	TRUE	true
+#	define	TRUE	true
 #endif
 #ifndef FALSE
-#define FALSE	false
+#	define FALSE	false
 #endif
 
 #define	pBOOL	bool
