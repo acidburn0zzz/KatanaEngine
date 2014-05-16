@@ -3,11 +3,11 @@
 #ifndef __PLATFORMFILESYSTEM__
 #define	__PLATFORMFILESYSTEM__
 
+#include "platform.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "platform.h"
 
 extern	void	pFileSystem_GetUserName(char *cOut);
 extern	void	pFileSystem_ScanDirectory(const char *ccPath,void (*vFunction)(const char *ccFile));

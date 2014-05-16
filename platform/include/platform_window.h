@@ -1,13 +1,13 @@
 /*	Copyright (C) 2013-2014 OldTimes Software
 */
-#ifndef __GIPLWINDOW__
-#define __GIPLWINDOW__
+#ifndef __PLATFORMWINDOW__
+#define __PLATFORMWINDOW__
+
+#include "platform.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "platform.h"
 
 #ifdef _WIN32
 #else	// Linux

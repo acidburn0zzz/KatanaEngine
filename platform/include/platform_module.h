@@ -3,11 +3,11 @@
 #ifndef __PLATFORMMODULE__
 #define __PLATFORMMODULE__
 
+#include "platform.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "platform.h"
 
 #ifdef _WIN32
 #define	pMODULE_EXTENSION	".dll"

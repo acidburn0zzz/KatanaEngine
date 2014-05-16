@@ -14,7 +14,7 @@ HRESULT	(*gURLDownloadToFile)(LPUNKNOWN pCaller,LPCTSTR szURL,LPCTSTR szFileName
 
 /*  Initialization.
 */
-void gNetwork_Initialize(void)
+void pNetwork_Initialize(void)
 {
 #ifdef _WIN32
 //	gURLDownloadToFile = GetProcAddress(LoadLibrary("urlmon.dll"),"URLDownloadToFileA");

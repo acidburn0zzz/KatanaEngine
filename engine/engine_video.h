@@ -119,6 +119,7 @@ void Video_SetTexture(gltexture_t *gTexture);
 void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType);
 void Video_EnableMultitexture(void);
 void Video_DisableMultitexture(void);
+void Video_SelectTexture(unsigned int uiTarget);
 void Video_EnableCapabilities(unsigned int iCapabilities);
 void Video_DisableCapabilities(unsigned int iCapabilities);
 void Video_ResetCapabilities(bool bClearActive);
