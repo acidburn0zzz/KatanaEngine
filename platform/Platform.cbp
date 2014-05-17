@@ -38,6 +38,7 @@
 		<Unit filename="include/platform.h" />
 		<Unit filename="include/platform_filesystem.h" />
 		<Unit filename="include/platform_inttypes.h" />
+		<Unit filename="include/platform_math.h" />
 		<Unit filename="include/platform_module.h" />
 		<Unit filename="include/platform_stdint.h" />
 		<Unit filename="include/platform_window.h" />

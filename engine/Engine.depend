@@ -4688,8 +4688,8 @@
 1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/chase.c
 	"quakedef.h"
 
-1398122236 /home/hogsy/dev/ProjectKatana/trunk/quakedef.h
-	"platform/include/platform.h"
+1400189536 /home/hogsy/dev/ProjectKatana/trunk/quakedef.h
+	"platform.h"
 	"shared_flags.h"
 	"cmdlib.h"
 	"common.h"
@@ -4752,7 +4752,7 @@
 	<limits.h>
 	<wchar.h>
 
-1399984663 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
+1400097388 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
 
 1398120592 /home/hogsy/dev/ProjectKatana/trunk/cmdlib.h
 	"platform/include/platform.h"
@@ -4768,11 +4768,11 @@
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/zone.h
 
-1398122236 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_math.h
+1400188745 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_math.h
 	"../platform/include/platform.h"
-	"../platform/include/platform_math.h"
+	"platform_math.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_math.h
+1400188785 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_math.h
 	"platform.h"
 
 1399385831 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_client.h
@@ -4805,7 +4805,7 @@
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/render.h
 	"shared_client.h"
 
-1398120592 /home/hogsy/dev/ProjectKatana/trunk/client.h
+1400189666 /home/hogsy/dev/ProjectKatana/trunk/client.h
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/progs.h
 	"pr_comp.h"
@@ -5306,7 +5306,7 @@
 	"engine_video.h"
 	"engine_client.h"
 
-1398122236 source:/home/hogsy/dev/ProjectKatana/trunk/gl_fog.c
+1400185704 source:/home/hogsy/dev/ProjectKatana/trunk/gl_fog.c
 	"quakedef.h"
 
 1399119609 source:/home/hogsy/dev/ProjectKatana/trunk/gl_model.c
@@ -5316,7 +5316,7 @@
 1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_refrag.c
 	"quakedef.h"
 
-1399899560 source:/home/hogsy/dev/ProjectKatana/trunk/gl_rmain.c
+1400188625 source:/home/hogsy/dev/ProjectKatana/trunk/gl_rmain.c
 	"quakedef.h"
 	"KatEditor.h"
 	"engine_console.h"
@@ -5352,7 +5352,7 @@
 1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_vidnt.c
 	"quakedef.h"
 
-1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_warp.c
+1400188629 source:/home/hogsy/dev/ProjectKatana/trunk/gl_warp.c
 	"quakedef.h"
 	"engine_video.h"
 
@@ -5401,7 +5401,7 @@
 	<iostream>
 	"lodepng.h"
 
-1399984729 source:/home/hogsy/dev/ProjectKatana/trunk/KatGL.c
+1400083627 source:/home/hogsy/dev/ProjectKatana/trunk/KatGL.c
 	"KatGL.h"
 	"KatAlias.h"
 	"KatEditor.h"
@@ -5448,7 +5448,7 @@
 	"quakedef.h"
 	"engine_video.h"
 
-1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/shared/shared_math.c
+1400188489 source:/home/hogsy/dev/ProjectKatana/trunk/shared/shared_math.c
 	"shared_math.h"
 	<xmmintrin.h>
 	"quakedef.h"
@@ -5481,7 +5481,7 @@
 	"engine_edict.h"
 	"shared_server.h"
 
-1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/sv_user.c
+1400188635 source:/home/hogsy/dev/ProjectKatana/trunk/sv_user.c
 	"quakedef.h"
 
 1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/zone.c
@@ -5545,7 +5545,7 @@
 	"engine_video.h"
 	"engine_menu.h"
 
-1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_light.c
+1400188577 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_light.c
 	"engine_video.h"
 
 1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_loader.c
@@ -5589,7 +5589,7 @@
 	"engine_physics.h"
 	"engine_game.h"
 
-1398260963 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_screen.c
+1400188584 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_screen.c
 	"quakedef.h"
 	"platform_filesystem.h"
 	"engine_menu.h"
@@ -5603,7 +5603,7 @@
 	"engine_game.h"
 	"Python.h"
 
-1399119609 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_server.c
+1400184063 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_server.c
 	"engine_server.h"
 	"KatGL.h"
 	"engine_console.h"
@@ -5618,7 +5618,7 @@
 	"engine_menu.h"
 	"platform_window.h"
 
-1399454494 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_view.c
+1400188605 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_view.c
 	"quakedef.h"
 	"engine_video.h"
 	"shared_math.h"
@@ -5626,7 +5626,7 @@
 1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_world.c
 	"quakedef.h"
 
-1400077966 source:/home/hogsy/dev/ProjectKatana/trunk/gl_alias.c
+1400091700 source:/home/hogsy/dev/ProjectKatana/trunk/gl_alias.c
 	"KatAlias.h"
 	"KatGL.h"
 	"engine_video.h"

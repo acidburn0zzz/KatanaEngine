@@ -64,10 +64,14 @@ EntityField_t	EntityFields[] =
 	{	"style",			FIELD(local.style),				EV_INTEGER	},
 	{	"count",			FIELD(local.count),				EV_INTEGER	},
 	{	"pTeam",			FIELD(local.pTeam),				EV_INTEGER	},
-	{	"attack_finished",	FIELD(local.dAttackFinished),	EV_NONE		},
+	{	"attack_finished",	FIELD(local.dAttackFinished),	EV_DOUBLE	},
 
 	// hacks
 	{	"angle",	FIELD(v.angles),	EV_VECTOR,	FL_ANGLEHACK	},
+
+    {	"wad",			0,	EV_NONE		},
+	{	"ambient",		0,	EV_NONE		},
+	{	"sky",			0,	EV_NONE		},
 
 	{	0	}
 };

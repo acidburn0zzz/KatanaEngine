@@ -162,7 +162,8 @@ void Fog_ParseWorldspawn (void)
 		return; // error
 	if (com_token[0] != '{')
 		return; // error
-	while (1)
+
+	for(;;)
 	{
 		data = COM_Parse(data);
 		if (!data)

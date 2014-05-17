@@ -20,7 +20,7 @@
 #ifndef QUAKEDEF_H
 #define QUAKEDEF_H
 
-#include "platform/include/platform.h"
+#include "platform.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable:4115)
@@ -56,7 +56,6 @@
 #define	IT_INVISIBILITY		524288
 
 #define	MAX_SCOREBOARD		64
-#define	MAX_SCOREBOARDNAME	32
 
 #include "shared_flags.h"
 

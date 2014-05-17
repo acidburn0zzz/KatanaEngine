@@ -58,7 +58,7 @@ void SV_SetIdealPitch (void)
 	if(!(sv_player->v.flags & FL_ONGROUND))
 		return;
 
-	angleval = sv_player->v.angles[YAW] * M_PI*2 / 360;
+	angleval = sv_player->v.angles[YAW] * pMath_PI*2 / 360;
 	sinval = sin(angleval);
 	cosval = cos(angleval);
 
@@ -279,7 +279,7 @@ void SV_ClientThink (void)
 		}
 
 		sv_player->v.velocity[0] = sv_player->v.movedir[0];
-		sv_player->v.velocity[1] = sv_player->v.movedir[1];		
+		sv_player->v.velocity[1] = sv_player->v.movedir[1];
 		return;
 	}
 
@@ -347,7 +347,7 @@ void SV_ClientThink (void)
 			for(i = 0; i < 3; i++)
 				velocity[i] += accelspeed*wishdir[i];
 		}
-		else	
+		else
 			// Not on ground, so little effect on velocity
 			SV_AirAccelerate(vWishVelocity);
 	}

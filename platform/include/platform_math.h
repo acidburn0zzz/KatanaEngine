@@ -27,7 +27,7 @@ typedef struct
 			vZ;
 } MathVector_t;
 
-#define Math_PI 3.14159265358979323846
+#define pMath_PI 3.14159265358979323846
 
 #define Math_Min(a,b)					(	((a)<(b))?(a):(b)	                    )
 #define Math_Max(a,b)                   (	((a)>(b))?(a):(b)	                    )

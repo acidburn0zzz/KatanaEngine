@@ -252,8 +252,8 @@ float frustum_skew = 0.0; //used by r_stereo
 void GL_SetFrustum(float fovx, float fovy)
 {
 	float xmax, ymax;
-	xmax = NEARCLIP * tan( fovx * M_PI / 360.0 );
-	ymax = NEARCLIP * tan( fovy * M_PI / 360.0 );
+	xmax = NEARCLIP * tan( fovx * pMath_PI / 360.0 );
+	ymax = NEARCLIP * tan( fovy * pMath_PI / 360.0 );
 	glFrustum(-xmax + frustum_skew, xmax + frustum_skew, -ymax, ymax, NEARCLIP, gl_farclip.value);
 }
 
@@ -275,8 +275,8 @@ void R_Mirror(void)
 	d = Math_DotProduct(vpn,mpMirrorPlane->normal);
 	Math_VectorMA(vpn,-2*d,mpMirrorPlane->normal,vpn);
 
-	r_refdef.viewangles[0] = -asin(vpn[2])/M_PI*180;
-	r_refdef.viewangles[1] = atan2(vpn[1],vpn[0])/M_PI*180;
+	r_refdef.viewangles[0] = -asin(vpn[2])/pMath_PI*180;
+	r_refdef.viewangles[1] = atan2(vpn[1],vpn[0])/pMath_PI*180;
 	r_refdef.viewangles[2] = -r_refdef.viewangles[2];
 
 	eEntity = &cl_entities[cl.viewentity];

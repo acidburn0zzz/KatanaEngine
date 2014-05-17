@@ -250,14 +250,10 @@ void ExtraMaps_Add (char *name)
 void ExtraMaps_Init(void)
 {
     char            cMapName[128],
-                    filestring[MAX_OSPATH],
-					ignorepakdir[32];
+                    filestring[MAX_OSPATH];
 	searchpath_t    *search;
 	pack_t          *pak;
 	int             i;
-
-	//we don't want to list the maps in id1 pakfiles, becuase these are not "add-on" levels
-	sprintf(ignorepakdir,"/%s/%s",host_parms.cBasePath);
 
 	for (search = com_searchpaths ; search ; search = search->next)
 	{
@@ -308,14 +304,13 @@ void ExtraMaps_Init(void)
 		}
 		else //pakfile
 		{
-			if(!strstr(search->pack->filename,ignorepakdir)) // Don't list standard id maps
-				for(i = 0,pak = search->pack; i < pak->numfiles; i++)
-					if(strstr(pak->files[i].name,".bsp"))
-						if(pak->files[i].filelen > 32*1024) // Don't list files under 32k (ammo boxes etc)
-						{
-							COM_StripExtension(pak->files[i].name+5,cMapName);
-							ExtraMaps_Add(cMapName);
-						}
+            for(i = 0,pak = search->pack; i < pak->numfiles; i++)
+				if(strstr(pak->files[i].name,".bsp"))
+					if(pak->files[i].filelen > 32*1024) // Don't list files under 32k (ammo boxes etc)
+					{
+						COM_StripExtension(pak->files[i].name+5,cMapName);
+						ExtraMaps_Add(cMapName);
+					}
 		}
 	}
 }
@@ -498,12 +493,12 @@ void Host_Status_f (void)
 	else
 		print = SV_ClientPrintf;
 
-	print("host:    %s\n", Cvar_VariableString ("hostname"));
+	print("Host:    %s\n", Cvar_VariableString ("hostname"));
 	print("Version: %i\n",ENGINE_VERSION_BUILD);
 	if (tcpipAvailable)
 		print ("tcp/ip:  %s\n", my_tcpip_address);
-	print("map:     %s\n", sv.name);
-	print("players: %i active (%i max)\n\n", iActiveNetConnections, svs.maxclients);
+	print("Level:     %s\n", sv.name);
+	print("Clients: %i active (%i max)\n\n", iActiveNetConnections, svs.maxclients);
 	for (j=0, client = svs.clients ; j<svs.maxclients ; j++, client++)
 	{
 		if (!client->active)
