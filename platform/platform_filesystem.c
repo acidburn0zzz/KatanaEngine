@@ -61,14 +61,13 @@ bool pFileSystem_CreateDirectory(const char *ccPath)
 */
 void pFileSystem_GetUserName(char *cOut)
 {
-	char	*cUser;
+	char	cUser[128] = "user";
 #ifdef _WIN32
 	DWORD	dName;
 
 	pERROR_UPDATE;
 
 	// [16/5/2014] Set these AFTER we update active function ~hogsy
-	cUser	= "user";
 	dName	= sizeof(cUser);
 
 	if(GetUserName(cUser,&dName))

@@ -251,13 +251,13 @@ void ExtraMaps_Init(void)
 {
     char            cMapName[128],
                     filestring[MAX_OSPATH],
-					ignorepakdir[32];
+					ignorepakdir[64];
 	searchpath_t    *search;
 	pack_t          *pak;
 	int             i;
 
 	//we don't want to list the maps in id1 pakfiles, becuase these are not "add-on" levels
-	sprintf(ignorepakdir,"/%s/%s",host_parms.cBasePath);
+	sprintf(ignorepakdir,"/%s/",host_parms.cBasePath);
 
 	for (search = com_searchpaths ; search ; search = search->next)
 	{
@@ -273,7 +273,7 @@ void ExtraMaps_Init(void)
                 Find = FindFirstFile(filestring,&FindFileData);
                 if(Find == INVALID_HANDLE_VALUE)
                     continue;
-
+				
                 do
                 {
                     COM_StripExtension(FindFileData.cFileName,cMapName);

@@ -16,7 +16,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="../platform/lib/libplatformx64.a" />
+					<Add library="..\platform\lib\libplatformx64.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -34,103 +34,12 @@
 			<Add option="`pkg-config gtk+-2.0 --libs`" />
 			<Add library="X11" />
 		</Linker>
-		<Unit filename="brush.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="brush.h" />
-		<Unit filename="bspfile.h" />
-		<Unit filename="camera.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="camera.h" />
-		<Unit filename="csg.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="drag.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="eclass.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="editor_camera.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="editor_camera.h" />
-		<Unit filename="editor_console.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="editor_console.h" />
-		<Unit filename="editor_interface.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="editor_main.c">
-			<Option compilerVar="CC" />
-		</Unit>
+		<Unit filename="editor_main.cpp" />
 		<Unit filename="editor_main.h" />
-		<Unit filename="entity.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="entity.h" />
-		<Unit filename="entityw.h" />
-		<Unit filename="glingr.h" />
-		<Unit filename="lbmlib.h" />
-		<Unit filename="main.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="map.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="map.h" />
-		<Unit filename="parse.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="parse.h" />
-		<Unit filename="points.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="qedefs.h" />
-		<Unit filename="qfiles.h" />
-		<Unit filename="select.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="select.h" />
-		<Unit filename="textures.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="textures.h" />
-		<Unit filename="vertsel.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="view.h" />
-		<Unit filename="win_dlg.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="win_ent.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="win_main.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="win_qe3.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="win_xy.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="win_z.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="xy.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="xy.h" />
-		<Unit filename="z.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="z.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
