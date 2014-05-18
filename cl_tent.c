@@ -36,56 +36,6 @@ void CL_InitTEnts(void)
 	sExplosionSound = S_PrecacheSound("weapons/r_exp3.wav");
 }
 
-void CL_ParseBeam (model_t *m)
-{
-	int		ent;
-	vec3_t	start, end;
-	beam_t	*b;
-	int		i;
-
-	ent = MSG_ReadShort ();
-
-	start[0] = MSG_ReadCoord ();
-	start[1] = MSG_ReadCoord ();
-	start[2] = MSG_ReadCoord ();
-
-	end[0] = MSG_ReadCoord ();
-	end[1] = MSG_ReadCoord ();
-	end[2] = MSG_ReadCoord ();
-
-// override any beam with the same entity
-	for (i=0, b=cl_beams ; i< MAX_BEAMS ; i++, b++)
-		if (b->entity == ent)
-		{
-			b->entity = ent;
-			b->model = m;
-			b->endtime = cl.time + 0.2;
-			Math_VectorCopy (start, b->start);
-			Math_VectorCopy (end, b->end);
-			return;
-		}
-
-// find a free beam
-	for (i=0, b=cl_beams ; i< MAX_BEAMS ; i++, b++)
-		if (!b->model || b->endtime < cl.time)
-		{
-			b->entity = ent;
-			b->model = m;
-			b->endtime = cl.time + 0.2;
-			Math_VectorCopy (start, b->start);
-			Math_VectorCopy (end, b->end);
-			return;
-		}
-
-	//johnfitz -- less spammy overflow message
-	if (!dev_overflows.beams || dev_overflows.beams + CONSOLE_RESPAM_TIME < realtime )
-	{
-		Con_Printf ("Beam list overflow!\n");
-		dev_overflows.beams = realtime;
-	}
-	//johnfitz
-}
-
 void CL_ParseTEnt (void)
 {
 	int				type,i,j,k,iParticleTexture;
@@ -262,12 +212,12 @@ void CL_UpdateTEnts (void)
 		}
 		else
 		{
-			yaw = (int) (atan2(dist[1], dist[0]) * 180 / M_PI);
+			yaw = (int) (atan2(dist[1], dist[0]) * 180 / pMath_PI);
 			if (yaw < 0)
 				yaw += 360;
 
 			forward = sqrt (dist[0]*dist[0] + dist[1]*dist[1]);
-			pitch = (int) (atan2(dist[2], forward) * 180 / M_PI);
+			pitch = (int) (atan2(dist[2], forward) * 180 / pMath_PI);
 			if (pitch < 0)
 				pitch += 360;
 		}
@@ -286,7 +236,7 @@ void CL_UpdateTEnts (void)
 			ent->angles[0]	= pitch;
 			ent->angles[1]	= yaw;
 			ent->angles[2]	= rand()%360;
-	
+
 			//johnfitz -- use j instead of using i twice, so we don't corrupt memory
 			for (j=0 ; j<3 ; j++)
 				org[j] += dist[j]*30;

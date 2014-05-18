@@ -418,17 +418,17 @@
 	<limits.h>
 	<wchar.h>
 
-1399984663 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
+1400097388 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_menu.h
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_module.h
 
-1398122236 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_math.h
+1400188745 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_math.h
 	"../platform/include/platform.h"
-	"../platform/include/platform_math.h"
+	"platform_math.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_math.h
+1400188785 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_math.h
 	"platform.h"
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_engine.h

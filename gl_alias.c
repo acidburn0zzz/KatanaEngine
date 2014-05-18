@@ -36,7 +36,7 @@ float	r_avertexnormals[NUMVERTEXNORMALS][3] =
 	{	-0.850651,	0.525731,	0.000000	},
 	{	-0.864188,	0.442863,	0.238856	},
 	{	-0.716567,	0.681718,	0.147621	},
-	{-0.688191, 0.587785, 0.425325},
+	{   -0.688191,  0.587785,   0.425325    },
 	{-0.500000, 0.809017, 0.309017},
 	{-0.238856, 0.864188, 0.442863},
 	{-0.425325, 0.688191, 0.587785},
@@ -285,8 +285,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 	if(currententity->effects & EF_FULLBRIGHT)
 		Math_VectorSet(1.0f,vLightColour);
 
-	for(i = 0; i < NUMVERTEXNORMALS; i++)
-		shadedots = r_avertexnormal_dots[((int)(vOrigin[0]*(SHADEDOT_QUANT/360.0f))) & (SHADEDOT_QUANT-1)];
+    shadedots = r_avertexnormal_dots[((int)(vOrigin[0]*(SHADEDOT_QUANT/360.0f))) & (SHADEDOT_QUANT-1)];
 
 	Math_VectorScale(vLightColour,1.0f/200.0f,vLightColour);
 }
@@ -295,12 +294,13 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
 #if 1 // new
 	int					i,j,k;
+	float               fAlpha;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
 	MD2TriangleVertex_t	*mtvVertices;
 	MD2Triangle_t		*mtTriangles;
 	MD2Frame_t			*frame1,*frame2;
 	vec3_t				scale1,translate1,
-                        scale2,vTranslate2;
+                        scale2;
 
 	// [20/8/2012] Quick fix ~hogsy
 	// [24/8/2012] Moved ~hogsy
@@ -314,13 +314,12 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	Math_VectorCopy(frame1->scale,scale1);
 	Math_VectorCopy(frame1->translate,translate1);
 	Math_VectorCopy(frame2->scale,scale2);
-	Math_VectorCopy(frame2->translate,vTranslate2);
 
 	// [24/8/2012] Probably not the best way, but it's better than my other method ~hogsy
 	Math_VectorScale(scale1,currententity->scale,scale1);
 	Math_VectorScale(scale2,currententity->scale,scale2);
 
-	memset(voModel,0,sizeof(voModel));
+	fAlpha = ENTALPHA_DECODE(currententity->alpha);
 
 	mtvVertices = &frame1->verts[0];
 
@@ -337,10 +336,13 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
                 for(j = 0; j < 3; j++)
                 {
                     voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+translate1[j]);
-                    voModel[i].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])*0.5f;
+                    voModel[i].vNormal[j] = r_avertexnormals[mtTriangles->index_xyz[k]][j];
+
+                    if(bShading)
+                        voModel[i].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])*0.5f;
                 }
 
-                voModel[i].vColour[3] = 1.0f;
+                voModel[i].vColour[3] = fAlpha;
 
                 // Hacky!
                 if(k < 2)

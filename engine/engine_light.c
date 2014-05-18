@@ -112,7 +112,7 @@ void Light_Draw(void)
 
 			for(i = 16; i >= 0; i--)
 			{
-				a = i/16.0f*M_PI*2.0f;
+				a = i/16.0f*pMath_PI*2.0f;
 
 				for(j = 0; j < 3; j++)
 					v[j] = dLight->origin[j]+vright[j]*cos(a)*rad+vup[j]*sin(a)*rad;

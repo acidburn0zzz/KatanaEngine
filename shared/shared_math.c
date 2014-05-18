@@ -94,12 +94,12 @@ MathVector_t Math_VectorToAngles(vec3_t vValue)
 	}
 	else
 	{
-		fYaw = (float)(atan2(vValue[1],vValue[0])*180/Math_PI);
+		fYaw = (float)(atan2(vValue[1],vValue[0])*180/pMath_PI);
 		if(fYaw < 0)
 			fYaw += 360.0f;
 
 		fForward	= (float)sqrt(vValue[0]*vValue[0]+vValue[1]*vValue[1]);
-		fPitch		= (float)(atan2(vValue[2],fForward)*180/Math_PI);
+		fPitch		= (float)(atan2(vValue[2],fForward)*180/pMath_PI);
 		if(fPitch < 0)
 			fPitch += 360.0f;
 	}
@@ -119,7 +119,7 @@ float Math_VectorToYaw(vec_t *vVector)
 		fResult = 0;
 	else
 	{
-		fResult = (float)(atan2(vVector[1],vVector[0])*180.0f/Math_PI);
+		fResult = (float)(atan2(vVector[1],vVector[0])*180.0f/pMath_PI);
 		if(fResult < 0)
 			fResult += 360.0f;
 	}
@@ -201,13 +201,13 @@ void Math_AngleVectors(vec3_t angles,vec3_t forward,vec3_t right,vec3_t up)
 {
 	float	angle,sr,sp,sy,cr,cp,cy;
 
-	angle	= angles[YAW]*((float)Math_PI*2/360);
+	angle	= angles[YAW]*((float)pMath_PI*2/360);
 	sy		= (float)sin(angle);
 	cy		= (float)cos(angle);
-	angle	= angles[PITCH]*((float)Math_PI*2/360);
+	angle	= angles[PITCH]*((float)pMath_PI*2/360);
 	sp		= (float)sin(angle);
 	cp		= (float)cos(angle);
-	angle	= angles[ROLL]*((float)Math_PI*2/360);
+	angle	= angles[ROLL]*((float)pMath_PI*2/360);
 	sr		= (float)sin(angle);
 	cr		= (float)cos(angle);
 

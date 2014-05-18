@@ -69,7 +69,7 @@ float turbsin[] =
 	-1.56072, -1.3677, -1.17384, -0.979285, -0.784137, -0.588517, -0.392541, -0.19633,
 };
 
-#define WARPCALC(s,t) ((s + turbsin[(int)((t*2)+(cl.time*(128.0/M_PI))) & 255]) * (1.0/64)) //johnfitz -- correct warp
+#define WARPCALC(s,t) ((s + turbsin[(int)((t*2)+(cl.time*(128.0/pMath_PI))) & 255]) * (1.0/64)) //johnfitz -- correct warp
 
 //==============================================================================
 //

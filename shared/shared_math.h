@@ -6,7 +6,7 @@
 // OBSOLETE: ALL OF THIS IS BEING TRANSITIONED INTO PLATFORM_MATH
 
 #include "../platform/include/platform.h"
-#include "../platform/include/platform_math.h"
+#include "platform_math.h"
 
 typedef int fixed8_t;
 
@@ -33,13 +33,9 @@ enum	{	RED,	GREEN,	BLUE,	ALPHA	};	//	0,	1,	2,	3
 #define	SIDE_BACK		1
 #define	SIDE_CROSS		-2
 
-#ifndef M_PI
-#define M_PI				3.14159265358979323846
-#endif
-
 #define Q_rint(x)			((x)>0?(int)((x)+0.5):(int)((x)-0.5))
 
-#define M_PI_DIV_180		(Math_PI/180.0f)
+#define M_PI_DIV_180		(pMath_PI/180.0f)
 
 #define DEG2RAD(a)			((a)*M_PI_DIV_180)
 
