@@ -107,6 +107,143 @@ void DrawGLPoly(glpoly_t *p)
 
 void R_DrawSequentialPoly(msurface_t *s)
 {
+#if 1
+    int         i;
+    float       fAlpha;
+    texture_t   *tAnimation;
+
+    fAlpha      = ENTALPHA_DECODE(currententity->alpha);
+    tAnimation  = R_TextureAnimation(s->texinfo->texture,currententity->frame);
+
+    Video_ResetCapabilities(false);
+
+	if(s->flags & SURF_DRAWSKY)
+		return;
+    else if(s->flags & SURF_NOTEXTURE)
+	{
+		if(fAlpha < 1.0f)
+		{
+            Video_SetBlend(VIDEO_DEPTH_FALSE,VIDEO_BLEND_IGNORE);
+            Video_EnableCapabilities(VIDEO_BLEND);
+
+			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+			glColor4f(1.0f,1.0f,1.0f,fAlpha);
+		}
+
+		Video_SetTexture(tAnimation->gltexture);
+
+		DrawGLPoly(s->polys);
+
+		rs_brushpasses++;
+
+		if(fAlpha < 1.0f)
+		{
+			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+			glColor3f(1.0f,1.0f,1.0f);
+		}
+	}
+    else if(s->flags & SURF_DRAWTURB)
+	{
+        glpoly_t *pBrushPoly;
+
+		if(currententity->alpha == ENTALPHA_DEFAULT)
+			fAlpha = CLAMP(0.0,r_wateralpha.value,1.0f);
+
+		if(fAlpha < 1.0f)
+		{
+            Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
+            Video_EnableCapabilities(VIDEO_BLEND);
+
+			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+			glColor4f(1.0f,1.0f,1.0f,fAlpha);
+		}
+
+        Video_SetTexture(s->texinfo->texture->gltexture);
+
+        for(pBrushPoly = s->polys->next; pBrushPoly; pBrushPoly = pBrushPoly->next)
+        {
+            Warp_DrawWaterPoly(pBrushPoly);
+
+            rs_brushpasses++;
+        }
+
+        rs_brushpasses++;
+
+#if 0   // New water
+		{
+			Video_SetTexture(s->texinfo->texture->warpimage);
+			s->texinfo->texture->update_warp = true; // FIXME: one frame too late!
+			DrawGLPoly (s->polys);
+			rs_brushpasses++;
+		}
+#endif
+
+		if(fAlpha < 1.0f)
+		{
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_REPLACE);
+			glColor3f(1.0f,1.0f,1.0f);
+		}
+	}
+	else
+	{
+        float   *fVert;
+
+        if(fAlpha < 1.0f)
+		{
+            Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
+            Video_EnableCapabilities(VIDEO_BLEND);
+
+			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+			glColor4f(1.0f,1.0f,1.0f,fAlpha);
+		}
+		else
+            Video_EnableCapabilities(VIDEO_ALPHA_TEST);
+
+        Video_SetTexture(tAnimation->gltexture);
+
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+        Video_SelectTexture(1);
+        Video_EnableCapabilities(VIDEO_TEXTURE_2D);
+        Video_SetTexture(lightmap_textures[s->lightmaptexturenum]);
+
+        R_RenderDynamicLightmaps(s);
+        R_UploadLightmap(s->lightmaptexturenum);
+
+        glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_EXT);
+        glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB_EXT,GL_MODULATE);
+        glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB_EXT,GL_PREVIOUS_EXT);
+        glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB_EXT,GL_TEXTURE);
+        glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,4);
+
+        glBegin(GL_TRIANGLE_FAN);
+
+        fVert = s->polys->verts[0];
+        for(i = 0; i < s->polys->numverts; i++,fVert += VERTEXSIZE)
+        {
+            glMultiTexCoord2fARB(VIDEO_TEXTURE0,fVert[3],fVert[4]);
+            glMultiTexCoord2fARB(VIDEO_TEXTURE1,fVert[5],fVert[6]);
+            glVertex3fv(fVert);
+        }
+
+        glEnd();
+
+        glTexEnvf(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,1.0f);
+        glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+
+        Video_SelectTexture(0);
+
+        if(fAlpha < 1.0f)
+        {
+            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_REPLACE);
+			glColor3f(1.0f,1.0f,1.0f);
+        }
+
+        rs_brushpasses++;
+	}
+
+	Video_ResetCapabilities(true);
+#else
 	glpoly_t	*p;
 	texture_t	*t;
 	float		*v;
@@ -143,8 +280,9 @@ void R_DrawSequentialPoly(msurface_t *s)
 	{
 		if(entalpha < 1.0f)
 		{
-			glDepthMask(false);
-			glEnable(GL_BLEND);
+			Video_EnableCapabilities(VIDEO_BLEND);
+			Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 			glColor4f(1.0f,1.0f,1.0f,entalpha);
 		}
@@ -155,8 +293,9 @@ void R_DrawSequentialPoly(msurface_t *s)
 
 		if(entalpha < 1.0f)
 		{
-			glDepthMask(true);
-			glDisable(GL_BLEND);
+			Video_DisableCapabilities(VIDEO_BLEND);
+			Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_TRUE);
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 			glColor3f(1.0f,1.0f,1.0f);
 		}
@@ -169,9 +308,12 @@ void R_DrawSequentialPoly(msurface_t *s)
 	{
 		if (s->flags & SURF_DRAWTILED)
 		{
-			glDisable (GL_TEXTURE_2D);
+			Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+
 			DrawGLPoly (s->polys);
-			glEnable (GL_TEXTURE_2D);
+
+			Video_EnableCapabilities(VIDEO_TEXTURE_2D);
+
 			rs_brushpasses++;
 			return;
 		}
@@ -210,79 +352,8 @@ void R_DrawSequentialPoly(msurface_t *s)
 		return;
 	}
 
-// sky poly -- skip it, already handled in gl_sky.c
-	if(s->flags & SURF_DRAWSKY)
-		return;
-
-// water poly
-	if(s->flags & SURF_DRAWTURB)
-	{
-		if (currententity->alpha == ENTALPHA_DEFAULT)
-			entalpha = CLAMP(0.0,r_wateralpha.value,1.0f);
-
-		if (entalpha < 1.0f)
-		{
-			glDepthMask(GL_FALSE);
-			glEnable(GL_BLEND);
-			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-			glColor4f(1.0f,1.0f,1.0f,entalpha);
-		}
-
-		if (r_oldwater.value)
-		{
-			Video_SetTexture(s->texinfo->texture->gltexture);
-			for (p = s->polys->next; p; p = p->next)
-			{
-				Warp_DrawWaterPoly (p);
-				rs_brushpasses++;
-			}
-			rs_brushpasses++;
-		}
-		else
-		{
-			Video_SetTexture(s->texinfo->texture->warpimage);
-			s->texinfo->texture->update_warp = TRUE; // FIXME: one frame too late!
-			DrawGLPoly (s->polys);
-			rs_brushpasses++;
-		}
-
-		if(entalpha < 1.0f)
-		{
-			glDepthMask(GL_TRUE);
-			glDisable(GL_BLEND);
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_REPLACE);
-			glColor3f(1.0f,1.0f,1.0f);
-		}
-
-		return;
-	}
-
 // missing texture
-	if (s->flags & SURF_NOTEXTURE)
-	{
-		if (entalpha < 1)
-		{
-			glDepthMask(false);
-			glEnable(GL_BLEND);
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			glColor4f(1, 1, 1, entalpha);
-		}
 
-		Video_SetTexture(t->gltexture);
-
-		DrawGLPoly (s->polys);
-
-		rs_brushpasses++;
-
-		if (entalpha < 1)
-		{
-			glDepthMask(GL_TRUE);
-			glDisable(GL_BLEND);
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			glColor3f(1, 1, 1);
-		}
-		return;
-	}
 
 // lightmapped poly
 	if(entalpha < 1.0f)
@@ -297,41 +368,6 @@ void R_DrawSequentialPoly(msurface_t *s)
 
 	if(gl_overbright.value)
 	{
-		if(Video.bTextureEnvCombine && Video.bMultitexture) //case 1: texture and lightmap in one pass, overbright using texture combiners
-		{
-			Video_DisableMultitexture(); // selects TEXTURE0
-			Video_SetTexture(t->gltexture);
-
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-			Video_EnableMultitexture(); // selects TEXTURE1
-			Video_SetTexture(lightmap_textures[s->lightmaptexturenum]);
-
-			R_RenderDynamicLightmaps (s);
-			R_UploadLightmap(s->lightmaptexturenum);
-
-			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_EXT);
-			glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB_EXT,GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB_EXT,GL_PREVIOUS_EXT);
-			glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB_EXT,GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,4);
-			glBegin(GL_POLYGON);
-
-			v = s->polys->verts[0];
-			for (i=0 ; i<s->polys->numverts ; i++, v += VERTEXSIZE)
-			{
-				glMultiTexCoord2fARB(VIDEO_TEXTURE0,v[3],v[4]);
-				glMultiTexCoord2fARB(VIDEO_TEXTURE1,v[5],v[6]);
-				glVertex3fv (v);
-			}
-			glEnd();
-			glTexEnvf(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,1.0f);
-			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-
-			Video_DisableMultitexture();
-
-			rs_brushpasses++;
-		}
 		else if (entalpha < 1.0f) //case 2: can't do multipass if entity has alpha, so just draw the texture
 		{
 			Video_SetTexture(t->gltexture);
@@ -474,17 +510,16 @@ void R_DrawSequentialPoly(msurface_t *s)
 				rs_brushpasses++;
 			}
 
-			glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glDisable (GL_BLEND);
-			glDepthMask (GL_TRUE);
-
+            Video_DisableCapabilities(VIDEO_BLEND);
+            Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_TRUE);
 		}
 	}
 
 	if(entalpha < 1.0f)
 	{
-		glDepthMask(true);
-		glDisable(GL_BLEND);
+        Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_TRUE);
+        Video_DisableCapabilities(VIDEO_BLEND);
+
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 		glColor3f(1.0f,1.0f,1.0f);
 	}
@@ -492,11 +527,10 @@ void R_DrawSequentialPoly(msurface_t *s)
 fullbrights:
 	if (gl_fullbrights.value && t->fullbright)
 	{
-		glDepthMask(false);
+		Video_SetBlend(VIDEO_BLEND_ONE,VIDEO_DEPTH_FALSE);
 		Video_EnableCapabilities(VIDEO_BLEND);
-		glBlendFunc(GL_ONE,GL_ONE);
-		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 
+		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 		glColor3f(entalpha,entalpha,entalpha);
 
 		Video_SetTexture(t->fullbright);
@@ -507,12 +541,13 @@ fullbrights:
 
 		glColor3f(1.0f,1.0f,1.0f);
 		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		glDisable(GL_BLEND);
-		glDepthMask(true);
+
+        Video_DisableCapabilities(VIDEO_BLEND);
+		Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_TRUE);
 
 		rs_brushpasses++;
 	}
+#endif
 }
 
 void Brush_Draw(entity_t *e)
@@ -601,8 +636,6 @@ void Brush_Draw(entity_t *e)
 	// draw it
 	//
 
-    Video_ResetCapabilities(false);
-
 	if (r_drawflat_cheatsafe) //johnfitz
 		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 
@@ -620,7 +653,8 @@ void Brush_Draw(entity_t *e)
 
 	glPopMatrix();
 
-	Video_ResetCapabilities(true);
+	if(r_drawflat_cheatsafe)
+        Video_EnableCapabilities(VIDEO_TEXTURE_2D);
 }
 
 void R_DrawBrushModel_ShowTris (entity_t *e)

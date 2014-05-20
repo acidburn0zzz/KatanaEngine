@@ -192,8 +192,8 @@ void Draw_Particles(void)
     Video_ResetCapabilities(false);
 
     glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-    glDepthMask(false);
 
+    Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
     Video_EnableCapabilities(VIDEO_BLEND);
     Video_DisableCapabilities(VIDEO_ALPHA_TEST);
 
@@ -233,7 +233,6 @@ void Draw_Particles(void)
 		rs_particles++;
 	}
 
-    glDepthMask(true);
     glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 
 	Video_ResetCapabilities(true);
