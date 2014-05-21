@@ -372,8 +372,6 @@ void R_SetupView (void)
 	//johnfitz
 }
 
-void R_DrawBrushModel(entity_t *eBrush);    // [25/11/2013] See r_brush.c ~hogsy
-
 void R_DrawEntitiesOnList(bool bAlphaPass) //johnfitz -- added parameter
 {
 	int i;

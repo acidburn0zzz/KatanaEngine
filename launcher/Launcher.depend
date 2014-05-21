@@ -257,17 +257,17 @@
 	"../platform/include/platform.h"
 	"shared_flags.h"
 
-1399984193 source:/home/hogsy/dev/ProjectKatana/trunk/launcher/launcher_main.cpp
+1400341934 source:/home/hogsy/dev/ProjectKatana/trunk/launcher/launcher_main.cpp
 	"platform_module.h"
 	"platform_window.h"
 	"shared_flags.h"
 	"shared_module.h"
 	"shared_engine.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
 	"platform.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform.h
 	<stdio.h>
 	<stdlib.h>
 	<stdarg.h>
@@ -284,6 +284,7 @@
 	<Windows.h>
 	<WindowsX.h>
 	<CommCtrl.h>
+	<direct.h>
 	<dirent.h>
 	<unistd.h>
 	<dlfcn.h>
@@ -295,11 +296,11 @@
 	<limits.h>
 	<wchar.h>
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_window.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_window.h
 	"platform.h"
 	<X11/Xlib.h>
 
-1400097388 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
+1400583719 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_module.h
 

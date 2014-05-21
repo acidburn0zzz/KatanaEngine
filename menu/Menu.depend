@@ -390,7 +390,7 @@
 	"shared_engine.h"
 	"shared_game.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform.h
 	<stdio.h>
 	<stdlib.h>
 	<stdarg.h>
@@ -407,6 +407,7 @@
 	<Windows.h>
 	<WindowsX.h>
 	<CommCtrl.h>
+	<direct.h>
 	<dirent.h>
 	<unistd.h>
 	<dlfcn.h>
@@ -418,7 +419,7 @@
 	<limits.h>
 	<wchar.h>
 
-1400097388 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
+1400583719 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_menu.h
 
@@ -442,11 +443,11 @@
 
 1399385831 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_client.h
 
-1399372234 source:/home/hogsy/dev/ProjectKatana/trunk/menu/menu_main.c
+1400341934 source:/home/hogsy/dev/ProjectKatana/trunk/menu/menu_main.c
 	"menu_main.h"
 	"platform_module.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
 	"platform.h"
 
 1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/menu/menu_input.c

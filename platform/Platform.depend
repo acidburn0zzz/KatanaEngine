@@ -119,10 +119,10 @@
 1395600926 /home/hogsy/dev/katana-engine/trunk/platform/include/platform_module.h
 	"platform.h"
 
-1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/platform/platform.c
+1400341935 source:/home/hogsy/dev/ProjectKatana/trunk/platform/platform.c
 	"platform.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform.h
 	<stdio.h>
 	<stdlib.h>
 	<stdarg.h>
@@ -139,6 +139,7 @@
 	<Windows.h>
 	<WindowsX.h>
 	<CommCtrl.h>
+	<direct.h>
 	<dirent.h>
 	<unistd.h>
 	<dlfcn.h>
@@ -160,25 +161,31 @@
 1400188785 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_math.h
 	"platform.h"
 
-1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/platform/platform_module.c
+1400341935 source:/home/hogsy/dev/ProjectKatana/trunk/platform/platform_module.c
 	"platform_module.h"
+	"platform_system.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
 	"platform.h"
 
-1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/platform/platform_net.c
+1400341935 source:/home/hogsy/dev/ProjectKatana/trunk/platform/platform_net.c
 	"platform.h"
+	"platform_system.h"
 
-1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/platform/platform_window.c
+1400341935 source:/home/hogsy/dev/ProjectKatana/trunk/platform/platform_window.c
 	"platform_window.h"
+	"platform_system.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_window.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_window.h
 	"platform.h"
 	<X11/Xlib.h>
 
-1399373075 source:/home/hogsy/dev/ProjectKatana/trunk/platform/platform_filesystem.c
+1400341935 source:/home/hogsy/dev/ProjectKatana/trunk/platform/platform_filesystem.c
 	"platform_filesystem.h"
+	"platform_system.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_filesystem.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_filesystem.h
 	"platform.h"
+
+1400341935 /home/hogsy/dev/ProjectKatana/trunk/platform/platform_system.h
 

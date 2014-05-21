@@ -40,7 +40,7 @@ EntityField_t	EntityFields[] =
 	{	"spawnflags",	FIELD(v.spawnflags),		EV_INTEGER	},
 	{	"bTakeDamage",	FIELD(v.bTakeDamage),		EV_BOOLEAN	},
 	{	"scale",		FIELD(Model.fScale),		EV_FLOAT	},
-	{	"alpha",		FIELD(alpha),				EV_FLOAT	},
+	{	"alpha",		FIELD(alpha),				EV_INTEGER	},
 
 	// Physical properties
 	{	"physics_solid",	FIELD(Physics.iSolid),		EV_INTEGER	},

@@ -4724,7 +4724,7 @@
 	"crc.h"
 	"glquake.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform.h
 	<stdio.h>
 	<stdlib.h>
 	<stdarg.h>
@@ -4741,6 +4741,7 @@
 	<Windows.h>
 	<WindowsX.h>
 	<CommCtrl.h>
+	<direct.h>
 	<dirent.h>
 	<unistd.h>
 	<dlfcn.h>
@@ -4752,7 +4753,7 @@
 	<limits.h>
 	<wchar.h>
 
-1400097388 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
+1400583719 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_flags.h
 
 1398120592 /home/hogsy/dev/ProjectKatana/trunk/cmdlib.h
 	"platform/include/platform.h"
@@ -4868,7 +4869,7 @@
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_server.h
 
-1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/cl_input.c
+1400189395 source:/home/hogsy/dev/ProjectKatana/trunk/cl_input.c
 	"quakedef.h"
 
 1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/cl_main.c
@@ -4910,7 +4911,7 @@
 1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_console.h
 	"quakedef.h"
 
-1398120592 source:/home/hogsy/dev/ProjectKatana/trunk/cl_tent.c
+1400189199 source:/home/hogsy/dev/ProjectKatana/trunk/cl_tent.c
 	"quakedef.h"
 	"KatGL.h"
 
@@ -4925,12 +4926,12 @@
 	<direct.h>
 	"common.h"
 
-1399237758 source:/home/hogsy/dev/ProjectKatana/trunk/common.c
+1400341932 source:/home/hogsy/dev/ProjectKatana/trunk/common.c
 	"quakedef.h"
 	"platform_filesystem.h"
 	"engine_script.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_filesystem.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_filesystem.h
 	"platform.h"
 
 1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_script.h
@@ -4950,7 +4951,7 @@
 	"engine_input.h"
 	"engine_video.h"
 
-1399898050 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_video.h
+1400341933 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_video.h
 	"quakedef.h"
 	<SDL.h>
 
@@ -5316,7 +5317,7 @@
 1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_refrag.c
 	"quakedef.h"
 
-1400188625 source:/home/hogsy/dev/ProjectKatana/trunk/gl_rmain.c
+1400585683 source:/home/hogsy/dev/ProjectKatana/trunk/gl_rmain.c
 	"quakedef.h"
 	"KatEditor.h"
 	"engine_console.h"
@@ -5330,7 +5331,7 @@
 
 1398120601 /home/hogsy/dev/ProjectKatana/trunk/shared/shared_module.h
 
-1400083633 /home/hogsy/dev/ProjectKatana/trunk/KatAlias.h
+1400585618 /home/hogsy/dev/ProjectKatana/trunk/KatAlias.h
 	"quakedef.h"
 
 1399899622 source:/home/hogsy/dev/ProjectKatana/trunk/gl_rmisc.c
@@ -5343,7 +5344,7 @@
 	"quakedef.h"
 	"engine_video.h"
 
-1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/gl_texmgr.c
+1400341934 source:/home/hogsy/dev/ProjectKatana/trunk/gl_texmgr.c
 	"quakedef.h"
 	"platform/include/platform_filesystem.h"
 	"engine_console.h"
@@ -5356,7 +5357,7 @@
 	"quakedef.h"
 	"engine_video.h"
 
-1399234068 source:/home/hogsy/dev/ProjectKatana/trunk/host.c
+1400341934 source:/home/hogsy/dev/ProjectKatana/trunk/host.c
 	"quakedef.h"
 	"engine_main.h"
 	"engine_console.h"
@@ -5382,13 +5383,13 @@
 1399234068 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_audio.h
 	"quakedef.h"
 
-1399898330 source:/home/hogsy/dev/ProjectKatana/trunk/host_cmd.c
+1400341934 source:/home/hogsy/dev/ProjectKatana/trunk/host_cmd.c
 	"quakedef.h"
 	"engine_game.h"
 	"engine_server.h"
 	"engine_input.h"
 
-1398120601 source:/home/hogsy/dev/ProjectKatana/trunk/image.c
+1400341934 source:/home/hogsy/dev/ProjectKatana/trunk/image.c
 	"quakedef.h"
 	"platform/include/platform_filesystem.h"
 	"shared_png.h"
@@ -5401,7 +5402,7 @@
 	<iostream>
 	"lodepng.h"
 
-1400083627 source:/home/hogsy/dev/ProjectKatana/trunk/KatGL.c
+1400584891 source:/home/hogsy/dev/ProjectKatana/trunk/KatGL.c
 	"KatGL.h"
 	"KatAlias.h"
 	"KatEditor.h"
@@ -5440,11 +5441,11 @@
 1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_edict.h
 	"quakedef.h"
 
-1399984982 source:/home/hogsy/dev/ProjectKatana/trunk/r_brush.c
+1400589217 source:/home/hogsy/dev/ProjectKatana/trunk/r_brush.c
 	"quakedef.h"
 	"engine_video.h"
 
-1399900201 source:/home/hogsy/dev/ProjectKatana/trunk/r_world.c
+1400584222 source:/home/hogsy/dev/ProjectKatana/trunk/r_world.c
 	"quakedef.h"
 	"engine_video.h"
 
@@ -5518,7 +5519,7 @@
 1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_cvar.c
 	"quakedef.h"
 
-1398610036 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_editor.c
+1400341933 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_editor.c
 	"KatEditor.h"
 	"engine_video.h"
 	"engine_input.h"
@@ -5528,10 +5529,10 @@
 	"platform_module.h"
 	"platform_filesystem.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_module.h
 	"platform.h"
 
-1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_game.c
+1400341933 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_game.c
 	"engine_game.h"
 	"engine_console.h"
 	"KatGL.h"
@@ -5554,7 +5555,7 @@
 1398120596 /home/hogsy/dev/ProjectKatana/trunk/engine/engine_loader.h
 	"quakedef.h"
 
-1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_main.c
+1400341933 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_main.c
 	"engine_main.h"
 	"engine_video.h"
 	"../platform/include/platform_module.h"
@@ -5564,7 +5565,7 @@
 	<assert.h>
 	<WS2tcpip.h>
 
-1398122235 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_menu.c
+1400341933 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_menu.c
 	"engine_menu.h"
 	"engine_video.h"
 	"engine_client.h"
@@ -5573,7 +5574,7 @@
 	"platform_window.h"
 	"platform_module.h"
 
-1398120601 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_window.h
+1400341934 /home/hogsy/dev/ProjectKatana/trunk/platform/include/platform_window.h
 	"platform.h"
 	<X11/Xlib.h>
 
@@ -5589,7 +5590,7 @@
 	"engine_physics.h"
 	"engine_game.h"
 
-1400188584 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_screen.c
+1400341933 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_screen.c
 	"quakedef.h"
 	"platform_filesystem.h"
 	"engine_menu.h"
@@ -5603,7 +5604,7 @@
 	"engine_game.h"
 	"Python.h"
 
-1400184063 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_server.c
+1400584431 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_server.c
 	"engine_server.h"
 	"KatGL.h"
 	"engine_console.h"
@@ -5626,7 +5627,7 @@
 1398120596 source:/home/hogsy/dev/ProjectKatana/trunk/engine/engine_world.c
 	"quakedef.h"
 
-1400091700 source:/home/hogsy/dev/ProjectKatana/trunk/gl_alias.c
+1400189104 source:/home/hogsy/dev/ProjectKatana/trunk/gl_alias.c
 	"KatAlias.h"
 	"KatGL.h"
 	"engine_video.h"
