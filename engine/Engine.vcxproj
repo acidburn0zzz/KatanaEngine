@@ -39,7 +39,7 @@
     <SccLocalPath />
     <ProjectName>Engine</ProjectName>
     <ProjectGuid>{5588B942-90A0-63A2-3369-523F456D79C5}</ProjectGuid>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release With Debug Info|Win32'" Label="Configuration">

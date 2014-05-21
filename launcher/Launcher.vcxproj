@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals" />
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0D435709-1C21-446A-BE4E-A41438087A4D}</ProjectGuid>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <RootNamespace>Launcher</RootNamespace>
     <ProjectName>Launcher</ProjectName>
   </PropertyGroup>

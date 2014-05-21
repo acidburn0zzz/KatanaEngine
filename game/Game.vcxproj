@@ -16,7 +16,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6BA71186-7156-4A79-ABAD-FC46D4492EA0}</ProjectGuid>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <RootNamespace>Menu</RootNamespace>
     <ProjectName>Example Game</ProjectName>
   </PropertyGroup>
