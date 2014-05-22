@@ -173,9 +173,9 @@ typedef struct particle_s
 
 	struct		particle_s	*next;
 
-	float					ramp;
-	float					die;
-	float					scale;		// Size/scale of the particle.
+	float					ramp,
+							die,
+							scale;		// Size/scale of the particle.
 } Particle_t;
 //////////////////////////////////////////////////////////////////////////
 
