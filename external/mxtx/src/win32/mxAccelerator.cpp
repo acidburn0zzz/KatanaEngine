@@ -29,9 +29,9 @@ mxAccelerator::add (int key, int flags, int cmd)
 {
 	if (g_numAccel < 50)
 	{
-		g_AccelTable[g_numAccel].fVirt = flags;
-		g_AccelTable[g_numAccel].key = key;
-		g_AccelTable[g_numAccel].cmd = cmd;
+		g_AccelTable[g_numAccel].fVirt	= (BYTE)flags;
+		g_AccelTable[g_numAccel].key	= (WORD)key;
+		g_AccelTable[g_numAccel].cmd	= (WORD)cmd;
 	}
 	g_numAccel++;
 }

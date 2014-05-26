@@ -22,7 +22,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Viewer", "viewer\msvc\Kview
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{A1423832-9C78-4437-AB29-7C59F21B1D4A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mxToolKit Win32", "external\mxtx\msvc\mxToolKit Win32.vcxproj", "{91D40B93-1C1E-E4D2-8C8F-255471CCA0EC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mxToolKit", "external\mxtx\msvc\mxToolKit Win32.vcxproj", "{91D40B93-1C1E-E4D2-8C8F-255471CCA0EC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "engine\Engine.vcxproj", "{5588B942-90A0-63A2-3369-523F456D79C5}"
 EndProject

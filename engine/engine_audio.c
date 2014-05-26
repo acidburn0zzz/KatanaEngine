@@ -61,19 +61,17 @@ void Audio_Initialize(void)
 void Audio_PlaySound(AudioSound_t *asSample)
 {
 #ifdef KATANA_AUDIO_OPENAL
-//	sfxcache_t	*sSoundCache;
+	sfxcache_t	*sSoundCache;
 
 	if(!asSample)
 		return;
 
-//	sSoundCache = S_LoadSound(sSoundEffect);
-//	if(!sSoundCache)
+	sSoundCache = S_LoadSound(asSample->sSample);
+	if(!sSoundCache)
 	{
-		Con_Warning("Failed to load sound data (%s)!\n",asSample->ccSample);
+		Con_Warning("Failed to load sound data (%s)!\n",asSample->sSample->name);
 		return;
 	}
-
-	//
 
 	alGenSources((ALuint)Audio.iAudioSource,&aAudioSource[0]);
 

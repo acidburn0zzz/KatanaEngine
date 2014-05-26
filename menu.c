@@ -87,7 +87,6 @@ void M_Main_Draw (void);
 		void M_Keys_Draw (void);
 		void M_Video_Draw (void);
 	void M_Help_Draw (void);
-	void M_Quit_Draw (void);
 
 void M_Main_Key (int key);
 	void M_SinglePlayer_Key (int key);
@@ -1452,40 +1451,6 @@ void M_Quit_Key (int key)
 
 }
 
-void M_Quit_Draw (void) //johnfitz -- modified for new quit message
-{
-#if 0
-	char	msg1[40];
-	char	msg2[40];
-	char	msg3[40];
-	int		boxlen;
-
-	if (wasInMenus)
-	{
-		m_state = m_quit_prevstate;
-		m_recursiveDraw = TRUE;
-		M_Draw ();
-		m_state = m_quit;
-	}
-
-	sprintf(msg1, "FitzQuake version %1.2f", (float)FITZQUAKE_VERSION);
-	sprintf(msg2, "by John Fitzgibbons");
-	sprintf(msg3, "Press y to quit");
-
-	//okay, this is kind of fucked up.  M_DrawTextBox will always act as if
-	//width is even. Also, the width and lines values are for the interior of the box,
-	//but the x and y values include the border.
-	boxlen = max(strlen(msg1),max(strlen(msg2),strlen(msg3))) + 1;
-	if (boxlen & 1) boxlen++;
-	M_DrawTextBox	(160-4*(boxlen+2), 76, boxlen, 4);
-
-	//now do the text
-	M_Print			(160-4*Q_strlen(msg1), 88, msg1);
-	M_Print			(160-4*Q_strlen(msg2), 96, msg2);
-	M_PrintWhite	(160-4*Q_strlen(msg3), 104, msg3);
-#endif
-}
-
 //=============================================================================
 
 /* SERIAL CONFIG MENU */
@@ -2663,8 +2628,6 @@ void M_Draw (void)
 	S_ExtraUpdate ();
 }
 
-void M_Keydown (int key)
-{
 #if 0
 	switch(m_state)
 	{
@@ -2723,7 +2686,6 @@ void M_Keydown (int key)
 		return;
 	}
 #endif
-}
 
 void M_ConfigureNetSubsystem(void)
 {
