@@ -123,7 +123,7 @@ int CL_GetMessage (void)
 		return 1;
 	}
 
-	while (1)
+	for(;;)
 	{
 		r = NET_GetMessage (cls.netcon);
 		if(r != 1 && r != 2)

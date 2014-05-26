@@ -91,9 +91,6 @@
     <ClCompile Include="..\gl_draw.c">
       <Filter>Video</Filter>
     </ClCompile>
-    <ClCompile Include="..\gl_alias.c">
-      <Filter>Video</Filter>
-    </ClCompile>
     <ClCompile Include="..\KatGL.c">
       <Filter>Video</Filter>
     </ClCompile>
@@ -146,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="..\snd_dma.c">
       <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_alias.c">
+      <Filter>Video</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

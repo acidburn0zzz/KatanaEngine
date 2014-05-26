@@ -96,8 +96,6 @@ void Sprite_Draw(entity_t *eEntity)
 	{
 		VideoObject_t voSprite[4];
 
-		if(
-
 		voSprite[0].vTextureCoord[0][0]	=
 		voSprite[0].vTextureCoord[0][1]	= 0;
 		voSprite[1].vTextureCoord[0][0]	= 1.0f;

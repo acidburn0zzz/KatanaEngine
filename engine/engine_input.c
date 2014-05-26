@@ -74,27 +74,35 @@ void Input_Initialize(void)
 
 	for(i = 0; i < SDL_NumJoysticks(); i++)
 	{
+		Con_Printf(" Opening ");
+
 		if(SDL_IsGameController(i))
 		{
 			cController[i].sGameController = SDL_GameControllerOpen(i);
 
-			Con_Printf(" Opening Controller (%i): ",i);
+			Con_Printf("Controller ");
         }
 		else
+		{
 			cController[i].sJoystick = SDL_JoystickOpen(i);
+
+			Con_Printf("Joystick ");
+		}
+
+		Con_Printf("(%i): ",i);
 
 		if(cController[i].sJoystick || cController[i].sGameController)
 		{
-            Con_Printf("Success");
+            Con_Printf("Success\n");
 
 			iNumControllers++;
         }
         else
-            Con_Printf("Failed!");
+            Con_Printf("Failed!\n");
 	}
 
 	if(iNumControllers > 0)
-		Con_Printf(" Found %i controller(s)\n",iNumControllers);
+		Con_Printf(" Found %i input device(s)\n",iNumControllers);
 	else
 	{
 		// [30/1/2013] No controllers found, disable event processing ~hogsy

@@ -66,10 +66,11 @@ void Light_Draw(void)
 	// Because the count hasn't advanced yet for this frame.
 	r_dlightframecount = r_framecount+1;
 
-	glDepthMask(false);
-	glDisable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE,GL_ONE);
+	Video_ResetCapabilities(false);
+
+	Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+	Video_EnableCapabilities(VIDEO_BLEND);
+	Video_SetBlend(VIDEO_BLEND_ONE,VIDEO_DEPTH_FALSE);
 
 	dLight = cl_dlights;
 	for(i = 0; i < MAX_DLIGHTS; i++,dLight++)
@@ -125,10 +126,10 @@ void Light_Draw(void)
 	}
 
 	glColor3f(1.0f,1.0f,1.0f);
-	glDisable(GL_BLEND);
-	glEnable(GL_TEXTURE_2D);
+
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	glDepthMask(true);
+
+	Video_ResetCapabilities(true);
 }
 
 void Light_MarkLights(DynamicLight_t *light,int bit,mnode_t *node)
