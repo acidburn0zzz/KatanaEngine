@@ -7,7 +7,7 @@ typedef struct
 {
 	unsigned	int		iSampleID;	// The ID of the sound.
 
-	const		char	*ccSample;	// The path of the sound.
+	sfx_t				*sSample;
 
 	vec3_t				vPosition,
 						vVelocity;

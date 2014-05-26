@@ -302,13 +302,12 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 			break;
 
 		PAINTSTRUCT ps;
-		HDC hDC = BeginPaint (hwnd, &ps);
+
+		BeginPaint(hwnd,&ps);
 
 		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
 		if (window)
-		{
 			window->redraw ();
-		}
 
 		EndPaint (hwnd, &ps);
 	}

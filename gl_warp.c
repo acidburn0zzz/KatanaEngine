@@ -246,10 +246,11 @@ void R_UpdateWarpTextures (void)
 
 	for (i=0; i<cl.worldmodel->numtextures; i++)
 	{
-		if (!(tx = cl.worldmodel->textures[i]))
+		tx = cl.worldmodel->textures[i];
+		if(!tx)
 			continue;
 
-		if (!tx->update_warp)
+		if(!tx->update_warp)
 			continue;
 
 		//render warp

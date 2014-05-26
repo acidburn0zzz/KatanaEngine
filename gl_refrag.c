@@ -48,7 +48,7 @@ void R_RemoveEfrags (entity_t *ent)
 	while (ef)
 	{
 		prev = &ef->leaf->efrags;
-		while (1)
+		for(;;)
 		{
 			walk = *prev;
 			if(!walk)
