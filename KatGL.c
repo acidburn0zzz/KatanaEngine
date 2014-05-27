@@ -351,11 +351,12 @@ void Draw_Shadow(entity_t *ent)
 
 		// [30/7/2013] Went over this and cleaned it up. Several major oversights when I originally revised it ~hogsy
 		glPushMatrix();
-		glDepthMask(false);
 
 		Video_ResetCapabilities(false);
+
 		Video_EnableCapabilities(VIDEO_BLEND|VIDEO_STENCIL_TEST);
 		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+		Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
 
 		glStencilFunc(GL_EQUAL,1,2);
 		glColor4f(0,0,0,fShadowAlpha);
@@ -372,9 +373,8 @@ void Draw_Shadow(entity_t *ent)
 
 		glColor3f(1.0f,1.0f,1.0f);
 
-		Video_ResetCapabilities(true);
-
-		glDepthMask(true);
 		glPopMatrix();
+
+		Video_ResetCapabilities(true);
 	}
 }

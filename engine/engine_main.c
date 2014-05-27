@@ -1,7 +1,9 @@
+/*	Copyright (C) 2011-2014 OldTimes Software
+*/
 #include "engine_main.h"
 #include "engine_video.h"
 
-#include "../platform/include/platform_module.h"
+#include "platform_module.h"
 
 EngineExport_t	eExport;
 EngineImport_t	Launcher;
