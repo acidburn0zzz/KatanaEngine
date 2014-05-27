@@ -77,6 +77,10 @@ typedef struct cvar_s
 	struct		cvar_s *next;
 	char		*default_string;
 	void		(*callback)(void);
+
+	// [27/5/2014] Different value types ~hogsy
+	bool	bValue;
+	int		iValue;
 } cvar_t;
 
 typedef struct

@@ -195,29 +195,13 @@ void Draw_ExternPic(char *path,float alpha,int x,int y,int w,int h)
 		}
 
 	{
-		VideoObject_t voPicture[4];
-
-		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-
-		voPicture[0].vVertex[0]	= x;	voPicture[0].vVertex[1]	= y;
-		voPicture[1].vVertex[0]	= x+w;	voPicture[1].vVertex[1]	= y;
-		voPicture[2].vVertex[0]	= x+w;	voPicture[2].vVertex[1]	= y+h;
-		voPicture[3].vVertex[0]	= x;	voPicture[3].vVertex[1]	= y+h;
-
-		voPicture[0].vTextureCoord[0][0]	=		voPicture[0].vTextureCoord[0][1]	= 0;
-		voPicture[1].vTextureCoord[0][0]	= 1.0f;	voPicture[1].vTextureCoord[0][1]	= 0;
-		voPicture[2].vTextureCoord[0][0]	=		voPicture[2].vTextureCoord[0][1]	= 1.0f;
-		voPicture[3].vTextureCoord[0][0]	= 0;	voPicture[3].vTextureCoord[0][1]	= 1.0f;
-
-		Math_VectorSet(1.0f,voPicture[0].vColour);
-		Math_VectorSet(1.0f,voPicture[1].vColour);
-		Math_VectorSet(1.0f,voPicture[2].vColour);
-		Math_VectorSet(1.0f,voPicture[3].vColour);
-
-		voPicture[0].vColour[ALPHA]	=
-		voPicture[1].vColour[ALPHA]	=
-		voPicture[2].vColour[ALPHA]	=
-		voPicture[3].vColour[ALPHA]	= alpha;
+		VideoObject_t voPicture	[]=
+		{
+			{	{	x,	y,	0	},	{	{	0,	0	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
+			{	{	x+w,	y,	0	},	{	{	1.0f,	0	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
+			{	{	x+w,	y+h,	0	},	{	{	1.0f,	1.0f	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
+			{	{	x,	y+h,	0	},	{	{	0,	1.0f	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	}
+		};
 
 		Video_DrawFill(voPicture);
 
@@ -408,8 +392,15 @@ void Draw_Character(int x,int y,int num)
 			{	{	x,		y+8,	0	},	{	{	fcol,		frow+size	}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	}
 		};
 
+		Video_ResetCapabilities(false);
+
+		Video_DisableCapabilities(VIDEO_ALPHA_TEST);
+		Video_EnableCapabilities(VIDEO_BLEND);
+
 		Video_SetTexture(gCharTexture);
 		Video_DrawFill(voCharacter);
+
+		Video_ResetCapabilities(true);
 	}
 }
 

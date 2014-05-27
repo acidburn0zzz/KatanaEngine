@@ -204,8 +204,6 @@ int Q_strcmp (char *s1, char *s2)
 		s1++;
 		s2++;
 	}
-
-	return -1;
 }
 
 int Q_strncmp (char *s1, char *s2, int count)
@@ -221,8 +219,6 @@ int Q_strncmp (char *s1, char *s2, int count)
 		s1++;
 		s2++;
 	}
-
-	return -1;
 }
 
 int Q_atoi (char *str)
@@ -275,8 +271,6 @@ int Q_atoi (char *str)
 			return val*sign;
 		val = val*10 + c - '0';
 	}
-
-	return 0;
 }
 
 float Q_atof (char *str)

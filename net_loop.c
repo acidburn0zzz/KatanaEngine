@@ -220,14 +220,14 @@ int Loop_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data)
 qboolean Loop_CanSendMessage (qsocket_t *sock)
 {
 	if (!sock->driverdata)
-		return FALSE;
+		return false;
 	return sock->canSend;
 }
 
 
 qboolean Loop_CanSendUnreliableMessage (qsocket_t *sock)
 {
-	return TRUE;
+	return true;
 }
 
 

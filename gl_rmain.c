@@ -398,7 +398,7 @@ void R_DrawEntitiesOnList(bool bAlphaPass) //johnfitz -- added parameter
 		switch(currententity->model->mType)
 		{
 			case MODEL_MD2:
-				Alias_Draw();
+				Alias_Draw(currententity);
 				break;
 			case MODEL_BRUSH:
 				Brush_Draw(currententity);
@@ -426,7 +426,7 @@ void R_DrawViewModel(void)
 	// hack the depth range to prevent view model from poking into walls
 	glDepthRange(0,0.3);
 
-	Alias_Draw();
+	Alias_Draw(currententity);
 
 	glDepthRange(0,1);
 }

@@ -17,7 +17,6 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-
 #include "quakedef.h"
 
 /*
@@ -187,6 +186,18 @@ void Cvar_Init(void)
 //
 //==============================================================================
 
+void Cvar_UpdateValues(cvar_t *cVariable)
+{
+	cVariable->value	= Q_atof(cVariable->string);
+	cVariable->bValue	=
+	cVariable->iValue	= Q_atoi(cVariable->string);
+
+	if(cVariable->bValue < false)
+		cVariable->bValue = false;
+	else if(cVariable->bValue > true)
+		cVariable->bValue = true;
+}
+
 cvar_t *Cvar_FindVar (char *var_name)
 {
 	cvar_t	*var;
@@ -252,7 +263,7 @@ void Cvar_Set (char *var_name, char *value)
 	bool changed;
 
 	var = Cvar_FindVar (var_name);
-	if (!var)
+	if(!var)
 	{	// there is an error in C code if this happens
 		Con_Printf ("Cvar_Set: variable %s not found\n", var_name);
 		return;
@@ -260,11 +271,12 @@ void Cvar_Set (char *var_name, char *value)
 
 	changed = strcmp(var->string,value);
 
-	Z_Free (var->string);	// free the old value string
+	Z_Free(var->string);	// free the old value string
 
-	var->string = (char*)Z_Malloc (Q_strlen(value)+1);
-	strcpy (var->string, value);
-	var->value = Q_atof (var->string);
+	var->string = (char*)Z_Malloc(Q_strlen(value)+1);
+	strcpy(var->string,value);
+
+	Cvar_UpdateValues(var);
 
 	//johnfitz -- during initialization, update default too
 	if (!bHostInitialized)
@@ -320,7 +332,8 @@ void Cvar_RegisterVariable (cvar_t *variable,void (*Function)(void))
 	oldstr = variable->string;
 	variable->string = (char*)Z_Malloc(strlen(variable->string)+1);
 	strcpy (variable->string, oldstr);
-	variable->value = atof(variable->string);
+
+	Cvar_UpdateValues(variable);
 
 	//johnfitz -- save initial value for "reset" command
 	variable->default_string = (char*)Z_Malloc(strlen(variable->string)+1);

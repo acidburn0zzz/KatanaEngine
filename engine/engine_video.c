@@ -155,12 +155,12 @@ bool Video_CreateWindow(void)
 	// [15/8/2012] Figure out what resolution we're going to use ~hogsy
 	if(COM_CheckParm("-window"))
 	{
-		Video.bFullscreen	= false;
+		Video.bFullscreen	=
 		Video.bUnlocked		= false;
 	}
 	else
 		// [15/8/2012] Otherwise set us as fullscreen ~hogsy
-		Video.bFullscreen = (bool)cvFullscreen.value;
+		Video.bFullscreen = cvFullscreen.bValue;
 
 	if(COM_CheckParm("-width"))
 	{
@@ -168,7 +168,7 @@ bool Video_CreateWindow(void)
 		Video.bUnlocked	= false;
 	}
 	else
-		Video.iWidth = (int)cvWidth.value;
+		Video.iWidth = cvWidth.iValue;
 
 	if(COM_CheckParm("-height"))
 	{
@@ -176,7 +176,7 @@ bool Video_CreateWindow(void)
 		Video.bUnlocked	= false;
 	}
 	else
-		Video.iHeight = (int)cvHeight.value;
+		Video.iHeight = cvHeight.iValue;
 
 	if(!Video.bFullscreen)
 		iFlags &= ~SDL_WINDOW_FULLSCREEN;
@@ -318,7 +318,7 @@ bool Video_CreateWindow(void)
 	vid.conwidth		= Math_Clamp(320,vid.conwidth,Video.iWidth);
 	vid.conwidth		&= 0xFFFFFFF8;
 	vid.conheight		= vid.conwidth*Video.iHeight/Video.iWidth;
-	Video.bVerticalSync	= (bool)cvVerticalSync.value;
+	Video.bVerticalSync	= cvVerticalSync.bValue;
 
 	return true;
 }
@@ -338,22 +338,22 @@ void Video_UpdateWindow(void)
 		return;
 	}
 
-	Video.iWidth	= (int)cvWidth.value;
-	Video.iHeight	= (int)cvHeight.value;
+	Video.iWidth	= cvWidth.iValue;
+	Video.iHeight	= cvHeight.iValue;
 
 	SDL_SetWindowSize(sMainWindow,Video.iWidth,Video.iHeight);
 
-	if(Video.bVerticalSync != (bool)cvVerticalSync.value)
+	if(Video.bVerticalSync != cvVerticalSync.bValue)
 	{
-		SDL_GL_SetSwapInterval((int)cvVerticalSync.value);
+		SDL_GL_SetSwapInterval(cvVerticalSync.iValue);
 
-		Video.bVerticalSync = (bool)cvVerticalSync.value;
+		Video.bVerticalSync = cvVerticalSync.bValue;
 	}
 
 	// [16/7/2013] There's gotta be a cleaner way of doing this... Ugh ~hogsy
-	if(Video.bFullscreen != (bool)cvFullscreen.value)
+	if(Video.bFullscreen != cvFullscreen.bValue)
 	{
-		if(SDL_SetWindowFullscreen(sMainWindow,(SDL_bool)cvFullscreen.value) < 0)
+		if(SDL_SetWindowFullscreen(sMainWindow,(SDL_bool)cvFullscreen.bValue) < 0)
 		{
 			Con_Warning("Failed to set window mode!\n%s",SDL_GetError());
 
@@ -361,7 +361,7 @@ void Video_UpdateWindow(void)
 			Cvar_SetValue(cvFullscreen.name,(float)Video.bFullscreen);
 		}
 		else
-			Video.bFullscreen = (bool)cvFullscreen.value;
+			Video.bFullscreen = cvFullscreen.bValue;
 	}
 
 	if(!cvFullscreen.value)

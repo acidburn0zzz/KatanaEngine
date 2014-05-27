@@ -323,7 +323,7 @@ int	Datagram_GetMessage (qsocket_t *sock)
 		if ((net_time - sock->lastSendTime) > 1.0)
 			ReSendMessage (sock);
 
-	while(1)
+	for(;;)
 	{
 		length = sfunc.Read (sock->socket, (byte *)&packetBuffer, NET_DATAGRAMSIZE, &readaddr);
 
@@ -530,7 +530,7 @@ static void Test_Poll(void)
 
 	net_landriverlevel = testDriver;
 
-	while(1)
+	for(;;)
 	{
 		len = dfunc.Read (testSocket, net_message.data, net_message.maxsize, &clientaddr);
 		if (len < sizeof(int))
@@ -915,7 +915,8 @@ static qsocket_t *_Datagram_CheckNewConnections (void)
 	}
 
 	// Allocate a QSocket
-	if(!(sock = NET_NewQSocket()))
+	sock = NET_NewQSocket();
+	if(!sock)
 	{
 		// no room; try to let him know
 		SZ_Clear(&net_message);

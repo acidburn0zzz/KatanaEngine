@@ -455,14 +455,15 @@ void R_AddDynamicLights(msurface_t *surf)
 		cgreen	= cl_dlights[lnum].color[GREEN];
 		cblue	= cl_dlights[lnum].color[BLUE];
 
-		for (t = 0 ; t<tmax ; t++)
+		for(t = 0; t < tmax; t++)
 		{
-			td = local[1] - t*16;
-			if (td < 0)
+			td = local[1]-t*16;
+			if(td < 0)
 				td = -td;
-			for (s=0 ; s<smax ; s++)
+
+			for(s = 0; s < smax; s++)
 			{
-				sd = local[0] - s*16;
+				sd = local[0]-s*16;
 				if (sd < 0)
 					sd = -sd;
 				if (sd > td)

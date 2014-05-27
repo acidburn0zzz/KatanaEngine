@@ -541,9 +541,8 @@ void R_RotateForEntity(vec3_t origin,vec3_t angles);
 
 /*	Draw the alias model.
 */
-void Alias_Draw(void)
+void Alias_Draw(entity_t *eEntity)
 {
-#if 1	// Revised
 	lerpdata_t	lLerpData;
 	gltexture_t	*gDiffuseTexture,
 				*gFullbrightTexture,
@@ -551,14 +550,14 @@ void Alias_Draw(void)
 	MD2_t		*mModel;
 
 	// [17/10/2013] Oops! Added this back in :) ~hogsy
-	if(!cvShowModels.value || R_CullModelForEntity(currententity))
+	if(!cvShowModels.value || R_CullModelForEntity(eEntity))
 		return;
 
 	// [27/6/2013] Set defaults ~hogsy
 	bShading	= true;
-	entalpha    = ENTALPHA_DECODE(currententity->alpha);
+	entalpha    = ENTALPHA_DECODE(eEntity->alpha);
 
-	mModel = (MD2_t*)Mod_Extradata(currententity->model);
+	mModel = (MD2_t*)Mod_Extradata(eEntity->model);
 
 	// [23/8/2013] Update alias poly count! ~hogsy
 	rs_aliaspolys += mModel->numtris;
@@ -566,17 +565,17 @@ void Alias_Draw(void)
 	Alias_SetupFrame(mModel,&lLerpData);
 	Alias_SetupEntityTransform(&lLerpData);
 
-    gDiffuseTexture		= mModel->gDiffuseTexture[currententity->skinnum];
-	gFullbrightTexture	= mModel->gFullbrightTexture[currententity->skinnum];
-	gSphereTexture		= mModel->gSphereTexture[currententity->skinnum];
+    gDiffuseTexture		= mModel->gDiffuseTexture[eEntity->skinnum];
+	gFullbrightTexture	= mModel->gFullbrightTexture[eEntity->skinnum];
+	gSphereTexture		= mModel->gSphereTexture[eEntity->skinnum];
 
 	glPushMatrix();
 
 	if(r_drawflat_cheatsafe)
 		glShadeModel(GL_FLAT);
 
-	R_RotateForEntity(currententity->origin,currententity->angles);
-	R_SetupModelLighting(currententity->origin);
+	R_RotateForEntity(eEntity->origin,eEntity->angles);
+	R_SetupModelLighting(eEntity->origin);
 
     Video_ResetCapabilities(false);
 
@@ -621,324 +620,16 @@ void Alias_Draw(void)
 	if(!r_drawflat_cheatsafe)
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 	else
+	{
 		// Restore randomness
 		srand((int)(cl.time*1000));
 
-	if(r_drawflat_cheatsafe)
 		glShadeModel(GL_SMOOTH);
+	}
 
 	glPopMatrix();
 
     Video_ResetCapabilities(true);
-#else	// Original
-	gltexture_t	*tx,*fb = NULL;
-	lerpdata_t	lLerpData;
-	MD2_t		*mModel;
-
-	// Setup pose/lerp data -- do it first so we don't miss updates due to culling
-	mModel = (MD2_t*)Mod_Extradata(currententity->model);
-
-	Alias_SetupFrame(mModel,&lLerpData);
-	Alias_SetupEntityTransform(&lLerpData);
-
-	// Transform it
-	glPushMatrix();
-
-	R_RotateForEntity(currententity->origin,currententity->angles);
-
-	if(gl_smoothmodels.value && !r_drawflat_cheatsafe)
-		glShadeModel(GL_SMOOTH);
-
-	if(gl_affinemodels.value)
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_FASTEST);
-
-	bShading	= true;
-
-	// set up for alpha blending
-	if (r_drawflat_cheatsafe || r_lightmap_cheatsafe) //no alpha in drawflat or lightmap mode
-		entalpha = 1.0f;
-	else
-		entalpha = ENTALPHA_DECODE(currententity->alpha);
-
-	if(entalpha == 0)
-		goto CLEANUP;
-	else
-	{
-		// Overbright can't be done in a single pass without combiners
-		if(!Video.bTextureEnvCombine)
-			bOverbright = false;
-
-//		glDepthMask(false);
-		glEnable(GL_BLEND);
-	}
-
-	rs_aliaspolys += mModel->numtris;
-
-	// Set up textures
-	Video_DisableMultitexture();
-
-	tx = mModel->gDiffuseTexture[currententity->skinnum];
-	if(gl_fullbrights.value)
-		fb = mModel->gFullbrightTexture[currententity->skinnum];
-
-	// draw it
-	if(r_drawflat_cheatsafe)
-	{
-		R_SetupModelLighting(currententity->origin);
-
-		glDisable(GL_TEXTURE_2D);
-
-		GL_DrawModelFrame(mModel,lLerpData);
-
-		glEnable (GL_TEXTURE_2D);
-
-		srand((int)(cl.time*1000)); //restore randomness
-	}
-	else if (r_fullbright_cheatsafe)
-	{
-		Video_SetTexture(tx);
-
-		bShading = false;
-
-		glColor4f(1.0f,1.0f,1.0f,entalpha);
-
-		GL_DrawModelFrame(mModel,lLerpData);
-
-		if(fb)
-		{
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-			Video_SetTexture(fb);
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE,GL_ONE);
-			glDepthMask(false);
-			glColor3f(entalpha,entalpha,entalpha);
-
-			Fog_StartAdditive();
-
-			GL_DrawModelFrame(mModel,lLerpData);
-
-			Fog_StopAdditive();
-
-			glDepthMask(true);
-			glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-			glDisable(GL_BLEND);
-		}
-	}
-	else if (r_lightmap_cheatsafe)
-	{
-		glDisable (GL_TEXTURE_2D);
-
-		bShading = false;
-
-		glColor3f(1,1,1);
-
-		GL_DrawModelFrame(mModel,lLerpData);
-
-		glEnable (GL_TEXTURE_2D);
-	}
-	else if(bOverbright)
-	{
-		R_SetupModelLighting(currententity->origin);
-
-		// [27/1/2013] BUG: Seems to fuck up with some compressed textures... Needs looking into ~hogsy
-		if(Video.bTextureEnvCombine && Video.bTextureEnvAdd && fb) //case 1: everything in one pass
-		{
-			Video_SetTexture(tx);
-
-			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_EXT);
-			glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB_EXT,GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB_EXT,GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB_EXT,GL_PRIMARY_COLOR_EXT);
-			glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,1);
-
-			Video_EnableMultitexture(); // selects TEXTURE1
-
-			Video_SetTexture(fb);
-
-			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
-			glEnable(GL_BLEND);
-
-			GL_DrawModelFrame(mModel,lLerpData);
-
-			glDisable(GL_BLEND);
-
-			Video_DisableMultitexture();
-
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		}
-		else if(Video.bTextureEnvCombine) //case 2: overbright in one pass, then fullbright pass
-		{
-			// first pass
-			Video_SetTexture(tx);
-
-			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_EXT);
-			glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB_EXT,GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB_EXT,GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB_EXT,GL_PRIMARY_COLOR_EXT);
-			glTexEnvf(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,1.0f);
-
-			GL_DrawModelFrame(mModel,lLerpData);
-
-			glTexEnvf(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,2.0f);
-			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
-
-			// second pass
-			if (fb)
-			{
-				bShading = false;
-
-				glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-
-				Video_SetTexture(fb);
-
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_ONE,GL_ONE);
-				glDepthMask(false);
-
-				glColor3f(entalpha,entalpha,entalpha);
-
-				Fog_StartAdditive();
-
-				GL_DrawModelFrame(mModel,lLerpData);
-
-				Fog_StopAdditive();
-
-				glDepthMask(true);
-				glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-				glDisable(GL_BLEND);
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			}
-		}
-		else //case 3: overbright in two passes, then fullbright pass
-		{
-			// first pass
-			Video_SetTexture(tx);
-
-			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-
-			GL_DrawModelFrame(mModel,lLerpData);
-
-			// second pass -- additive with black fog, to double the object colors but not the fog color
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE,GL_ONE);
-			glDepthMask(false);
-
-			Fog_StartAdditive();
-
-			GL_DrawModelFrame(mModel,lLerpData);
-
-			Fog_StopAdditive();
-
-			glDepthMask(GL_TRUE);
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glDisable(GL_BLEND);
-			// third pass
-			if (fb)
-			{
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-				Video_SetTexture(fb);
-
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_ONE,GL_ONE);
-				glDepthMask(false);
-				glColor3f(entalpha,entalpha,entalpha);
-
-				bShading = false;
-
-				Fog_StartAdditive ();
-
-				GL_DrawModelFrame(mModel,lLerpData);
-
-				Fog_StopAdditive();
-				glDepthMask(true);
-				glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				glDisable(GL_BLEND);
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			}
-		}
-	}
-	else
-	{
-		R_SetupModelLighting(currententity->origin);
-
-		// [22/7/2012] BUG: Does not work ~hogsy
-#if 0
-		if (gl_mtexable && Video.bTextureEnvAdd && fb) //case 4: fullbright mask using multitexture
-		{
-			GL_DisableMultitexture(); // selects TEXTURE0
-
-			Video_SetTexture(tx);
-
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-			GL_EnableMultitexture(); // selects TEXTURE1
-
-			Video_SetTexture(fb);
-
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
-			glEnable(GL_BLEND);
-
-			GL_DrawModelFrame(mModel,lLerpData);
-
-			glDisable(GL_BLEND);
-
-			GL_DisableMultitexture();
-
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		}
-		else //case 5: fullbright mask without multitexture
-#endif
-		{
-			// first pass
-			Video_SetTexture(tx);
-
-			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-
-			GL_DrawModelFrame(mModel,lLerpData);
-
-			// second pass
-			if (fb)
-			{
-				Video_SetTexture(fb);
-
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_ONE,GL_ONE);
-				glDepthMask(false);
-				glColor3f(entalpha,entalpha,entalpha);
-
-				bShading = false;
-
-				Fog_StartAdditive();
-
-				Alias_DrawModelFrame(mModel,lLerpData);
-
-				Fog_StopAdditive();
-
-				glDepthMask(true);
-				glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-				glDisable(GL_BLEND);
-			}
-		}
-	}
-
-CLEANUP:
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
-
-	if(gl_affinemodels.value)
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
-
-	if(gl_smoothmodels.value && !r_drawflat_cheatsafe)
-		glShadeModel(GL_FLAT);
-
-//	glDepthMask(true);
-	glDisable(GL_BLEND);
-	glColor3f(1.0f,1.0f,1.0f);
-	glPopMatrix();
-#endif
 }
 
 void R_DrawAliasModel_ShowTris(entity_t *e)
