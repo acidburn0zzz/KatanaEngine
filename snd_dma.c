@@ -173,7 +173,7 @@ void S_Init (void)
 		Con_Warning("Loading all sounds as 8-bit!\n");
 	}
 
-	snd_initialized = TRUE;
+	snd_initialized = true;
 
 	S_Startup();
 
@@ -819,13 +819,5 @@ void S_LocalSound (char *sound)
 		return;
 	}
 	S_StartSound (cl.viewentity, -1, sfx, vec3_origin, 255, 1);
-}
-
-void S_ClearPrecache (void)
-{
-}
-
-void S_EndPrecaching (void)
-{
 }
 

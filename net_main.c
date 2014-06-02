@@ -26,8 +26,8 @@ qsocket_t	*net_activeSockets = NULL;
 qsocket_t	*net_freeSockets = NULL;
 int			net_numsockets = 0;
 
-qboolean	serialAvailable = FALSE;
-qboolean	tcpipAvailable = FALSE;
+bool	serialAvailable = FALSE;
+bool	tcpipAvailable = FALSE;
 
 int			net_hostport;
 int			DEFAULTnet_hostport = 26000;
@@ -35,12 +35,12 @@ int			DEFAULTnet_hostport = 26000;
 char		my_ipx_address[NET_NAMELEN];
 char		my_tcpip_address[NET_NAMELEN];
 
-void (*GetComPortConfig) (int portNumber, int *port, int *irq, int *baud, qboolean *useModem);
-void (*SetComPortConfig) (int portNumber, int port, int irq, int baud, qboolean useModem);
+void (*GetComPortConfig) (int portNumber, int *port, int *irq, int *baud, bool *useModem);
+void (*SetComPortConfig) (int portNumber, int port, int irq, int baud, bool useModem);
 void (*GetModemConfig) (int portNumber, char *dialType, char *clear, char *init, char *hangup);
 void (*SetModemConfig) (int portNumber, char *dialType, char *clear, char *init, char *hangup);
 
-static qboolean	listening = FALSE;
+static bool	listening = FALSE;
 
 bool	slistInProgress = FALSE;
 bool	slistSilent = FALSE;
@@ -766,7 +766,7 @@ static PollProcedure *pollProcedureList = NULL;
 void NET_Poll(void)
 {
 	PollProcedure *pp;
-	qboolean	useModem;
+	bool	useModem;
 
 	if (!configRestored)
 	{

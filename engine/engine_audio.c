@@ -12,15 +12,25 @@
 
 bool bAudioInitialized = false;
 
+void Audio_PlayCommand(void);
+
 void Audio_Initialize(void)
 {
 	if(bAudioInitialized)
 		return;
 
+	Cmd_AddCommand("play",Audio_PlayCommand);
+
 	if(SDL_AudioInit(NULL) < 0)
 		Sys_Error("Failed to initialize audio!\n%s\n",SDL_GetError());
 
 	bAudioInitialized = true;
+}
+
+/*	Play a specified sound via the console.
+*/
+void Audio_PlayCommand(void)
+{
 }
 
 void Audio_PlaySound(AudioSound_t *asSample)
@@ -42,13 +52,14 @@ void Audio_PlaySound(AudioSound_t *asSample)
 #endif
 }
 
-sfxcache_t *Audio_LoadSound(sfx_t *sSoundEffect)
+AudioSound_t *Audio_LoadSound(sfx_t *sSoundEffect)
 {
-	byte		*bData,
-				bStackBuffer[1*1024];
-	sfxcache_t	*sSoundCache;
-	char		cNameBuffer[256];
-
+	AudioSound_t	*asNewSound;
+	byte			*bData,
+					bStackBuffer[1*1024];
+	sfxcache_t		*sSoundCache;
+	char			cNameBuffer[256];
+	
 	sSoundCache = (sfxcache_t*)Cache_Check(&sSoundEffect->cache);
 	if(sSoundCache)
 		return sSoundCache;
@@ -65,7 +76,7 @@ sfxcache_t *Audio_LoadSound(sfx_t *sSoundEffect)
 
 	//------
 
-	return sSoundCache;
+	return asNewSound;
 }
 
 /*	Called per-frame to update listener position and more!

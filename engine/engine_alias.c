@@ -38,10 +38,10 @@ float	r_avertexnormals[NUMVERTEXNORMALS][3] =
 	{	-0.716567,	0.681718,	0.147621	},
 	{   -0.688191,  0.587785,   0.425325    },
 	{	-0.500000,	0.809017,	0.309017	},
-	{-0.238856, 0.864188, 0.442863},
-	{-0.425325, 0.688191, 0.587785},
-	{-0.716567, 0.681718, -0.147621},
-	{-0.500000, 0.809017, -0.309017},
+	{	-0.238856,	0.864188,	0.442863	},
+	{	-0.425325,	0.688191,	0.587785	},
+	{	-0.716567,	0.681718,	-0.147621	},
+	{	-0.500000,	0.809017,	-0.309017	},
 	{-0.525731, 0.850651, 0.000000},
 	{0.000000, 0.850651, -0.525731},
 	{-0.238856, 0.864188, -0.442863},
@@ -207,85 +207,41 @@ float	entalpha; //johnfitz
 bool	bOverbright,
 		bShading;		//johnfitz -- if false, disable vertex shading for various reasons (fullbright, r_lightmap, showtris, etc)
 
-int	iLightCount = 0;
-
 void R_SetupModelLighting(vec3_t vOrigin)
 {
-	vec4_t			vParameters,
-					vSpecular =
-	{	1.0f,	1.0f,	1.0f,	1.0f	};
-	vec3_t			vDistance,vLightColour;
+	vec3_t			vDistance,vLightColour,vLightOrigin;
+	DynamicLight_t	*dlLightSource;
 	float			fDistance;
 	int				i;
 
 	if(!bShading)
 		return;
 
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,false);
-	//glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,true);
-
-	iLightCount = 0;
-
-	Math_MVToVector(Light_GetSample(vOrigin),vLightColour);
-
-	// Add dynamic lights
-	for(i = 0; i < MAX_DLIGHTS; i++)
-		if(cl_dlights[i].die >= cl.time || (!cl_dlights[i].die && cl_dlights[i].radius))
-		{
-			// [6/8/2013] Break if we reach the max light count ~hogsy
-			if(iLightCount >= GL_MAX_LIGHTS)
-				break;
-
-			Math_VectorSubtract(vOrigin,cl_dlights[i].origin,vDistance);
-
-			fDistance = (cl_dlights[i].radius-Math_Length(vDistance))/100.0f;
-			if(fDistance > 0)
-			{
-				Math_VectorMA(vLightColour,fDistance,cl_dlights[i].color,vLightColour);
-
-				// Set the position
-				{
-					Math_VectorCopy(cl_dlights[i].origin,vParameters);
-
-					// Positional (0 is directional)
-					vParameters[3] = 1.0f;
-
-					glLightfv(GL_LIGHT0+i,GL_POSITION,vParameters);
-				}
-
-				Math_VectorClear(vParameters);
-
-				// Set the colour and brightness
-				{
-					Math_VectorScale(vLightColour,1.0f/255.0f,vParameters);
-
-					vParameters[3] = 1.0f/cl_dlights[i].radius;
-
-					glLightfv(GL_LIGHT0+i,GL_DIFFUSE,vParameters);
-					glLightfv(GL_LIGHT0+i,GL_SPECULAR,vSpecular);
-				}
-
-				iLightCount++;
-			}
-		}
+	dlLightSource = Light_GetDynamic(vOrigin);
+	if(!dlLightSource)
+	{
+		Math_MVToVector(Light_GetSample(vOrigin),vLightColour);
+		Math_VectorCopy(vOrigin,vLightOrigin);
+	}
+	else
+	{
+		Math_VectorCopy(dlLightSource->color,vLightColour);
+		Math_VectorCopy(dlLightSource->origin,vLightOrigin);
+	}
 
 	// Minimum light value on players (8)
 	if(currententity > cl_entities && currententity <= cl_entities + cl.maxclients)
 	{
 		fDistance = 24.0f-(vLightColour[0]+vLightColour[1]+vLightColour[2]);
 		if(fDistance > 0.0f)
-		{
-			vLightColour[0] += fDistance/3.0f;
-			vLightColour[1] += fDistance/3.0f;
-			vLightColour[2] += fDistance/3.0f;
-		}
+			Math_VectorAddValue(vLightColour,fDistance/3.0f,vLightColour);
 	}
 
 	// [16/5/2013] BUG: Doesn't work since effects aren't being sent over... Poop ~hogsy
 	if(currententity->effects & EF_FULLBRIGHT)
 		Math_VectorSet(1.0f,vLightColour);
 
-    shadedots = r_avertexnormal_dots[((int)(vOrigin[0]*(SHADEDOT_QUANT/360.0f))) & (SHADEDOT_QUANT-1)];
+    shadedots = r_avertexnormal_dots[((int)(vLightOrigin[0]*(SHADEDOT_QUANT/360.0f))) & (SHADEDOT_QUANT-1)];
 
 	Math_VectorScale(vLightColour,1.0f/200.0f,vLightColour);
 }

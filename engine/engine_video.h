@@ -3,8 +3,6 @@
 #ifndef __ENGINEVIDEO__
 #define __ENGINEVIDEO__
 
-#include "quakedef.h"
-
 #include <SDL.h>
 
 extern cvar_t	cvShowModels,	// Should we draw models?

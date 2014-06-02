@@ -117,20 +117,27 @@ void Video_DrawDepthBuffer(void)
 	//Video_DrawFill()
 }
 
-/*	Set the gamma level.
-	Unfinished
-*/
-void Video_SetGamma(float fAmount)
-{
-#if 0
-	if(!SDL_SetWindowGammaRamp(sMainWindow, RAMPY DAMP! WHOOOOOO!
-		Con_Warning("Failed to set gamma level!\n");
-#endif
-}
-
 /*
 	Window Management
 */
+
+/*	Set the gamma level.
+	Based on Darkplaces implementation.
+*/
+void Video_SetGamma(unsigned short *usRamp,int iRampSize)
+{
+	if(!SDL_SetWindowGammaRamp(sMainWindow,usRamp,usRamp+iRampSize,usRamp+iRampSize*2))
+		Con_Warning("Failed to set gamma level!\n");
+}
+
+/*	Get gamma level.
+	Based on the Darkplaces implementation.
+*/
+void Video_GetGamma(unsigned short *usRamp,int iRampSize)
+{
+	if(!SDL_GetWindowGammaRamp(sMainWindow,usRamp,usRamp+iRampSize,usRamp+iRampSize*2))
+		Con_Warning("Failed to get gamma level!\n");
+}
 
 /*	Create our window.
 */
@@ -458,6 +465,8 @@ void Video_SelectTexture(unsigned int uiTarget)
         break;
     default:
         Sys_Error("Unknown texture unit! (%i)\n",uiTarget);
+		// Return to resolve VS warning.
+		return;
     }
 
 	glActiveTextureARB(uiUnit);
@@ -487,8 +496,10 @@ void Video_EnableMultitexture(void)
 /*	Draw terrain.
 	Unfinished
 */
-void Video_DrawTerrain(VideoObject_t *voTerrain,vec3_t vScale)
+void Video_DrawTerrain(VideoObject_t *voTerrain)
 {
+	if(!voTerrain)
+		Sys_Error("Invalid video object!\n");
 }
 
 /*  Draw a simple rectangle.
@@ -541,6 +552,8 @@ void Video_DrawObject(
         default:
             // [16/3/2014] Anything else and give us an error ~hogsy
             Sys_Error("Unknown object primitive type! (%i)\n",vpPrimitiveType);
+			// Return to resolve VS warning.
+			return;
         }
 
         glBegin(gPrimitive);

@@ -34,7 +34,7 @@ static struct qsockaddr broadcastaddr;
 
 static unsigned long myAddr;
 
-qboolean	winsock_lib_initialized;
+bool	winsock_lib_initialized;
 
 int (PASCAL FAR *pWSAStartup)(WORD wVersionRequired, LPWSADATA lpWSAData);
 int (PASCAL FAR *pWSACleanup)(void);
@@ -64,10 +64,10 @@ WSADATA		winsockdata;
 
 static double	blocktime;
 
-qboolean PASCAL FAR BlockingHook(void)
+bool PASCAL FAR BlockingHook(void)
 {
     MSG		msg;
-    qboolean	ret;
+    bool	ret;
 
 	if ((Sys_FloatTime() - blocktime) > 2.0)
 	{
@@ -76,7 +76,7 @@ qboolean PASCAL FAR BlockingHook(void)
 	}
 
     /* get the next message, if any */
-    ret = (qboolean) PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
+    ret = (bool) PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
 
     /* if we got one, process it */
     if (ret) {
@@ -255,7 +255,7 @@ void WINS_Shutdown (void)
 
 //=============================================================================
 
-void WINS_Listen (qboolean state)
+void WINS_Listen (bool state)
 {
 	// enable listening
 	if (state)

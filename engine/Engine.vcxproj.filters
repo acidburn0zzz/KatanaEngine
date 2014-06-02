@@ -13,6 +13,9 @@
     <Filter Include="Audio">
       <UniqueIdentifier>{756baf0d-9c64-4827-ba82-fcc905b86cbe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{1178c8d7-e22f-4b83-a122-c5327d9bb2d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\chase.c" />
@@ -116,7 +119,6 @@
       <Filter>Networking</Filter>
     </ClCompile>
     <ClCompile Include="engine_client.c" />
-    <ClCompile Include="engine_editor.c" />
     <ClCompile Include="engine_console.c" />
     <ClCompile Include="engine_game.c" />
     <ClCompile Include="engine_input.c" />
@@ -146,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="engine_video.c">
       <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_editor.c">
+      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +189,9 @@
     </ClInclude>
     <ClInclude Include="..\shared\shared_server.h">
       <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_editor.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

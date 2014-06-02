@@ -561,6 +561,7 @@
     <ClInclude Include="..\shared\shared_module.h" />
     <ClInclude Include="..\shared\shared_png.h" />
     <ClInclude Include="..\shared\shared_server.h" />
+    <ClInclude Include="engine_editor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

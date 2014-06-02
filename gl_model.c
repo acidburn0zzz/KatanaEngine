@@ -855,7 +855,7 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 			out->samples = loadmodel->lightdata + (i * 3); //johnfitz -- lit support via lordhavoc (was "+ i")
 
 		//johnfitz -- this section rewritten
-		if (!Q_strncasecmp(out->texinfo->texture->name,"sky",3)) // sky surface //also note -- was Q_strncmp, changed to match qbsp
+		if(!Q_strncasecmp(out->texinfo->texture->name,"sky",3)) // sky surface //also note -- was Q_strncmp, changed to match qbsp
 		{
 			out->flags |= (SURF_DRAWSKY | SURF_DRAWTILED);
 			Mod_PolyForUnlitSurface (out); //no more subdivision

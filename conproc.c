@@ -37,12 +37,12 @@ HANDLE	hStdin;
 DWORD RequestProc (DWORD dwNichts);
 LPVOID GetMappedBuffer (HANDLE hfileBuffer);
 void ReleaseMappedBuffer (LPVOID pBuffer);
-qboolean GetScreenBufferLines (int *piLines);
-qboolean SetScreenBufferLines (int iLines);
-qboolean ReadText (LPTSTR pszText, int iBeginLine, int iEndLine);
-qboolean WriteText (LPCTSTR szText);
+bool GetScreenBufferLines (int *piLines);
+bool SetScreenBufferLines (int iLines);
+bool ReadText (LPTSTR pszText, int iBeginLine, int iEndLine);
+bool WriteText (LPCTSTR szText);
 int CharToCode (char c);
-qboolean SetConsoleCXCY(HANDLE hStdout, int cx, int cy);
+bool SetConsoleCXCY(HANDLE hStdout, int cx, int cy);
 
 void InitConProc (HANDLE hFile, HANDLE heventParent, HANDLE heventChild)
 {

@@ -99,8 +99,6 @@ void S_ExtraUpdate (void);
 
 sfx_t *S_PrecacheSound (char *sample);
 void S_TouchSound (char *sample);
-void S_ClearPrecache (void);
-void S_EndPrecaching (void);
 void S_PaintChannels(int endtime);
 void S_InitPaintChannels (void);
 

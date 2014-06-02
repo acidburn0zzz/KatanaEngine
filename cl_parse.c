@@ -369,8 +369,6 @@ void Client_ParseServerInfo(void)
 		CL_KeepaliveMessage ();
 	}
 
-	S_EndPrecaching ();
-
 	// Local state
 	cl_entities[0].model = cl.worldmodel = cl.model_precache[1];
 

@@ -85,13 +85,13 @@ typedef struct cvar_s
 
 typedef struct
 {
-	vec3_t			origin;
-	vec3_t			angles;
-	unsigned short 	modelindex;
-	unsigned short 	frame;
-	unsigned char 	colormap;
-	unsigned char 	skin;
-	unsigned char	alpha;
+	vec3_t			origin,
+					angles;
+	unsigned short 	modelindex,
+					frame;
+	unsigned char 	colormap,
+					skin,
+					alpha;
 	int				effects;
 
 	float			fScale;

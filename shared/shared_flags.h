@@ -24,7 +24,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	675	// 22/5/2014
+#define ENGINE_VERSION_BUILD	676	// 2/6/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"
@@ -42,11 +42,6 @@
 //	Default extensions.
 #define	EXTENSION_MAP	".map"
 #define EXTENSION_MODEL	".md2"
-
-// [6/5/2014] TODO: This needs to die already ~hogsy
-#ifndef __cplusplus
-#define qboolean	bool
-#endif
 
 typedef unsigned char byte;
 
