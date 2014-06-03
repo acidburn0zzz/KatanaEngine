@@ -10,16 +10,7 @@
 
 void Console_Initialize(void)
 {
-	char temp[CONSOLE_MAX_GAMEDIRLEN+1],*t2 = "log.txt";
-
-	if(strlen(com_gamedir) < (CONSOLE_MAX_GAMEDIRLEN-strlen(t2)))
-	{
-		sprintf(temp,"%s",t2);
-
-		unlink(temp);
-	}
-
-//	Cmd_AddCommand("dir",Console_DirCommand);
+	Console_ClearLog("log.txt");
 }
 
 void Console_ErrorMessage(bool bCrash,const char *ccFile,char *reason)
@@ -30,21 +21,37 @@ void Console_ErrorMessage(bool bCrash,const char *ccFile,char *reason)
 		Con_Error("Failed to load %s\nReason: %s",ccFile,reason);
 }
 
-void Console_WriteToLog(char *file,char *fmt,...)
+void Console_WriteToLog(const char *ccFile,char *fmt,...)
 {
 	va_list		    argptr;
 	static  char	scData[1024];
+	char			cPath[MAX_OSPATH];
 	int			    fd,iData;
 
-	va_start(argptr, fmt);
-	vsprintf(scData, fmt, argptr);
+	sprintf(cPath,PATH_LOGS"/%s",ccFile);
+
+	COM_DefaultExtension(cPath,".txt");
+
+	va_start(argptr,fmt);
+	vsprintf(scData,fmt,argptr);
 	va_end(argptr);
 
     iData = strlen(scData);
 
-	fd = open(file,O_WRONLY|O_CREAT|O_APPEND,0666);
+	fd = open(cPath,O_WRONLY|O_CREAT|O_APPEND,0666);
 	if(write(fd,scData,iData) != iData)
         Sys_Error("Failed to write to log!\n");
 
 	close(fd);
+}
+
+void Console_ClearLog(const char *ccFile)
+{
+	char	cPath[MAX_OSPATH];
+
+	sprintf(cPath,PATH_LOGS"/%s",ccFile);
+
+	COM_DefaultExtension(cPath,".txt");
+
+	unlink(cPath);
 }

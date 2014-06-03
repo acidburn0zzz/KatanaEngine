@@ -23,7 +23,8 @@
 #include "quakedef.h"
 
 void Console_ErrorMessage(bool bCrash,const char *ccFile,char *reason);
-void Console_WriteToLog(char *file,char *fmt,...);
+void Console_WriteToLog(const char *ccFile,char *fmt,...);
+void Console_ClearLog(const char *ccFile);
 void Console_Initialize(void);
 
 // Other crap...

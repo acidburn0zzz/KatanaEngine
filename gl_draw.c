@@ -429,23 +429,6 @@ void Draw_Pic(int x,int y,qpic_t *pic)
     }
 }
 
-/*	Only used for the player color selection menu
-*/
-void Draw_TransPicTranslate (int x, int y, qpic_t *pic, int top, int bottom)
-{
-	static int oldtop = -2,oldbottom = -2;
-
-	if(top != oldtop || bottom != oldbottom)
-	{
-		oldtop		= top;
-		oldbottom	= bottom;
-
-		TexMgr_ReloadImage(((glpic_t*)pic->data)->gltexture,top,bottom);
-	}
-
-	Draw_Pic(x,y,pic);
-}
-
 void Draw_ConsoleBackground(void)
 {
 	float fAlpha = 1.0f;

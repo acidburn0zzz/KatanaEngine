@@ -162,7 +162,6 @@ void M_DrawPic (int x, int y, qpic_t *pic)
 
 void M_DrawTransPicTranslate (int x, int y, qpic_t *pic, int top, int bottom) //johnfitz -- more parameters
 {
-	Draw_TransPicTranslate(x, y, pic, top, bottom); //johnfitz -- simplified becuase centering is handled elsewhere
 }
 
 void M_DrawTextBox (int x, int y, int width, int lines)

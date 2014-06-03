@@ -390,6 +390,7 @@ void View_PolyBlend(void)
 		return;
 
     Video_ResetCapabilities(false);
+
 	Video_DisableCapabilities(VIDEO_DEPTH_TEST);
 
 	glMatrixMode(GL_PROJECTION);
@@ -784,6 +785,13 @@ void V_CalcRefdef (void)
 */
 void View_DrawMuzzleFlash(void)
 {
+	// Get players active weapon
+
+	// Set up position of sprite
+
+	// Draw
+
+	// Reset
 }
 
 /*	The player's clipping box goes from (-16 -16 -24) to (16 16 32) from

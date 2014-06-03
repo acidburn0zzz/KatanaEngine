@@ -17,7 +17,10 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+#include "quakedef.h"
+
 #include "engine_video.h"
+#include "engine_editor.h"
 
 int	r_dlightframecount;
 
@@ -58,9 +61,9 @@ void Light_Animate(void)
 void Light_Draw(void)
 {
 	int				i;
-	DynamicLight_t	*dLight;
+	DynamicLight_t	*dlLight;
 
-	if(!gl_flashblend.value)
+	if(!gl_flashblend.bValue && !cvEditorLightPreview.bValue)
 		return;
 
 	// Because the count hasn't advanced yet for this frame.
@@ -72,43 +75,45 @@ void Light_Draw(void)
 	Video_EnableCapabilities(VIDEO_BLEND);
 	Video_SetBlend(VIDEO_BLEND_ONE,VIDEO_DEPTH_FALSE);
 
-	dLight = cl_dlights;
-	for(i = 0; i < MAX_DLIGHTS; i++,dLight++)
+	dlLight = cl_dlights;
+	for(i = 0; i < MAX_DLIGHTS; i++,dlLight++)
 	{
 		// [5/5/2012] Ugh some lights are inverted... ~hogsy
-		if(((dLight->die < cl.time) && dLight->die) || !dLight->radius)
+		if(((dlLight->die < cl.time) && dlLight->die) || !dlLight->radius)
 			continue;
 
 		{
 			int		i,j;
 			float	a,a2,b,rad;
 			vec3_t	v;
+			VideoObject_t	voLight[16];
 
-			Math_VectorSubtract(dLight->origin,r_origin,v);
+			Math_VectorSubtract(dlLight->origin,r_origin,v);
 
-			rad = dLight->radius*0.35f;
+			rad = dlLight->radius*0.35f;
 			if(Math_Length(v) < rad)
 			{
 				// view is inside the dlight
-				a2 = dLight->radius*0.0003f;
+				a2 = dlLight->radius*0.0003f;
 				vViewBlend[3] = b = vViewBlend[3]+a2*(1-vViewBlend[3]);
 				a2 = a2/b;
 
 				// [7/5/2012] Make sure it shows the lights colour ~hogsy
-				vViewBlend[0] = vViewBlend[1]*(1-a2)+((1.0f/255)*dLight->color[RED])*a2;
-				vViewBlend[1] = vViewBlend[1]*(1-a2)+((1.0f/255)*dLight->color[GREEN])*a2;
-				vViewBlend[2] = vViewBlend[2]*(1-a2)+((1.0f/255)*dLight->color[BLUE])*a2;
+				vViewBlend[0] = vViewBlend[1]*(1-a2)+((1.0f/255)*dlLight->color[RED])*a2;
+				vViewBlend[1] = vViewBlend[1]*(1-a2)+((1.0f/255)*dlLight->color[GREEN])*a2;
+				vViewBlend[2] = vViewBlend[2]*(1-a2)+((1.0f/255)*dlLight->color[BLUE])*a2;
 				return;
 			}
 
 			glBegin(GL_TRIANGLE_FAN);
 			// [7/5/2012] Make sure it shows the lights colour ~hogsy
-			glColor3ub(dLight->color[RED],dLight->color[GREEN],dLight->color[BLUE]);
+			glColor3ub(dlLight->color[RED],dlLight->color[GREEN],dlLight->color[BLUE]);
 
 			for(i = 0; i < 3; i++)
-				v[i] = dLight->origin[i]-vpn[i]*rad;
+				v[i] = dlLight->origin[i]-vpn[i]*rad;
 
-			glVertex3fv(v);
+			Math_VectorCopy(v,voLight[0].vVertex);
+
 			glColor3f(0,0,0);
 
 			for(i = 16; i >= 0; i--)
@@ -116,18 +121,19 @@ void Light_Draw(void)
 				a = i/16.0f*pMath_PI*2.0f;
 
 				for(j = 0; j < 3; j++)
-					v[j] = dLight->origin[j]+vright[j]*cos(a)*rad+vup[j]*sin(a)*rad;
+					v[j] = dlLight->origin[j]+vright[j]*cos(a)*rad+vup[j]*sin(a)*rad;
 
-				glVertex3fv(v);
+				Math_VectorCopy(v,voLight[i].vVertex);
+				//Math_VectorSet(1.0f,voLight[i].vColour);
+
+				voLight[i].vColour[ALPHA] = 0.5f;
 			}
 
-			glEnd();
+			Video_DrawObject(voLight,VIDEO_PRIMITIVE_TRIANGLE_FAN,16,false);
 		}
 	}
 
 	glColor3f(1.0f,1.0f,1.0f);
-
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
 	Video_ResetCapabilities(true);
 }

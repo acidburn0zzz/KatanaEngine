@@ -24,7 +24,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	676	// 2/6/2014
+#define ENGINE_VERSION_BUILD	678	// 4/6/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"
@@ -34,6 +34,7 @@
 #define	PATH_ENGINE	"engine"	// Directory to look in for engine specific modules / assets
 #define	PATH_MAPS	"maps"		// Default directory for opening, loading and exporting maps
 #define	PATH_SOUNDS	"sounds"	// Default directory for opening, loading and exporting sounds
+#define	PATH_LOGS	PATH_ENGINE"/logs"
 
 #define DIR_PARTICLES	"textures/particles/"
 #define DIR_FLARES		"textures/flares/"
