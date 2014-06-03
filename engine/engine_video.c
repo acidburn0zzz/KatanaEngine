@@ -807,9 +807,6 @@ void Video_Process(void)
 
 	SCR_UpdateScreen();
 
-	//Menu->Draw();
-	//Game->Draw();
-
     // [31/3/2014] Draw any ATB windows ~hogsy
 	TwDraw();
 

@@ -209,10 +209,9 @@ bool	bOverbright,
 
 void R_SetupModelLighting(vec3_t vOrigin)
 {
-	vec3_t			vDistance,vLightColour,vLightOrigin;
+	vec3_t			vLightColour,vLightOrigin;
 	DynamicLight_t	*dlLightSource;
 	float			fDistance;
-	int				i;
 
 	if(!bShading)
 		return;
@@ -248,7 +247,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 1 // new
+#if 0 // new
 	int					i,j,k;
 	float               fAlpha;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
@@ -264,8 +263,8 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 		currententity->scale = 1.0f;
 
 	//new version by muff - fixes bug, easier to read, faster (well slightly)
-	frame1 = (MD2Frame_t*)((byte*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_lastpose));
-	frame2 = (MD2Frame_t*)((byte*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_pose));
+	frame1 = (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_lastpose));
+	frame2 = (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_pose));
 
 	Math_VectorCopy(frame1->scale,scale1);
 	Math_VectorCopy(frame1->translate,translate1);
@@ -280,7 +279,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	mtvVertices = &frame1->verts[0];
 
 	{
-		mtTriangles	= (MD2Triangle_t*)((byte*)mModel+mModel->ofs_tris);
+		mtTriangles	= (MD2Triangle_t*)((uint8_t*)mModel+mModel->ofs_tris);
 
 		for(i = 0; i < mModel->numtris; i++,mtTriangles++)
 		{
@@ -314,7 +313,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	MD2TriangleVertex_t	*verts1,*verts2;
 	MD2Frame_t		*frame1,*frame2;
 	vec3_t			scale1,translate1,scale2,translate2;
-	vec4_t			vVertexArray;
+	vec4_t			vVertexArray,vColour;
 
 	// [20/8/2012] Quick fix ~hogsy
 	// [24/8/2012] Moved ~hogsy
@@ -324,8 +323,8 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	fLerp = 1.0f-lLerpData.blend;
 
 	//new version by muff - fixes bug, easier to read, faster (well slightly)
-	frame1 = (MD2Frame_t*)((byte*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_lastpose));
-	frame2 = (MD2Frame_t*)((byte*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_pose));
+	frame1 = (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_lastpose));
+	frame2 = (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_pose));
 
 	Math_VectorCopy(frame1->scale,scale1);
 	Math_VectorCopy(frame1->translate,translate1);
@@ -339,7 +338,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	verts1 = &frame1->verts[0];
 	verts2 = &frame2->verts[0];
 
-	order = (int*)((byte*)mModel+mModel->ofs_glcmds);
+	order = (int*)((uint8_t*)mModel+mModel->ofs_glcmds);
 
 	for(;;)
 	{
@@ -347,22 +346,13 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 		if(!count)
 			break;
 
-		if(count < 0)
-		{
-			count = -count;
-
-			glBegin(GL_TRIANGLE_FAN);
-		}
-		else
-			glBegin(GL_TRIANGLE_STRIP);
+		glBegin(GL_TRIANGLE_FAN);
 
 		// [27/6/2013] Revised the following ~hogsy
 		do
 		{
 			if(r_drawflat_cheatsafe)
 			{
-				vec4_t	vColour;
-
 				srand(count*(unsigned int)order);
 
 				for(i = 0; i < 3; i++)
@@ -382,9 +372,14 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 				glTexCoord2fv((float*)order);
 
 			for(i = 0; i < 3; i++)
+			{
 				vVertexArray[i] = (verts1[order[2]].v[i]*scale1[i]+translate1[i])*fLerp+(verts2[order[2]].v[i]*scale2[i]+translate2[i])*lLerpData.blend;
+				if(bShading)
+					vColour[i] = (shadedots[verts1->lightnormalindex])*0.10f;
+			}
 
 			glVertex3fv(vVertexArray);
+			glColor3fv(vColour);
 
 			order += 3;
 		} while(--count);

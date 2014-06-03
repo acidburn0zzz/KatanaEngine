@@ -504,7 +504,7 @@ typedef struct
 	void	(*DrawPic)(char *path,float alpha,int x,int y,int w,int h);
 	void	(*DrawString)(int x,int y,char *msg);
 	void	(*DrawFill)(int x,int y,int w,int h,float r,float g,float b,float alpha);
-	void 	(*Cvar_RegisterVariable)(cvar_t *variable, void *function);
+	void 	(*Cvar_RegisterVariable)(cvar_t *variable,void (*Function)(void));
 	void	(*Cvar_SetValue)(char *var_name,float value);
 	void	(*LightStyle)(int style,char *val);
 	void	(*MakeVectors)(vec3_t angles);

@@ -60,9 +60,9 @@ AudioSound_t *Audio_LoadSound(sfx_t *sSoundEffect)
 	sfxcache_t		*sSoundCache;
 	char			cNameBuffer[256];
 	
-	sSoundCache = (sfxcache_t*)Cache_Check(&sSoundEffect->cache);
-	if(sSoundCache)
-		return sSoundCache;
+//	sSoundCache = (sfxcache_t*)Cache_Check(&sSoundEffect->cache);
+//	if(sSoundCache)
+//		return sSoundCache;
 
 	strcpy(cNameBuffer,PATH_SOUNDS"/");
 	strcat(cNameBuffer,sSoundEffect->name);

@@ -223,9 +223,6 @@ int Input_ConvertKey(int iKey)
 		case SDLK_SLASH:		return '/';
 		default:    			return iKey;
 	}
-
-	// [9/1/2013] We'd never reach here but compiler complain anyway ~hogsy
-	return 0;
 }
 
 /*

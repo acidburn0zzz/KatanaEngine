@@ -78,15 +78,17 @@ void Light_Draw(void)
 	dlLight = cl_dlights;
 	for(i = 0; i < MAX_DLIGHTS; i++,dlLight++)
 	{
+		if(cvEditorLightPreview.bValue && dlLight->bLightmap)
+			continue;
 		// [5/5/2012] Ugh some lights are inverted... ~hogsy
-		if(((dlLight->die < cl.time) && dlLight->die) || !dlLight->radius)
+		else if(((dlLight->die < cl.time) && dlLight->die) || !dlLight->radius)
 			continue;
 
 		{
-			int		i,j;
-			float	a,a2,b,rad;
-			vec3_t	v;
-			VideoObject_t	voLight[16];
+			int				i,j,c = 0;
+			float			a,a2,b,rad;
+			vec3_t			v;
+			VideoObject_t	voLight[17];
 
 			Math_VectorSubtract(dlLight->origin,r_origin,v);
 
@@ -105,7 +107,6 @@ void Light_Draw(void)
 				return;
 			}
 
-			glBegin(GL_TRIANGLE_FAN);
 			// [7/5/2012] Make sure it shows the lights colour ~hogsy
 			glColor3ub(dlLight->color[RED],dlLight->color[GREEN],dlLight->color[BLUE]);
 
@@ -114,26 +115,25 @@ void Light_Draw(void)
 
 			Math_VectorCopy(v,voLight[0].vVertex);
 
-			glColor3f(0,0,0);
-
-			for(i = 16; i >= 0; i--)
+			for(i = 16; i >= 0; i--,c++)
 			{
+				vec3_t	vColour;
+
 				a = i/16.0f*pMath_PI*2.0f;
 
 				for(j = 0; j < 3; j++)
 					v[j] = dlLight->origin[j]+vright[j]*cos(a)*rad+vup[j]*sin(a)*rad;
 
-				Math_VectorCopy(v,voLight[i].vVertex);
-				//Math_VectorSet(1.0f,voLight[i].vColour);
+				Math_VectorCopy(v,voLight[c].vVertex);
+				Math_ColorNormalize(dlLight->color,vColour);
+				Math_VectorCopy(vColour,voLight[c].vColour);
 
-				voLight[i].vColour[ALPHA] = 0.5f;
+				voLight[c].vColour[3] = 0.5f;
 			}
 
-			Video_DrawObject(voLight,VIDEO_PRIMITIVE_TRIANGLE_FAN,16,false);
+			Video_DrawObject(voLight,VIDEO_PRIMITIVE_TRIANGLE_FAN,17,false);
 		}
 	}
-
-	glColor3f(1.0f,1.0f,1.0f);
 
 	Video_ResetCapabilities(true);
 }

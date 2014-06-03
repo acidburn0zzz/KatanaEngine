@@ -217,36 +217,6 @@ void Sbar_DrawFrags (void)
 	}
 }
 
-void Sbar_IntermissionNumber (int x, int y, int num, int digits, int color)
-{
-#if 0
-	char			str[12];
-	char			*ptr;
-	int				l, frame;
-
-	l = Sbar_itoa (num, str);
-	ptr = str;
-	if (l > digits)
-		ptr += (l-digits);
-	if (l < digits)
-		x += (digits-l)*24;
-
-	while (*ptr)
-	{
-		if (*ptr == '-')
-			frame = STAT_MINUS;
-		else
-			frame = *ptr -'0';
-
-		Draw_Pic (x,y,sb_nums[color][frame]); //johnfitz -- stretched menus
-		x += 24;
-		ptr++;
-	}
-#else
-	Con_Printf("OBSOLETE: Sbar_IntermissionNumber\n");
-#endif
-}
-
 void Sbar_DeathmatchOverlay (void)
 {
 	qpic_t			*pic;

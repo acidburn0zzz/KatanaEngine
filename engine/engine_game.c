@@ -553,7 +553,7 @@ void Game_WriteEntity(int mode,edict_t *ent)
 
 void Game_AddCommand(char *c,void *f)
 {
-	Cmd_AddCommand(c,(xcommand_t)f);
+	Cmd_AddCommand(c,(xcommand_t*)f);
 }
 
 // [28/7/2012] Added Game_SetMessageEntity ~hogsy

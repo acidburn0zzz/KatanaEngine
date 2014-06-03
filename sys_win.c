@@ -502,6 +502,7 @@ bool System_Main(int iArgumentCount,char *cArguments[])
 			epParameters.memsize = atoi(com_argv[t])*1024;
 	}
 
+	// Create any directories we need here; before anything else is done.
 	pFileSystem_CreateDirectory(PATH_LOGS);
 
 	epParameters.membase = malloc(epParameters.memsize);
