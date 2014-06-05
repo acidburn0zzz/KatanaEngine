@@ -76,7 +76,7 @@ static	unsigned HashVec (vec3_t vec)
 //============================================================================
 
 // Vic: changed this to qboolean
-qboolean CanonicalVector (vec3_t vec)
+bool CanonicalVector (vec3_t vec)
 {
 	vec_t length;
 

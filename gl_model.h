@@ -294,4 +294,7 @@ void	Model_Touch(char *cName);
 mleaf_t *Mod_PointInLeaf (float *p, model_t *model);
 byte	*Mod_LeafPVS (mleaf_t *leaf, model_t *model);
 
+// OBJ Support
+void Model_DrawOBJ(entity_t *eEntity);
+
 #endif	// __MODEL__

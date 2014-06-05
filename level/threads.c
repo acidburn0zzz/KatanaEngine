@@ -35,16 +35,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 int		dispatch;
 int		workcount;
 int		oldf;
-qboolean		pacifier;
+bool	pacifier;
 
-qboolean	threaded;
+bool	threaded;
 
-/*
-=============
-GetThreadWork
-
-=============
-*/
 int	GetThreadWork (void)
 {
 	int	r;
@@ -154,7 +148,7 @@ void ThreadUnlock (void)
 	LeaveCriticalSection (&crit);
 }
 
-void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
+void RunThreadsOn (int workcnt, bool showpacifier, void(*func)(int))
 {
 	DWORD	threadid[MAX_THREADS];
 	HANDLE	threadhandle[MAX_THREADS];
@@ -248,7 +242,7 @@ void ThreadUnlock (void)
 RunThreadsOn
 =============
 */
-void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
+void RunThreadsOn (int workcnt, bool showpacifier, void(*func)(int))
 {
 	int		i;
 	pthread_t	work_threads[MAX_THREADS];
@@ -352,7 +346,7 @@ void ThreadUnlock (void)
 RunThreadsOn
 =============
 */
-void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
+void RunThreadsOn (int workcnt, bool showpacifier, void(*func)(int))
 {
 	int		i;
 	int		pid[MAX_THREADS];
@@ -506,7 +500,7 @@ void recursive_mutex_init(pthread_mutexattr_t attribs)
 RunThreadsOn
 =============
 */
-void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
+void RunThreadsOn (int workcnt, bool showpacifier, void(*func)(int))
 {
   pthread_mutexattr_t         mattrib;
   pthread_t work_threads[MAX_THREADS];
@@ -593,7 +587,7 @@ void ThreadUnlock (void)
 RunThreadsOn
 =============
 */
-void RunThreadsOn (int workcnt, qboolean showpacifier, void(*func)(int))
+void RunThreadsOn (int workcnt, bool showpacifier, void(*func)(int))
 {
 	int		i;
 	int		start, end;

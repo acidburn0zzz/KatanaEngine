@@ -171,12 +171,7 @@ void NormalizePlane( plane_t *dp )
 	}
 }
 
-/*
-=================
-PlaneCompare
-=================
-*/
-qboolean PlaneCompare( plane_t *p1, plane_t *p2 )
+bool PlaneCompare( plane_t *p1, plane_t *p2 )
 {
 	int		i;
 

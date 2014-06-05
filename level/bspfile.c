@@ -203,24 +203,29 @@ void LoadBSPFile (char *filename)
 	swappedbuffer_t	sb;
 	lump_t			lumps[HEADER_LUMPS], *lump;
 
-// load file into buffer
+	// load file into buffer
 	SB_LoadFile (&sb, filename);
 
-// hull 0 is always point-sized
+	// hull 0 is always point-sized
 	VectorClear (hullinfo.hullsizes[0][0]);
 	VectorClear (hullinfo.hullsizes[0][1]);
 
-// check header
-	i = SB_ReadInt (&sb);
-	if (i != BSP_VERSION)
+	// Check the BSP header.
+	i = SB_ReadInt(&sb);
+	if(i != BSP_HEADER)
+		Error("Unrecognised file header!");
+
+	i = SB_ReadInt(&sb);
+	if(i != BSP_VERSION)
 		Error("%s is version %i, should be %i", filename, i, BSP_VERSION);
 
-	hullinfo.numhulls = 3;
-	hullinfo.filehulls = 4;
-	VectorSet (hullinfo.hullsizes[1][0], -16, -16, -24);
-	VectorSet (hullinfo.hullsizes[1][1], 16, 16, 32);
-	VectorSet (hullinfo.hullsizes[2][0], -32, -32, -24);
-	VectorSet (hullinfo.hullsizes[2][1], 32, 32, 64);
+	hullinfo.numhulls	= 3;
+	hullinfo.filehulls	= 4;
+
+	VectorSet(hullinfo.hullsizes[1][0],-16,-16,-24);
+	VectorSet(hullinfo.hullsizes[1][1],16,16,32);
+	VectorSet(hullinfo.hullsizes[2][0],-32,-32,-24);
+	VectorSet(hullinfo.hullsizes[2][1],32,32,64);
 
 	for (i = 0; i < HEADER_LUMPS; i++)
 	{
@@ -405,20 +410,28 @@ void WriteBSPFile(char *filename)
 	swappedbuffer_t	sb;
 	lump_t			lumps[HEADER_LUMPS], *lump;
 
+#if 0
+	bspsize = 8;
+	bspsize += sizeof(lumps)+20*numplanes+(40+BSP_AMBIENT_END)*numleafs+12*numvertexes;
+	bspsize += 44*numnodes+40*numtexinfo+(24+MAXLIGHTMAPS)*numfaces+12*numclipnodes;
+	bspsize += 4*nummarksurfaces+4*numsurfedges+8*numedges;
+	bspsize += (48+4*MAX_Q1MAP_HULLS)*nummodels+lightdatasize;
+	bspsize += visdatasize+entdatasize+texdatasize;
+#else
 	bspsize = 4;
 	bspsize += sizeof(lumps)+20*numplanes+(24+BSP_AMBIENT_END)*numleafs+12*numvertexes;
 	bspsize += 24*numnodes+40*numtexinfo+(16+MAXLIGHTMAPS)*numfaces+8*numclipnodes;
 	bspsize += 2*nummarksurfaces+4*numsurfedges+4*numedges;
 	bspsize += (48+4*MAX_Q1MAP_HULLS)*nummodels+rgblightdatasize;
 	bspsize += visdatasize+entdatasize+texdatasize;
+#endif
 	bspsize += 512;	// extra case for safety and to compensate for the 4-byte padding of the lumps
 
 	SB_Alloc (&sb, bspsize);
 	printf ("Allocated %f MB (%d bytes) for file buffer\n", bspsize*(1.0f/(1024.0f*1024.0f)), bspsize);
 
-	// write header
-	SB_WriteInt(&sb,BSP_VERSION);
-	SB_ZeroFill(&sb,sizeof(lumps));	// filled in later
+	// Write out the header, which we'll fill out at the end.
+	SB_ZeroFill(&sb,sizeof(lumps)+8);
 
 	// write lumps and pad each one to a multiple of 4 bytes
 	lump = &lumps[LUMP_PLANES];
@@ -602,10 +615,11 @@ void WriteBSPFile(char *filename)
 #endif
 
 	// go back and update the header
-	index = SB_Tell (&sb);
-	SB_SeekAbsolute (&sb, 0);
+	index = SB_Tell(&sb);
+	SB_SeekAbsolute(&sb,0);
 
-	SB_WriteInt (&sb, BSP_VERSION);
+	SB_WriteInt(&sb,BSP_HEADER);
+	SB_WriteInt(&sb,BSP_VERSION);
 
 	for (i = 0; i < HEADER_LUMPS; i++)
 	{

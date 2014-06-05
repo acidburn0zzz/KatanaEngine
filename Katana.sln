@@ -30,7 +30,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Platform", "platform\Platfo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Menu", "menu\Menu.vcxproj", "{5A2253BD-BDF0-4F0C-A53F-382D3EB5C4BE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Example Game", "game\Game.vcxproj", "{6BA71186-7156-4A79-ABAD-FC46D4492EA0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenKatana", "game\Game.vcxproj", "{6BA71186-7156-4A79-ABAD-FC46D4492EA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

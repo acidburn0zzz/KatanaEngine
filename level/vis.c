@@ -120,12 +120,7 @@ void *LeafThread(void)
 	return NULL;
 }
 
-/*
-===============
-LeafFlow
-
-Builds the entire visibility list for a leaf
-===============
+/*	Builds the entire visibility list for a leaf
 */
 int		totalvis;
 
@@ -265,7 +260,7 @@ sep_t *Findpassages (viswinding_t *source, viswinding_t *pass)
 	double		d;
 	double		length;
 	int			counts[3];
-	qboolean	fliptest;
+	bool		fliptest;
 	sep_t		*sep, *list;
 
 	list = NULL;

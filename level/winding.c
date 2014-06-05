@@ -262,12 +262,7 @@ void CheckWinding( winding_t *w )
 	while (i < w->numpoints);
 }
 
-/*
-==================
-WindingIsTiny
-==================
-*/
-qboolean WindingIsTiny( winding_t *w )
+bool WindingIsTiny( winding_t *w )
 {
 	int		i, cnt;
 	vec3_t	edge;
@@ -371,16 +366,11 @@ void PlaneFromWinding( winding_t *w, plane_t *plane )
 	plane->dist = DotProduct( w->points[0], plane->normal );
 }
 
-/*
-==================
-WindingOnPlaneSide
-==================
-*/
 int WindingOnPlaneSide( winding_t *w, plane_t *plane )
 {
 	int i;
 	vec_t dist;
-	qboolean back, front;
+	bool back, front;
 
 	back = front = false;
 	for( i = 0; i < w->numpoints; i++ ) {
@@ -409,7 +399,7 @@ int WindingOnPlaneSide( winding_t *w, plane_t *plane )
 ClipWindingEpsilon
 ==================
 */
-winding_t *ClipWindingEpsilon( winding_t *in, plane_t *split, vec_t epsilon, qboolean keepon )
+winding_t *ClipWindingEpsilon( winding_t *in, plane_t *split, vec_t epsilon, bool keepon )
 {
 	int			i, j;
 	vec_t		dists[MAX_POINTS_ON_WINDING + 1];
@@ -500,7 +490,7 @@ winding_t *ClipWindingEpsilon( winding_t *in, plane_t *split, vec_t epsilon, qbo
 ClipWinding
 ==================
 */
-winding_t *ClipWinding( winding_t *in, plane_t *split, qboolean keepon ) {
+winding_t *ClipWinding( winding_t *in, plane_t *split, bool keepon ) {
 	return ClipWindingEpsilon( in, split, WINDING_EPSILON, keepon );
 }
 
@@ -632,7 +622,7 @@ winding_t *TryMergeWinding( winding_t *w1, winding_t *w2, vec3_t planenormal )
 	winding_t	*neww;
 	vec3_t		normal, delta;
 	vec_t		dot;
-	qboolean	keep1, keep2;
+	bool		keep1, keep2;
 
 	//
 	// find a common edge

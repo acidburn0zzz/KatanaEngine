@@ -5,7 +5,8 @@
 
 typedef enum
 {
-	MODEL_MD2,
+	MODEL_TYPE_MD2,
+	MODEL_TYPE_OBJ,
 	MODEL_SPRITE,
 	MODEL_BRUSH,
 
@@ -75,8 +76,17 @@ typedef struct
 						*gFullbrightTexture[MD2_MAX_SKINS],	// Texture used for fullbright layer.
 						*gSphereTexture[MD2_MAX_SKINS];		// Texture used for sphere mapping.
 
-	MD2Triangle_t	*mtTriangles;
+	MD2TextureCoordinate_t	*mtcTextureCoord;
 } MD2_t;
+
+/*
+	OBJ Format
+*/
+
+typedef struct
+{
+	vec3_t	vVertex;
+} OBJVertex_t;
 
 /*
 	IQM Format
@@ -188,9 +198,10 @@ typedef struct
 	BSP Format
 */
 
-#define	BSP_HEADER	(('P'<<16)+('S'<<8)+'B')
+#define	BSP_HEADER	(('K'<<24)+('P'<<16)+('S'<<8)+'B')
 
-#define	BSP_VERSION	3
+#define	BSP_VERSION	4
+#define	BSP_VERSION_4	// Enable support for version 4 feature set.
 
 #define	BSP_MAX_HULLS		16
 #define	BSP_MAX_LEAFS		32767
@@ -245,7 +256,8 @@ typedef struct
 
 typedef struct
 {
-	int			iVersion;
+	int			iIdentification,
+				iVersion;
 	BSPLump_t	bLumps[HEADER_LUMPS];
 } BSPHeader_t;
 

@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2013 OldTimes Software
+	Copyright (C) 2011-2014 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -31,6 +31,7 @@ char	loadname[32];	// for hunk tags
 
 void Model_LoadBSP(model_t *mod, void *buffer);
 void Model_LoadMD2(model_t *mod,void *buffer);
+bool Model_LoadOBJ(model_t *mModel,void *Buffer);
 
 model_t *Model_Load(model_t *mod);
 
@@ -156,7 +157,7 @@ void Model_ClearAll(void)
 	model_t	*mModel;
 
 	for(i = 0,mModel = mod_known; i < mod_numknown; i++,mModel++)
-		if(mModel->mType != MODEL_MD2)
+		if(mModel->mType != MODEL_TYPE_MD2)
 		{
 			mModel->bNeedLoad = true;
 
@@ -198,7 +199,7 @@ void Model_Touch(char *cName)
 
 	mModel = Model_FindName(cName);
 	if(!mModel->bNeedLoad)
-		if(mModel->mType == MODEL_MD2)
+		if(mModel->mType == MODEL_TYPE_MD2)
 			Cache_Check(&mModel->cache);
 }
 
@@ -212,7 +213,7 @@ model_t *Model_Load(model_t *mModel)
 
 	if(!mModel->bNeedLoad)
 	{
-		if(mModel->mType == MODEL_MD2)
+		if(mModel->mType == MODEL_TYPE_MD2)
 		{
 			d = Cache_Check (&mModel->cache);
 			if (d)
@@ -238,16 +239,31 @@ model_t *Model_Load(model_t *mModel)
 	// Call the apropriate loader
 	mModel->bNeedLoad = false;
 
-	switch(LittleLong(*(unsigned *)buf))
+	switch(LittleLong(*(unsigned*)buf))
 	{
-	// [21/4/2013] DKSP and IDSP are obsolete ~hogsy
 	case MD2_HEADER:
 		Model_LoadMD2(mModel,buf);
 		break;
+#ifdef BSP_VERSION_4	// BSP header support.
 	case BSP_HEADER:
-	default:
 		Model_LoadBSP(mModel,buf);
 		break;
+	default:
+		if(Model_LoadOBJ(mModel,buf))
+			break;
+
+		Con_Warning("Unsupported model type! (%s)\n",mModel->name);
+		return NULL;
+#else
+	case BSP_HEADER:
+	default:
+		// OBJ files don't have "headers" so let the function just give it a quick look over.
+		if(Model_LoadOBJ(mModel,buf))
+			break;
+
+		Model_LoadBSP(mModel,buf);
+		break;
+#endif
 	}
 
 	return mModel;
@@ -1571,10 +1587,10 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 	iSize = LittleLong(pinmodel->ofs_end)+sizeof(MD2_t);
 
 	mMD2Model = (MD2_t*)Hunk_AllocName(iSize,loadname);
-	for(i = 0;i < 17;i++)
+	for(i = 0; i < 17; i++)
 		((int*)mMD2Model)[i] = LittleLong(((int*)pinmodel)[i]);
 
-	mModel->mType		= MODEL_MD2;
+	mModel->mType		= MODEL_TYPE_MD2;
 	mModel->version		= iVersion;
 	mModel->flags		= 0;
 	mModel->numframes	= numframes = mMD2Model->num_frames;
@@ -1603,8 +1619,8 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 	for(i = 0; i < 7; i++)
 		((int*)&mMD2Model->ofs_skins)[i] += sizeof(mMD2Model);
 
-	pintriangles	= (MD2Triangle_t*)((byte*)pinmodel+LittleLong(pinmodel->ofs_tris));
-	pouttriangles	= (MD2Triangle_t*)((byte*)mMD2Model+mMD2Model->ofs_tris);
+	pintriangles	= (MD2Triangle_t*)((uint8_t*)pinmodel+LittleLong(pinmodel->ofs_tris));
+	pouttriangles	= (MD2Triangle_t*)((uint8_t*)mMD2Model+mMD2Model->ofs_tris);
 	for(i=0; i < mMD2Model->numtris; i++)
 	{
 		for(j=0; j < 3; j++)
@@ -1620,8 +1636,8 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 		pouttriangles++;
 	}
 
-	pinframe	= (MD2Frame_t*)((byte*)pinmodel+LittleLong(pinmodel->ofs_frames));
-	poutframe	= (MD2Frame_t*)((byte*)mMD2Model+mMD2Model->ofs_frames);
+	pinframe	= (MD2Frame_t*)((uint8_t*)pinmodel+LittleLong(pinmodel->ofs_frames));
+	poutframe	= (MD2Frame_t*)((uint8_t*)mMD2Model+mMD2Model->ofs_frames);
 	for(i=0; i < numframes; i++)
 	{
 		for(j=0; j < 3; j++)
@@ -1645,10 +1661,12 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 		poutframe	= (MD2Frame_t*)&poutframe->verts[j].v[0];
 	}
 
-	pinglcmd	= (int*)((byte*)pinmodel+LittleLong(pinmodel->ofs_glcmds));
-	poutglcmd	= (int*)((byte*)mMD2Model+mMD2Model->ofs_glcmds);
+	pinglcmd	= (int*)((uint8_t*)pinmodel+LittleLong(pinmodel->ofs_glcmds));
+	poutglcmd	= (int*)((uint8_t*)mMD2Model+mMD2Model->ofs_glcmds);
 	for(i=0; i < mMD2Model->num_glcmds; i++)
 		*poutglcmd++ = LittleLong(*pinglcmd++);
+
+	mMD2Model->mtcTextureCoord	= (MD2TextureCoordinate_t*)((uint8_t*)pinmodel+pinmodel->ofs_st);
 
 	memcpy
 	(
@@ -1709,6 +1727,43 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 
 	Hunk_FreeToLowMark(iStartHunk);
 }
+
+/*
+	OBJ Support
+*/
+
+bool Model_LoadOBJ(model_t *mModel,void *Buffer)
+{
+	mModel->mType	= MODEL_TYPE_OBJ;
+
+#if 0
+	// Parse OBJ file...
+	for(;;)
+	{
+		char	cLine[128];
+
+		if(fscanf(Buffer,"%s",cLine) == EOF)
+			break;
+
+		if(!Q_strcmp(cLine,"v"))
+		{}
+		else if(!Q_strcmp(cLine,"vt"))
+		{}
+		else if(!Q_strcmp(cLine,"vn"))
+		{}
+		else if(!Q_strcmp(cLine,"f"))
+		{}
+	}
+#endif
+
+	return false;
+}
+
+void Model_DrawOBJ(entity_t *eEntity)
+{
+}
+
+/**/
 
 void Model_PrintMemoryCache(void)
 {

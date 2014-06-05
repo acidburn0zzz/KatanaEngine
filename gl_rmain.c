@@ -397,8 +397,11 @@ void R_DrawEntitiesOnList(bool bAlphaPass) //johnfitz -- added parameter
 
 		switch(currententity->model->mType)
 		{
-			case MODEL_MD2:
+			case MODEL_TYPE_MD2:
 				Alias_Draw(currententity);
+				break;
+			case MODEL_TYPE_OBJ:
+				Model_DrawOBJ(currententity);
 				break;
 			case MODEL_BRUSH:
 				Brush_Draw(currententity);
@@ -420,7 +423,7 @@ void R_DrawViewModel(void)
 		return;
 
 	currententity = &cl.viewent;
-	if(!currententity->model || currententity->model->mType != MODEL_MD2)
+	if(!currententity->model || currententity->model->mType != MODEL_TYPE_MD2)
 		return;
 
 	// hack the depth range to prevent view model from poking into walls
@@ -584,7 +587,7 @@ void R_ShowTris(void)
 			case MODEL_BRUSH:
 				R_DrawBrushModel_ShowTris (currententity);
 				break;
-			case MODEL_MD2:
+			case MODEL_TYPE_MD2:
 				R_DrawAliasModel_ShowTris (currententity);
 				break;
 			case MODEL_SPRITE:
@@ -601,7 +604,7 @@ void R_ShowTris(void)
 			&& cl.stats[STAT_HEALTH] > 0
 			&& !(cl.items & IT_INVISIBILITY)
 			&& currententity->model
-			&& currententity->model->mType == MODEL_MD2)
+			&& currententity->model->mType == MODEL_TYPE_MD2)
 		{
 			glDepthRange(0,0.3);
 			R_DrawAliasModel_ShowTris(currententity);
@@ -629,7 +632,7 @@ void R_DrawShadows (void)
 	{
 		currententity = cl_visedicts[i];
 
-		if(currententity->model->mType != MODEL_MD2)
+		if(currententity->model->mType != MODEL_TYPE_MD2)
 			continue;
 		else if(currententity == &cl.viewent)
 			return;

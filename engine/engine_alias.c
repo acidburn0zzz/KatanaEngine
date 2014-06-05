@@ -240,20 +240,22 @@ void R_SetupModelLighting(vec3_t vOrigin)
 	if(currententity->effects & EF_FULLBRIGHT)
 		Math_VectorSet(1.0f,vLightColour);
 
-    shadedots = r_avertexnormal_dots[((int)(vLightOrigin[0]*(SHADEDOT_QUANT/360.0f))) & (SHADEDOT_QUANT-1)];
+    shadedots = r_avertexnormal_dots[((int)((cl.time*200.0f)*(SHADEDOT_QUANT/360.0f))) & (SHADEDOT_QUANT-1)];
 
 	Math_VectorScale(vLightColour,1.0f/200.0f,vLightColour);
 }
 
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 0 // new
-	int					i,j,k;
+#if 1 // new
+	int					i,j,k,
+						iVert = 0;
 	float               fAlpha;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
-	MD2TriangleVertex_t	*mtvVertices;
+	MD2TriangleVertex_t	*mtvVertices,
+						*mtvLerpVerts;
 	MD2Triangle_t		*mtTriangles;
-	MD2Frame_t			*frame1,*frame2;
+	MD2Frame_t			*mfFirst,*mfSecond;
 	vec3_t				scale1,translate1,
                         scale2;
 
@@ -263,12 +265,12 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 		currententity->scale = 1.0f;
 
 	//new version by muff - fixes bug, easier to read, faster (well slightly)
-	frame1 = (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_lastpose));
-	frame2 = (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_pose));
+	mfFirst		= (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_lastpose));
+	mfSecond	= (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_pose));
 
-	Math_VectorCopy(frame1->scale,scale1);
-	Math_VectorCopy(frame1->translate,translate1);
-	Math_VectorCopy(frame2->scale,scale2);
+	Math_VectorCopy(mfFirst->scale,scale1);
+	Math_VectorCopy(mfFirst->translate,translate1);
+	Math_VectorCopy(mfSecond->scale,scale2);
 
 	// [24/8/2012] Probably not the best way, but it's better than my other method ~hogsy
 	Math_VectorScale(scale1,currententity->scale,scale1);
@@ -276,12 +278,14 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 
 	fAlpha = ENTALPHA_DECODE(currententity->alpha);
 
-	mtvVertices = &frame1->verts[0];
+	mtvVertices		= &mfFirst->verts[0];
+	mtvLerpVerts	= &mfSecond->verts[0];
 
 	{
+		MD2TextureCoordinate_t	*mtcTextureCoord	= 
 		mtTriangles	= (MD2Triangle_t*)((uint8_t*)mModel+mModel->ofs_tris);
 
-		for(i = 0; i < mModel->numtris; i++,mtTriangles++)
+		for(i = 0; i < mModel->numtris; i++,iVert++,mtTriangles++)
 		{
 			if(!mtTriangles)
 				break;
@@ -290,23 +294,28 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
             {
                 for(j = 0; j < 3; j++)
                 {
-                    voModel[i].vVertex[j] = (mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+translate1[j]);
-                    voModel[i].vNormal[j] = r_avertexnormals[mtTriangles->index_xyz[k]][j];
+                    voModel[iVert].vVertex[j]	= mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+translate1[j];
+                    voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
+
+					voModel[iVert].vTextureCoord[1][0]	=
+					voModel[iVert].vTextureCoord[0][0]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/mModel->skinwidth;
+					voModel[iVert].vTextureCoord[1][1]	=
+					voModel[iVert].vTextureCoord[0][1]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/mModel->skinheight;
 
                     if(bShading)
-                        voModel[i].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])*0.5f;
+                        voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;
                 }
 
-                voModel[i].vColour[3] = fAlpha;
+                voModel[iVert].vColour[3] = fAlpha;
 
                 // Hacky!
                 if(k < 2)
-                    i++;
+                    iVert++;
             }
 		}
 	}
 
-	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,mModel->numtris,true);
+	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,iVert,true);
 #else // old
 	float			fLerp;
 	int				i,*order,count;
@@ -375,7 +384,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 			{
 				vVertexArray[i] = (verts1[order[2]].v[i]*scale1[i]+translate1[i])*fLerp+(verts2[order[2]].v[i]*scale2[i]+translate2[i])*lLerpData.blend;
 				if(bShading)
-					vColour[i] = (shadedots[verts1->lightnormalindex])*0.10f;
+					vColour[i] = (shadedots[verts1->lightnormalindex])*0.5f;
 			}
 
 			glVertex3fv(vVertexArray);

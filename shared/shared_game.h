@@ -13,6 +13,12 @@ typedef struct link_s
 } link_t;
 #endif
 
+enum
+{
+	DAMAGE_TYPE_NONE,
+	DAMAGE_TYPE_EXPLOSIVE
+};
+
 typedef struct edict_s edict_t;
 
 typedef struct
@@ -77,8 +83,8 @@ typedef struct
 	int			iWeaponFrame;
 
 	// Editor
-	char		*cClassname;
-	char		*cName;
+	char		*cClassname,	// The classname of the entity.
+				*cName;			// The specified name for the entity.
 	char		*noise;
 	char		*model;
 	int			iHealth;
@@ -87,7 +93,7 @@ typedef struct
 	int			modelindex;
 	vec3_t		absmin;
 	vec3_t		absmax;
-	float		ltime;
+	float		ltime;			// Local time for ents.
 	// [20/7/2012] Changed to an integer ~hogsy
 	int			movetype;
 	vec3_t		origin;
@@ -124,7 +130,6 @@ typedef struct
 	bool		bTakeDamage;
 	// [20/8/2012] Changed from an int to edict ~hogsy
 	edict_t		*chain;
-	float		deadflag;
 	vec3_t		view_ofs;
 	vec3_t		button;
 	float		impulse;
@@ -139,8 +144,9 @@ typedef struct
 	// [27/1/2013] Changed from float to integer (and renamed to iMaxHealth) ~hogsy
 	int			iMaxHealth;
 	float		teleport_time;
-	float		armortype;
-	float		armorvalue;
+
+	int			iArmorType,iArmorValue;
+
 	float		waterlevel;
 	int			watertype;
 	float		ideal_yaw;
@@ -149,9 +155,11 @@ typedef struct
 	// [9/7/2012] Changed from float to an integer ~hogsy
 	int			spawnflags;
 	char		*targetname;
+
 	float		dmg_take;
 	float		dmg_save;
-	int			dmg_inflictor;
+	edict_t		*eDamageInflictor;
+
 	char		*message;
 	float		sounds;
 
@@ -345,6 +353,8 @@ typedef struct
 	char			*cInfoMessage;				// see server_point > Point_InfoMessage.
 	bool			bBleed;						// Do we bleed?
 
+	int				iDamageType;				// The type of damage this entity can recieve.
+
 	double			damage_time,				// Time between each amount of damage.
 					dStepTime;					// Time between each step.
 	double			dPainFinished,
@@ -361,7 +371,6 @@ typedef struct
 	vec3_t			pos2;
 	char			*deathtype;
 	PlayerTeam_t	pTeam;						// Current active team.
-	float			ltime;						// Local time for ents.
 	void			(*think1)(edict_t *ent,edict_t *other);
 	vec3_t			finaldest;
 	char			*killtarget;
