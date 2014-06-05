@@ -337,7 +337,7 @@ void Player_PostThink(edict_t *ePlayer)
 	char	snd[32];
 
 	// [5/9/2013] If round has not started then don't go through this! ~hogsy
-	if((ePlayer->v.deadflag == DEAD_DEAD) || !Server.bRoundStarted)
+	if((ePlayer->monster.iState == STATE_DEAD) || !Server.bRoundStarted)
 		return;
 	// [12/4/2013] Check if we're in a vehicle ~hogsy
 	else if(ePlayer->local.eVehicle)
@@ -370,7 +370,7 @@ void Player_PostThink(edict_t *ePlayer)
 		{
 			// [8/6/2012] TODO: Figure out if we were pushed by an enemy... ~hogsy
 			// [8/6/2012] TODO: Base damage on velocity ~hogsy
-			MONSTER_Damage(ePlayer,ePlayer,10);
+			MONSTER_Damage(ePlayer,ePlayer,10, 0);
 
 			if(rand()%2 == 1)
 				sprintf(snd,"player/playerlandhurt.wav");
@@ -406,7 +406,7 @@ void Player_PostThink(edict_t *ePlayer)
 		Entity_Animate(ePlayer,PlayerAnimation_Walk);
 	else if((ePlayer->v.velocity[0] == 0 || ePlayer->v.velocity[1] == 0) && (!ePlayer->local.dAnimationTime || ePlayer->local.iAnimationEnd == 46))
 	{
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 		if(ePlayer->v.iActiveWeapon == WEAPON_DAIKATANA)
 			Entity_Animate(ePlayer,PlayerAnimation_KatanaIdle);
 		else
@@ -415,98 +415,98 @@ void Player_PostThink(edict_t *ePlayer)
 	}
 
 	Player_CheckFootsteps(ePlayer);
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	Player_CheckPowerups(ePlayer);
 #endif
 }
 
-void Player_PreThink(edict_t *ent)
+void Player_PreThink(edict_t *ePlayer)
 {
 	if(Server.bRoundStarted && !Server.bPlayersSpawned)
 	{
 		Server.bPlayersSpawned = true;
 
 		// [5/9/2013] Spawn the player! ~hogsy
-		Player_Spawn(ent);
+		Player_Spawn(ePlayer);
 		return;
 	}
 	else if(!Server.bRoundStarted)
 		return;
 
-	WEAPON_CheckFrames(ent);
-	Entity_CheckFrames(ent);
+	Weapon_CheckFrames(ePlayer);
+	Entity_CheckFrames(ePlayer);
 
-	if(ent->v.deadflag == DEAD_DEAD)
+	if(ePlayer->monster.iState == STATE_DEAD)
 	{
-		Player_DeathThink(ent);
+		Player_DeathThink(ePlayer);
 		return;
 	}
 
-	if(ent->v.waterlevel == 2)
+	if(ePlayer->v.waterlevel == 2)
 	{
 		int		i;
 		trace_t	tTrace;
 		vec3_t	vStart,vEnd;
 
 		// [23/9/2012] Check if we can jump onto an edge, was originally in a seperate function but merged here instead ~hogsy
-		Math_AngleVectors(ent->v.angles,ent->v.vForward,ent->local.vRight,ent->local.vUp);
-		Math_VectorCopy(ent->v.origin,vStart);
+		Math_AngleVectors(ePlayer->v.angles,ePlayer->v.vForward,ePlayer->local.vRight,ePlayer->local.vUp);
+		Math_VectorCopy(ePlayer->v.origin,vStart);
 
 		vStart[Z] += 8.0f;
 
-		ent->v.vForward[Z] = 0;
+		ePlayer->v.vForward[Z] = 0;
 
-		Math_VectorNormalize(ent->v.vForward);
+		Math_VectorNormalize(ePlayer->v.vForward);
 
 		for(i = 0; i < 3; i++)
-			vEnd[i]	= vStart[i]+ent->v.vForward[i]*24.0f;
+			vEnd[i]	= vStart[i]+ePlayer->v.vForward[i]*24.0f;
 
-		tTrace = Engine.Server_Move(vStart,vEnd,vec3_origin,vec3_origin,true,ent);
+		tTrace = Engine.Server_Move(vStart,vEnd,vec3_origin,vec3_origin,true,ePlayer);
 		if(tTrace.fraction < 1.0f)
 		{
-			vStart[Z] += ent->v.maxs[Z]-8.0f;
+			vStart[Z] += ePlayer->v.maxs[Z]-8.0f;
 
 			for(i = 0; i < 3; i++)
-				vEnd[i]	= vStart[i]+ent->v.vForward[i]*24.0f;
+				vEnd[i]	= vStart[i]+ePlayer->v.vForward[i]*24.0f;
 
-			Math_VectorSubtractValue(tTrace.plane.normal,50.0f,ent->v.movedir);
+			Math_VectorSubtractValue(tTrace.plane.normal,50.0f,ePlayer->v.movedir);
 
-			tTrace = Engine.Server_Move(vStart,vEnd,vec3_origin,vec3_origin,true,ent);
+			tTrace = Engine.Server_Move(vStart,vEnd,vec3_origin,vec3_origin,true,ePlayer);
 			if(tTrace.fraction == 1.0f)
 			{
-				ent->v.flags		|= FL_WATERJUMP;
-				ent->v.flags		-= (ent->v.flags & FL_JUMPRELEASED);
-				ent->v.velocity[Z]	= 225.0f;
+				ePlayer->v.flags		|= FL_WATERJUMP;
+				ePlayer->v.flags		-= (ePlayer->v.flags & FL_JUMPRELEASED);
+				ePlayer->v.velocity[Z]	= 225.0f;
 			}
 		}
 	}
 
-	if(ent->v.button[2])
-		Player_Jump(ent);
+	if(ePlayer->v.button[2])
+		Player_Jump(ePlayer);
 	else
 		// [30/7/2012] Simplified ~hogsy
-		ent->v.flags |= FL_JUMPRELEASED;
+		ePlayer->v.flags |= FL_JUMPRELEASED;
 
 	if(cvServerWaypointSpawn.value && (Server.dTime >= Server.dWaypointSpawnDelay))
 	{
-		if(ent->v.movetype != MOVETYPE_WALK)
+		if(ePlayer->v.movetype != MOVETYPE_WALK)
 			return;
 
 		// [2/1/2012] TODO: Delay currently isn't properly setup! Ugh lazy me ~hogsy
-		if(ent->v.flags & FL_ONGROUND)
+		if(ePlayer->v.flags & FL_ONGROUND)
 			// [20/12/2012] Create a waypoint at our current position ~hogsy
-			Waypoint_Spawn(ent->v.origin,WAYPOINT_DEFAULT);
+			Waypoint_Spawn(ePlayer->v.origin,WAYPOINT_DEFAULT);
 		/*	[10/1/2013] Create waypoints underwater.
 			Why do we check if we're on the ground underwater? This is
 			done to prevent us from creating waypoints too close to
 			surfaces while underwater which would cause issues for
 			any monster navigation. ~hogsy
 		*/
-		else if((ent->v.flags & FL_SWIM) && !(ent->v.flags & FL_ONGROUND))
-			Waypoint_Spawn(ent->v.origin,WAYPOINT_SWIM);
+		else if((ePlayer->v.flags & FL_SWIM) && !(ePlayer->v.flags & FL_ONGROUND))
+			Waypoint_Spawn(ePlayer->v.origin,WAYPOINT_SWIM);
 		// [10/4/2013] Create waypoints in the air.
-		else if(!(ent->v.flags & FL_ONGROUND))
-			Waypoint_Spawn(ent->v.origin,WAYPOINT_JUMP);
+		else if(!(ePlayer->v.flags & FL_ONGROUND))
+			Waypoint_Spawn(ePlayer->v.origin,WAYPOINT_JUMP);
 
 		Server.dWaypointSpawnDelay = Server.dTime+((double)cvServerWaypointDelay.value);
 	}
@@ -523,19 +523,18 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 
 	Math_VectorClear(ePlayer->v.view_ofs);
 
-	ePlayer->v.deadflag		= DEAD_DEAD;
 	ePlayer->v.modelindex	= iPlayerModelIndex;
 	ePlayer->v.view_ofs[2]	= -8.0f;
 	ePlayer->v.flags		-= (ePlayer->v.flags & FL_ONGROUND);
 	ePlayer->v.movetype		= MOVETYPE_TOSS;
 	ePlayer->v.angles[0]	= ePlayer->v.angles[2] = 0;
 
+	ePlayer->monster.iState	= STATE_DEAD;
+
 	ePlayer->Physics.iSolid	= SOLID_NOT;
 
-#ifdef GAME_OPENKATANA
 	// [15/10/2013] Detonate all C4 bombs we've laid out! ~hogsy
 	C4Vizatergo_SecondaryAttack(ePlayer);
-#endif
 
 #if 0
 	int i;
@@ -576,11 +575,9 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 
 	Sound(ePlayer,CHAN_VOICE,s,255,ATTN_NONE);
 
-#ifdef GAME_OPENKATANA
 	if(ePlayer->v.iActiveWeapon == WEAPON_DAIKATANA)
 		Entity_Animate(ePlayer,PlayerAnimation_KatanaDeath1);
 	else 
-#endif
 	{
 		if(rand()%2 == 1)
 			Entity_Animate(ePlayer,PlayerAnimation_Death1);
@@ -618,7 +615,6 @@ void Player_Spawn(edict_t *ePlayer)
 	// [5/6/2012] Make max_health changable for admins ~hogsy
 	ePlayer->v.iMaxHealth	= (int)cvServerMaxHealth.value;
 	ePlayer->v.movetype		= MOVETYPE_WALK;
-	ePlayer->v.deadflag		= DEAD_NO;
 	ePlayer->v.bTakeDamage	= true;
 	ePlayer->v.model		= cvServerPlayerModel.string;
 	ePlayer->v.effects		= 0;
@@ -639,10 +635,10 @@ void Player_Spawn(edict_t *ePlayer)
 	ePlayer->v.fixangle		= true;
 	ePlayer->v.view_ofs[2]	= 30.0f; // [10/05/2013] Was 22.0f ~eukos
 
+	ePlayer->monster.iState		= STATE_AWAKE;
 	ePlayer->monster.think_die	= Player_Die;
 	ePlayer->monster.think_pain = Player_Pain;
 
-#ifdef GAME_OPENKATANA
 	if(bIsMultiplayer)
 	{
 		switch((int)cvServerGameMode.value)
@@ -704,7 +700,6 @@ void Player_Spawn(edict_t *ePlayer)
 		}
 	}
 	else	// [29/7/2013] Singleplayer ~hogsy
-#endif
 	{
 		Server_UpdateClientMenu(ePlayer,MENU_STATE_HUD,true);
 

@@ -109,7 +109,7 @@ int	Monster_GetRelationship(edict_t *eMonster,edict_t *eTarget);
 
 float MONSTER_GetRange(edict_t *ent,vec3_t target);
 
-void MONSTER_Damage(edict_t *target,edict_t *inflictor,int iDamage);
+void MONSTER_Damage(edict_t *target,edict_t *inflictor,int iDamage, int iDamageType);
 void Monster_Jump(edict_t *eMonster,float fVelocity);
 void Monster_MoveToGoal(edict_t *ent,vec3_t goal,float distance);
 void Monster_Frame(edict_t *eMonster);

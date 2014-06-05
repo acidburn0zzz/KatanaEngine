@@ -9,6 +9,10 @@
 	in both OpenKatana and future projects.
 */
 
+#include "server_player.h"
+#include "server_item.h"
+#include "server_weapon.h"
+
 /*	TODO:
 		- Move out player specific code
 		- Parse a document to find waypoints in the map
@@ -76,6 +80,8 @@ MonsterRelationship_t MonsterRelationship[]=
 
 	{	MONSTER_NONE	}
 };
+
+/**/
 
 // [30/7/2012] Added Monster_CheckBottom ~hogsy
 bool Monster_CheckBottom(edict_t *ent)
@@ -259,7 +265,7 @@ bool Monster_StepDirection(edict_t *ent,float yaw,float dist)
 	ent->v.ideal_yaw	= yaw;
 	ChangeYaw(ent);
 
-	yaw	*= (float)M_PI*2/360;
+	yaw	*= (float)pMath_PI*2/360;
 	move[0] = (vec_t)cos(yaw)*dist;
 	move[1] = (vec_t)sin(yaw)*dist;
 	move[2] = 0;
@@ -414,18 +420,18 @@ bool Monster_SetState(edict_t *eMonster,MonsterState_t msState)
 */
 void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
 {
-	if(eTarget->v.deadflag == DEAD_DEAD || eTarget->monster.iState == STATE_DEAD)
+	if(eTarget->monster.iState == STATE_DEAD)
 		return;
 
-	if((eTarget->monster.iType != MONSTER_PLAYER) && (eTarget->monster.iType != MONSTER_VEHICLE))
+	if(Entity_IsMonster(eTarget))
 	{
 		WriteByte(MSG_ALL,SVC_KILLEDMONSTER);
 
 		eAttacker->v.iScore++;
 	}
-	else if((eAttacker->monster.iType == MONSTER_PLAYER) && bIsMultiplayer)
+	else if(Entity_IsPlayer(eAttacker) && bIsMultiplayer)
 	{
-		char	*cDeathMessage = "%s was killed by %s\n";
+		char *cDeathMessage = "%s was killed by %s\n";
 
 		if(eTarget == eAttacker)
 		{
@@ -433,7 +439,7 @@ void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
 
 			eAttacker->v.iScore--;
 		}
-		else if((eTarget->monster.iType == MONSTER_PLAYER) && bIsCooperative)
+		else if(Entity_IsPlayer(eTarget) && bIsCooperative)
 		{
 			cDeathMessage = "%s was tk'd by %s (what a dick, huh?)";
 
@@ -454,7 +460,7 @@ void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
 
 				eAttacker->v.iScore += 2;
 			}
-				
+
 			// [15/12/2013] Extra points! ~hogsy
 			if(!(eTarget->v.flags & FL_ONGROUND))
 			{
@@ -473,11 +479,26 @@ void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
 	else
 		eTarget->v.bTakeDamage = false;
 
+    // [22/4/2014] Drop the currently equipped item for the player to pick up! ~hogsy
+    {
+        Weapon_t *wActive = Weapon_GetCurrentWeapon(eTarget);
+        if(wActive && (wActive->iItem != WEAPON_LASERS))
+        {
+            edict_t *eDroppedItem = Entity_Spawn();
+
+            Math_VectorCopy(eTarget->v.origin,eDroppedItem->v.origin);
+
+            eDroppedItem->local.style = wActive->iItem;
+
+            Item_Spawn(eDroppedItem);
+        }
+    }
+
 	if(eTarget->monster.think_die)
 		eTarget->monster.think_die(eTarget,eAttacker);
 }
 
-void MONSTER_Damage(edict_t *target,edict_t *inflictor,int iDamage)
+void MONSTER_Damage(edict_t *target,edict_t *inflictor,int iDamage, int iDamageType)
 {
 	/*	TODO
 		If the new inflicted damage is greater
@@ -492,15 +513,17 @@ void MONSTER_Damage(edict_t *target,edict_t *inflictor,int iDamage)
 	*/
 	if(!target->v.bTakeDamage || target->v.flags & FL_GODMODE)
 		return;
+	if(!Entity_CanDamage(inflictor, target, iDamageType))
+		return;
 
 	// [28/8/2012] Blood is now handled here :) ~hogsy
 	if(target->local.bBleed)
 		Engine.Particle(target->v.origin,target->v.velocity,10.0f,"blood",20);
 
 	// [3/10/2012] Only do this for clients ~hogsy
-	if(inflictor->monster.iType == MONSTER_PLAYER)
+	if(Entity_IsPlayer(inflictor))
 	{
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 		if(inflictor->local.power_finished > Server.dTime)
 			iDamage *= 3;
 #endif
@@ -510,10 +533,17 @@ void MONSTER_Damage(edict_t *target,edict_t *inflictor,int iDamage)
 		if(cvServerSkill.value >= 3)
 			iDamage /= 2;
 	}
-	else if(inflictor->monster.iType != MONSTER_PLAYER)
+	else if(Entity_IsMonster(inflictor))
+	{
 		// [3/10/2012] Double if we're a monster ~hogsy
 		if(cvServerSkill.value >= 3)
 			iDamage *= 2;
+	}
+
+	if(Entity_IsMonster(target))
+		// [27/4/2014] Automatically wake us up if asleep ~hogsy
+		if(target->monster.iState == STATE_ASLEEP)
+			Monster_SetState(target,STATE_AWAKE);
 
 	target->v.iHealth -= iDamage;
 	if(target->v.iHealth <= 0)
@@ -538,7 +568,7 @@ void MONSTER_WaterMove(edict_t *ent)
 		if(ent->local.iDamage > 15)
 			ent->local.iDamage = 10;
 
-		MONSTER_Damage(ent,Server.eWorld,ent->local.iDamage);
+		MONSTER_Damage(ent,Server.eWorld,ent->local.iDamage,ent->local.iDamageType);
 
 		ent->local.dPainFinished = Server.dTime+1.0;
 	}
@@ -658,7 +688,7 @@ edict_t *Monster_GetTarget(edict_t *eMonster)
 	{
 		// [6/6/2013] Only return if it's a new target and a monster type! ~hogsy
 		if(	(eMonster != eTargets)																&&
-			(eTargets != eMonster->monster.eTarget && eTargets != eMonster->monster.eOldTarget) && 
+			(eTargets != eMonster->monster.eTarget && eTargets != eMonster->monster.eOldTarget) &&
 			(eTargets->monster.iType != MONSTER_NONE)											&&
 			(eTargets->monster.iType != eMonster->monster.iType))
 			// [11/6/2013] Quick crap thrown in to check if the target is visible or not... ~hogsy
@@ -794,6 +824,7 @@ void Monster_Frame(edict_t *eMonster)
 			Engine.Con_Warning("No think was set for %s at spawn!\n",eMonster->v.cClassname);
 
 			Monster_SetThink(eMonster,THINK_IDLE);
+			return;
 		}
 		break;
 	default:
@@ -825,7 +856,7 @@ bool Monster_WalkMove(edict_t *ent,float yaw,float dist)
 	if(!(ent->v.flags & (FL_ONGROUND|FL_FLY|FL_SWIM)))
 		return false;
 
-	yaw *= (float)M_PI*2.0f/360.0f;
+	yaw *= (float)pMath_PI*2.0f/360.0f;
 
 	move[0] = (vec_t)cos(yaw)*dist;
 	move[1] = (vec_t)sin(yaw)*dist;
@@ -837,6 +868,21 @@ bool Monster_WalkMove(edict_t *ent,float yaw,float dist)
 /*
 	Movement
 */
+
+void Monster_MoveForward(edict_t *eMonster)
+{
+	if(!(eMonster->v.flags & FL_ONGROUND))
+		return;
+}
+
+void Monster_MoveBackward(void)
+{}
+
+void Monster_MoveLeft(void)
+{}
+
+void Monster_MoveRight(void)
+{}
 
 /*	Allows a monster to jump with the given velocity.
 */

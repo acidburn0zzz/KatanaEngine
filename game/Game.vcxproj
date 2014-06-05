@@ -5,10 +5,6 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Editor|Win32">
-      <Configuration>Editor</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -18,7 +14,7 @@
     <ProjectGuid>{6BA71186-7156-4A79-ABAD-FC46D4492EA0}</ProjectGuid>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <RootNamespace>Menu</RootNamespace>
-    <ProjectName>Example Game</ProjectName>
+    <ProjectName>OpenKatana</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -32,14 +28,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -48,9 +37,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -70,40 +56,51 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;..\shared;..\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_AFX_SECURE_NO_WARNINGS;_ATL_SECURE_NO_WARNINGS;GAME_EXAMPLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;./server;./client;../shared;../platform/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_AFX_SECURE_NO_WARNINGS;_ATL_SECURE_NO_WARNINGS;GAME_OPENKATANA;OPENKATANA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <OutputFile>..\bin\example\game.x86.dll</OutputFile>
+      <OutputFile>..\..\openkatana\game.x86.dll</OutputFile>
       <AdditionalLibraryDirectories>..\platform\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\game\Shared\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <OutputFile>..\..\..\data\menu.dll</OutputFile>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\shared_math.c" />
+    <ClCompile Include="client\client_effects.c" />
     <ClCompile Include="client\client_main.c" />
     <ClCompile Include="game_main.c" />
     <ClCompile Include="server\monster_bot.c" />
+    <ClCompile Include="server\openkatana\mode_ctf.c" />
+    <ClCompile Include="server\openkatana\mode_deathmatch.c" />
+    <ClCompile Include="server\openkatana\mode_vektar.c" />
+    <ClCompile Include="server\openkatana\monster_inmater.c" />
+    <ClCompile Include="server\openkatana\monster_lasergat.c" />
+    <ClCompile Include="server\openkatana\monster_prisoner.c" />
+    <ClCompile Include="server\openkatana\weapon_axe.c" />
+    <ClCompile Include="server\openkatana\weapon_ballista.c" />
+    <ClCompile Include="server\openkatana\weapon_barrier.c" />
+    <ClCompile Include="server\openkatana\weapon_c4vizatergo.c" />
+    <ClCompile Include="server\openkatana\weapon_crossbow.c" />
+    <ClCompile Include="server\openkatana\weapon_daikatana.c" />
+    <ClCompile Include="server\openkatana\weapon_discus.c" />
+    <ClCompile Include="server\openkatana\weapon_glock.c" />
+    <ClCompile Include="server\openkatana\weapon_greekfire.c" />
+    <ClCompile Include="server\openkatana\weapon_hermes.c" />
+    <ClCompile Include="server\openkatana\weapon_ionblaster.c" />
+    <ClCompile Include="server\openkatana\weapon_ionrifle.c" />
+    <ClCompile Include="server\openkatana\weapon_kineticore.c" />
+    <ClCompile Include="server\openkatana\weapon_midas.c" />
+    <ClCompile Include="server\openkatana\weapon_pulserifle.c" />
+    <ClCompile Include="server\openkatana\weapon_shockwave.c" />
+    <ClCompile Include="server\openkatana\weapon_shotcycler6.c" />
+    <ClCompile Include="server\openkatana\weapon_sidewinder.c" />
+    <ClCompile Include="server\openkatana\weapon_trident.c" />
+    <ClCompile Include="server\openkatana\weapon_zeus.c" />
     <ClCompile Include="server\server_area.c" />
     <ClCompile Include="server\server_deco.c" />
     <ClCompile Include="server\server_entity.c" />
@@ -120,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\shared_client.h" />
+    <ClInclude Include="..\shared\shared_game.h" />
     <ClInclude Include="..\Shared\shared_math.h" />
     <ClInclude Include="..\Shared\shared_menu.h" />
     <ClInclude Include="game_main.h" />

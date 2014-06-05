@@ -4,6 +4,7 @@
 #define	__GAMERESOURCES__
 
 #ifdef GAME_OPENKATANA
+
 #define	VEKTAR_MODEL_STATUE		"models/vektar/statue.md2"
 #define	VEKTAR_SOUND_FINDING	"vektar/finding_loop.wav"
 #define	VEKTAR_SOUND_FANFARE	"vektar/fanfare.wav"
@@ -26,8 +27,6 @@
 */
 #define	DAIKATANA_MODEL_WORLD	"models/w_daikatana.md2"
 #define	DAIKATANA_MODEL_VIEW	"models/weapons/v_daikatana.md2"
-#elif GAME_EXAMPLE
-#endif
 
 /*	MODEL:	models/physics/
 	SOUND:	physics/
@@ -70,5 +69,17 @@
 #define WAYPOINT_MODEL_SPAWN	"models/debug/waypoint_spawn.md2"
 #define WAYPOINT_MODEL_SWIM		"models/debug/waypoint_swim.md2"
 #define WAYPOINT_MODEL_WEAPON	"models/debug/waypoint_weapon.md2"
+
+#define PARTICLE_SMOKE(a)   sprintf(a,"smoke%i",rand()%4)
+#define PARTICLE_SMOKE0     "smoke0"
+#define PARTICLE_SMOKE1     "smoke1"
+#define PARTICLE_SMOKE2     "smoke2"
+#define PARTICLE_SMOKE3     "smoke3"
+
+#endif
+
+#define BASE_SOUND_TALK0    "misc/talk1.wav"
+#define BASE_SOUND_TALK1    "misc/talk2.wav"
+#define BASE_SOUND_TALK2    "misc/talk3.wav"
 
 #endif

@@ -43,7 +43,7 @@ SpawnList_t SpawnList[] =
 	{	"area_door_rotate",	Point_NullSpawn		},
 	{	"area_noclip",		Area_NoclipSpawn	},
 	{	"area_push",		Area_PushSpawn		},
-	{	"area_debris",		Area_PushableSpawn	},
+	{	"area_debris",		Area_PushableSpawn	},	// [25/9/2013] For compatability ~hogsy
 	{	"area_pushable",	Area_PushableSpawn	},
 	{	"area_platform",	Area_PlatformSpawn	},
 	{	"area_rotate",		Area_RotateSpawn	},
@@ -61,7 +61,7 @@ SpawnList_t SpawnList[] =
 	{	"point_lightstyle",		Point_LightstyleSpawn	},
 	{	"point_logic",			Point_LogicSpawn		},
 	{	"point_message",		Point_MessageSpawn		},
-	{	"point_monster",		Point_MonsterSpawn		},
+//	{	"point_monster",		Point_MonsterSpawn		},
 	{	"point_multitrigger",	Point_MultiTriggerSpawn	},
 	{	"point_vehicle",		Point_VehicleSpawn		},
 	{	"point_null",			Point_NullSpawn			},
@@ -83,25 +83,25 @@ SpawnList_t SpawnList[] =
 	{	NULL,	NULL	}
 };
 
-cvar_t	cvServerPlayerModel		= { "server_playermodel",	"models/player.md2",	false,	true,   "Sets the main server-side player model."	        };
-cvar_t	cvServerRespawnDelay	= { "server_respawndelay",	"40",					false,	true,	"Sets the amount of time until a player respawns."  };
-cvar_t	cvServerSkill			= { "server_skill",			"1",					false,	true,   "The level of difficulty."	                        };
-cvar_t	cvServerSelfDamage		= { "server_selfdamage",	"0",					false,	true,	"If enabled, your weapons can damage you."          };
+cvar_t	cvServerPlayerModel		= { "server_playermodel",	"models/player.md2",	false,	true,   "Sets the main server-side player model."	            };
+cvar_t	cvServerRespawnDelay	= { "server_respawndelay",	"40",					false,	true,	"Sets the amount of time until a player respawns."      };
+cvar_t	cvServerSkill			= { "server_skill",			"1",					false,	true,   "The level of difficulty."	                            };
+cvar_t	cvServerSelfDamage		= { "server_selfdamage",	"0",					false,	true,	"If enabled, your weapons can damage you."              };
 // [7/12/2012] Changed default maxhealth to 200 ~hogsy
-cvar_t	cvServerMaxHealth		= { "server_maxhealth",		"200",					false,	true,   "Sets the max amount of health."	                };
-cvar_t	cvServerDefaultHealth	= {	"server_defaulthealth",	"100",					false,	true,   "Changes the default amount of health."	            };
-cvar_t	cvServerMonsters		= { "server_monsters",		"1",					false,	true,   "If enabled, monsters can spawn."	                };
+cvar_t	cvServerMaxHealth		= { "server_maxhealth",		"200",					false,	true,   "Sets the max amount of health."	                    };
+cvar_t	cvServerDefaultHealth	= {	"server_defaulthealth",	"100",					false,	true,   "Changes the default amount of health."	                };
+cvar_t	cvServerMonsters		= { "server_monsters",		"1",					false,	true,   "If enabled, monsters can spawn."	                    };
 cvar_t	cvServerMaxScore		= { "server_maxscore",		"20",					false,	true	};
-cvar_t	cvServerGameMode		= { "server_gamemode",		"0",					false,	true	};
+cvar_t	cvServerGameMode		= { "server_gamemode",		"0",					false,	true,   "Sets the active mode of play."	                        };
 cvar_t	cvServerGameTime		= {	"server_gametime",		"120",					false,	true	};
 cvar_t	cvServerGameClients		= { "server_gameclients",	"2",					false,	true	};
-cvar_t	cvServerWaypointDelay	= { "server_waypointdelay",	"5.0",					false,	true	};
+cvar_t	cvServerWaypointDelay	= { "server_waypointdelay",	"5.0",					false,	true,   "Delay before attempting to spawn another waypoint."	};
 cvar_t	cvServerWaypointSpawn	= { "server_waypointspawn",	"1",					false,	true	};
-cvar_t	cvServerWaypointParse	= { "server_waypointparse",	"",						false,	true	};
+cvar_t	cvServerWaypointParse	= { "server_waypointparse",	"",						false,	true    };
 // [19/3/2013] Replacement for the engine-side variable ~hogsy
 cvar_t	cvServerGravityTweak	= {	"server_gravityamount",	"1.0",					false,	true	};
 cvar_t	cvServerGravity			= {	"server_gravity",		"600.0",				false,	true	};
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 // [20/1/2013] By default bots spawn in OpenKatana for both SP and MP ~hogsy
 cvar_t	cvServerBots			= {	"server_bots",			"1",					false,	true	};
 #else
@@ -191,7 +191,6 @@ void Server_Spawn(edict_t *ent)
 		Server.bRoundStarted = true;
 	}
 
-#ifdef GAME_OPENKATANA	// [22/4/2013] OpenKatana specific stuff is now here instead ~hogsy
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"misc/deny.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,BASE_SOUND_TALK0);
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,BASE_SOUND_TALK1);
@@ -225,6 +224,7 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/gib1.md2");
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/gib2.md2");
 
+#ifdef GAME_OPENKATANA	// [22/4/2013] OpenKatana specific stuff is now here instead ~hogsy
 	// [29/7/2012] Player sounds ~hogsy
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerjump5.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerjump6.wav");
@@ -257,18 +257,6 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/blip.md2");
 	// [4/2/2013] Moved here since he's used in singleplayer too :) ~hogsy
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/sprfly.md2");
-
-	// [21/3/2012] Updated ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"blood");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"poison");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"smoke0");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"smoke1");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"smoke2");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"smoke3");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark2");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"ice");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"zspark");
 #endif
 
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,cvServerPlayerModel.string);
@@ -302,6 +290,18 @@ void Server_Spawn(edict_t *ent)
 		// [31/7/2013] TODO: Get actual current game directory from the engine ~hogsy
 		//gFileSystem_ScanDirectory("data/models/player/*.md2",Server_PrecachePlayerModel);
 	}
+
+	// [21/3/2012] Updated ~hogsy
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"blood");
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"poison");
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE0);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE1);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE2);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE3);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark");
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark2");
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"ice");
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"zspark");
 
 	Weapon_Precache();
 
@@ -357,8 +357,8 @@ void Server_EntityFrame(edict_t *eEntity)
 */
 void Server_KillClient(edict_t *eClient)
 {
-	if(eClient->v.deadflag != DEAD_DEAD)
-		MONSTER_Damage(eClient,eClient,eClient->v.iHealth);
+	if(eClient->monster.iState != STATE_DEAD)
+		MONSTER_Damage(eClient,eClient,eClient->v.iHealth, 0);
 }
 
 /*	General function for globally updating the HUD for clients.

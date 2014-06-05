@@ -1,5 +1,8 @@
 /*	Copyright (C) 2011-2014 OldTimes Software
 */
+#ifndef __SERVERWAYPOINT__
+#define __SERVERWAYPOINT__
+
 #include "server_main.h"
 
 //#define	DEBUG_WAYPOINT
@@ -45,3 +48,5 @@ Waypoint_t	*Waypoint_GetByType(edict_t *eMonster,int iType,float fMaxDistance);
 Waypoint_t	*Waypoint_GetByVisibility(vec3_t origin);
 
 bool Waypoint_IsSafe(edict_t *eMonster,Waypoint_t *wPoint);
+
+#endif

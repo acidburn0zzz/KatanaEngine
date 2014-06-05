@@ -6,6 +6,7 @@
 
 #include "server_waypoint.h"
 #include "server_vehicle.h"
+#include "server_physics.h"
 
 enum
 {
@@ -653,7 +654,7 @@ void Point_EffectUse(edict_t *eEntity)
 	{
 		case 1:
 			// [15/8/2013] Updated ~hogsy
-			Entity_RadiusDamage(eEntity,MONSTER_RANGE_MEDIUM,eEntity->local.iDamage);
+			Entity_RadiusDamage(eEntity,MONSTER_RANGE_MEDIUM,eEntity->local.iDamage, eEntity->local.iDamageType);
 			break;
 		case 2:
 			Engine.WriteByte(MSG_BROADCAST,SVC_TEMPENTITY);
@@ -692,9 +693,18 @@ void Point_EffectSpawn(edict_t *eEntity)
 	Damage
 */
 
+enum
+{
+	DAMAGE_NORMAL,
+	DAMAGE_BURN,
+	DAMAGE_FREEZE,
+	DAMAGE_EXPLODE,
+	DAMAGE_GRAVITY
+};
+
 void Point_DamageUse(edict_t *eEntity)
 {
-	MONSTER_Damage(eEntity->local.activator,eEntity,eEntity->local.iDamage);
+	MONSTER_Damage(eEntity->local.activator,eEntity,eEntity->local.iDamage,DAMAGE_TYPE_NONE);
 
 	Engine.Con_Warning("JIRTT %i", eEntity->local.iDamage);
 }
@@ -703,6 +713,9 @@ void Point_DamageSpawn(edict_t *eEntity)
 {
 	if(!eEntity->local.iDamage)
 		eEntity->local.iDamage = 10;
+
+	if(!eEntity->local.style)
+		eEntity->local.style = 0;
 
 	eEntity->v.use = Point_DamageUse;
 

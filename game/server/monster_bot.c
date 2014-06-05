@@ -20,8 +20,11 @@
 	~hogsy
 */
 
+#include "server_monster.h"
+
 #include "server_waypoint.h"
 #include "server_weapon.h"
+#include "server_player.h"
 
 #define	BOT_MAX_HEALTH	100
 #define	BOT_MAX_SIGHT	900.0f
@@ -337,15 +340,6 @@ void Bot_Pain(edict_t *ent,edict_t *other)
 {
 	char		sound[MAX_QPATH];
 	Weapon_t	*wMyWeapon,*wHisWeapon;
-
-	if(ent->monster.iState == STATE_ASLEEP)
-	{
-		// [5/8/2012] Wake us up ~hogsy
-		Monster_SetState(ent,STATE_AWAKE);
-		// [14/9/2012] Immediately run if we were asleep since we'd be in shock! ~hogsy
-		Monster_SetThink(ent,THINK_FLEEING);
-		return;
-	}
 
 	// [4/10/2012] Let the player know how we're feeling :) ~hogsy
 	Bot_BroadcastMessage(ent,other);

@@ -40,6 +40,7 @@ Item_t Items[] =
 
 	// Unused weapons
 	{	WEAPON_GLOCK,		"Glock",		"models/weapons/w_glock.md2",		"items/weaponpickup.wav"	},
+	{   WEAPON_LASERS,      "Lasers",       "",                                 ""                          },
 
 	// Items
 	{	ITEM_PLASTEELARMOR,	"PLASTEEL ARMOR",	"models/plasteel.md2",		"items/armorpickup1.wav"					},
@@ -284,7 +285,7 @@ void Item_Touch(edict_t *eItem,edict_t *eOther)
 			if(iVizatergo)
 			{
 				eOther->local.iC4Ammo += 15;
-				
+
 				Item_AddInventory(iVizatergo,eOther);
 			}
 		}

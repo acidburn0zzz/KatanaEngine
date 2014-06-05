@@ -8,8 +8,9 @@
 
 #include "platform_module.h"
 
-#include "server\server_main.h"
-#include "client\client_main.h"
+#include "server_player.h"
+
+#include "client_main.h"
 
 ModuleExport_t	Export;	// Game exports.
 ModuleImport_t	Engine;	// Engine imports.
@@ -105,6 +106,38 @@ trace_t Traceline(edict_t *ent,vec3_t vStart,vec3_t vEnd,int type)
 void Sound(edict_t *ent,int channel,char *sound,int volume,float attenuation)
 {
 	Engine.Sound(ent,channel,sound,volume,attenuation);
+
+	/* TODO
+	// [21/3/2012] Revised ~hogsy
+	#define SOUND_DEFAULT	0
+	#define SOUND_REFERENCE	1
+
+	edict_t *sound;
+
+	if(type)
+		sound = Spawn();
+	else
+		return;
+
+	switch(type)
+	{
+	case SOUND_REFERENCE:
+		if(volume >= 0.5f)
+		{
+			sound->v.cClassname = "sound_reference";
+
+			SetOrigin(sound,ent->v.origin);
+
+			sound->v.think		= RemoveEntity(ref);
+			sound->v.dNextThink	= (Server.time+0.01)*volume;
+		}
+		else
+			RemoveEntity(sound);
+		break;
+	default:
+		RemoveEntity(sound);
+	}
+	*/
 }
 
 void Flare(vec3_t org,float r,float g,float b,float a,float scale,char *texture)
@@ -122,8 +155,7 @@ void WriteByte(int mode,int c)
 	Engine.WriteByte(mode,c);
 }
 
-/*	Obsolete initialization function.
-*/
+// Future replacement for SV_Init and CL_Init ~hogsy
 bool Game_Init(int state,edict_t *ent,double dTime)
 {
 	Server.dTime = dTime;
@@ -151,6 +183,7 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 		Entity_Remove(ent);
 		break;
 	case SERVER_STARTFRAME:
+		Deathmatch_Frame();
 		break;
 	case SERVER_SETCHANGEPARMS:
 		if(ent->v.iHealth <= 0)
@@ -171,6 +204,10 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 
 	return true;
 }
+
+#include "server_physics.h"
+
+//ModuleImport_t	*Engine; (replacement for Game)
 
 pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 {
@@ -222,24 +259,23 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Engine.Server_AmbientSound		= Import->Server_AmbientSound;
 
 	Export.Version						= MODULE_VERSION2;
-	Export.Name							=
-#ifdef GAME_EXAMPLE
-		"Example Game";
-#elif GAME_OPENKATANA
-		"OpenKatana";
+#ifdef GAME_OPENKATANA
+	Export.Name							= "OpenKatana";
+#elif ICTUS
+	Export.Name							= "Ictus";
 #else
-		"Katana";
+	Export.Name							= "Katana";
 #endif
 	Export.Server_SpawnEntity			= Server_SpawnEntity;
-	Export.Server_CheckWaterTransition	= Server_CheckWaterTransition;
-	Export.Server_CheckVelocity			= Server_CheckVelocity;
+	Export.Server_CheckWaterTransition	= Physics_CheckWaterTransition;
+	Export.Server_CheckVelocity			= Physics_CheckVelocity;
 	Export.Server_EntityFrame			= Server_EntityFrame;
 	Export.Server_KillClient			= Server_KillClient;
 	Export.Server_SetSizeVector			= Entity_SetSizeVector;
 	Export.Server_SpawnPlayer			= Player_Spawn;
 	Export.ChangeYaw					= ChangeYaw;
 	Export.SetSize						= Entity_SetSize;
-	//Export.Draw						= Client_Draw;
+	Export.Draw							= Client_Draw;
 	Export.Game_Init					= Game_Init;
 
 	Export.Client_RelinkEntities		= Client_RelinkEntities;

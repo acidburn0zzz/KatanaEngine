@@ -5,8 +5,6 @@
 
 #include "server_main.h"
 
-#include "server_item.h"
-
 /*	Ammo types.
 */
 typedef enum
@@ -73,7 +71,6 @@ void Shotcycler_PrimaryAttack(edict_t *ent);
 void SideWinder_PrimaryAttack(edict_t *eOwner);
 void Zeus_PrimaryAttack(edict_t *ent);
 void IonRifle_PrimaryAttack(edict_t *eOwner);
-
 void IonRifle_SecondaryAttack(edict_t *eOwner);
 #endif
 
@@ -103,14 +100,11 @@ Weapon_t *Weapon_GetWeapon(int iWeaponID);
 
 void Weapon_Precache(void);
 void Weapon_SetActive(Weapon_t *wWeapon,edict_t *eEntity);
-void Weapon_BulletProjectile(edict_t *ent,float spread,int damage, vec3_t vVector);
-void WEAPON_CheckFrames(edict_t *ent);
+void Weapon_BulletProjectile(edict_t *ent,float spread,int damage,vec3_t vVector);
+void Weapon_CheckFrames(edict_t *eEntity);
 void WEAPON_Animate(edict_t *ent,EntityFrame_t *eFrames);
+void Weapon_PrimaryAttack(edict_t *eEntity);
 void Weapon_CheckInput(edict_t *eEntity);
-void Weapon_KickUp(edict_t *eEntity);
-void Weapon_KickDown(edict_t *eEntity);
-void Weapon_KickLeft(edict_t *eEntity);
-void Weapon_KickRight(edict_t *eEntity);
 
 bool Weapon_CheckPrimaryAmmo(Weapon_t *wWeapon,edict_t *eEntity);
 bool Weapon_CheckSecondaryAmmo(Weapon_t *wWeapon,edict_t *eEntity);
