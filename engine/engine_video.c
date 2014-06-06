@@ -336,7 +336,7 @@ bool Video_CreateWindow(void)
 	glClearColor(0,0,0,0);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
-	glAlphaFunc(GL_GREATER,0.666f);
+	glAlphaFunc(GL_GREATER,0.4f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glShadeModel(GL_SMOOTH);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
