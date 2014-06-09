@@ -61,8 +61,8 @@ bool pFileSystem_CreateDirectory(const char *ccPath)
 */
 void pFileSystem_GetUserName(char *cOut)
 {
-	char	cUser[128] = "user";
 #ifdef _WIN32
+    char	cUser[128] = "user";
 	DWORD	dName;
 
 	pERROR_UPDATE;
@@ -72,6 +72,8 @@ void pFileSystem_GetUserName(char *cOut)
 
 	if(GetUserName(cUser,&dName))
 #else   // Linux
+    char *cUser;
+
     cUser = getenv("LOGNAME");
 	if(strcasecmp(cUser,"user"))
 #endif

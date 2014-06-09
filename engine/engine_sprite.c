@@ -96,13 +96,11 @@ void Sprite_Draw(entity_t *eEntity)
 	{
 		VideoObject_t voSprite[4];
 
-		if(
-
 		voSprite[0].vTextureCoord[0][0]	=
 		voSprite[0].vTextureCoord[0][1]	= 0;
 		voSprite[1].vTextureCoord[0][0]	= 1.0f;
 		voSprite[1].vTextureCoord[0][1]	= 0;
-		voSprite[2].vTextureCoord[0][0]	= 
+		voSprite[2].vTextureCoord[0][0]	=
 		voSprite[2].vTextureCoord[0][1]	= 1.0f;
 		voSprite[3].vTextureCoord[0][0]	= 0;
 		voSprite[3].vTextureCoord[0][1]	= 1.0f;
@@ -116,7 +114,7 @@ void Sprite_Draw(entity_t *eEntity)
 		Math_VectorMA(sSprite->vOrigin,sSprite->fScale,vup,voSprite[1].vVertex);
 		Math_VectorMA(voSprite[1].vVertex,sSprite->fScale,vright,voSprite[2].vVertex);
 		Math_VectorMA(sSprite->vOrigin,sSprite->fScale,vright,voSprite[3].vVertex);
-		
+
 		Video_DrawFill(voSprite);
 	}
 
