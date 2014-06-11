@@ -6,35 +6,30 @@ int		*planemapping;
 
 //===========================================================================
 
-/*
-==================
-FindFinalPlane
-
-Used to find plane index numbers for clip nodes read from child processes
-==================
+/*	Used to find plane index numbers for clip nodes read from child processes.
 */
 int FindFinalPlane( vec3_t normal, vec_t dist, int type )
 {
 	int			i;
-	dplane_t	*dplane;
+	BSPPlane_t	*dplane;
 
 	for( i = 0, dplane = dplanes; i < numplanes; i++, dplane++ ) {
-		if( dplane->type != type
-			|| dplane->dist != dist
-			|| dplane->normal[0] != normal[0]
-			|| dplane->normal[1] != normal[1]
-			|| dplane->normal[2] != normal[2])
+		if( dplane->iType != type
+			|| dplane->fDist != dist
+			|| dplane->fNormal[0] != normal[0]
+			|| dplane->fNormal[1] != normal[1]
+			|| dplane->fNormal[2] != normal[2])
 			continue;
 		return i;
 	}
 
 	// new plane
-	if( numplanes == MAX_MAP_PLANES )
-		Error( "numplanes == MAX_MAP_PLANES" );
+	if( numplanes == BSP_MAX_PLANES )
+		Error( "numplanes == BSP_MAX_PLANES" );
 
-	dplane->type = type;
-	dplane->dist = dist;
-	VectorCopy( normal, dplane->normal );
+	dplane->iType = type;
+	dplane->fDist = dist;
+	VectorCopy( normal, dplane->fNormal );
 
 	return numplanes++;
 }
@@ -59,19 +54,18 @@ static void EmitNodePlanes_r( node_t *node )
 
 void EmitNodePlanes( node_t *nodes )
 {
-//	qprintf( "--- EmitNodePlanes ---\n" );
-
 	EmitNodePlanes_r( nodes );
 }
 
 static int EmitClipNodes_r( node_t *node )
 {
-	int			i, c;
-	dclipnode_t	*cn;
-	int			num;
+	int				i, c;
+	BSPClipNode_t	*cn;
+	int				num;
 
 	// FIXME: free more stuff?
-	if( node->planenum == PLANENUM_LEAF ) {
+	if( node->planenum == PLANENUM_LEAF ) 
+	{
 		num = node->contents;
 		FreeNode( node );
 		return num;
@@ -79,9 +73,9 @@ static int EmitClipNodes_r( node_t *node )
 
 	c = numclipnodes;
 	cn = &dclipnodes[numclipnodes++];	// emit a clipnode
-	cn->planenum = node->outputplanenum;
+	cn->iPlaneNum = node->outputplanenum;
 	for( i = 0; i < 2; i++ )
-		cn->children[i] = EmitClipNodes_r( node->children[i] );
+		cn->iChildren[i] = EmitClipNodes_r( node->children[i] );
 
 	FreeNode( node );
 
@@ -100,7 +94,7 @@ void EmitClipNodes( node_t *nodes, int modnum, int hullnum )
 {
 //	qprintf( "--- EmitClipNodes ---\n" );
 
-	dmodels[modnum].headnode[hullnum] = numclipnodes;
+	dmodels[modnum].iHeadNode[hullnum] = numclipnodes;
 	EmitClipNodes_r( nodes );
 }
 
@@ -108,8 +102,8 @@ void EmitVertex( vec3_t point )
 {
 	BSPVertex_t	*vert;
 
-	if( numvertexes == MAX_MAP_VERTS )
-		Error( "numvertexes == MAX_MAP_VERTS" );
+	if( numvertexes == BSP_MAX_VERTS )
+		Error( "numvertexes == BSP_MAX_VERTS" );
 
 	vert = &dvertexes[numvertexes++];	// emit a vertex
 
@@ -118,10 +112,10 @@ void EmitVertex( vec3_t point )
 
 void EmitEdge( int v1, int v2 )
 {
-	dedge_t		*edge;
+	BSPEdge_t	*edge;
 
-	if( numedges == MAX_MAP_EDGES )
-		Error( "numedges == MAX_MAP_EDGES" );
+	if( numedges == BSP_MAX_EDGES )
+		Error( "numedges == BSP_MAX_EDGES" );
 
 	edge = &dedges[numedges++];	// emit an edge
 	edge->v[0] = v1;
@@ -131,68 +125,68 @@ void EmitEdge( int v1, int v2 )
 static void EmitLeaf( node_t *node )
 {
 	face_t		**fp, *f;
-	dleaf_t		*leaf_p;
+	BSPLeaf_t	*leaf_p;
 
 	if( numleafs == BSP_MAX_LEAFS )
 		Error( "numleafs == BSP_MAX_LEAFS" );
 
 	leaf_p = &dleafs[numleafs++];	// emit a leaf
-	leaf_p->contents = node->contents;
-	leaf_p->visofs = -1;			// no vis info yet
+	leaf_p->iContents = node->contents;
+	leaf_p->iVisibilityOffset = -1;			// no vis info yet
 
 	// write bounding box info
-	VectorCopy( node->mins, leaf_p->mins );
-	VectorCopy( node->maxs, leaf_p->maxs );
+	VectorCopy( node->mins, leaf_p->fMins );
+	VectorCopy( node->maxs, leaf_p->fMaxs );
 
 	// write the marksurfaces
-	leaf_p->firstmarksurface = nummarksurfaces;
+	leaf_p->uiFirstMarkSurface = nummarksurfaces;
 
 	for( fp = node->markfaces; *fp ; fp++ ) 
 	{
 		for( f = *fp; f; f = f->original ) 
 		{	
 			// grab tjunction split faces
-			if( nummarksurfaces == MAX_MAP_MARKSURFACES )
-				Error( "nummarksurfaces == MAX_MAP_MARKSURFACES" );
+			if( nummarksurfaces == BSP_MAX_MARKSURFACES )
+				Error( "nummarksurfaces == BSP_MAX_MARKSURFACES" );
 			if( f->outputnumber == -1 )
 				Error( "f->outputnumber == -1" );
 			dmarksurfaces[nummarksurfaces++] = f->outputnumber;		// emit a marksurface
 		}
 	}
 
-	leaf_p->nummarksurfaces = nummarksurfaces - leaf_p->firstmarksurface;
+	leaf_p->uiNumMarkSurfaces = nummarksurfaces - leaf_p->uiFirstMarkSurface;
 }
 
 void EmitDrawNodes_r( node_t *node )
 {
 	int			i;
-	dnode_t		*n;
+	BSPNode_t	*n;
 
-	if( numnodes == MAX_MAP_NODES )
-		Error( "numnodes == MAX_MAP_NODES" );
+	if( numnodes == BSP_MAX_NODES )
+		Error( "numnodes == BSP_MAX_NODES" );
 
 	n = &dnodes[numnodes++];		// emit a node
-	n->planenum = node->outputplanenum;
-	n->firstface = node->firstface;
-	n->numfaces = node->numfaces;
-	VectorCopy( node->mins, n->mins );
-	VectorCopy( node->maxs, n->maxs );
+	n->iPlaneNum	= node->outputplanenum;
+	n->usFirstFace	= node->firstface;
+	n->usNumFaces	= node->numfaces;
+	VectorCopy( node->mins, n->fMins );
+	VectorCopy( node->maxs, n->fMaxs );
 
 	// recursively output the other nodes
 	for( i = 0; i < 2; i++ ) 
 	{
 		if( node->children[i]->planenum == PLANENUM_LEAF ) 
 		{
-			n->children[i] = -1;
+			n->iChildren[i] = -1;
 
 			if( node->children[i]->contents != BSP_CONTENTS_SOLID ) {
-				n->children[i] = -(numleafs + 1);
+				n->iChildren[i] = -(numleafs + 1);
 				EmitLeaf( node->children[i] );
 			}
 		} 
 		else 
 		{
-			n->children[i] = numnodes;
+			n->iChildren[i] = numnodes;
 			EmitDrawNodes_r( node->children[i] );
 		}
 	}
@@ -201,18 +195,18 @@ void EmitDrawNodes_r( node_t *node )
 void EmitDrawNodes( node_t *headnode )
 {
 	int			i;
-	dmodel_t	*bm;
+	BSPModel_t	*bm;
 	int			firstleaf;
 
 //	qprintf( "--- EmitDrawNodes ---\n" );
 
-	if( nummodels == MAX_MAP_MODELS )
-		Error( "nummodels == MAX_MAP_MODELS" );
+	if( nummodels == BSP_MAX_MODELS )
+		Error( "nummodels == BSP_MAX_MODELS" );
 
 	bm = &dmodels[nummodels++];		// emit a model
-	bm->headnode[0] = numnodes;
-	bm->firstface = firstface;
-	bm->numfaces = numfaces - firstface;
+	bm->iHeadNode[0] = numnodes;
+	bm->iFirstFace = firstface;
+	bm->iNumFaces = numfaces - firstface;
 	firstface = numfaces;
 
 	firstleaf = numleafs;
@@ -220,11 +214,11 @@ void EmitDrawNodes( node_t *headnode )
 		EmitLeaf( headnode );
 	else
 		EmitDrawNodes_r( headnode );
-	bm->visleafs = numleafs - firstleaf;
+	bm->iVisLeafs = numleafs - firstleaf;
 
 	for( i = 0; i < 3; i++ ) {
-		bm->mins[i] = headnode->mins[i] + SIDESPACE + 1;	// remove the padding
-		bm->maxs[i] = headnode->maxs[i] - SIDESPACE - 1;
+		bm->fMins[i] = headnode->mins[i] + SIDESPACE + 1;	// remove the padding
+		bm->fMaxs[i] = headnode->maxs[i] - SIDESPACE - 1;
 	}
 }
 
@@ -232,16 +226,16 @@ void BeginBSPFile( void )
 {
 	qprintf( "--- BeginBSPFile ---\n" );
 
-	planemapping = (int*)qmalloc( sizeof( *planemapping ) * MAX_MAP_PLANES );
-	memset( planemapping, -1, sizeof( *planemapping ) * MAX_MAP_PLANES );
+	planemapping = (int*)qmalloc( sizeof( *planemapping ) * BSP_MAX_PLANES );
+	memset( planemapping, -1, sizeof( *planemapping ) * BSP_MAX_PLANES );
 
 	// edge 0 is not used, because 0 can't be negated
 	numedges = 1;
 
 	// leaf 0 is common solid with no faces
 	numleafs = 1;
-	dleafs[0].contents = BSP_CONTENTS_SOLID;
-	dleafs[0].visofs = -1; // thanks to Vic for suggesting this line
+	dleafs[0].iContents = BSP_CONTENTS_SOLID;
+	dleafs[0].iVisibilityOffset = -1; // thanks to Vic for suggesting this line
 
 	firstface = 0;
 }

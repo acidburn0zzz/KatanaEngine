@@ -39,7 +39,7 @@ If a light has a targetname, generate a unique style in the 32-63 range
 int		numlighttargets;
 char	lighttargets[32][128];
 
-vec3_t	vTextureReflectivity[MAX_MAP_TEXINFO];
+vec3_t	vTextureReflectivity[BSP_MAX_TEXINFO];
 
 // [22/7/2012] Taken from Quake 2's BSP tools ~hogsy
 void Light_CalculateTextureReflectivity(void)
@@ -324,11 +324,11 @@ void ParseLightEntities( void )
 	}
 }
 
-#define LIGHTCHAINS (MAX_MAP_FACES * 64)
+#define LIGHTCHAINS (BSP_MAX_FACES * 64)
 
-lightchain_t *surfacelightchain[MAX_MAP_FACES];
+lightchain_t *surfacelightchain[BSP_MAX_FACES];
 lightchain_t lightchainbuf[LIGHTCHAINS];
-byte surfacehit[MAX_MAP_FACES];
+byte surfacehit[BSP_MAX_FACES];
 const directlight_t *novislight[BSP_MAX_ENTITIES];
 const directlight_t *alllight[BSP_MAX_ENTITIES];
 int novislights, alllights;
@@ -337,10 +337,10 @@ int lightchainbufindex;
 void LightWorld( void )
 {
 	int			i, k, n, m, count, pass, surfacesdone, lightvisibilitydone;
-	unsigned short	*mark;
+	unsigned int	*mark;
 	time_t		lightstarttime, oldtime, newtime;
 	directlight_t *light;
-	dleaf_t		*leaf;
+	BSPLeaf_t		*leaf;
 	int			lightcount = 0, castcount = 0, emptycount = 0, solidcount = 0, watercount = 0, slimecount = 0, lavacount = 0, skycount = 0, misccount = 0, ignorevis;
 	vec3_t		org;
 	char		name[8];
@@ -364,7 +364,7 @@ void LightWorld( void )
 		leaf = Light_PointInLeaf(light->origin);
 		ignorevis = false;
 
-		switch( leaf->contents )
+		switch( leaf->iContents )
 		{
 			case BSP_CONTENTS_EMPTY:
 				emptycount++;
@@ -394,28 +394,28 @@ void LightWorld( void )
 		if( ignorevis )
 			printf( "light at origin '%f %f %f' is in solid or sky, ignoring vis\n", light->origin[0], light->origin[1], light->origin[2] );
 
-		if( leaf->visofs == -1 || ignorevis || !lightvis || light->type == LIGHTTYPE_SUN )
+		if( leaf->iVisibilityOffset == -1 || ignorevis || !lightvis || light->type == LIGHTTYPE_SUN )
 		{
 			castcount += numfaces;
 			novislight[novislights++] = light;
 		}
 		else
 		{
-			DecompressVis( dvisdata + leaf->visofs, currentvis, (dmodels[0].visleafs + 7) >> 3 );
+			DecompressVis( dvisdata + leaf->iVisibilityOffset, currentvis, (dmodels[0].iVisLeafs + 7) >> 3 );
 			memset( surfacehit, 0, numfaces );
 
 			for( n = 0, leaf = dleafs + 1; n < numleafs; n++, leaf++ )
 			{
 				// leafs begin at 1
-				if( !leaf->nummarksurfaces )
+				if( !leaf->uiNumMarkSurfaces )
 					continue;
 				if( !(currentvis[n >> 3] & (1 << (n & 7))) )
 					continue;
 
-				if( (lightchainbufindex + leaf->nummarksurfaces) > LIGHTCHAINS )
+				if( (lightchainbufindex + leaf->uiNumMarkSurfaces) > LIGHTCHAINS )
 					Error( "LightWorld: ran out of light chains!  complain to maintainer of hlight\n" );
 
-				for( m = 0, mark = dmarksurfaces + leaf->firstmarksurface; m < leaf->nummarksurfaces; m++, mark++ )
+				for( m = 0, mark = dmarksurfaces + leaf->uiFirstMarkSurface; m < leaf->uiNumMarkSurfaces; m++, mark++ )
 				{
 					if( surfacehit[*mark] )
 						continue;
@@ -452,7 +452,7 @@ void LightWorld( void )
 	printf( "%4i lights will be cast onto %5i surfaces, %10i casts will be performed\n", lightcount, numfaces, castcount );
 
 	// LordHavoc: let there be light
-	count = dmodels[0].numfaces;
+	count = dmodels[0].iNumFaces;
 	VectorClear(org);
 	oldtime = time( NULL );
 
@@ -461,7 +461,7 @@ void LightWorld( void )
 	for (pass = 0;pass < 256;pass++)
 		for (m = pass; m < count;m += 256)
 		{
-			LightFace(dfaces + m + dmodels[0].firstface, surfacelightchain[m + dmodels[0].firstface], novislight, novislights, org);
+			LightFace(dfaces + m + dmodels[0].iFirstFace, surfacelightchain[m + dmodels[0].iFirstFace], novislight, novislights, org);
 			surfacesdone++;
 			newtime = time(NULL);
 			if (newtime != oldtime)
@@ -500,21 +500,14 @@ void LightWorld( void )
 		// LordHavoc: changed this to support origins on all submodels
 		GetVectorForKey( ent, "origin", org );
 
-		for( m = 0; m < dmodels[k].numfaces; m++ )
-			LightFace( dfaces + m + dmodels[k].firstface, NULL, alllight, alllights, org );
+		for( m = 0; m < dmodels[k].iNumFaces; m++ )
+			LightFace( dfaces + m + dmodels[k].iFirstFace, NULL, alllight, alllights, org );
 	}
 
 	printf( "\n%5i submodels done\nlightdatasize: %i\n", nummodels, lightdatasize );
 	printf( "c_occluded: %i\n", c_occluded );
 }
 
-/*
-========
-Light_Main
-
-light modelfile
-========
-*/
 int Light_Main( int argc, char **argv )
 {
 	double start, end;

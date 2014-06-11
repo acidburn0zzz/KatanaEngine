@@ -27,18 +27,18 @@ mxImage *mxTgaRead (const char *filename)
 	if(!fTGAFile)
 		return 0;
 
-	targa_header.id_length			= fgetc(fTGAFile);
-	targa_header.colormap_type		= fgetc(fTGAFile);
-	targa_header.image_type			= fgetc(fTGAFile);
+	targa_header.id_length			= (unsigned char)fgetc(fTGAFile);
+	targa_header.colormap_type		= (unsigned char)fgetc(fTGAFile);
+	targa_header.image_type			= (unsigned char)fgetc(fTGAFile);
 	targa_header.colormap_index		= (short)(fgetc(fTGAFile)+fgetc(fTGAFile)*256);
 	targa_header.colormap_length	= (short)(fgetc(fTGAFile)+fgetc(fTGAFile)*256);
-	targa_header.colormap_size		= fgetc(fTGAFile);
+	targa_header.colormap_size		= (unsigned char)fgetc(fTGAFile);
 	targa_header.x_origin			= (short)(fgetc(fTGAFile)+fgetc(fTGAFile)*256);
 	targa_header.y_origin			= (short)(fgetc(fTGAFile)+fgetc(fTGAFile)*256);
 	targa_header.width				= (short)(fgetc(fTGAFile)+fgetc(fTGAFile)*256);
 	targa_header.height				= (short)(fgetc(fTGAFile)+fgetc(fTGAFile)*256);
-	targa_header.pixel_size			= fgetc(fTGAFile);
-	targa_header.attributes			= fgetc(fTGAFile);
+	targa_header.pixel_size			= (unsigned char)fgetc(fTGAFile);
+	targa_header.attributes			= (unsigned char)fgetc(fTGAFile);
 
 	if(	((targa_header.image_type != 2) && (targa_header.image_type != 10)) ||
 		(targa_header.colormap_type != 0)									|| 
@@ -70,19 +70,19 @@ mxImage *mxTgaRead (const char *filename)
 				switch(targa_header.pixel_size) 
 				{
 				case 24:
-					blue		= getc(fTGAFile);
-					green		= getc(fTGAFile);
-					red			= getc(fTGAFile);
+					blue		= (unsigned char)getc(fTGAFile);
+					green		= (unsigned char)getc(fTGAFile);
+					red			= (unsigned char)getc(fTGAFile);
 					*pixbuf++	= red;
 					*pixbuf++	= green;
 					*pixbuf++	= blue;
 					*pixbuf++	= 255;
 					break;
 				default:
-					blue		= getc(fTGAFile);
-					green		= getc(fTGAFile);
-					red			= getc(fTGAFile);
-					alphabyte	= getc(fTGAFile);
+					blue		= (unsigned char)getc(fTGAFile);
+					green		= (unsigned char)getc(fTGAFile);
+					red			= (unsigned char)getc(fTGAFile);
+					alphabyte	= (unsigned char)getc(fTGAFile);
 					*pixbuf++	= red;
 					*pixbuf++	= green;
 					*pixbuf++	= blue;
@@ -101,7 +101,7 @@ mxImage *mxTgaRead (const char *filename)
 			pixbuf = targa_rgba + row*columns*4;
 			for(column=0; column<columns; ) 
 			{
-				packetHeader	= getc(fTGAFile);
+				packetHeader	= (unsigned char)getc(fTGAFile);
 				packetSize		= 1+(packetHeader & 0x7f);
 
 				if (packetHeader & 0x80) 
@@ -110,16 +110,16 @@ mxImage *mxTgaRead (const char *filename)
 					switch (targa_header.pixel_size) 
 					{
 						case 24:
-								blue		= getc(fTGAFile);
-								green		= getc(fTGAFile);
-								red			= getc(fTGAFile);
+								blue		= (unsigned char)getc(fTGAFile);
+								green		= (unsigned char)getc(fTGAFile);
+								red			= (unsigned char)getc(fTGAFile);
 								alphabyte	= 255;
 								break;
 						default:
-								blue		= getc(fTGAFile);
-								green		= getc(fTGAFile);
-								red			= getc(fTGAFile);
-								alphabyte	= getc(fTGAFile);
+								blue		= (unsigned char)getc(fTGAFile);
+								green		= (unsigned char)getc(fTGAFile);
+								red			= (unsigned char)getc(fTGAFile);
+								alphabyte	= (unsigned char)getc(fTGAFile);
 								break;
 					}
 	
@@ -147,19 +147,19 @@ mxImage *mxTgaRead (const char *filename)
 						switch (targa_header.pixel_size) 
 						{
 							case 24:
-									blue		= getc(fTGAFile);
-									green		= getc(fTGAFile);
-									red			= getc(fTGAFile);
+									blue		= (unsigned char)getc(fTGAFile);
+									green		= (unsigned char)getc(fTGAFile);
+									red			= (unsigned char)getc(fTGAFile);
 									*pixbuf++	= red;
 									*pixbuf++	= green;
 									*pixbuf++	= blue;
 									*pixbuf++	= 255;
 									break;
 							default:
-									blue		= getc(fTGAFile);
-									green		= getc(fTGAFile);
-									red			= getc(fTGAFile);
-									alphabyte	= getc(fTGAFile);
+									blue		= (unsigned char)getc(fTGAFile);
+									green		= (unsigned char)getc(fTGAFile);
+									red			= (unsigned char)getc(fTGAFile);
+									alphabyte	= (unsigned char)getc(fTGAFile);
 									*pixbuf++	= red;
 									*pixbuf++	= green;
 									*pixbuf++	= blue;

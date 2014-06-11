@@ -198,14 +198,30 @@ typedef struct
 	BSP Format
 */
 
-#define	BSP_HEADER	(('K'<<24)+('P'<<16)+('S'<<8)+'B')
-
 #define	BSP_VERSION	4
 #define	BSP_VERSION_4	// Enable support for version 4 feature set.
 
-#define	BSP_MAX_HULLS		16
-#define	BSP_MAX_LEAFS		32767
-#define	BSP_MAX_ENTITIES	32768
+#define	BSP_HEADER		(('P'<<16)+('S'<<8)+'B')	// For easy identification.
+#define	BSP_HEADER_SIZE	8									// "BSP" followed by version number.
+
+#define	BSP_MAX_HULLS			16
+#define	BSP_MAX_LEAFS			32768//0x400000
+#define	BSP_MAX_ENTITIES		32768
+#define	BSP_MAX_VERTS			65535//0x100000  1048576
+#define	BSP_MAX_MODELS			4096
+#define	BSP_MAX_BRUSHES			4096//0x100000
+#define	BSP_MAX_ENTSTRING		65536//0x400000  4194304
+#define	BSP_MAX_PLANES			65535//0x200000
+#define	BSP_MAX_NODES			65535//0x200000
+#define	BSP_MAX_CLIPNODES		65535//0x800000
+#define	BSP_MAX_FACES			65535//0x200000
+#define	BSP_MAX_MARKSURFACES	65535//0x400000
+#define	BSP_MAX_TEXINFO			4096//0x100000
+#define	BSP_MAX_EDGES			65535//0x400000
+#define	BSP_MAX_SURFEDGES		65535//0x800000
+#define	BSP_MAX_MIPTEX			65535//0x1000000
+#define	BSP_MAX_LIGHTING		65535//0x1000000
+#define	BSP_MAX_VISIBILITY		65535//0x1000000
 
 /*	Different content types
 	set for brushes by Katana Level.
@@ -256,18 +272,18 @@ typedef struct
 
 typedef struct
 {
-	int			iIdentification,
-				iVersion;
+	int			iVersion;
 	BSPLump_t	bLumps[HEADER_LUMPS];
 } BSPHeader_t;
 
 typedef struct
 {
-	float	fMins[3],fMaxs[3];
-	float	fOrigin[3];
-	int		iHeadNode[BSP_MAX_HULLS];
-	int		iVisLeafs;
-	int		iFirstFace,iNumFaces;
+	float	fMins[3],fMaxs[3],
+			fOrigin[3];
+
+	int		iHeadNode[BSP_MAX_HULLS],
+			iVisLeafs,
+			iFirstFace,iNumFaces;
 } BSPModel_t;
 
 typedef struct
@@ -284,39 +300,43 @@ typedef struct
 
 typedef struct
 {
-	int					iPlaneNum;
-	short				sChildren[2];
-	short				sMins[3],sMaxs[3];
-	unsigned	short	usFirstFace;
-	unsigned	short	usNumFaces;
+	int					iPlaneNum,
+						iChildren[2];
+
+	float				fMins[3],fMaxs[3];
+
+	unsigned	int		usFirstFace;
+	unsigned	int		usNumFaces;
 } BSPNode_t;
 
 typedef struct
 {
-	int		iPlaneNum;
-	short	sChildren[2];
+	int		iPlaneNum,
+			iChildren[2];
 } BSPClipNode_t;
 
 typedef struct
 {
 	float	v[2][4];
-	int		iMipTex;
-	int		iFlags;
+	int		iMipTex,
+			iFlags;
 } BSPTextureInfo_t;
 
 typedef struct
 {
-	unsigned	short	v[2];
+	unsigned	int	v[2];
 } BSPEdge_t;
 
 typedef struct
 {
-	short	sPlaneNum;
-	short	sSide;
-	int		iFirstEdge;
-	short	sNumEdges;
-	short	sTexInfo;
-	byte	bStyles[BSP_MAX_HULLS];
+	int		iPlaneNum,
+			iSide,
+			iFirstEdge,
+			iNumEdges,
+			iTexInfo;
+
+	byte	bStyles[4];
+
 	int		iLightOffset;
 } BSPFace_t;
 
@@ -325,10 +345,10 @@ typedef struct
 	int					iContents,
 						iVisibilityOffset;
 
-	short				sMins[3],sMaxs[3];
+	float				fMins[3],fMaxs[3];
 
-	unsigned	short	usFirstMarkSurface,
-						usNumMarkSurfaces;
+	unsigned	int		uiFirstMarkSurface,
+						uiNumMarkSurfaces;
 
 	byte				bAmbientLevel[BSP_AMBIENT_END];
 } BSPLeaf_t;

@@ -93,7 +93,7 @@ typedef struct texture_s
 // !!! if this is changed, it must be changed in asm_draw.h too !!!
 typedef struct
 {
-	unsigned short	v[2];
+	unsigned int	v[2];
 	unsigned int	cachededgeoffset;
 } medge_t;
 
@@ -160,11 +160,11 @@ typedef struct mnode_s
 	struct mnode_s	*parent;
 
 // node specific
-	mplane_t	*plane;
+	mplane_t		*plane;
 	struct mnode_s	*children[2];
 
-	unsigned short		firstsurface;
-	unsigned short		numsurfaces;
+	unsigned int	firstsurface,
+					numsurfaces;
 } mnode_t;
 
 
@@ -189,23 +189,18 @@ typedef struct mleaf_s
 	byte		ambient_sound_level[NUM_AMBIENTS];
 } mleaf_t;
 
-//johnfitz -- for clipnodes>32k
-typedef struct mclipnode_s
-{
-	int			planenum;
-	int			children[2]; // negative numbers are contents
-} mclipnode_t;
-//johnfitz
-
 // !!! if this is changed, it must be changed in asm_i386.h too !!!
 typedef struct
 {
-	mclipnode_t	*clipnodes; //johnfitz -- was dclipnode_t
-	mplane_t	*planes;
-	int			firstclipnode;
-	int			lastclipnode;
-	vec3_t		clip_mins;
-	vec3_t		clip_maxs;
+	BSPClipNode_t	*clipnodes; //johnfitz -- was dclipnode_t
+
+	mplane_t		*planes;
+
+	int				firstclipnode;
+	int				lastclipnode;
+
+	vec3_t			clip_mins;
+	vec3_t			clip_maxs;
 } hull_t;
 
 //
@@ -239,7 +234,7 @@ typedef struct model_s
 	int			firstmodelsurface, nummodelsurfaces;
 
 	int			numsubmodels;
-	dmodel_t	*submodels;
+	BSPModel_t	*submodels;
 
 	int			numplanes;
 	mplane_t	*planes;
@@ -266,7 +261,7 @@ typedef struct model_s
 	int				*surfedges;
 
 	int				numclipnodes;
-	mclipnode_t		*clipnodes; //johnfitz -- was dclipnode_t
+	BSPClipNode_t	*clipnodes; //johnfitz -- was dclipnode_t
 
 	int				nummarksurfaces;
 	msurface_t		**marksurfaces;

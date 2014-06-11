@@ -13,19 +13,19 @@ by recursive subdivision of the line by the BSP tree.
 ==============================================================================
 */
 
-dleaf_t *Light_PointInLeaf( const vec3_t point )
+BSPLeaf_t *Light_PointInLeaf( const vec3_t point )
 {
 	int num = 0;
 
 	while( num >= 0 )
-		num = dnodes[num].children[PlaneDiff(point, &dplanes[dnodes[num].planenum]) < 0];
+		num = dnodes[num].iChildren[PlaneDiff(point, &dplanes[dnodes[num].iPlaneNum]) < 0];
 
 	return dleafs + (-1 - num);
 }
 
 int Light_PointContents( const vec3_t point )
 {
-	return Light_PointInLeaf(point)->contents;
+	return Light_PointInLeaf(point)->iContents;
 }
 
 #define TESTLINESTATE_BLOCKED 0
@@ -37,8 +37,8 @@ static int RecursiveTestLine (lightTrace_t *trace, int num, float p1f, float p2f
 	int			side, ret;
 	vec_t		t1, t2, frac, midf;
 	vec3_t		mid;
-	dnode_t		*node;
-	dplane_t	*plane;
+	BSPNode_t	*node;
+	BSPPlane_t	*plane;
 
 	// LordHavoc: this function operates by doing depth-first front-to-back
 	// recursion through the BSP tree, checking at every split for an empty to
@@ -55,24 +55,24 @@ static int RecursiveTestLine (lightTrace_t *trace, int num, float p1f, float p2f
 	{
 		// find the point distances
 		node = dnodes + num;
-		plane = dplanes + node->planenum;
+		plane = dplanes + node->iPlaneNum;
 
-		if (plane->type < 3)
+		if (plane->iType < 3)
 		{
-			t1 = p1[plane->type] - plane->dist;
-			t2 = p2[plane->type] - plane->dist;
+			t1 = p1[plane->iType]-plane->fDist;
+			t2 = p2[plane->iType]-plane->fDist;
 		}
 		else
 		{
-			t1 = DotProduct (plane->normal, p1) - plane->dist;
-			t2 = DotProduct (plane->normal, p2) - plane->dist;
+			t1 = DotProduct(plane->fNormal,p1)-plane->fDist;
+			t2 = DotProduct(plane->fNormal,p2)-plane->fDist;
 		}
 
 		if (t1 >= 0)
 		{
 			if (t2 >= 0)
 			{
-				num = node->children[0];
+				num = node->iChildren[0];
 				continue;
 			}
 			side = 0;
@@ -81,7 +81,7 @@ static int RecursiveTestLine (lightTrace_t *trace, int num, float p1f, float p2f
 		{
 			if (t2 < 0)
 			{
-				num = node->children[1];
+				num = node->iChildren[1];
 				continue;
 			}
 			side = 1;
@@ -94,24 +94,24 @@ static int RecursiveTestLine (lightTrace_t *trace, int num, float p1f, float p2f
 		mid[2] = p1[2] + frac * (p2[2] - p1[2]);
 
 		// front side first
-		ret = RecursiveTestLine (trace, node->children[side], p1f, midf, p1, mid);
+		ret = RecursiveTestLine (trace, node->iChildren[side], p1f, midf, p1, mid);
 		if (ret != TESTLINESTATE_EMPTY)
 			return ret; // solid or blocked
 
-		ret = RecursiveTestLine (trace, node->children[!side], midf, p2f, mid, p2);
+		ret = RecursiveTestLine (trace, node->iChildren[!side], midf, p2f, mid, p2);
 		if (ret != TESTLINESTATE_SOLID)
 			return ret; // empty or blocked
 
 		if (!side)
 		{
-			VectorCopy (plane->normal, trace->plane.normal);
-			trace->plane.dist = plane->dist;
-			trace->plane.type = plane->type;
+			VectorCopy (plane->fNormal, trace->plane.normal);
+			trace->plane.dist = plane->fDist;
+			trace->plane.type = plane->iType;
 		}
 		else
 		{
-			VectorNegate (plane->normal, trace->plane.normal);
-			trace->plane.dist = -plane->dist;
+			VectorNegate (plane->fNormal, trace->plane.normal);
+			trace->plane.dist = -plane->fDist;
 			trace->plane.type = PLANE_ANYX;
 		}
 
@@ -124,7 +124,7 @@ static int RecursiveTestLine (lightTrace_t *trace, int num, float p1f, float p2f
 	}
 
 	// check leaf contents
-	num = dleafs[-num - 1].contents;
+	num = dleafs[-num - 1].iContents;
 	if (!trace->startcontents)
 		trace->startcontents = num;
 

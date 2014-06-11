@@ -282,7 +282,6 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	mtvLerpVerts	= &mfSecond->verts[0];
 
 	{
-		MD2TextureCoordinate_t	*mtcTextureCoord	= 
 		mtTriangles	= (MD2Triangle_t*)((uint8_t*)mModel+mModel->ofs_tris);
 
 		for(i = 0; i < mModel->numtris; i++,iVert++,mtTriangles++)

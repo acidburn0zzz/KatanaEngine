@@ -90,7 +90,7 @@ typedef struct
 {
 	vec3_t				mins, maxs;		// bounding box
 	brush_t				*brushes;		// NULL terminated list
-	face_t				*validfaces[MAX_MAP_PLANES];	// build surfaces is also used by GatherNodeFaces
+	face_t				*validfaces[BSP_MAX_PLANES];	// build surfaces is also used by GatherNodeFaces
 	surface_t			*surfaces;
 	node_t				*headnode;
 } tree_t;

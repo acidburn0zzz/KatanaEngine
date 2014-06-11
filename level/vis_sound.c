@@ -7,7 +7,7 @@ Find an aproximate distance to the nearest emiter of each class for each leaf.
 
 */
 
-void SurfaceBBox (dface_t *s, vec3_t mins, vec3_t maxs)
+void SurfaceBBox (BSPFace_t *s, vec3_t mins, vec3_t maxs)
 {
 	int		i;
 	int		e;
@@ -16,9 +16,9 @@ void SurfaceBBox (dface_t *s, vec3_t mins, vec3_t maxs)
 
 	ClearBounds( mins, maxs );
 
-	for (i=0 ; i<s->numedges ; i++)
+	for (i=0 ; i<s->iNumEdges ; i++)
 	{
-		e = dsurfedges[s->firstedge+i];
+		e = dsurfedges[s->iFirstEdge+i];
 		if (e >= 0)
 			vi = dedges[e].v[0];
 		else
@@ -32,14 +32,14 @@ void SurfaceBBox (dface_t *s, vec3_t mins, vec3_t maxs)
 
 void CalcAmbientSounds (void)
 {
-	int		i, j, k, l;
-	dleaf_t	*leaf, *hit;
-	byte	*vis;
-	dface_t	*surf;
-	vec3_t	mins, maxs;
-	vec_t	d, maxd;
-	BSPAmbient_t	ambient_type;
-	texinfo_t	*info;
+	int					i, j, k, l;
+	BSPLeaf_t			*leaf, *hit;
+	byte				*vis;
+	BSPFace_t			*surf;
+	vec3_t				mins, maxs;
+	vec_t				d, maxd;
+	BSPAmbient_t		ambient_type;
+	BSPTextureInfo_t	*info;
 	miptex_t	*miptex;
 	int		ofs;
 	vec_t	dists[BSP_AMBIENT_END];
@@ -72,10 +72,10 @@ void CalcAmbientSounds (void)
 		//	
 			hit = &dleafs[j+1];
 
-			for (k=0 ; k< hit->nummarksurfaces ; k++)
+			for (k=0 ; k< hit->uiNumMarkSurfaces ; k++)
 			{
-				surf = &dfaces[dmarksurfaces[hit->firstmarksurface + k]];
-				info = &texinfo[surf->texinfo];
+				surf = &dfaces[dmarksurfaces[hit->uiFirstMarkSurface + k]];
+				info = &texinfo[surf->iTexInfo];
 				ofs = ((dmiptexlump_t *)dtexdata)->dataofs[info->miptex];
 				miptex = (miptex_t *)(&dtexdata[ofs]);
 
@@ -130,10 +130,10 @@ void CalcAmbientSounds (void)
 				maxd = 0;
 				for (l=0 ; l<3 ; l++)
 				{
-					if (mins[l] > leaf->maxs[l])
-						d = mins[l] - leaf->maxs[l];
-					else if (maxs[l] < leaf->mins[l])
-						d = leaf->mins[l] - mins[l];
+					if (mins[l] > leaf->fMaxs[l])
+						d = mins[l] - leaf->fMaxs[l];
+					else if (maxs[l] < leaf->fMins[l])
+						d = leaf->fMins[l] - mins[l];
 					else
 						d = 0;
 					if (d > maxd)
@@ -157,7 +157,7 @@ void CalcAmbientSounds (void)
 				else if (vol > 1.0)
 					vol = 1.0;		// Vic
 			}
-			leaf->ambient_level[j] = vol*255;
+			leaf->bAmbientLevel[j] = vol*255;
 		}
 	}
 }
