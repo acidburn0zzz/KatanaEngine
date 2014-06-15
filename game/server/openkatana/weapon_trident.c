@@ -2,7 +2,7 @@
 
 void Trident_Deploy(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,1,10,0.1f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,1,10,0.1f,0,0,0,FALSE);
 }
 
 void WEAPON_TRIDENT_Precache (void)
@@ -49,9 +49,9 @@ void Trident_PrimaryAttack(edict_t *ent)
 
 #if 0
 	if(rand()%2 == 1)
-		//WEAPON_Animate(ent,FALSE,10,19,0.05f,10,19,0,FALSE);
+		//Weapon_Animate(ent,FALSE,10,19,0.05f,10,19,0,FALSE);
 	else
-		//WEAPON_Animate(ent,FALSE,20,29,0.05f,10,19,0,FALSE);
+		//Weapon_Animate(ent,FALSE,20,29,0.05f,10,19,0,FALSE);
 #endif
 
 	if(ent->local.attackb_finished > Server.dTime)	// No attack boost...

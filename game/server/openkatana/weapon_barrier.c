@@ -4,7 +4,7 @@
 
 void Barrier_Deploy(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,1,13,0.1f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,1,13,0.1f,0,0,0,FALSE);
 }
 
 #if 0   // [10/2/2014] TODO: This needs to be rewritten ~hogsy
@@ -54,7 +54,7 @@ void BarrierFire(edict_t *ent)
 
 void Barrier_PrimaryAttack(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,0,15,0.05f,10,19,0,FALSE);
+	//Weapon_Animate(ent,FALSE,0,15,0.05f,10,19,0,FALSE);
 	BarrierFire(ent);
 }
 #endif

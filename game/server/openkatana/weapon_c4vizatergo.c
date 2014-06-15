@@ -57,7 +57,7 @@ void C4Vizatergo_Deploy(edict_t *ent)
 {
 	Sound(ent,CHAN_WEAPON,"weapons/c4/c4cock.wav",255,ATTN_NORM);
 
-	WEAPON_Animate(ent,C4Animation_Deploy);
+	Weapon_Animate(ent,C4Animation_Deploy);
 }
 
 void C4Vizatergo_Explode(edict_t *eVizatergo)
@@ -147,7 +147,7 @@ void C4Vizatergo_PrimaryAttack(edict_t *eOwner)
 	Sound(eOwner,CHAN_AUTO,"weapons/c4/c4fire.wav",255,ATTN_NORM);
 	Sound(eOwner,CHAN_AUTO,"weapons/c4/c4cock.wav",255,ATTN_NORM);
 
-	WEAPON_Animate(eOwner,C4Animation_Fire);
+	Weapon_Animate(eOwner,C4Animation_Fire);
 
 	// [11/8/2013] Fixed ~hogsy
 	eOwner->v.iPrimaryAmmo = eOwner->local.iC4Ammo -= 1;
@@ -207,5 +207,5 @@ void C4Vizatergo_SecondaryAttack(edict_t *eOwner)
 		eExplodable = eExplodable->v.chain;
 	} while(eExplodable);
 
-	WEAPON_Animate(eOwner,C4Animation_Trigger);
+	Weapon_Animate(eOwner,C4Animation_Trigger);
 }

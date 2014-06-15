@@ -53,7 +53,7 @@ EntityFrame_t ShockwaveAnimation_Fire [] =
 
 void Shockwave_Deploy(edict_t *ent)
 {
-	WEAPON_Animate(ent,ShockwaveAnimation_Deploy);
+	Weapon_Animate(ent,ShockwaveAnimation_Deploy);
 	Sound(ent,CHAN_WEAPON,"weapons/shockwave/ready.wav",255,ATTN_NORM);
 }
 
@@ -122,7 +122,7 @@ void Shockwave_PrimaryAttack(edict_t *ent)
 {
 	Sound(ent,CHAN_WEAPON,"weapons/shockwave/warmup.wav",255,ATTN_NORM);
 
-	WEAPON_Animate(ent,ShockwaveAnimation_Fire);
+	Weapon_Animate(ent,ShockwaveAnimation_Fire);
 
 	if(ent->local.attackb_finished > Server.dTime)	// No attack boost...
 		ent->local.dAttackFinished = Server.dTime+0.65;

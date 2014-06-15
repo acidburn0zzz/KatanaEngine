@@ -2,7 +2,7 @@
 
 void Hermes_Deploy(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,1,11,0.1f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,1,11,0.1f,0,0,0,FALSE);
 }
 
 // [17/7/2012] Renamed to Hermes_CloudThink ~hogsy
@@ -71,10 +71,10 @@ void Hermes_PrimaryAttack(edict_t *ent)
 
 #if 0
 	if(rand()%3 == 1)
-		//WEAPON_Animate(ent,FALSE,12,17,0.07f,10,19,0,FALSE);
+		//Weapon_Animate(ent,FALSE,12,17,0.07f,10,19,0,FALSE);
 	else if(rand()%3 == 2)
-		//WEAPON_Animate(ent,FALSE,18,23,0.07f,10,19,0,FALSE);
+		//Weapon_Animate(ent,FALSE,18,23,0.07f,10,19,0,FALSE);
 	else
-		//WEAPON_Animate(ent,FALSE,24,29,0.07f,10,19,0,FALSE);
+		//Weapon_Animate(ent,FALSE,24,29,0.07f,10,19,0,FALSE);
 #endif
 }

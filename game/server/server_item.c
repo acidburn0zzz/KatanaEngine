@@ -21,7 +21,7 @@
 
 Item_t Items[] =
 {
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	// Ammo
 	{	AMMO_IONBALLS,		"Ion Cells",			"models/ammo/ammo_ionblaster.md2",	"items/weaponpickup.wav"	},
 	{	AMMO_C4BOMBS,		"C4 Bombs",				"models/ammo/ammo_c4viz.md2",		"items/weaponpickup.wav"	},
@@ -52,6 +52,9 @@ Item_t Items[] =
 	{	ITEM_ACROBOOST,		"ACRO BOOST",		"models/acroboost.md2",		"items/boostpickup1.wav"					},
 	{	ITEM_OXYLUNG,		"OXYLUNG",			"models/oxylung.md2",		"artifacts/oxylung/oxylungpickup.wav"		},
 	{	ITEM_ENVIROSUIT,	"ENVIROSUIT",		"models/envirosuit.md2",	"artifacts/envirosuit/envirosuitpickup.wav"	},
+#elif GAME_ADAMAS
+	{	WEAPON_BLAZER,		"Blazer",			"models/v_barrier.md2",		"items/weaponpickup.wav"	},
+	{	ITEM_BASEARMOR,		"Armor",			"models/armor.md2",			"items/weaponpickup.wav"	},
 #endif
 
 	{	0	}

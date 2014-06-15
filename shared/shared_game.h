@@ -336,6 +336,8 @@ typedef struct
 	int			wyndrax_ammo;
 	int			zeus_ammo;
 	int			tazerhook_ammo;
+#elif GAME_ADAMAS
+	int		iBlazerAmmo;
 #endif
 
 	// Animation

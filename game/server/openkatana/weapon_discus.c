@@ -2,7 +2,7 @@
 
 void Discus_Deploy(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,1,10,0.1f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,1,10,0.1f,0,0,0,FALSE);
 }
 
 void Discus_Catch(edict_t *ent, edict_t *discus)
@@ -132,7 +132,7 @@ void Discus_SpawnProjectile(edict_t *ent,vec3_t org)
 // [4/7/2012] Renamed to Discus_PrimaryAttack ~hogsy
 void Discus_PrimaryAttack(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,8,24,0.035f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,8,24,0.035f,0,0,0,FALSE);
 
 	Discus_SpawnProjectile(ent,ent->v.origin);
 

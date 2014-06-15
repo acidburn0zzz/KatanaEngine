@@ -533,8 +533,10 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 
 	ePlayer->Physics.iSolid	= SOLID_NOT;
 
+#ifdef GAME_OPENKATANA
 	// [15/10/2013] Detonate all C4 bombs we've laid out! ~hogsy
 	C4Vizatergo_SecondaryAttack(ePlayer);
+#endif
 
 #if 0
 	int i;
@@ -575,9 +577,11 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 
 	Sound(ePlayer,CHAN_VOICE,s,255,ATTN_NONE);
 
+#ifdef GAME_OPENKATANA
 	if(ePlayer->v.iActiveWeapon == WEAPON_DAIKATANA)
 		Entity_Animate(ePlayer,PlayerAnimation_KatanaDeath1);
 	else 
+#endif
 	{
 		if(rand()%2 == 1)
 			Entity_Animate(ePlayer,PlayerAnimation_Death1);
@@ -641,6 +645,7 @@ void Player_Spawn(edict_t *ePlayer)
 
 	if(bIsMultiplayer)
 	{
+#ifdef GAME_OPENKATANA
 		switch((int)cvServerGameMode.value)
 		{
 		// TODO: Check what model this player has set in a cvar
@@ -698,12 +703,13 @@ void Player_Spawn(edict_t *ePlayer)
 			Deathmatch_Spawn(ePlayer);
 			break;
 		}
+#endif
 	}
 	else	// [29/7/2013] Singleplayer ~hogsy
 	{
 		Server_UpdateClientMenu(ePlayer,MENU_STATE_HUD,true);
 
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 		// [18/5/2013] Initial weapon should be the IonBlaster ? Mainly for testing ~hogsy
 		{
 			Item_t	*iDaikatana = Item_GetItem(WEAPON_DAIKATANA);

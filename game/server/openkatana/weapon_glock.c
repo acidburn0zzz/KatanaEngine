@@ -10,7 +10,7 @@
 
 void Glock_Deploy(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,46,74,0.1f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,46,74,0.1f,0,0,0,FALSE);
 }
 
 void Glock_Reload(edict_t *ent)
@@ -30,7 +30,7 @@ void Glock_Reload(edict_t *ent)
 
 		Sound(ent,CHAN_WEAPON,noise,255,ATTN_NORM);
 
-		//WEAPON_Animate(ent,FALSE,30,74,0.05f,0,0,0,FALSE);
+		//Weapon_Animate(ent,FALSE,30,74,0.05f,0,0,0,FALSE);
 
 		ent->local.glock_ammo2		= 20;
 		ent->local.dAttackFinished	= Server.dTime+2.6;
@@ -56,9 +56,9 @@ void Glock_PrimaryAttack(edict_t *ent)
 
 #if 0
 	if(rand()%2 == 1)
-		//WEAPON_Animate(ent,FALSE,0,15,0.03f,10,19,0,FALSE);
+		//Weapon_Animate(ent,FALSE,0,15,0.03f,10,19,0,FALSE);
 	else
-		//WEAPON_Animate(ent,FALSE,16,27,0.03f,10,19,0,FALSE);
+		//Weapon_Animate(ent,FALSE,16,27,0.03f,10,19,0,FALSE);
 #endif
 
 	// [25/8/2012] Simplified ~hogsy

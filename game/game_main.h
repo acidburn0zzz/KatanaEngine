@@ -64,6 +64,8 @@ GameClient_t Client;
 	Weapons
 */
 
+#define	WEAPON_NONE		-1
+
 // [5/8/2013] Made these standard defines since maps rely on these now ~hogsy
 #ifdef OPENKATANA
 #define WEAPON_LASERS		1	// NPC weapon
@@ -91,6 +93,9 @@ GameClient_t Client;
 // Episode Four
 #define	WEAPON_GLOCK		50
 #define	WEAPON_IONRIFLE		70	// Talon Brave's weapon
+#elif GAME_ADAMAS
+#define WEAPON_BLAZER	1
+#define	ITEM_BASEARMOR	2
 #endif
 #define ITEM_FLAG			1000
 

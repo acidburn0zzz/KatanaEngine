@@ -479,6 +479,7 @@ void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
 	else
 		eTarget->v.bTakeDamage = false;
 
+#ifdef GAME_OPENKATANA
     // [22/4/2014] Drop the currently equipped item for the player to pick up! ~hogsy
     {
         Weapon_t *wActive = Weapon_GetCurrentWeapon(eTarget);
@@ -493,6 +494,7 @@ void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
             Item_Spawn(eDroppedItem);
         }
     }
+#endif
 
 	if(eTarget->monster.think_die)
 		eTarget->monster.think_die(eTarget,eAttacker);

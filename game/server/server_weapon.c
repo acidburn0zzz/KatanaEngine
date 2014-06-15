@@ -9,7 +9,11 @@
 
 Weapon_t Weapons[] =
 {
-#ifdef OPENKATANA
+	{
+		WEAPON_NONE
+	},
+
+#ifdef GAME_OPENKATANA
 	{
 		WEAPON_KATANA,
 		DAIKATANA_MODEL_VIEW,
@@ -120,7 +124,16 @@ Weapon_t Weapons[] =
 		AM_BULLET,
 		Glock_PrimaryAttack
 	},
-#elif ICTUS
+#elif GAME_ADAMAS
+	{
+		WEAPON_BLAZER,
+		BLAZER_MODEL_VIEW,
+		Blazer_Deploy,
+
+		// Primary
+		AM_PROJECTILE,
+		Blazer_PrimaryAttack
+	},
 #endif
 
 	{	0,	NULL,	NULL,	AM_NONE, NULL,	AM_NONE,	NULL	}
@@ -445,9 +458,11 @@ void Weapon_CheckFrames(edict_t *eEntity)
 
 	eEntity->v.iWeaponFrame = eEntity->local.iWeaponFrames[eEntity->local.iWeaponAnimationCurrent].iFrame;
 
+#ifdef GAME_OPENKATANA
 	if(eEntity->local.attackb_finished > Server.dTime)
 		eEntity->local.fWeaponAnimationTime = ((float)Server.dTime)+eEntity->local.iWeaponFrames[eEntity->local.iWeaponAnimationCurrent].fSpeed * 0.2f;
 	else
+#endif
 		eEntity->local.fWeaponAnimationTime = ((float)Server.dTime)+eEntity->local.iWeaponFrames[eEntity->local.iWeaponAnimationCurrent].fSpeed;
 
 	if(eEntity->local.iWeaponFrames[eEntity->local.iWeaponAnimationCurrent].Function)
@@ -456,7 +471,7 @@ void Weapon_CheckFrames(edict_t *eEntity)
 	eEntity->local.iWeaponAnimationCurrent++;
 }
 
-void WEAPON_Animate(edict_t *ent,EntityFrame_t *eFrames)
+void Weapon_Animate(edict_t *ent,EntityFrame_t *eFrames)
 {
 	int i;
 
@@ -475,9 +490,11 @@ void WEAPON_Animate(edict_t *ent,EntityFrame_t *eFrames)
 
 	ent->local.iWeaponFrames = eFrames;
 
+#ifdef GAME_OPENKATANA
 	if(ent->local.attackb_finished > Server.dTime)
 		ent->local.fWeaponAnimationTime = ((float)Server.dTime)+eFrames[0].fSpeed*0.5f;
 	else
+#endif
 		ent->local.fWeaponAnimationTime = ((float)Server.dTime)+eFrames[0].fSpeed;
 }
 
@@ -534,11 +551,13 @@ void Weapon_PrimaryAttack(edict_t *eEntity)
 	{
 		Engine.MakeVectors(eEntity->v.v_angle);
 
+#ifdef GAME_OPENKATANA
 		// [15/8/2013] Why write this out again and again for every weapon? Just do it here! ~hogsy
 		if(Entity_IsPlayer(eEntity) && ((eEntity->v.velocity[0] == 0) && (eEntity->v.velocity[1] == 0)))
 			// [15/8/2013] But let's not forget that the Daikatana is a special case :) ~hogsy
 			if(wCurrentWeapon->iItem != WEAPON_DAIKATANA)
 				Entity_Animate(eEntity,PlayerAnimation_Fire);
+#endif
 
 		wCurrentWeapon->Primary(eEntity);
 	}
@@ -579,14 +598,14 @@ void Weapon_CheatCommand(edict_t *eEntity)
 #if 0
 	Item_AddInventory(Item_GetItem(WEAPON_GLOCK),eEntity);
 #endif
-#elif ICTUS
-#endif
-
-	eEntity->v.impulse = 0;
 
 	wWeapon = Weapon_GetWeapon(WEAPON_DAIKATANA);
 	if(wWeapon)
 		Weapon_SetActive(wWeapon,eEntity);
+#elif GAME_ADAMAS
+#endif
+
+	eEntity->v.impulse = 0;
 }
 
 void Weapon_CheckInput(edict_t *eEntity)
@@ -602,6 +621,7 @@ void Weapon_CheckInput(edict_t *eEntity)
 
 		switch((int)eEntity->v.impulse)
 		{
+#ifdef GAME_OPENKATANA
 		case 1:
 			iNewWeapon = WEAPON_IONBLASTER;
 			break;
@@ -622,6 +642,12 @@ void Weapon_CheckInput(edict_t *eEntity)
 			break;
 		case 7:
 			iNewWeapon = WEAPON_IONRIFLE;
+#endif
+		case 1:
+			iNewWeapon = WEAPON_BLAZER;
+			break;
+		default:
+			iNewWeapon = WEAPON_NONE;
 		}
 
 		// [29/7/2013] Check our actual inventory! ~hogsy

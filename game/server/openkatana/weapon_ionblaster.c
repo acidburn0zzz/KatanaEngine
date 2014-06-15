@@ -77,7 +77,7 @@ void IonBlaster_Deploy(edict_t *ent)
 {
 	Sound(ent,CHAN_WEAPON,"weapons/ionblaster/ionready.wav",255,ATTN_NORM);
 
-	WEAPON_Animate(ent,IonBlasterAnimation_Deploy);
+	Weapon_Animate(ent,IonBlasterAnimation_Deploy);
 }
 
 void IonBlaster_IonBallExplode(edict_t *ent)
@@ -161,9 +161,9 @@ void IonBlaster_PrimaryAttack(edict_t *ent)
 	ent->v.punchangle[0] -= (float)(rand()%5+2);
 
 	if(rand()%2 == 1)
-		WEAPON_Animate(ent,IonBlasterAnimation_Fire1);
+		Weapon_Animate(ent,IonBlasterAnimation_Fire1);
 	else
-		WEAPON_Animate(ent,IonBlasterAnimation_Fire2);
+		Weapon_Animate(ent,IonBlasterAnimation_Fire2);
 
 	// This fixes the ammo bug ~eukos [05/08/2013]
 	ent->local.ionblaster_ammo--;

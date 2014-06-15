@@ -2,7 +2,7 @@
 
 void Crossbow_Deploy(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,53,64,0.1f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,53,64,0.1f,0,0,0,FALSE);
 }
 
 void arrow_touch(edict_t *ent, edict_t *other)
@@ -81,7 +81,7 @@ void Crossbow_PrimaryAttack(edict_t *ent)
 	ent->v.punchangle[0] -= 5.0f;
 	ent->v.iPrimaryAmmo = ent->local.crossbow_ammo -= 1;
 
-	//WEAPON_Animate(ent,FALSE,1,52,0.043f,10,19,0,FALSE);
+	//Weapon_Animate(ent,FALSE,1,52,0.043f,10,19,0,FALSE);
 
 	projectile_arrow(ent);
 

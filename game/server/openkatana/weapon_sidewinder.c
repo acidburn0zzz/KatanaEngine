@@ -82,7 +82,7 @@ void SideWinder_Deploy(edict_t *ent)
 {
 	// [31/12/2013] TODO: Deploy sound? ~hogsy
 
-	WEAPON_Animate(ent,SideWinderAnimation_Deploy);
+	Weapon_Animate(ent,SideWinderAnimation_Deploy);
 }
 
 // [2/8/2012] Renamed to SideWinder_MissileExplode ~hogsy
@@ -217,7 +217,7 @@ void SideWinder_PrimaryAttack(edict_t *eOwner)
 
 	Sound(eOwner,CHAN_WEAPON,cSound,255,ATTN_NORM);
 
-	WEAPON_Animate(eOwner,SideWinderAnimation_Fire);
+	Weapon_Animate(eOwner,SideWinderAnimation_Fire);
 
 	// [1/10/2012] Readded ~hogsy
 	eOwner->v.iPrimaryAmmo	= eOwner->local.sidewinder_ammo -= 2;

@@ -120,7 +120,7 @@ void IonRifle_Deploy(edict_t *eOwner)
 	// [29/1/2014] Remember to reset everything we're going to use ~hogsy
 	eOwner->local.iBarrelCount = 0;
 
-	WEAPON_Animate(eOwner,efIonRifleDeploy);
+	Weapon_Animate(eOwner,efIonRifleDeploy);
 }
 
 /*	Uses both primary burst and mega burst!
@@ -130,7 +130,7 @@ void IonRifle_PrimaryAttack(edict_t *eOwner)
 	switch(eOwner->local.iFireMode)
 	{
 	case 1:
-		WEAPON_Animate(eOwner,efIonRifleBlastFire);
+		Weapon_Animate(eOwner,efIonRifleBlastFire);
 
 		eOwner->v.punchangle[0] -= (float)(((rand()%10)+5));
 
@@ -185,19 +185,19 @@ void IonRifle_PrimaryAttack(edict_t *eOwner)
 		switch(eOwner->local.iBarrelCount)
 		{
 		case 0:
-			WEAPON_Animate(eOwner,efIonRiflePulseFireA);
+			Weapon_Animate(eOwner,efIonRiflePulseFireA);
 			break;
 		case 1:
-			WEAPON_Animate(eOwner,efIonRiflePulseFireB);
+			Weapon_Animate(eOwner,efIonRiflePulseFireB);
 			break;
 		case 2:
-			WEAPON_Animate(eOwner,efIonRiflePulseFireC);
+			Weapon_Animate(eOwner,efIonRiflePulseFireC);
 			break;
 		case 3:
-			WEAPON_Animate(eOwner,efIonRiflePulseFireD);
+			Weapon_Animate(eOwner,efIonRiflePulseFireD);
 			break;
 		case 4:
-			WEAPON_Animate(eOwner,efIonRiflePulseFireE);
+			Weapon_Animate(eOwner,efIonRiflePulseFireE);
 		}
 
 		// [25/9/2013] Punch the view back ~hogsy
@@ -264,14 +264,14 @@ void IonRifle_SecondaryAttack(edict_t *eOwner)
 {
 	if(eOwner->local.iFireMode)
 	{
-		WEAPON_Animate(eOwner,efIonRiflePulseMode);
+		Weapon_Animate(eOwner,efIonRiflePulseMode);
 
 		eOwner->local.iFireMode			=
 		eOwner->local.iWeaponIdleFrame	= IONRIFLE_IDLEA_FRAME;
 	}
 	else
 	{
-		WEAPON_Animate(eOwner,efIonRifleBlastMode);
+		Weapon_Animate(eOwner,efIonRifleBlastMode);
 
 		eOwner->local.iFireMode			= 1;
 		eOwner->local.iWeaponIdleFrame	= IONRIFLE_IDLEB_FRAME;

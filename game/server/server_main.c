@@ -74,10 +74,10 @@ SpawnList_t SpawnList[] =
 	{	"point_timedtrigger",	Point_TimedTriggerSpawn	},
 	{	"point_waypoint",		Point_WaypointSpawn		},
 
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	{	"point_decoration",	Point_DecorationSpawn	},
 	{	"item_flag",		CTF_FlagSpawn			},
-#elif ICTUS
+#elif GAME_ADAMAS
 #endif
 
 	{	NULL,	NULL	}
@@ -276,7 +276,7 @@ void Server_Spawn(edict_t *ent)
 	// [31/7/2012] Changed so we precache these if it's multiplayer ~hogsy
 	if(bIsMultiplayer)
 	{
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 		// [31/7/2012] TODO: We need an md2 version of this! ~hogsy
 //		Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/mikiko.mdl");
 		Engine.Server_PrecacheResource(RESOURCE_SOUND,"items/respawn.wav");

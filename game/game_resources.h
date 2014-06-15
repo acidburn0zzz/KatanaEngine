@@ -3,8 +3,6 @@
 #ifndef __GAMERESOURCES__
 #define	__GAMERESOURCES__
 
-#ifdef GAME_OPENKATANA
-
 #define	VEKTAR_MODEL_STATUE		"models/vektar/statue.md2"
 #define	VEKTAR_SOUND_FINDING	"vektar/finding_loop.wav"
 #define	VEKTAR_SOUND_FANFARE	"vektar/fanfare.wav"
@@ -76,6 +74,8 @@
 #define PARTICLE_SMOKE2     "smoke2"
 #define PARTICLE_SMOKE3     "smoke3"
 
+#ifdef GAME_ADAMAS
+#define	BLAZER_MODEL_VIEW	"models/v_barrier.md2"
 #endif
 
 #define BASE_SOUND_TALK0    "misc/talk1.wav"
