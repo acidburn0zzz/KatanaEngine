@@ -61,8 +61,10 @@ EntityFrame_t efInmaterDeath[]=
 };
 
 #define INMATER_MAX_HEALTH	150
-#define	INMATOR_MAX_BOREDOM	35
+#define	INMATOR_MAX_BOREDOM	45
+
 #define	INMATOR_MIN_HEALTH	-35
+#define	INMATOR_MIN_BOREDOM	-45
 
 void Inmater_Pain(edict_t *eInmater,edict_t *eOther)
 {

@@ -162,8 +162,7 @@ md2_readModel (const char *filename)
 	return model;
 }
 
-void
-md2_freeModel (md2_model_t *model)
+void md2_freeModel (md2_model_t *model)
 {
 	if (model)
 	{
@@ -239,8 +238,7 @@ void md2_getBoundingBox (md2_model_t *model, float *minmax)
 	minmax[5] = maxz;
 }
 
-void
-_md2_drawModel (md2_model_t *model, int frame)
+void _md2_drawModel (md2_model_t *model, int frame)
 {
 	int i;
 
@@ -495,8 +493,7 @@ angle = 1;
 	fn[2] = (v1[0] * v2[1] - v1[1] * v2[0]) * (float) angle;
 }
 
-void
-_normalize (float *n)
+void _normalize (float *n)
 {
 	float l = (float) sqrt (n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
 
@@ -508,8 +505,7 @@ _normalize (float *n)
 	}
 }
 
-void
-md2_generateLightNormals (md2_model_t *model)
+void md2_generateLightNormals (md2_model_t *model)
 {
 	int i;
 
@@ -522,9 +518,9 @@ md2_generateLightNormals (md2_model_t *model)
 
 		for (j = 0; j < model->header.numVertices; j++)
 		{
-			model->frames[i].vertices[j].normal[0] = 0.0f;
-			model->frames[i].vertices[j].normal[1] = 0.0f;
-			model->frames[i].vertices[j].normal[2] = 0.0f;
+			model->frames[i].vertices[j].normal[0]	=
+			model->frames[i].vertices[j].normal[1]	=
+			model->frames[i].vertices[j].normal[2]	= 0.0f;
 		}
 
 		for (j = 0; j < model->header.numTriangles; j++)

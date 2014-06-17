@@ -592,15 +592,11 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 
 void Player_Pain(edict_t *ent,edict_t *other)
 {
-	int i;
+	char cSound[24];
 
-	i = rand()%3;
-	if(i == 1)
-		Sound(ent,CHAN_VOICE,"player/playerpain1.wav",255,ATTN_NORM);
-	else if(i == 2)
-		Sound(ent,CHAN_VOICE,"player/playerpain2.wav",255,ATTN_NORM);
-	else
-		Sound(ent,CHAN_VOICE,"player/playerpain3.wav",255,ATTN_NORM);
+	PLAYER_SOUND_PAIN(cSound);
+
+	Sound(ent,CHAN_VOICE,cSound,255,ATTN_NORM);
 
 	Engine.Particle(ent->v.origin,ent->v.velocity,1.0f,"blood",10);
 }
@@ -725,6 +721,21 @@ void Player_Spawn(edict_t *ePlayer)
 				}
 			}
 		}
+#elif GAME_ADAMAS
+		{
+			Item_t *iBlazer = Item_GetItem(WEAPON_BLAZER);
+
+			if(iBlazer)
+			{
+				Weapon_t *wStartWeapon;
+
+				Item_AddInventory(iBlazer,ePlayer);
+
+				wStartWeapon = Weapon_GetWeapon(WEAPON_BLAZER);
+				if(wStartWeapon)
+					Weapon_SetActive(wStartWeapon,ePlayer);
+			}
+		}
 #endif
 	}
 
@@ -814,20 +825,17 @@ void Player_Jump(edict_t *ePlayer)
 		sprintf(cJumpSound,"player/acroboost.wav");
 	}
 	else
+#endif
 	{
 		ePlayer->v.velocity[2] += 250.0f;
 
 		sprintf(cJumpSound,"player/playerjump%i.wav",rand()%3+5);
 	}
-#else	// [30/10/2013] Changed to else, this has to be something! ~hogsy
-	sprintf(cJumpSound,"player/jump%i.wav",rand()%3);
-#endif
 
 	Sound(ePlayer,CHAN_VOICE,cJumpSound,255,ATTN_NORM);
 
 	ePlayer->v.punchangle[0] += 3.0f;
 
-	// [7/2/2013] TODO: Bleh this can be done WAY more cleanly ;) ~hogsy
 	if((ePlayer->v.velocity[0] == 0) && (ePlayer->v.velocity[1] == 0))
 		Entity_Animate(ePlayer,PlayerAnimation_Jump);
 	else

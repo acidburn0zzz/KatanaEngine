@@ -1,4 +1,4 @@
-/*	Copyright (C) 2014 OldTimes Software
+/*	Copyright (C) 2014 OldTimes Software / Mark Elsworth Sowden
 */
 #include "server_weapon.h"
 

@@ -767,7 +767,9 @@ bool KatanaViewer::loadModel (const char *ptr, int pos)
 	}
 
 	md2_generateLightNormals (model);
+
 	glw->redraw ();
+
 	return true;
 }
 

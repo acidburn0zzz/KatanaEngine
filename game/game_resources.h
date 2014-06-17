@@ -3,6 +3,11 @@
 #ifndef __GAMERESOURCES__
 #define	__GAMERESOURCES__
 
+#define	PLAYER_SOUND_PAIN(a)	sprintf(a,"player/playerpain%i.wav",rand()%3+1)
+#define	PLAYER_SOUND_PAIN0		"player/playerpain1.wav"
+#define	PLAYER_SOUND_PAIN1		"player/playerpain2.wav"
+#define	PLAYER_SOUND_PAIN2		"player/playerpain3.wav"
+
 #define	VEKTAR_MODEL_STATUE		"models/vektar/statue.md2"
 #define	VEKTAR_SOUND_FINDING	"vektar/finding_loop.wav"
 #define	VEKTAR_SOUND_FANFARE	"vektar/fanfare.wav"
