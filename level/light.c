@@ -379,10 +379,10 @@ void LightWorld( void )
 			case BSP_CONTENTS_SLIME:
 				slimecount++;
 				break;
-			case CONTENTS_LAVA:
+			case BSP_CONTENTS_LAVA:
 				lavacount++;
 				break;
-			case CONTENTS_SKY:
+			case BSP_CONTENTS_SKY:
 				skycount++;
 				ignorevis = true;
 				break;

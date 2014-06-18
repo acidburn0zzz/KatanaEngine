@@ -10,11 +10,6 @@
 
 typedef struct
 {
-	int		fileofs, filelen;
-} lump_t;
-
-typedef struct
-{
 	int			numhulls,
 				filehulls;
 
@@ -42,9 +37,6 @@ typedef struct miptex_s
 #define	PLANE_ANYX		3
 #define	PLANE_ANYY		4
 #define	PLANE_ANYZ		5
-
-#define	CONTENTS_LAVA		-5
-#define	CONTENTS_SKY		-6
 
 //============================================================================
 

@@ -242,6 +242,11 @@ enum
 #define	BSP_CONTENTS_SOLID	-2	// Solid brush.
 #define	BSP_CONTENTS_WATER	-3	// Water
 #define BSP_CONTENTS_SLIME  -4
+#define BSP_CONTENTS_LAVA	-5	// Lava content.
+#define	BSP_CONTENTS_SKY	-7	// Sky content.
+#define	BSP_CONTENTS_0		-9
+#define	BSP_CONTENTS_DOWN	-14	// Down current.
+#define	BSP_CONTENTS_ORIGIN	-15	// Origin brush, removed during CSG time.
 
 enum
 {

@@ -486,7 +486,7 @@ int SV_PointContents (vec3_t p)
 	int		cont;
 
 	cont = SV_HullPointContents (&sv.worldmodel->hulls[0], 0, p);
-	if (cont <= CONTENTS_CURRENT_0 && cont >= CONTENTS_CURRENT_DOWN)
+	if (cont <= BSP_CONTENTS_0 && cont >= BSP_CONTENTS_DOWN)
 		cont = BSP_CONTENTS_WATER;
 	return cont;
 }

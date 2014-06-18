@@ -18,7 +18,7 @@ BSPLeaf_t *Light_PointInLeaf( const vec3_t point )
 	int num = 0;
 
 	while( num >= 0 )
-		num = dnodes[num].iChildren[PlaneDiff(point, &dplanes[dnodes[num].iPlaneNum]) < 0];
+		num = dnodes[num].iChildren[PlaneDiff(point,&dplanes[dnodes[num].iPlaneNum]) < 0];
 
 	return dleafs + (-1 - num);
 }
@@ -129,7 +129,7 @@ static int RecursiveTestLine (lightTrace_t *trace, int num, float p1f, float p2f
 		trace->startcontents = num;
 
 	trace->endcontents = num;
-	if (num == BSP_CONTENTS_SOLID || (num == CONTENTS_SKY && trace->hitsky))
+	if (num == BSP_CONTENTS_SOLID || (num == BSP_CONTENTS_SKY && trace->hitsky))
 	{
 		//VectorClear( trace->filter );
 		return TESTLINESTATE_SOLID;
@@ -139,7 +139,7 @@ static int RecursiveTestLine (lightTrace_t *trace, int num, float p1f, float p2f
 		//trace->filter[0] *= 0.6;
 		//trace->filter[1] *= 0.6;
 	}
-	else if (num == CONTENTS_LAVA)
+	else if (num == BSP_CONTENTS_LAVA)
 	{
 		//trace->filter[1] *= 0.6;
 		//trace->filter[2] *= 0.6;

@@ -79,7 +79,7 @@ bool RecursiveFillOutside (node_t *l, int hullnum, bool fill)
 	portal_t	*p;
 	int			s;
 
-	if (l->contents == BSP_CONTENTS_SOLID || l->contents == CONTENTS_SKY)
+	if (l->contents == BSP_CONTENTS_SOLID || l->contents == BSP_CONTENTS_SKY)
 		return false;
 
 	if (l->valid == valid)

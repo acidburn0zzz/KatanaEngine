@@ -205,7 +205,7 @@ void	LoadBSPFile (char *filename)
 {
 	int				i, j, headerend;
 	swappedbuffer_t	sb;
-	lump_t			lumps[HEADER_LUMPS], *lump;
+	BSPLump_t		lumps[HEADER_LUMPS], *lump;
 
 // load file into buffer
 	SB_LoadFile(&sb, filename);
@@ -236,19 +236,19 @@ void	LoadBSPFile (char *filename)
 	{
 		if(headerend >= 4+(i+1)*sizeof(lumps[0]))
 		{
-			lumps[i].fileofs = SB_ReadInt (&sb);
-			lumps[i].filelen = SB_ReadInt (&sb);
-			if (headerend > lumps[i].fileofs && lumps[i].filelen)
-				headerend = lumps[i].fileofs;
+			lumps[i].iFileOffset = SB_ReadInt (&sb);
+			lumps[i].iFileLength = SB_ReadInt (&sb);
+			if (headerend > lumps[i].iFileOffset && lumps[i].iFileLength)
+				headerend = lumps[i].iFileOffset;
 		}
 		else
-			lumps[i].fileofs = lumps[i].filelen = 0;
+			lumps[i].iFileOffset = lumps[i].iFileLength = 0;
 	}
 
 // read lumps (sigh...)
 	lump = &lumps[LUMP_PLANES];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	numplanes = lump->filelen / 20;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	numplanes = lump->iFileLength / 20;
 	for (i = 0; i < numplanes; i++)
 	{
 		dplanes[i].fNormal[0]	= SB_ReadFloat (&sb);
@@ -259,8 +259,8 @@ void	LoadBSPFile (char *filename)
 	}
 
 	lump = &lumps[LUMP_LEAFS];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	numleafs = lump->filelen / 44;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	numleafs = lump->iFileLength / 44;
 	for (i = 0; i < numleafs; i++)
 	{
 		dleafs[i].iContents = SB_ReadInt (&sb);
@@ -278,8 +278,8 @@ void	LoadBSPFile (char *filename)
 	}
 
 	lump = &lumps[LUMP_VERTEXES];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	numvertexes = lump->filelen / 12;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	numvertexes = lump->iFileLength / 12;
 	for (i = 0; i < numvertexes; i++)
 	{
 		dvertexes[i].fPoint[0] = SB_ReadFloat (&sb);
@@ -288,8 +288,8 @@ void	LoadBSPFile (char *filename)
 	}
 
 	lump = &lumps[LUMP_NODES];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	numnodes = lump->filelen / 44;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	numnodes = lump->iFileLength / 44;
 	for (i = 0; i < numnodes; i++)
 	{
 		dnodes[i].iPlaneNum = SB_ReadInt (&sb);
@@ -306,8 +306,8 @@ void	LoadBSPFile (char *filename)
 	}
 
 	lump = &lumps[LUMP_TEXINFO];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	numtexinfo = lump->filelen / 40;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	numtexinfo = lump->iFileLength / 40;
 	for (i = 0; i < numtexinfo; i++)
 	{
 		texinfo[i].v[0][0]	= SB_ReadFloat (&sb);
@@ -323,8 +323,8 @@ void	LoadBSPFile (char *filename)
 	}
 
 	lump = &lumps[LUMP_FACES];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	numfaces = lump->filelen / 28;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	numfaces = lump->iFileLength / 28;
 	for (i = 0; i < numfaces; i++)
 	{
 		dfaces[i].iPlaneNum = SB_ReadInt (&sb);
@@ -338,8 +338,8 @@ void	LoadBSPFile (char *filename)
 	}
 
 	lump = &lumps[LUMP_CLIPNODES];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	numclipnodes = lump->filelen / 12;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	numclipnodes = lump->iFileLength / 12;
 	for (i = 0; i < numclipnodes; i++)
 	{
 		dclipnodes[i].iPlaneNum = SB_ReadInt (&sb);
@@ -348,20 +348,20 @@ void	LoadBSPFile (char *filename)
 	}
 
 	lump = &lumps[LUMP_MARKSURFACES];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	nummarksurfaces = lump->filelen / 4;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	nummarksurfaces = lump->iFileLength / 4;
 	for (i = 0; i < nummarksurfaces; i++)
 		dmarksurfaces[i] = SB_ReadInt (&sb);
 
 	lump = &lumps[LUMP_SURFEDGES];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	numsurfedges = lump->filelen / 4;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	numsurfedges = lump->iFileLength / 4;
 	for (i = 0; i < numsurfedges; i++)
 		dsurfedges[i] = SB_ReadInt (&sb);
 
 	lump = &lumps[LUMP_EDGES];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	numedges = lump->filelen / 8;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	numedges = lump->iFileLength / 8;
 	for (i = 0; i < numedges; i++)
 	{
 		dedges[i].v[0] = SB_ReadInt (&sb);
@@ -369,8 +369,8 @@ void	LoadBSPFile (char *filename)
 	}
 
 	lump = &lumps[LUMP_MODELS];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	nummodels = lump->filelen / (48+4*hullinfo.filehulls);
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	nummodels = lump->iFileLength / (48+4*hullinfo.filehulls);
 	for (i = 0; i < nummodels; i++)
 	{
 		dmodels[i].fMins[0] = SB_ReadFloat (&sb);
@@ -390,23 +390,23 @@ void	LoadBSPFile (char *filename)
 	}
 
 	lump = &lumps[LUMP_LIGHTING];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	rgblightdatasize = lump->filelen;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	rgblightdatasize = lump->iFileLength;
 	SB_ReadData (&sb, drgblightdata, rgblightdatasize);
 
 	lump = &lumps[LUMP_VISIBILITY];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	visdatasize = lump->filelen;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	visdatasize = lump->iFileLength;
 	SB_ReadData (&sb, dvisdata, visdatasize);
 
 	lump = &lumps[LUMP_ENTITIES];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	entdatasize = lump->filelen;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	entdatasize = lump->iFileLength;
 	SB_ReadData (&sb, dentdata, entdatasize);
 
 	lump = &lumps[LUMP_TEXTURES];
-	SB_SeekAbsolute (&sb, lump->fileofs);
-	texdatasize = lump->filelen;
+	SB_SeekAbsolute (&sb, lump->iFileOffset);
+	texdatasize = lump->iFileLength;
 	SB_ReadData (&sb, dtexdata, texdatasize);
 
 // finish up
@@ -420,9 +420,9 @@ void WriteBSPFile (char *filename)
 	int				i, j;
 	FILE			*f;
 	swappedbuffer_t	sb;
-	int		index;
-	int		bspsize;
-	lump_t	lumps[HEADER_LUMPS], *lump;
+	int				index;
+	int				bspsize;
+	BSPLump_t		lumps[HEADER_LUMPS],*lump;
 
 	bspsize = BSP_HEADER_SIZE;
 	bspsize += sizeof(lumps)+20*numplanes+(40+BSP_AMBIENT_END)*numleafs+12*numvertexes;
@@ -441,20 +441,20 @@ void WriteBSPFile (char *filename)
 
 	// write lumps and pad each one to a multiple of 4 bytes
 	lump = &lumps[LUMP_PLANES];
-	lump->fileofs = SB_Tell(&sb);
+	lump->iFileOffset = SB_Tell(&sb);
 	for (i = 0; i < numplanes; i++)
 	{
-		SB_WriteFloat (&sb, dplanes[i].normal[0]);
-		SB_WriteFloat (&sb, dplanes[i].normal[1]);
-		SB_WriteFloat (&sb, dplanes[i].normal[2]);
-		SB_WriteFloat (&sb, dplanes[i].dist);
-		SB_WriteInt (&sb, dplanes[i].type);
+		SB_WriteFloat(&sb,dplanes[i].fNormal[0]);
+		SB_WriteFloat(&sb,dplanes[i].fNormal[1]);
+		SB_WriteFloat(&sb,dplanes[i].fNormal[2]);
+		SB_WriteFloat(&sb,dplanes[i].fDist);
+		SB_WriteInt(&sb,dplanes[i].iType);
 	}
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill(&sb,((lump->iFileLength+3)&~3)-lump->iFileLength);
 
 	lump = &lumps[LUMP_LEAFS];
-	lump->fileofs = SB_Tell(&sb);
+	lump->iFileOffset = SB_Tell(&sb);
 	for (i = 0; i < numleafs; i++)
 	{
 		SB_WriteInt (&sb, dleafs[i].iContents);
@@ -470,22 +470,22 @@ void WriteBSPFile (char *filename)
 		for (j = 0; j < BSP_AMBIENT_END; j++)
 			SB_WriteByte (&sb, dleafs[i].bAmbientLevel[j]);
 	}
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_VERTEXES];
-	lump->fileofs = SB_Tell(&sb);
+	lump->iFileOffset = SB_Tell(&sb);
 	for (i = 0; i < numvertexes; i++)
 	{
 		SB_WriteFloat (&sb, dvertexes[i].fPoint[0]);
 		SB_WriteFloat (&sb, dvertexes[i].fPoint[1]);
 		SB_WriteFloat (&sb, dvertexes[i].fPoint[2]);
 	}
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_NODES];
-	lump->fileofs = SB_Tell(&sb);
+	lump->iFileOffset = SB_Tell(&sb);
 	for (i = 0; i < numnodes; i++)
 	{
 		SB_WriteInt (&sb, dnodes[i].iPlaneNum);
@@ -500,29 +500,29 @@ void WriteBSPFile (char *filename)
 		SB_WriteInt (&sb, dnodes[i].usFirstFace);
 		SB_WriteInt (&sb, dnodes[i].usNumFaces);
 	}
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_TEXINFO];
-	lump->fileofs = SB_Tell(&sb);
+	lump->iFileOffset = SB_Tell(&sb);
 	for (i = 0; i < numtexinfo; i++)
 	{
-		SB_WriteFloat (&sb, texinfo[i].vecs[0][0]);
-		SB_WriteFloat (&sb, texinfo[i].vecs[0][1]);
-		SB_WriteFloat (&sb, texinfo[i].vecs[0][2]);
-		SB_WriteFloat (&sb, texinfo[i].vecs[0][3]);
-		SB_WriteFloat (&sb, texinfo[i].vecs[1][0]);
-		SB_WriteFloat (&sb, texinfo[i].vecs[1][1]);
-		SB_WriteFloat (&sb, texinfo[i].vecs[1][2]);
-		SB_WriteFloat (&sb, texinfo[i].vecs[1][3]);
-		SB_WriteInt (&sb, texinfo[i].miptex);
-		SB_WriteInt (&sb, texinfo[i].flags);
+		SB_WriteFloat (&sb, texinfo[i].v[0][0]);
+		SB_WriteFloat (&sb, texinfo[i].v[0][1]);
+		SB_WriteFloat (&sb, texinfo[i].v[0][2]);
+		SB_WriteFloat (&sb, texinfo[i].v[0][3]);
+		SB_WriteFloat (&sb, texinfo[i].v[1][0]);
+		SB_WriteFloat (&sb, texinfo[i].v[1][1]);
+		SB_WriteFloat (&sb, texinfo[i].v[1][2]);
+		SB_WriteFloat (&sb, texinfo[i].v[1][3]);
+		SB_WriteInt (&sb, texinfo[i].iMipTex);
+		SB_WriteInt (&sb, texinfo[i].iFlags);
 	}
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_FACES];
-	lump->fileofs = SB_Tell(&sb);
+	lump->iFileOffset = SB_Tell(&sb);
 	for (i = 0; i < numfaces; i++)
 	{
 		SB_WriteInt (&sb, dfaces[i].iPlaneNum);
@@ -534,46 +534,46 @@ void WriteBSPFile (char *filename)
 			SB_WriteByte (&sb, dfaces[i].bStyles[j]);
 		SB_WriteInt (&sb, dfaces[i].iLightOffset);
 	}
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_CLIPNODES];
-	lump->fileofs = SB_Tell(&sb);
+	lump->iFileOffset = SB_Tell(&sb);
 	for (i = 0; i < numclipnodes; i++)
 	{
 		SB_WriteInt (&sb, dclipnodes[i].iPlaneNum);
 		SB_WriteInt (&sb, dclipnodes[i].iChildren[0]);
 		SB_WriteInt (&sb, dclipnodes[i].iChildren[1]);
 	}
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_MARKSURFACES];
-	lump->fileofs = SB_Tell(&sb);
+	lump->iFileOffset = SB_Tell(&sb);
 	for (i = 0; i < nummarksurfaces; i++)
 		SB_WriteInt (&sb, dmarksurfaces[i]);
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_SURFEDGES];
-	lump->fileofs = SB_Tell(&sb);
+	lump->iFileOffset = SB_Tell(&sb);
 	for (i = 0; i < numsurfedges; i++)
 		SB_WriteInt (&sb, dsurfedges[i]);
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_EDGES];
-	lump->fileofs = SB_Tell(&sb);
+	lump->iFileOffset = SB_Tell(&sb);
 	for (i = 0; i < numedges; i++)
 	{
 		SB_WriteInt (&sb, dedges[i].v[0]);
 		SB_WriteInt (&sb, dedges[i].v[1]);
 	}
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_MODELS];
-	lump->fileofs = SB_Tell (&sb);
+	lump->iFileOffset = SB_Tell (&sb);
 	for (i = 0; i < nummodels; i++)
 	{
 		SB_WriteFloat (&sb, dmodels[i].fMins[0]);
@@ -591,32 +591,32 @@ void WriteBSPFile (char *filename)
 		SB_WriteInt (&sb, dmodels[i].iFirstFace);
 		SB_WriteInt (&sb, dmodels[i].iNumFaces);
 	}
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_LIGHTING];
-	lump->fileofs = SB_Tell (&sb);
+	lump->iFileOffset = SB_Tell (&sb);
 	SB_WriteData (&sb, drgblightdata, rgblightdatasize);
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_VISIBILITY];
-	lump->fileofs = SB_Tell (&sb);
+	lump->iFileOffset = SB_Tell (&sb);
 	SB_WriteData (&sb, dvisdata, visdatasize);
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_ENTITIES];
-	lump->fileofs = SB_Tell (&sb);
+	lump->iFileOffset = SB_Tell (&sb);
 	SB_WriteData (&sb, dentdata, entdatasize);
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	lump = &lumps[LUMP_TEXTURES];
-	lump->fileofs = SB_Tell (&sb);
+	lump->iFileOffset = SB_Tell (&sb);
 	SB_WriteData (&sb, dtexdata, texdatasize);
-	lump->filelen = SB_Tell(&sb) - lump->fileofs;
-	SB_ZeroFill (&sb, ((lump->filelen + 3) & ~3) - lump->filelen);
+	lump->iFileLength = SB_Tell(&sb) - lump->iFileOffset;
+	SB_ZeroFill (&sb, ((lump->iFileLength + 3) & ~3) - lump->iFileLength);
 
 	// Go back and update the header.
 	index = SB_Tell (&sb);
@@ -628,8 +628,8 @@ void WriteBSPFile (char *filename)
 	// always write full BSP2 lumps, this is for future-proofing
 	for (i = 0; i < HEADER_LUMPS; i++)
 	{
-		SB_WriteInt (&sb, lumps[i].fileofs);
-		SB_WriteInt (&sb, lumps[i].filelen);
+		SB_WriteInt(&sb,lumps[i].iFileOffset);
+		SB_WriteInt(&sb,lumps[i].iFileLength);
 	}
 
 	SB_SeekAbsolute (&sb, index);

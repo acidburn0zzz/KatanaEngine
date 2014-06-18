@@ -816,7 +816,7 @@ void GL_SubdivideSurface(msurface_t *fa);
 
 void Model_LoadBSPFaces(BSPLump_t *blLump)
 {
-	dface_t		*in;
+	BSPFace_t	*in;
 	msurface_t 	*out;
 	int			i, count, surfnum;
 	int			planenum, side;
@@ -954,7 +954,7 @@ void Model_LoadBSPNodes(BSPLump_t *blLump)
 
 void Model_LoadBSPLeafs(BSPLump_t *blLump)
 {
-	dleaf_t 	*in;
+	BSPLeaf_t 	*in;
 	mleaf_t 	*out;
 	int			i, j, count, p;
 
@@ -997,8 +997,8 @@ void Model_LoadBSPLeafs(BSPLump_t *blLump)
 
 void Model_LoadBSPClipNodes(BSPLump_t *blLump)
 {
-	dclipnode_t *in;
-	mclipnode_t *out; //johnfitz -- was dclipnode_t
+	BSPClipNode_t *in;
+	BSPClipNode_t *out; //johnfitz -- was dclipnode_t
 	int			i, count;
 	hull_t		*hull;
 
@@ -1006,7 +1006,7 @@ void Model_LoadBSPClipNodes(BSPLump_t *blLump)
 	if (blLump->iFileLength % sizeof(*in))
 		Sys_Error ("Model_LoadBSPClipNodes: funny lump size in %s",loadmodel->name);
 	count = blLump->iFileLength / sizeof(*in);
-	out = (mclipnode_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
+	out = (BSPClipNode_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
 
 	loadmodel->clipnodes = out;
 	loadmodel->numclipnodes = count;
@@ -1059,8 +1059,8 @@ void Model_LoadBSPClipNodes(BSPLump_t *blLump)
 */
 void Mod_MakeHull0 (void)
 {
-	mnode_t		*in, *child;
-	mclipnode_t *out; //johnfitz -- was dclipnode_t
+	mnode_t			*in, *child;
+	BSPClipNode_t	*out; //johnfitz -- was dclipnode_t
 	int			i, j, count;
 	hull_t		*hull;
 
@@ -1068,7 +1068,7 @@ void Mod_MakeHull0 (void)
 
 	in = loadmodel->nodes;
 	count = loadmodel->numnodes;
-	out = (mclipnode_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
+	out = (BSPClipNode_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
 
 	hull->clipnodes = out;
 	hull->firstclipnode = 0;
@@ -1226,14 +1226,14 @@ void Model_LoadBSPSubmodels(BSPLump_t *blLump)
 */
 void Mod_BoundsFromClipNode (model_t *mod, int hull, int nodenum)
 {
-	mplane_t	*plane;
-	mclipnode_t	*node;
+	mplane_t		*plane;
+	BSPClipNode_t	*node;
 
 	if (nodenum < 0)
 		return; //hit a leafnode
 
 	node = &mod->clipnodes[nodenum];
-	plane = mod->hulls[hull].planes + node->planenum;
+	plane = mod->hulls[hull].planes + node->iPlaneNum;
 	switch (plane->type)
 	{
 
@@ -1260,8 +1260,8 @@ void Mod_BoundsFromClipNode (model_t *mod, int hull, int nodenum)
 		break;
 	}
 
-	Mod_BoundsFromClipNode (mod, hull, node->children[0]);
-	Mod_BoundsFromClipNode (mod, hull, node->children[1]);
+	Mod_BoundsFromClipNode (mod, hull, node->iChildren[0]);
+	Mod_BoundsFromClipNode (mod, hull, node->iChildren[1]);
 }
 
 void Model_LoadBSP(model_t *mod,void *buffer)
@@ -1318,18 +1318,18 @@ void Model_LoadBSP(model_t *mod,void *buffer)
 	{
 		bm = &mod->submodels[i];
 
-		mod->hulls[0].firstclipnode = bm->headnode[0];
+		mod->hulls[0].firstclipnode = bm->iHeadNode[0];
 		for (j=1 ; j<MAX_MAP_HULLS ; j++)
 		{
-			mod->hulls[j].firstclipnode = bm->headnode[j];
+			mod->hulls[j].firstclipnode = bm->iHeadNode[j];
 			mod->hulls[j].lastclipnode	= mod->numclipnodes-1;
 		}
 
-		mod->firstmodelsurface = bm->firstface;
-		mod->nummodelsurfaces = bm->numfaces;
+		mod->firstmodelsurface	= bm->iFirstFace;
+		mod->nummodelsurfaces	= bm->iNumFaces;
 
-		Math_VectorCopy (bm->maxs, mod->maxs);
-		Math_VectorCopy (bm->mins, mod->mins);
+		Math_VectorCopy (bm->fMaxs, mod->maxs);
+		Math_VectorCopy (bm->fMins, mod->mins);
 
 		//johnfitz -- calculate rotate bounds and yaw bounds
 		radius = RadiusFromBounds (mod->mins, mod->maxs);
@@ -1346,7 +1346,7 @@ void Model_LoadBSP(model_t *mod,void *buffer)
 		}
 		//johnfitz
 
-		mod->numleafs = bm->visleafs;
+		mod->numleafs = bm->iVisLeafs;
 
 		if (i < mod->numsubmodels-1)
 		{

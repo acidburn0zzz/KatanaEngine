@@ -11,11 +11,6 @@ the outside filling stage can remove some of them so a better bsp can be generat
 
 //===========================================================================
 
-/*
-===========
-AllocFace
-===========
-*/
 face_t *AllocFace( void )
 {
 	face_t	*f;
@@ -28,11 +23,6 @@ face_t *AllocFace( void )
 	return f;
 }
 
-/*
-===========
-FreeFace
-===========
-*/
 void FreeFace( face_t *f )
 {
 	if( f->winding )
@@ -65,11 +55,6 @@ face_t *NewFaceFromFace( face_t *in )
 
 //===========================================================================
 
-/*
-==================
-SplitFace
-==================
-*/
 void SplitFace( face_t *in, plane_t *split, face_t **front, face_t **back )
 {
 	winding_t	*frontw, *backw;

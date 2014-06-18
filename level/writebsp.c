@@ -1,8 +1,8 @@
 
 #include "bsp5.h"
 
-int		firstface;
-int		*planemapping;
+int		firstface,
+		*planemapping;
 
 //===========================================================================
 

@@ -139,8 +139,7 @@ typedef struct msurface_s
 	mtexinfo_t	*texinfo;
 
 // lighting info
-	int			dlightframe;
-	int			dlightbits;
+	int			dlightframe,dlightbits;
 
 	int			lightmaptexturenum;
 	byte		styles[BSP_MAX_LIGHTMAPS];
@@ -167,8 +166,6 @@ typedef struct mnode_s
 					numsurfaces;
 } mnode_t;
 
-
-
 typedef struct mleaf_s
 {
 // common with node
@@ -186,7 +183,7 @@ typedef struct mleaf_s
 	msurface_t	**firstmarksurface;
 	int			nummarksurfaces;
 	int			key;			// BSP sequence number for leaf's contents
-	byte		ambient_sound_level[NUM_AMBIENTS];
+	byte		ambient_sound_level[BSP_AMBIENT_END];
 } mleaf_t;
 
 // !!! if this is changed, it must be changed in asm_i386.h too !!!
