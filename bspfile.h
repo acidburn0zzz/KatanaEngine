@@ -34,25 +34,12 @@ typedef struct miptex_s
 #define	CONTENTS_LAVA			-5
 #define	CONTENTS_SKY			-6
 #define	CONTENTS_ORIGIN			-7		// removed at csg time
-#define	CONTENTS_CLIP			-8		// changed to contents_solid
 #define	CONTENTS_CURRENT_0		-9
 #define	CONTENTS_CURRENT_90		-10
 #define	CONTENTS_CURRENT_180	-11
 #define	CONTENTS_CURRENT_270	-12
 #define	CONTENTS_CURRENT_UP		-13
 #define	CONTENTS_CURRENT_DOWN	-14
-
-typedef struct texinfo_s
-{
-	float		vecs[2][4];		// [s/t][xyz offset]
-	int			miptex;
-	int			flags;
-} texinfo_t;
-
-#define	TEX_SPECIAL		1		// sky or slime, no lightmap or 256 subdivision
-#define TEX_MISSING		2		// johnfitz -- this texinfo does not have a texture
-
-#define	MAXLIGHTMAPS	4
 
 enum
 {

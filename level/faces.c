@@ -108,16 +108,16 @@ void SplitFace( face_t *in, plane_t *split, face_t **front, face_t **back )
 */
 int SubdivideFace( face_t *f, face_t **prevptr )
 {
-	int			i, axis;
-	int			subdivides;
-	vec_t		mins, maxs, v;
-	plane_t		plane;
-	winding_t	*w;
-	face_t		*front, *back, *next;
-	texinfo_t	*tex = &texinfo[f->texturenum];
+	int					i, axis;
+	int					subdivides;
+	vec_t				mins, maxs, v;
+	plane_t				plane;
+	winding_t			*w;
+	face_t				*front, *back, *next;
+	BSPTextureInfo_t	*tex = &texinfo[f->texturenum];
 
 	// special (non-surface cached) faces don't need subdivision
-	if( tex->flags & TEX_SPECIAL )
+	if( tex->iFlags & BSP_TEXTURE_SPECIAL )
 		return 0;
 
 	subdivides = 0;
@@ -131,7 +131,7 @@ int SubdivideFace( face_t *f, face_t **prevptr )
 			w = f->winding;
 			for( i = 0; i < w->numpoints; i++ )
 			{
-				v = DotProduct( w->points[i], tex->vecs[axis] );
+				v = DotProduct( w->points[i], tex->v[axis] );
 				if( v < mins )
 					mins = v;
 				if( v > maxs )
@@ -142,7 +142,7 @@ int SubdivideFace( face_t *f, face_t **prevptr )
 				break;
 
 			// split it
-			VectorCopy( tex->vecs[axis], plane.normal );
+			VectorCopy( tex->v[axis], plane.normal );
 			v = VectorNormalize( plane.normal );
 			if( !v )
 				Error( "SubdivideFace: zero length normal" );
@@ -506,7 +506,7 @@ static void EmitNodeFaces_r( node_t *node )
 		f->iSide = face->planeside;
 		f->iTexInfo = face->texturenum;
 		f->iLightOffset = -1;
-		for( i = 0; i < MAXLIGHTMAPS; i++ )
+		for( i = 0; i < BSP_MAX_LIGHTMAPS; i++ )
 			f->bStyles[i] = 255;
 
 		// add the face and mergable neighbors to it

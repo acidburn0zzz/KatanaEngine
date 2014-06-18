@@ -5,8 +5,6 @@
 
 #include "shared_formats.h"
 
-#define	MAX_Q1MAP_HULLS			4
-
 #define	MAX_KEY		32
 #define	MAX_VALUE	1024
 
@@ -47,16 +45,6 @@ typedef struct miptex_s
 
 #define	CONTENTS_LAVA		-5
 #define	CONTENTS_SKY		-6
-
-typedef struct texinfo_s
-{
-	float		vecs[2][4];		// [s/t][xyz offset]
-	int			miptex;
-	int			flags;
-} texinfo_t;
-#define	TEX_SPECIAL		1		// sky or slime, no lightmap or 256 subdivision
-
-#define	MAXLIGHTMAPS	4
 
 //============================================================================
 

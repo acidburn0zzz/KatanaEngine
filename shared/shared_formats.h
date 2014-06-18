@@ -202,26 +202,35 @@ typedef struct
 #define	BSP_VERSION_4	// Enable support for version 4 feature set.
 
 #define	BSP_HEADER		(('P'<<16)+('S'<<8)+'B')	// For easy identification.
-#define	BSP_HEADER_SIZE	8									// "BSP" followed by version number.
+#define	BSP_HEADER_SIZE	4							// "BSP" followed by version number.
 
-#define	BSP_MAX_HULLS			16
-#define	BSP_MAX_LEAFS			32768//0x400000
+#define	BSP_MAX_HULLS			4
+#define	BSP_MAX_LEAFS			32768			//0x400000
 #define	BSP_MAX_ENTITIES		32768
-#define	BSP_MAX_VERTS			65535//0x100000  1048576
+#define	BSP_MAX_VERTS			65535			//0x100000
 #define	BSP_MAX_MODELS			4096
-#define	BSP_MAX_BRUSHES			4096//0x100000
-#define	BSP_MAX_ENTSTRING		65536//0x400000  4194304
-#define	BSP_MAX_PLANES			65535//0x200000
-#define	BSP_MAX_NODES			65535//0x200000
-#define	BSP_MAX_CLIPNODES		65535//0x800000
-#define	BSP_MAX_FACES			65535//0x200000
-#define	BSP_MAX_MARKSURFACES	65535//0x400000
-#define	BSP_MAX_TEXINFO			4096//0x100000
-#define	BSP_MAX_EDGES			65535//0x400000
-#define	BSP_MAX_SURFEDGES		65535//0x800000
-#define	BSP_MAX_MIPTEX			65535//0x1000000
-#define	BSP_MAX_LIGHTING		65535//0x1000000
-#define	BSP_MAX_VISIBILITY		65535//0x1000000
+#define	BSP_MAX_BRUSHES			32768			//0x100000
+#define	BSP_MAX_ENTSTRING		0x100000		//0x400000
+#define	BSP_MAX_PLANES			65536			//0x200000
+#define	BSP_MAX_NODES			32767			//0x200000
+#define	BSP_MAX_CLIPNODES		32767			//0x800000
+#define	BSP_MAX_FACES			65536			//0x200000
+#define	BSP_MAX_MARKSURFACES	65535			//0x400000
+#define	BSP_MAX_TEXINFO			BSP_MAX_FACES	//0x100000
+#define	BSP_MAX_EDGES			0x100000		//0x400000
+#define	BSP_MAX_SURFEDGES		0x200000		//0x800000
+#define	BSP_MAX_MIPTEX			0x800000		//0x1000000
+#define	BSP_MAX_LIGHTING		0x400000		//0x1000000
+#define	BSP_MAX_LIGHTMAPS		4
+#define	BSP_MAX_VISIBILITY		0x400000		//0x1000000
+
+enum
+{
+	BSP_TEXTURE_SPECIAL = 1,	// Used for sky or water.
+	BSP_TEXTURE_SKIP,			// Surface to be skipped during rendering (and lighting).
+
+	BSP_TEXTURE_MISSING			// Indicates that the texture is missing.
+};
 
 /*	Different content types
 	set for brushes by Katana Level.

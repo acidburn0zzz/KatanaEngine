@@ -47,7 +47,7 @@ typedef struct
 
 	int				maxsamples;
 	lightpoint_t	*point;
-	lightsample_t	*sample[MAXLIGHTMAPS];
+	lightsample_t	*sample[BSP_MAX_LIGHTMAPS];
 
 	vec3_t			texorg;
 	vec3_t			worldtotex[2];	// s = (world - texorg) . worldtotex[0]
@@ -56,7 +56,7 @@ typedef struct
 	vec_t			exactmins[2], exactmaxs[2];
 
 	int				texmins[2], texsize[2];
-	int				lightstyles[MAXLIGHTMAPS];
+	int				lightstyles[BSP_MAX_LIGHTMAPS];
 	BSPFace_t		*face;
 } lightinfo_t;
 
@@ -186,7 +186,7 @@ static void CalcSamples( lightinfo_t *l )
 			qfree( l->point );
 		l->point = (lightpoint_t*)qmalloc( sizeof( lightpoint_t ) * l->maxsamples * (1<<extrasamplesbit)*(1<<extrasamplesbit) );
 
-		for( mapnum = 0; mapnum < MAXLIGHTMAPS; mapnum++ )
+		for( mapnum = 0; mapnum < BSP_MAX_LIGHTMAPS; mapnum++ )
 		{
 			if( l->sample[mapnum] )
 				qfree( l->sample[mapnum] );
@@ -271,7 +271,7 @@ static int SingleLightFace_FindMapNum( lightinfo_t *l, int style )
 {
 	int mapnum;
 
-	for( mapnum = 0; mapnum < MAXLIGHTMAPS; mapnum++ )
+	for( mapnum = 0; mapnum < BSP_MAX_LIGHTMAPS; mapnum++ )
 	{
 		if( l->lightstyles[mapnum] == style )
 			break;
@@ -279,13 +279,13 @@ static int SingleLightFace_FindMapNum( lightinfo_t *l, int style )
 		if( l->lightstyles[mapnum] == 255 )
 		{
 			if( relight )
-				return MAXLIGHTMAPS;
+				return BSP_MAX_LIGHTMAPS;
 			l->lightstyles[mapnum] = style;
 			break;
 		}
 	}
 
-	if( mapnum == MAXLIGHTMAPS )
+	if( mapnum == BSP_MAX_LIGHTMAPS )
 		printf( "WARNING: Too many light styles on a face\n" );
 	return mapnum;
 }
@@ -333,7 +333,7 @@ static void SingleLightFace_Sun( const directlight_t *light, lightinfo_t *l )
 
 		// if there is some light, alloc a style for it
 		if( mapnum < 0 )
-			if( (mapnum = SingleLightFace_FindMapNum( l, light->style )) >= MAXLIGHTMAPS )
+			if( (mapnum = SingleLightFace_FindMapNum( l, light->style )) >= BSP_MAX_LIGHTMAPS )
 				return;
 
 		// accumulate the lighting
@@ -432,7 +432,7 @@ static void SingleLightFace( const directlight_t *light, lightinfo_t *l )
 
 		// if there is some light, alloc a style for it
 		if( mapnum < 0 )
-			if( (mapnum = SingleLightFace_FindMapNum( l, light->style )) >= MAXLIGHTMAPS )
+			if( (mapnum = SingleLightFace_FindMapNum( l, light->style )) >= BSP_MAX_LIGHTMAPS )
 				return;
 
 		// accumulate the lighting
@@ -464,13 +464,13 @@ void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_
 	}
 	else
 	{
-		for( i = 0; i < MAXLIGHTMAPS; i++ )
+		for( i = 0; i < BSP_MAX_LIGHTMAPS; i++ )
 			f->bStyles[i] = l.lightstyles[i] = 255;
 
 		f->iLightOffset = -1;
 
 		// return if it's not a lightmapped surface
-		if(texinfo[f->iTexInfo].flags & TEX_SPECIAL)
+		if(texinfo[f->iTexInfo].iFlags & BSP_TEXTURE_SPECIAL)
 			return;
 		// return if we've run out of lightmap data space
 		else if(ranout)
@@ -478,8 +478,8 @@ void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_
 	}
 
 	// rotate plane
-	VectorCopy( dplanes[f->iPlaneNum].normal, l.facenormal );
-	l.facedist = dplanes[f->iPlaneNum].dist;
+	VectorCopy( dplanes[f->iPlaneNum].fNormal, l.facenormal );
+	l.facedist = dplanes[f->iPlaneNum].fDist;
 
 	if( f->iSide )
 	{
@@ -493,7 +493,7 @@ void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_
 	CalcPoints( &l );
 
 	// clear all the samples to 0
-	for( i = 0; i < MAXLIGHTMAPS; i++ )
+	for( i = 0; i < BSP_MAX_LIGHTMAPS; i++ )
 		memset( l.sample[i], 0, sizeof( lightsample_t ) * l.numsamples );
 
 	// if -minlight or -ambientlight is used we always allocate style 0
@@ -502,7 +502,7 @@ void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_
 
 	if( relight )
 		// reserve the correct light styles
-		for( i = 0; i < MAXLIGHTMAPS; i++ )
+		for( i = 0; i < BSP_MAX_LIGHTMAPS; i++ )
 			l.lightstyles[i] = f->bStyles[i];
 
 	// cast all lights
@@ -556,7 +556,7 @@ void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_
 	if( relight )
 	{
 		// relighting an existing map without changing it's lightofs table
-		for( i = 0; i < MAXLIGHTMAPS && f->bStyles[i] != 255; i++ );
+		for( i = 0; i < BSP_MAX_LIGHTMAPS && f->bStyles[i] != 255; i++ );
 
 		size = l.numsamples * i;
 		if( f->iLightOffset < 0 || f->iLightOffset + size > lightdatasize )
@@ -565,7 +565,7 @@ void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_
 	else
 	{
 		// creating lightofs table from scratch
-		for( i = 0; i < MAXLIGHTMAPS && l.lightstyles[i] != 255; i++ );
+		for( i = 0; i < BSP_MAX_LIGHTMAPS && l.lightstyles[i] != 255; i++ );
 
 		size = l.numsamples * i;
 		if( !size )
@@ -581,7 +581,7 @@ void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_
 			return;
 		}
 
-		for( i = 0; i < MAXLIGHTMAPS; i++ )
+		for( i = 0; i < BSP_MAX_LIGHTMAPS; i++ )
 			f->bStyles[i] = l.lightstyles[i];
 		f->iLightOffset = lightdatasize;
 		lightdatasize += size;
@@ -609,7 +609,7 @@ void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_
 	VectorNormalize(tangentvectors[0]);
 	VectorNormalize(tangentvectors[1]);
 
-	for( i = 0; i < MAXLIGHTMAPS && f->bStyles[i] != 255; i++ )
+	for( i = 0; i < BSP_MAX_LIGHTMAPS && f->bStyles[i] != 255; i++ )
 	{
 		for( j = 0, sample = l.sample[i]; j < l.numsamples; j++, sample++ )
 		{

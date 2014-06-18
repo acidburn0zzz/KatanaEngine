@@ -36,8 +36,8 @@ BSPVertex_t	dvertexes[BSP_MAX_VERTS];
 int			numnodes;
 BSPNode_t	dnodes[BSP_MAX_NODES];
 
-int			numtexinfo;
-texinfo_t	texinfo[BSP_MAX_TEXINFO];
+int					numtexinfo;
+BSPTextureInfo_t	texinfo[BSP_MAX_TEXINFO];
 
 int			numfaces;
 BSPFace_t	dfaces[BSP_MAX_FACES];
@@ -48,8 +48,7 @@ BSPClipNode_t	dclipnodes[BSP_MAX_CLIPNODES];
 int			numedges;
 BSPEdge_t	dedges[BSP_MAX_EDGES];
 
-int			nummarksurfaces;
-// MODIFIED FOR BSP2
+int				nummarksurfaces;
 unsigned int	dmarksurfaces[BSP_MAX_MARKSURFACES];
 
 int			numsurfedges;
@@ -216,9 +215,9 @@ void	LoadBSPFile (char *filename)
 	if(i != BSP_HEADER)
 		Error("Invalid file type!");
 
-	i = SB_ReadInt( &sb);
+	i = SB_ReadInt(&sb);
 	if(i != BSP_VERSION)
-		Error ("%s is version %i, should be %i", filename, i, BSP_VERSION);
+		Error ("%s is version %i, should be %i!", filename, i, BSP_VERSION);
 
 // hull 0 is always point-sized
 	VectorClear (hullinfo.hullsizes[0][0]);
@@ -252,11 +251,11 @@ void	LoadBSPFile (char *filename)
 	numplanes = lump->filelen / 20;
 	for (i = 0; i < numplanes; i++)
 	{
-		dplanes[i].normal[0] = SB_ReadFloat (&sb);
-		dplanes[i].normal[1] = SB_ReadFloat (&sb);
-		dplanes[i].normal[2] = SB_ReadFloat (&sb);
-		dplanes[i].dist = SB_ReadFloat (&sb);
-		dplanes[i].type = SB_ReadInt (&sb);
+		dplanes[i].fNormal[0]	= SB_ReadFloat (&sb);
+		dplanes[i].fNormal[1]	= SB_ReadFloat (&sb);
+		dplanes[i].fNormal[2]	= SB_ReadFloat (&sb);
+		dplanes[i].fDist		= SB_ReadFloat (&sb);
+		dplanes[i].iType		= SB_ReadInt (&sb);
 	}
 
 	lump = &lumps[LUMP_LEAFS];
@@ -311,16 +310,16 @@ void	LoadBSPFile (char *filename)
 	numtexinfo = lump->filelen / 40;
 	for (i = 0; i < numtexinfo; i++)
 	{
-		texinfo[i].vecs[0][0] = SB_ReadFloat (&sb);
-		texinfo[i].vecs[0][1] = SB_ReadFloat (&sb);
-		texinfo[i].vecs[0][2] = SB_ReadFloat (&sb);
-		texinfo[i].vecs[0][3] = SB_ReadFloat (&sb);
-		texinfo[i].vecs[1][0] = SB_ReadFloat (&sb);
-		texinfo[i].vecs[1][1] = SB_ReadFloat (&sb);
-		texinfo[i].vecs[1][2] = SB_ReadFloat (&sb);
-		texinfo[i].vecs[1][3] = SB_ReadFloat (&sb);
-		texinfo[i].miptex = SB_ReadInt (&sb);
-		texinfo[i].flags = SB_ReadInt (&sb);
+		texinfo[i].v[0][0]	= SB_ReadFloat (&sb);
+		texinfo[i].v[0][1]	= SB_ReadFloat (&sb);
+		texinfo[i].v[0][2]	= SB_ReadFloat (&sb);
+		texinfo[i].v[0][3]	= SB_ReadFloat (&sb);
+		texinfo[i].v[1][0]	= SB_ReadFloat (&sb);
+		texinfo[i].v[1][1]	= SB_ReadFloat (&sb);
+		texinfo[i].v[1][2]	= SB_ReadFloat (&sb);
+		texinfo[i].v[1][3]	= SB_ReadFloat (&sb);
+		texinfo[i].iMipTex	= SB_ReadInt (&sb);
+		texinfo[i].iFlags	= SB_ReadInt (&sb);
 	}
 
 	lump = &lumps[LUMP_FACES];
@@ -333,7 +332,7 @@ void	LoadBSPFile (char *filename)
 		dfaces[i].iFirstEdge = SB_ReadInt (&sb);
 		dfaces[i].iNumEdges = SB_ReadInt (&sb);
 		dfaces[i].iTexInfo = SB_ReadInt (&sb);
-		for (j = 0; j < MAXLIGHTMAPS; j++)
+		for (j = 0; j < BSP_MAX_LIGHTMAPS; j++)
 			dfaces[i].bStyles[j] = SB_ReadByte (&sb);
 		dfaces[i].iLightOffset = SB_ReadInt (&sb);
 	}
@@ -427,9 +426,9 @@ void WriteBSPFile (char *filename)
 
 	bspsize = BSP_HEADER_SIZE;
 	bspsize += sizeof(lumps)+20*numplanes+(40+BSP_AMBIENT_END)*numleafs+12*numvertexes;
-	bspsize += 44*numnodes+40*numtexinfo+(24+MAXLIGHTMAPS)*numfaces+12*numclipnodes;
+	bspsize += 44*numnodes+40*numtexinfo+(24+BSP_MAX_LIGHTMAPS)*numfaces+12*numclipnodes;
 	bspsize += 4*nummarksurfaces+4*numsurfedges+8*numedges;
-	bspsize += (48+4*MAX_Q1MAP_HULLS)*nummodels+rgblightdatasize;
+	bspsize += (48+4*BSP_MAX_HULLS)*nummodels+rgblightdatasize;
 	bspsize += visdatasize+entdatasize+texdatasize;
 	bspsize += 512;	// extra case for safety and to compensate for the 4-byte padding of the lumps
 
@@ -531,7 +530,7 @@ void WriteBSPFile (char *filename)
 		SB_WriteInt (&sb, dfaces[i].iFirstEdge);
 		SB_WriteInt (&sb, dfaces[i].iNumEdges);
 		SB_WriteInt (&sb, dfaces[i].iTexInfo);
-		for (j = 0; j < MAXLIGHTMAPS; j++)
+		for (j = 0; j < BSP_MAX_LIGHTMAPS; j++)
 			SB_WriteByte (&sb, dfaces[i].bStyles[j]);
 		SB_WriteInt (&sb, dfaces[i].iLightOffset);
 	}
@@ -654,7 +653,7 @@ void PrintBSPFileSizes (void)
 	printf ("%5i planes       %6i\n", numplanes, (int)(numplanes*sizeof(BSPPlane_t)));
 	printf ("%5i vertexes     %6i\n", numvertexes, (int)(numvertexes*sizeof(BSPVertex_t)));
 	printf ("%5i nodes        %6i\n", numnodes, (int)(numnodes*sizeof(BSPNode_t)));
-	printf ("%5i texinfo      %6i\n", numtexinfo, (int)(numtexinfo*sizeof(texinfo_t)));
+	printf ("%5i texinfo      %6i\n", numtexinfo, (int)(numtexinfo*sizeof(BSPTextureInfo_t)));
 	printf ("%5i faces        %6i\n", numfaces, (int)(numfaces*sizeof(BSPFace_t)));
 	printf ("%5i clipnodes    %6i\n", numclipnodes, (int)(numclipnodes*sizeof(BSPClipNode_t)));
 	printf ("%5i leafs        %6i\n", numleafs, (int)(numleafs*sizeof(BSPLeaf_t)));

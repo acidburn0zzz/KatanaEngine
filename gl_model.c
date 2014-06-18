@@ -662,11 +662,11 @@ void Model_LoadBSPTextureInfo(BSPLump_t *blLump)
 		//johnfitz -- rewrote this section
 		if (miptex >= loadmodel->numtextures-1 || !loadmodel->textures[miptex])
 		{
-			if (out->flags & TEX_SPECIAL)
+			if(out->flags & BSP_TEXTURE_SPECIAL)
 				out->texture = loadmodel->textures[loadmodel->numtextures-1];
 			else
 				out->texture = loadmodel->textures[loadmodel->numtextures-2];
-			out->flags |= TEX_MISSING;
+			out->flags |= BSP_TEXTURE_MISSING;
 			missing++;
 		}
 		else
@@ -727,7 +727,7 @@ void CalcSurfaceExtents (msurface_t *s)
 		s->texturemins[i] = bmins[i]*16;
 		s->extents[i] = (bmaxs[i]-bmins[i])*16;
 
-		if(!(tex->flags & TEX_SPECIAL) && s->extents[i] > 2000) //johnfitz -- was 512 in glquake, 256 in winquake
+		if(!(tex->flags & BSP_TEXTURE_SPECIAL) && s->extents[i] > 2000) //johnfitz -- was 512 in glquake, 256 in winquake
 			Con_Warning("Bad surface extents\n");
 	}
 }
@@ -851,7 +851,7 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 
 	// lighting info
 
-		for (i=0 ; i<MAXLIGHTMAPS ; i++)
+		for (i=0 ; i<BSP_MAX_LIGHTMAPS ; i++)
 			out->styles[i] = in->styles[i];
 		i = LittleLong(in->lightofs);
 		if (i == -1)
@@ -874,7 +874,7 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 
 			GL_SubdivideSurface (out);
 		}
-		else if(out->texinfo->flags & TEX_MISSING) // texture is missing from bsp
+		else if(out->texinfo->flags & BSP_TEXTURE_MISSING) // texture is missing from bsp
 		{
 			if(out->samples) //lightmapped
 				out->flags |= SURF_NOTEXTURE;
