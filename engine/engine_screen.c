@@ -892,7 +892,7 @@ void SCR_UpdateScreen (void)
 	else if(scr_drawloading) //loading
 		Menu->Draw();
 	else if(cl.intermission == 1 && key_dest == key_game) //end of level
-		Sbar_IntermissionOverlay ();
+	{}
 	else if(cl.intermission == 2 && key_dest == key_game) //end of episode
 		SCR_CheckDrawCenterString ();
 	else

@@ -19,8 +19,8 @@ static node_t *Bsp2Prt_BuildTree_r( int nodenum )
 		BSPNode_t *node = &dnodes[nodenum];
 
 		n = AllocNode ();
-		plane.dist = dplanes[node->iPlaneNum].dist;
-		VectorCopy( dplanes[node->iPlaneNum].normal, plane.normal );
+		plane.dist = dplanes[node->iPlaneNum].fDist;
+		VectorCopy( dplanes[node->iPlaneNum].fNormal, plane.normal );
 		n->planenum = FindPlane( &plane, &side );
 
 		if( side )

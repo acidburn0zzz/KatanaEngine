@@ -35,7 +35,6 @@
     <ClCompile Include="..\keys.c" />
     <ClCompile Include="..\menu.c" />
     <ClCompile Include="..\pr_edict.c" />
-    <ClCompile Include="..\sbar.c" />
     <ClCompile Include="..\sv_main.c" />
     <ClCompile Include="..\sv_user.c" />
     <ClCompile Include="..\sys_win.c" />

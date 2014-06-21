@@ -32,7 +32,8 @@ void SurfaceBBox (BSPFace_t *s, vec3_t mins, vec3_t maxs)
 
 void CalcAmbientSounds (void)
 {
-	int					i, j, k, l;
+	int					i, j, l;
+	unsigned	int		k;
 	BSPLeaf_t			*leaf, *hit;
 	byte				*vis;
 	BSPFace_t			*surf;
@@ -72,11 +73,11 @@ void CalcAmbientSounds (void)
 		//	
 			hit = &dleafs[j+1];
 
-			for (k=0 ; k< hit->uiNumMarkSurfaces ; k++)
+			for (k=0 ; k < hit->uiNumMarkSurfaces ; k++)
 			{
 				surf = &dfaces[dmarksurfaces[hit->uiFirstMarkSurface + k]];
 				info = &texinfo[surf->iTexInfo];
-				ofs = ((dmiptexlump_t *)dtexdata)->dataofs[info->miptex];
+				ofs = ((dmiptexlump_t *)dtexdata)->dataofs[info->iMipTex];
 				miptex = (miptex_t *)(&dtexdata[ofs]);
 
 				// LordHavoc: optimized this to reduce wasted Q_strncasecmp calls

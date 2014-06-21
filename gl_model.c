@@ -832,18 +832,19 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 
 	for ( surfnum=0 ; surfnum<count ; surfnum++, in++, out++)
 	{
-		out->firstedge = LittleLong(in->firstedge);
-		out->numedges = LittleShort(in->numedges);
+		out->firstedge	= LittleLong(in->iFirstEdge);
+		out->numedges	= LittleLong(in->iNumEdges);
 		out->flags = 0;
 
-		planenum = LittleShort(in->planenum);
-		side = LittleShort(in->side);
+		planenum = LittleLong(in->iPlaneNum);
+
+		side = LittleLong(in->iSide);
 		if (side)
 			out->flags |= SURF_PLANEBACK;
 
 		out->plane = loadmodel->planes + planenum;
 
-		out->texinfo = loadmodel->texinfo + LittleShort (in->texinfo);
+		out->texinfo = loadmodel->texinfo+LittleLong(in->iTexInfo);
 
 		CalcSurfaceExtents (out);
 
@@ -852,8 +853,8 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 	// lighting info
 
 		for (i=0 ; i<BSP_MAX_LIGHTMAPS ; i++)
-			out->styles[i] = in->styles[i];
-		i = LittleLong(in->lightofs);
+			out->styles[i] = in->bStyles[i];
+		i = LittleLong(in->iLightOffset);
 		if (i == -1)
 			out->samples = NULL;
 		else
@@ -926,12 +927,12 @@ void Model_LoadBSPNodes(BSPLump_t *blLump)
 		out->plane = loadmodel->planes + p;
 
 		out->firstsurface = (unsigned short)LittleShort (in->usFirstFace); //johnfitz -- explicit cast as unsigned short
-		out->numsurfaces = (unsigned short)LittleShort (in->numfaces); //johnfitz -- explicit cast as unsigned short
+		out->numsurfaces = (unsigned short)LittleShort (in->usNumFaces); //johnfitz -- explicit cast as unsigned short
 
 		for (j=0 ; j<2 ; j++)
 		{
 			//johnfitz -- hack to handle nodes > 32k, adapted from darkplaces
-			p = (unsigned short)LittleShort(in->children[j]);
+			p = (unsigned short)LittleShort(in->iChildren[j]);
 			if (p < count)
 				out->children[j] = loadmodel->nodes + p;
 			else
@@ -971,17 +972,17 @@ void Model_LoadBSPLeafs(BSPLump_t *blLump)
 	{
 		for (j=0 ; j<3 ; j++)
 		{
-			out->minmaxs[j] = LittleShort (in->mins[j]);
-			out->minmaxs[3+j] = LittleShort (in->maxs[j]);
+			out->minmaxs[j]		= LittleFloat(in->fMins[j]);
+			out->minmaxs[3+j]	= LittleFloat(in->fMaxs[j]);
 		}
 
-		p = LittleLong(in->contents);
+		p = LittleLong(in->iContents);
 		out->contents = p;
 
-		out->firstmarksurface = loadmodel->marksurfaces + (unsigned short)LittleShort(in->firstmarksurface); //johnfitz -- unsigned short
-		out->nummarksurfaces = (unsigned short)LittleShort(in->nummarksurfaces); //johnfitz -- unsigned short
+		out->firstmarksurface	= loadmodel->marksurfaces+LittleLong(in->uiFirstMarkSurface);
+		out->nummarksurfaces	= LittleLong(in->uiNumMarkSurfaces);
 
-		p = LittleLong(in->visofs);
+		p = LittleLong(in->iVisibilityOffset);
 		if (p == -1)
 			out->compressed_vis = NULL;
 		else
@@ -989,7 +990,7 @@ void Model_LoadBSPLeafs(BSPLump_t *blLump)
 		out->efrags = NULL;
 
 		for (j=0 ; j<4 ; j++)
-			out->ambient_sound_level[j] = in->ambient_level[j];
+			out->ambient_sound_level[j] = in->bAmbientLevel[j];
 
 		//johnfitz -- removed code to mark surfaces as SURF_UNDERWATER
 	}
@@ -1037,20 +1038,20 @@ void Model_LoadBSPClipNodes(BSPLump_t *blLump)
 
 	for (i=0 ; i<count ; i++, out++, in++)
 	{
-		out->planenum = LittleLong(in->planenum);
+		out->iPlaneNum = LittleLong(in->iPlaneNum);
 
 		//johnfitz -- bounds check
-		if (out->planenum < 0 || out->planenum >= loadmodel->numplanes)
-			Host_Error ("Model_LoadBSPClipNodes: planenum out of bounds! (%i)",out->planenum);
+		if (out->iPlaneNum < 0 || out->iPlaneNum >= loadmodel->numplanes)
+			Host_Error ("Model_LoadBSPClipNodes: planenum out of bounds! (%i)",out->iPlaneNum);
 		//johnfitz
 
 		//johnfitz -- support clipnodes > 32k
-		out->children[0] = (unsigned short)LittleShort(in->children[0]);
-		out->children[1] = (unsigned short)LittleShort(in->children[1]);
-		if (out->children[0] >= count)
-			out->children[0] -= 65536;
-		if (out->children[1] >= count)
-			out->children[1] -= 65536;
+		out->iChildren[0]	= LittleLong(in->iChildren[0]);
+		out->iChildren[1]	= LittleLong(in->iChildren[1]);
+		if (out->iChildren[0] >= count)
+			out->iChildren[0] -= 65536;
+		if (out->iChildren[1] >= count)
+			out->iChildren[1] -= 65536;
 		//johnfitz
 	}
 }
@@ -1077,14 +1078,14 @@ void Mod_MakeHull0 (void)
 
 	for (i=0 ; i<count ; i++, out++, in++)
 	{
-		out->planenum = in->plane - loadmodel->planes;
+		out->iPlaneNum = in->plane - loadmodel->planes;
 		for (j=0 ; j<2 ; j++)
 		{
 			child = in->children[j];
 			if (child->contents < 0)
-				out->children[j] = child->contents;
+				out->iChildren[j] = child->contents;
 			else
-				out->children[j] = child - loadmodel->nodes;
+				out->iChildren[j] = child - loadmodel->nodes;
 		}
 	}
 }

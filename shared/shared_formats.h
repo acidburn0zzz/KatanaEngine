@@ -201,8 +201,8 @@ typedef struct
 #define	BSP_VERSION	4
 #define	BSP_VERSION_4	// Enable support for version 4 feature set.
 
-#define	BSP_HEADER		(('P'<<16)+('S'<<8)+'B')	// For easy identification.
-#define	BSP_HEADER_SIZE	4							// "BSP" followed by version number.
+#define	BSP_HEADER		((' '<<24)+('P'<<16)+('S'<<8)+'B')	// For easy identification.
+#define	BSP_HEADER_SIZE	4									// "BSP" followed by version number.
 
 #define	BSP_MAX_HULLS			4
 #define	BSP_MAX_LEAFS			32768			//0x400000

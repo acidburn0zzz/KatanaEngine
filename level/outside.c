@@ -3,18 +3,13 @@
 
 int		outleafs;
 
-/*
-===========
-PointInLeaf
-
-Vic: rewrote to be faster
-LordHavoc: shortened a little
-===========
+/*	Vic: rewrote to be faster
+	LordHavoc: shortened a little
 */
 node_t	*PointInLeaf (node_t *node, vec3_t point)
 {
 	while (!node->contents)
-		node = node->children[PlaneDiff( point, &mapplanes[node->planenum] ) <= 0];
+		node = node->children[PlaneDiff2( point, &mapplanes[node->planenum] ) <= 0];
 	return node;
 }
 

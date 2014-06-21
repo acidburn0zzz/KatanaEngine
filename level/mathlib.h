@@ -107,6 +107,8 @@ typedef struct
 #define VectorInverse(v) ((v)[0]=-(v)[0],(v)[1]=-(v)[1],(v)[2]=-(v)[2])
 #define VectorScale(v, scale, out) ((out)[0]=(v)[0]*(scale),(out)[1]=(v)[1]*(scale),(out)[2]=(v)[2]*(scale))
 #define PlaneDiff(point,plane) (((plane)->iType < 3 ? (point)[(plane)->iType] : DotProduct((point), (plane)->fNormal)) - (plane)->fDist)
+// Quickly rushed in for older stuff. ~hogsy
+#define PlaneDiff2(point,plane) (((plane)->type < 3 ? (point)[(plane)->type] : DotProduct((point), (plane)->normal)) - (plane)->dist)
 
 vec_t VectorNormalize( vec3_t v );
 

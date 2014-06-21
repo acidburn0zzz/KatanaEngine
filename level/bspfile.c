@@ -436,8 +436,8 @@ void WriteBSPFile (char *filename)
 	printf ("Allocated %f MB (%d bytes) for file buffer\n", bspsize*(1.0f/(1024.0f*1024.0f)), bspsize);
 
 	// write header
-	SB_ZeroFill (&sb, BSP_HEADER_SIZE); // filled in later
-	SB_ZeroFill (&sb, sizeof(lumps));	// filled in later
+	SB_ZeroFill(&sb,BSP_HEADER_SIZE); // filled in later
+	SB_ZeroFill(&sb,sizeof(lumps));	// filled in later
 
 	// write lumps and pad each one to a multiple of 4 bytes
 	lump = &lumps[LUMP_PLANES];
