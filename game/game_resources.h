@@ -78,9 +78,16 @@
 #define PARTICLE_SMOKE1     "smoke1"
 #define PARTICLE_SMOKE2     "smoke2"
 #define PARTICLE_SMOKE3     "smoke3"
+#define	PARTICLE_BLOOD(a)	sprintf(a,"blood%i",rand()%4)
+#define	PARTICLE_BLOOD0		"blood0"
+#define	PARTICLE_BLOOD1		"blood1"
+#define	PARTICLE_BLOOD2		"blood2"
+#define	PARTICLE_BLOOD3		"blood3"
 
 #ifdef GAME_ADAMAS
 #define	BLAZER_MODEL_VIEW	"models/v_barrier.md2"
+
+#define	HURLER_MODEL_BODY	"models/hurler.bsp"
 #endif
 
 #define BASE_SOUND_TALK0    "misc/talk1.wav"

@@ -46,6 +46,7 @@ typedef enum
 	STAT_TOTALMONSTERS,
 	STAT_SECRETS,		// Bumped on client side by svc_foundsecret.
 	STAT_MONSTERS,		// Bumped by svc_killedmonster.
+	STAT_LIVES,			// Added for Adamas.
 
 	STAT_NONE
 } ClientStat_t;

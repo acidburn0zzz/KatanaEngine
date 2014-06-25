@@ -108,6 +108,7 @@
     <ClCompile Include="client\client_main.c" />
     <ClCompile Include="game_main.c" />
     <ClCompile Include="server\adamas\adamas_blazer.c" />
+    <ClCompile Include="server\adamas\adamas_hurler.c" />
     <ClCompile Include="server\adamas\adamas_player.c" />
     <ClCompile Include="server\monster_bot.c" />
     <ClCompile Include="server\openkatana\mode_ctf.c">

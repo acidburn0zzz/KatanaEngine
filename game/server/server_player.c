@@ -304,7 +304,7 @@ void Player_CheckFootsteps(edict_t *ePlayer)
 	vec2_t	vStep;
 
 	// [8/6/2013] Also check movetype so we don't do steps while noclipping/flying ~hogsy
-	if(ePlayer->v.movetype == MOVETYPE_WALK && ePlayer->v.flags & FL_ONGROUND)
+	if((ePlayer->v.movetype == MOVETYPE_WALK) && ePlayer->v.flags & FL_ONGROUND)
 	{
 		if((ePlayer->v.velocity[0] == 0 && ePlayer->v.velocity[1] == 0)	||
 			ePlayer->local.dStepTime > Server.dTime)
@@ -597,8 +597,6 @@ void Player_Pain(edict_t *ent,edict_t *other)
 	PLAYER_SOUND_PAIN(cSound);
 
 	Sound(ent,CHAN_VOICE,cSound,255,ATTN_NORM);
-
-	Engine.Particle(ent->v.origin,ent->v.velocity,1.0f,"blood",10);
 }
 
 int	iSpawnSlot;
@@ -622,11 +620,12 @@ void Player_Spawn(edict_t *ePlayer)
 	// [30/5/2013] Set physics properties to their defaults! ~hogsy
 	ePlayer->Physics.iSolid		= SOLID_SLIDEBOX;
 	ePlayer->Physics.fMass		= 1.4f;
-	ePlayer->Physics.fGravity	= 600.0f;
+	ePlayer->Physics.fGravity	= SERVER_GRAVITY;
 	ePlayer->Physics.fFriction	= 4.0f;
 
 	ePlayer->local.fSpawnDelay	= cvServerRespawnDelay.value;	// Set the delay before we spawn ~hogsy
 	ePlayer->local.pTeam		= TEAM_NEUTRAL;					// Set the default team ~hogsy
+	ePlayer->local.bBleed		= true;							// The player bleeds!
 
 	// [25/8/2012] Clear velocity here (why would we call this twice!?) ~hogsy
 	Math_VectorClear(ePlayer->v.velocity);
@@ -817,7 +816,7 @@ void Player_Jump(edict_t *ePlayer)
 	ePlayer->v.flags		-= FL_ONGROUND;
 	ePlayer->v.button[2]	= 0;
 
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	if(ePlayer->local.acro_finished > Server.dTime)
 	{
 		ePlayer->v.velocity[2] += 440.0f;

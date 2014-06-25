@@ -61,7 +61,7 @@ SpawnList_t SpawnList[] =
 	{	"point_lightstyle",		Point_LightstyleSpawn	},
 	{	"point_logic",			Point_LogicSpawn		},
 	{	"point_message",		Point_MessageSpawn		},
-//	{	"point_monster",		Point_MonsterSpawn		},
+	{	"point_monster",		Point_MonsterSpawn		},
 	{	"point_multitrigger",	Point_MultiTriggerSpawn	},
 	{	"point_vehicle",		Point_VehicleSpawn		},
 	{	"point_null",			Point_NullSpawn			},
@@ -96,7 +96,11 @@ cvar_t	cvServerGameMode		= { "server_gamemode",		"0",					false,	true,   "Sets t
 cvar_t	cvServerGameTime		= {	"server_gametime",		"120",					false,	true	};
 cvar_t	cvServerGameClients		= { "server_gameclients",	"2",					false,	true	};
 cvar_t	cvServerWaypointDelay	= { "server_waypointdelay",	"5.0",					false,	true,   "Delay before attempting to spawn another waypoint."	};
+#ifdef GAME_ADAMAS
+cvar_t	cvServerWaypointSpawn	= { "server_waypointspawn",	"0",					false,	true	};
+#else
 cvar_t	cvServerWaypointSpawn	= { "server_waypointspawn",	"1",					false,	true	};
+#endif
 cvar_t	cvServerWaypointParse	= { "server_waypointparse",	"",						false,	true    };
 // [19/3/2013] Replacement for the engine-side variable ~hogsy
 cvar_t	cvServerGravityTweak	= {	"server_gravityamount",	"1.0",					false,	true	};
@@ -224,6 +228,16 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/gib1.md2");
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/gib2.md2");
 
+	// Player
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep1.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep2.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep3.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep4.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain1.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain2.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain3.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain4.wav");
+
 #ifdef GAME_OPENKATANA	// [22/4/2013] OpenKatana specific stuff is now here instead ~hogsy
 	// [29/7/2012] Player sounds ~hogsy
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerjump5.wav");
@@ -233,10 +247,6 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerlandhurt.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerlandhurt2.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerswim1.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain1.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain2.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain3.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain4.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerdeath1.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerdeath2.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerdeath3.wav");
@@ -246,10 +256,6 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerland2.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerland3.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerland4.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep1.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep2.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep3.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep4.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerexitwater.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/gasp2.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/h2ojump.wav");
@@ -257,7 +263,23 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/blip.md2");
 	// [4/2/2013] Moved here since he's used in singleplayer too :) ~hogsy
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/sprfly.md2");
+
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"poison");
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark");
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark2");
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"ice");
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"zspark");
 #endif
+
+	// [21/3/2012] Updated ~hogsy
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD0);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD1);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD2);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD3);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE0);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE1);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE2);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE3);
 
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,cvServerPlayerModel.string);
 
@@ -290,18 +312,6 @@ void Server_Spawn(edict_t *ent)
 		// [31/7/2013] TODO: Get actual current game directory from the engine ~hogsy
 		//gFileSystem_ScanDirectory("data/models/player/*.md2",Server_PrecachePlayerModel);
 	}
-
-	// [21/3/2012] Updated ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"blood");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"poison");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE0);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE1);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE2);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE3);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark2");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"ice");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"zspark");
 
 	Weapon_Precache();
 

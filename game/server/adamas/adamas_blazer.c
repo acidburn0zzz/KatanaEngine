@@ -2,31 +2,19 @@
 */
 #include "server_weapon.h"
 
-EntityFrame_t efBlazerDeploy[]=
-{
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	0,	0.02f			},
-	{	NULL,	13,	0.02f,	true	}
-};
-
 void Blazer_Deploy(edict_t *eOwner)
 {
-	Weapon_Animate(eOwner,efBlazerDeploy);
 }
 
 void Blazer_PrimaryAttack(edict_t *eOwner)
 {
+	Engine.MakeVectors(eOwner->v.v_angle);
+	Engine.Aim(eOwner);
+
+	eOwner->v.effects |= EF_MUZZLEFLASH;
+
+	Weapon_BulletProjectile(eOwner,1.0f,25,eOwner->v.vForward);
+
 	eOwner->local.dAttackFinished = Server.dTime+0.3;
 
 	eOwner->local.iBlazerAmmo--;
