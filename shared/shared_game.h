@@ -301,7 +301,7 @@ typedef struct
 				*cSoundMoving,
 				*cSoundReturn;
 
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	// Powerups
 	double		power_finished,power_time,		// Power Boost.
 				speed_finished,speed_time,		// Speed Boost.
@@ -337,7 +337,7 @@ typedef struct
 	int			zeus_ammo;
 	int			tazerhook_ammo;
 #elif GAME_ADAMAS
-	int		iBlazerAmmo;
+	int		iBulletAmmo;
 #endif
 
 	// Animation
@@ -478,10 +478,11 @@ typedef struct
 	void		(*Server_PrecacheResource)(int iType,const char *ccResource);									// Precaches the specified resource.
 	void		(*Server_Restart)(void);																		// Restarts the server.
 	void		(*Server_ChangeLevel)(const char *ccNewLevel);													// Changes the level.
-	void		(*Server_AmbientSound)(vec_t *vPosition,const char *cPath,int iVolume,int iAttenuation);
+	void		(*Server_AmbientSound)(vec_t *vPosition,const char *cPath,int iVolume,int iAttenuation);		// Plays an ambient sound (a constant sound) from the given location.
 	trace_t		(*Server_Move)(vec3_t start,vec3_t mins,vec3_t maxs,vec3_t end,int type,edict_t *passedict);
 	edict_t		*(*Server_FindRadius)(vec3_t origin,float radius);												// Finds entities within a specific radius.
 	edict_t		*(*Server_FindEntity)(edict_t *eStartEntity,char *cName,bool bClassname);						// Finds a specified entity either by classname or by entity name.
+	char		*(*Server_GetLevelName)(void);																	// Returns the name of the currently active level.
 
 	// Client
 	int				(*Client_GetEffect)(const char *cPath);					// Get an effect index.

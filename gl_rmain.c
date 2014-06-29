@@ -632,9 +632,7 @@ void R_DrawShadows (void)
 	{
 		currententity = cl_visedicts[i];
 
-		if(currententity->model->mType != MODEL_TYPE_MD2)
-			continue;
-		else if(currententity == &cl.viewent)
+		if(currententity == &cl.viewent)
 			return;
 
 		Draw_Shadow(currententity);

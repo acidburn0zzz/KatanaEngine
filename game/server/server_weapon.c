@@ -131,7 +131,7 @@ Weapon_t Weapons[] =
 		Blazer_Deploy,
 
 		// Primary
-		AM_PROJECTILE,
+		AM_BULLET,
 		Blazer_PrimaryAttack
 	},
 #endif
@@ -232,7 +232,8 @@ void Weapon_Precache(void)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"weapons/sidewinder/sidewindersplash.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"weapons/sidewinder/sidewinderunderwaterfire.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"weapons/sidewinder/sidewinderunderwaterflyby.wav");
-#elif ICTUS
+#elif GAME_ADAMAS
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,BLAZER_MODEL_VIEW);
 #endif
 }
 
@@ -254,27 +255,31 @@ void Weapon_BulletProjectile(edict_t *eEntity,float fSpread,int iDamage,vec_t *v
 		return;
 	else
 	{
-			if(tTrace.ent && tTrace.ent->v.bTakeDamage)
-				MONSTER_Damage(tTrace.ent,eEntity,iDamage,DAMAGE_TYPE_NONE);
-			else
+		char	cSmoke[6];
+
+		if(tTrace.ent && tTrace.ent->v.bTakeDamage)
+			MONSTER_Damage(tTrace.ent,eEntity,iDamage,DAMAGE_TYPE_NONE);
+		else
+		{
+			edict_t *eSmoke = Spawn();
+			if(eSmoke)
 			{
-				edict_t *eSmoke = Spawn();
-				if(eSmoke)
-				{
-					char cSound[32];
+				char cSound[32];
 
-					eSmoke->v.think			= Entity_Remove;
-					eSmoke->v.dNextThink	= Server.dTime+0.5;
+				eSmoke->v.think			= Entity_Remove;
+				eSmoke->v.dNextThink	= Server.dTime+0.5;
 
-					Entity_SetOrigin(eSmoke,tTrace.endpos);
+				Entity_SetOrigin(eSmoke,tTrace.endpos);
 
-					PHYSICS_SOUND_RICOCHET(cSound);
+				PHYSICS_SOUND_RICOCHET(cSound);
 
-					Sound(eSmoke,CHAN_BODY,cSound,255,ATTN_NORM);
-				}
-
-				Engine.Particle(tTrace.endpos,vec3_origin,10,"smoke",12);
+				Sound(eSmoke,CHAN_BODY,cSound,255,ATTN_NORM);
 			}
+
+			PARTICLE_SMOKE(cSmoke);
+
+			Engine.Particle(tTrace.endpos,vec3_origin,15,cSmoke,15);
+		}
 	}
 }
 
@@ -322,6 +327,10 @@ void Weapon_SetActive(Weapon_t *wWeapon,edict_t *eEntity)
 			break;
 		case AM_C4BOMB:
 			eEntity->v.iPrimaryAmmo = eEntity->local.iC4Ammo;
+			break;
+#elif GAME_ADAMAS
+		case AM_BULLET:
+			eEntity->v.iPrimaryAmmo = eEntity->local.iBulletAmmo;
 			break;
 #endif
 		case AM_MELEE:
@@ -397,6 +406,11 @@ bool Weapon_CheckPrimaryAmmo(Weapon_t *wWeapon,edict_t *eEntity)
 		break;
 	case AM_C4BOMB:
 		if(eEntity->local.iC4Ammo)
+			return true;
+		break;
+#elif GAME_ADAMAS
+	case AM_BULLET:
+		if(eEntity->local.iBulletAmmo)
 			return true;
 		break;
 #endif

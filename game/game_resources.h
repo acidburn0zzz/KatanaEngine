@@ -85,7 +85,7 @@
 #define	PARTICLE_BLOOD3		"blood3"
 
 #ifdef GAME_ADAMAS
-#define	BLAZER_MODEL_VIEW	"models/v_barrier.md2"
+#define	BLAZER_MODEL_VIEW	"models/weapon.bsp"
 
 #define	HURLER_MODEL_BODY	"models/hurler.bsp"
 #endif

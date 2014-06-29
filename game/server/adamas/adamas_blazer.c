@@ -8,15 +8,16 @@ void Blazer_Deploy(edict_t *eOwner)
 
 void Blazer_PrimaryAttack(edict_t *eOwner)
 {
-	Engine.MakeVectors(eOwner->v.v_angle);
-	Engine.Aim(eOwner);
+	vec3_t	vForward,vTemp;
+
+	Math_AngleVectors(eOwner->v.v_angle,vForward,vTemp,vTemp);
 
 	eOwner->v.effects |= EF_MUZZLEFLASH;
 
-	Weapon_BulletProjectile(eOwner,1.0f,25,eOwner->v.vForward);
+	Weapon_BulletProjectile(eOwner,0.5f,25,vForward);
 
 	eOwner->local.dAttackFinished = Server.dTime+0.3;
 
-	eOwner->local.iBlazerAmmo--;
-	eOwner->v.iPrimaryAmmo = eOwner->local.iBlazerAmmo;
+	eOwner->local.iBulletAmmo--;
+	eOwner->v.iPrimaryAmmo = eOwner->local.iBulletAmmo;
 }

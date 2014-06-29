@@ -170,10 +170,14 @@ void Server_Spawn(edict_t *ent)
 {
 	Server.eWorld = ent;
 
-	// Set defaults
+	// Set defaults.
 	Server.dWaypointSpawnDelay	= ((double)cvServerWaypointDelay.value);
 	Server.bRoundStarted		=
 	Server.bPlayersSpawned		= false; // [5/9/3024] Players have no been spawned yet ~hogsy
+	Server.iMonsters			= 0;
+#ifdef GAME_ADAMAS
+	Server.iLives				= 2;
+#endif
 
 	Waypoint_Initialize();
 
@@ -183,11 +187,11 @@ void Server_Spawn(edict_t *ent)
 	bIsMultiplayer	= true;
 
 	// [19/3/2013] Set up our gamemode ~hogsy
-	if(cvServerGameMode.value == MODE_DEATHMATCH)
+	if(cvServerGameMode.iValue == MODE_DEATHMATCH)
 		bIsDeathmatch = true;
-	else if(cvServerGameMode.value == MODE_COOPERATIVE)
+	else if(cvServerGameMode.iValue == MODE_COOPERATIVE)
 		bIsCooperative = true;
-	else if(cvServerGameMode.value == MODE_SINGLEPLAYER)
+	else if(cvServerGameMode.iValue == MODE_SINGLEPLAYER)
 	{
 		bIsMultiplayer = false;
 
@@ -272,6 +276,7 @@ void Server_Spawn(edict_t *ent)
 #endif
 
 	// [21/3/2012] Updated ~hogsy
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"pl");
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD0);
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD1);
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD2);

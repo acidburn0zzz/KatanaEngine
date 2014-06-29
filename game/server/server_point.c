@@ -36,6 +36,8 @@ void Point_MonsterSpawn(edict_t *eMonster)
 	if(cvServerMonsters.value <= 0)
 		ENTITY_REMOVE(eMonster);
 
+	Server.iMonsters++;
+
 	switch(eMonster->local.style)
 	{
 #ifdef GAME_OPENKATANA
@@ -59,6 +61,10 @@ void Point_MonsterSpawn(edict_t *eMonster)
 #endif
 	default:
 		Engine.Con_Warning("Invalid monster type (%i)!\n",eMonster->local.style);
+
+		// Reduce the monster count. ~hogsy
+		Server.iMonsters--;
+
 		Entity_Remove(eMonster);
 	}
 }

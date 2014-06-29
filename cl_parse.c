@@ -918,6 +918,7 @@ void CL_ParseServerMessage(void)
 				Host_Error ("CL_ParseServerMessage: svc_updatefrags > MAX_SCOREBOARD");
 
 			cl.scores[i].frags = MSG_ReadShort();
+			cl.stats[STAT_FRAGS] = cl.scores[i].frags;
 			break;
 		case svc_updatecolors:
 			i = MSG_ReadByte ();
@@ -968,7 +969,7 @@ void CL_ParseServerMessage(void)
 		case svc_foundsecret:
 			cl.stats[STAT_SECRETS]++;
 			break;
-		case svc_updatestat:
+		case SVC_UPDATESTAT:
 			i = MSG_ReadByte ();
 			if(i < 0 || i >= STAT_NONE)
 				Sys_Error("svc_updatestat: %i is invalid",i);

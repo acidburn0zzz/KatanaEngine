@@ -424,8 +424,6 @@ void Player_PreThink(edict_t *ePlayer)
 {
 	if(Server.bRoundStarted && !Server.bPlayersSpawned)
 	{
-		Server.bPlayersSpawned = true;
-
 		// [5/9/2013] Spawn the player! ~hogsy
 		Player_Spawn(ePlayer);
 		return;
@@ -638,6 +636,8 @@ void Player_Spawn(edict_t *ePlayer)
 	ePlayer->monster.think_die	= Player_Die;
 	ePlayer->monster.think_pain = Player_Pain;
 
+	Server.bPlayersSpawned = true;
+
 	if(bIsMultiplayer)
 	{
 #ifdef GAME_OPENKATANA
@@ -730,11 +730,18 @@ void Player_Spawn(edict_t *ePlayer)
 
 				Item_AddInventory(iBlazer,ePlayer);
 
+				// Give us some ammo too! ~hogsy
+				ePlayer->local.iBulletAmmo = 250;
+
 				wStartWeapon = Weapon_GetWeapon(WEAPON_BLAZER);
 				if(wStartWeapon)
 					Weapon_SetActive(wStartWeapon,ePlayer);
 			}
 		}
+
+		// On our first life, notify the player on how to play. ~hogsy
+		if(Server.iLives == 2)
+			Engine.CenterPrint(ePlayer,"Walk forwards to begin the round!\nDon't get killed.");
 #endif
 	}
 
@@ -980,6 +987,18 @@ void Player_DeathThink(edict_t *ent)
 
 		if(!ent->local.fSpawnDelay)
 		{
+#ifdef GAME_ADAMAS
+			if(!Server.iLives)
+				Engine.Server_Restart();
+			else
+			{
+				Server.iLives--;
+
+				Engine.CenterPrint(ent,va("You have %i lives remaining!\n",Server.iLives));
+
+				Player_Spawn(ent);
+			}
+#else
 			// [25/8/2012] We don't respawn in singleplayer ~hogsy
 			// [23/3/2013] Oops! Fixed, we were checking for the wrong case here :) ~hogsy
 			if(bIsMultiplayer)
@@ -990,6 +1009,7 @@ void Player_DeathThink(edict_t *ent)
 				Engine.Server_Restart();
 				return;
 			}
+#endif
 		}
 	}
 

@@ -185,6 +185,20 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 	case SERVER_STARTFRAME:
 #ifdef GAME_OPENKATANA
 		Deathmatch_Frame();
+#elif GAME_ADAMAS
+		// This is stupid... ~hogsy
+		if(!Server.iMonsters && Server.bRoundStarted)
+		{
+			if(strstr(Engine.Server_GetLevelName(),"0"))
+				Engine.Server_ChangeLevel("room1");
+			else if(strstr(Engine.Server_GetLevelName(),"1"))
+				Engine.Server_ChangeLevel("room2");
+			else
+			{
+				Engine.Server_BroadcastPrint("You Win!!\n");
+				Engine.Server_ChangeLevel("room0");
+			}
+		}
 #endif
 		break;
 	case SERVER_SETCHANGEPARMS:
@@ -259,6 +273,7 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Engine.Server_Restart			= Import->Server_Restart;
 	Engine.Server_ChangeLevel		= Import->Server_ChangeLevel;
 	Engine.Server_AmbientSound		= Import->Server_AmbientSound;
+	Engine.Server_GetLevelName		= Import->Server_GetLevelName;
 
 	Export.Version						= MODULE_VERSION2;
 #ifdef GAME_OPENKATANA

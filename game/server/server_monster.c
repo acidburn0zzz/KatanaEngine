@@ -431,7 +431,16 @@ void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
 	{
 		WriteByte(MSG_ALL,SVC_KILLEDMONSTER);
 
+		Server.iMonsters--;
 		eAttacker->v.iScore++;
+
+#if 0
+		// Update number of frags for client.
+		Engine.SetMessageEntity(eAttacker);
+		Engine.WriteByte(MSG_ONE,SVC_UPDATESTAT);
+		Engine.WriteByte(MSG_ONE,STAT_FRAGS);
+		Engine.WriteByte(MSG_ONE,eAttacker->v.iScore);
+#endif
 	}
 	else if(Entity_IsPlayer(eAttacker) && bIsMultiplayer)
 	{

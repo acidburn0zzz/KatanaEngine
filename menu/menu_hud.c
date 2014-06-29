@@ -27,6 +27,9 @@ void HUD_Draw(void)
 		int	iClientArmor	= Engine.Client_GetStat(STAT_ARMOR),
 			iClientHealth	= Engine.Client_GetStat(STAT_HEALTH);
 
+		if(iClientHealth < 0)
+			iClientHealth = 0;
+
 		Engine.DrawPic(HUD_BASEPATH"health",1.0f,30,iMenuHeight-64,64,64);
 
 		if(iClientHealth >= 100)
@@ -55,7 +58,9 @@ void HUD_Draw(void)
 
 	// Display the players current score.
 	Engine.DrawString(iMenuWidth-128,iMenuHeight-16,va("SCORE: %i",Engine.Client_GetStat(STAT_FRAGS)));
+#if 0
 	Engine.DrawString(iMenuWidth-128,iMenuHeight-32,va("LIVES: %i",Engine.Client_GetStat(STAT_LIVES)));
+#endif
 #elif GAME_OPENKATANA
 	{
 		int iHSize[2],iNSize[2],

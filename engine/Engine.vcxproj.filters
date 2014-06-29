@@ -16,6 +16,9 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{1178c8d7-e22f-4b83-a122-c5327d9bb2d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{363525c9-c8a7-44ef-9df7-5fac45c5b6cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\chase.c" />
@@ -120,11 +123,9 @@
     </ClCompile>
     <ClCompile Include="engine_client.c" />
     <ClCompile Include="engine_console.c" />
-    <ClCompile Include="engine_game.c" />
     <ClCompile Include="engine_input.c" />
     <ClCompile Include="engine_loader.c" />
     <ClCompile Include="engine_main.c" />
-    <ClCompile Include="engine_menu.c" />
     <ClCompile Include="engine_world.c" />
     <ClCompile Include="engine_server.c" />
     <ClCompile Include="engine_script.c" />
@@ -151,6 +152,12 @@
     </ClCompile>
     <ClCompile Include="engine_editor.c">
       <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_game.c">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="engine_menu.c">
+      <Filter>Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
