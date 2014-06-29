@@ -9,9 +9,12 @@
 */
 typedef enum
 {
-#ifdef GAME_OPENKATANA
 	AM_BULLET,
+	AM_SWITCH,
+	AM_MELEE,
 	AM_ROCKET,
+	AM_PROJECTILE,				// General projectile-based ammo.
+#ifdef GAME_OPENKATANA
 /*	Episode one					*/
 	AM_IONS,					// ION ammunition.
 	AM_SHELL,					// SHOTCYCLER ammunition.
@@ -22,9 +25,6 @@ typedef enum
 /*	Episode three				*/
 /*	Episode four				*/
 #endif
-
-	AM_SWITCH,
-	AM_MELEE,
 
 	AM_NONE
 } WeaponAmmo_t;
@@ -72,6 +72,9 @@ void SideWinder_PrimaryAttack(edict_t *eOwner);
 void Zeus_PrimaryAttack(edict_t *ent);
 void IonRifle_PrimaryAttack(edict_t *eOwner);
 void IonRifle_SecondaryAttack(edict_t *eOwner);
+#elif GAME_ADAMAS
+void Blazer_Deploy(edict_t *eOwner);
+void Blazer_PrimaryAttack(edict_t *eOwner);
 #endif
 
 typedef struct
@@ -102,7 +105,7 @@ void Weapon_Precache(void);
 void Weapon_SetActive(Weapon_t *wWeapon,edict_t *eEntity);
 void Weapon_BulletProjectile(edict_t *ent,float spread,int damage,vec3_t vVector);
 void Weapon_CheckFrames(edict_t *eEntity);
-void WEAPON_Animate(edict_t *ent,EntityFrame_t *eFrames);
+void Weapon_Animate(edict_t *ent,EntityFrame_t *eFrames);
 void Weapon_PrimaryAttack(edict_t *eEntity);
 void Weapon_CheckInput(edict_t *eEntity);
 

@@ -429,8 +429,8 @@ void Input_ActivateMouse(void)
 	if(bMouseActive)
 		return;
 
-//	SDL_ShowCursor(false);
-//	SDL_SetWindowGrab(sMainWindow,SDL_TRUE);
+	SDL_ShowCursor(false);
+	SDL_SetWindowGrab(sMainWindow,SDL_TRUE);
 	SDL_WarpMouseInWindow(sMainWindow,Video.iWidth/2,Video.iHeight/2);
 
 	bMouseActive = true;
@@ -441,8 +441,8 @@ void Input_DeactivateMouse(void)
 	if(!bMouseActive)
 		return;
 
-//	SDL_ShowCursor(true);
-//	SDL_SetWindowGrab(sMainWindow,SDL_FALSE);
+	SDL_ShowCursor(true);
+	SDL_SetWindowGrab(sMainWindow,SDL_FALSE);
 
 	bMouseActive = false;
 }

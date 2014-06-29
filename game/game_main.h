@@ -35,11 +35,16 @@ typedef struct
 					*cMapTitle;             // Map title.
 
 	int				iLastGameMode,          // The last active gamemode.
-					iClients;               // Number of connected clients.
+					iClients,               // Number of connected clients.
+					iMonsters;				// Number of monsters within the level.
 
 	// Gamemode
 	bool			bRoundStarted,			// Has the round started yet?
 					bPlayersSpawned;		// Have the players been spawned for the current mode?
+
+#ifdef GAME_ADAMAS
+	int				iLives;					// Players current number of lives (shared).
+#endif
 } GameServer_t;
 
 typedef struct
@@ -63,6 +68,8 @@ GameClient_t Client;
 /*
 	Weapons
 */
+
+#define	WEAPON_NONE		-1
 
 // [5/8/2013] Made these standard defines since maps rely on these now ~hogsy
 #ifdef OPENKATANA
@@ -91,6 +98,9 @@ GameClient_t Client;
 // Episode Four
 #define	WEAPON_GLOCK		50
 #define	WEAPON_IONRIFLE		70	// Talon Brave's weapon
+#elif GAME_ADAMAS
+#define WEAPON_BLAZER	1
+#define	ITEM_LIFE		2
 #endif
 #define ITEM_FLAG			1000
 

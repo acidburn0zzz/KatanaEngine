@@ -304,7 +304,7 @@ void Player_CheckFootsteps(edict_t *ePlayer)
 	vec2_t	vStep;
 
 	// [8/6/2013] Also check movetype so we don't do steps while noclipping/flying ~hogsy
-	if(ePlayer->v.movetype == MOVETYPE_WALK && ePlayer->v.flags & FL_ONGROUND)
+	if((ePlayer->v.movetype == MOVETYPE_WALK) && ePlayer->v.flags & FL_ONGROUND)
 	{
 		if((ePlayer->v.velocity[0] == 0 && ePlayer->v.velocity[1] == 0)	||
 			ePlayer->local.dStepTime > Server.dTime)
@@ -424,8 +424,6 @@ void Player_PreThink(edict_t *ePlayer)
 {
 	if(Server.bRoundStarted && !Server.bPlayersSpawned)
 	{
-		Server.bPlayersSpawned = true;
-
 		// [5/9/2013] Spawn the player! ~hogsy
 		Player_Spawn(ePlayer);
 		return;
@@ -533,8 +531,10 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 
 	ePlayer->Physics.iSolid	= SOLID_NOT;
 
+#ifdef GAME_OPENKATANA
 	// [15/10/2013] Detonate all C4 bombs we've laid out! ~hogsy
 	C4Vizatergo_SecondaryAttack(ePlayer);
+#endif
 
 #if 0
 	int i;
@@ -575,9 +575,11 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 
 	Sound(ePlayer,CHAN_VOICE,s,255,ATTN_NONE);
 
+#ifdef GAME_OPENKATANA
 	if(ePlayer->v.iActiveWeapon == WEAPON_DAIKATANA)
 		Entity_Animate(ePlayer,PlayerAnimation_KatanaDeath1);
 	else 
+#endif
 	{
 		if(rand()%2 == 1)
 			Entity_Animate(ePlayer,PlayerAnimation_Death1);
@@ -588,17 +590,11 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 
 void Player_Pain(edict_t *ent,edict_t *other)
 {
-	int i;
+	char cSound[24];
 
-	i = rand()%3;
-	if(i == 1)
-		Sound(ent,CHAN_VOICE,"player/playerpain1.wav",255,ATTN_NORM);
-	else if(i == 2)
-		Sound(ent,CHAN_VOICE,"player/playerpain2.wav",255,ATTN_NORM);
-	else
-		Sound(ent,CHAN_VOICE,"player/playerpain3.wav",255,ATTN_NORM);
+	PLAYER_SOUND_PAIN(cSound);
 
-	Engine.Particle(ent->v.origin,ent->v.velocity,1.0f,"blood",10);
+	Sound(ent,CHAN_VOICE,cSound,255,ATTN_NORM);
 }
 
 int	iSpawnSlot;
@@ -622,11 +618,12 @@ void Player_Spawn(edict_t *ePlayer)
 	// [30/5/2013] Set physics properties to their defaults! ~hogsy
 	ePlayer->Physics.iSolid		= SOLID_SLIDEBOX;
 	ePlayer->Physics.fMass		= 1.4f;
-	ePlayer->Physics.fGravity	= 600.0f;
+	ePlayer->Physics.fGravity	= SERVER_GRAVITY;
 	ePlayer->Physics.fFriction	= 4.0f;
 
 	ePlayer->local.fSpawnDelay	= cvServerRespawnDelay.value;	// Set the delay before we spawn ~hogsy
 	ePlayer->local.pTeam		= TEAM_NEUTRAL;					// Set the default team ~hogsy
+	ePlayer->local.bBleed		= true;							// The player bleeds!
 
 	// [25/8/2012] Clear velocity here (why would we call this twice!?) ~hogsy
 	Math_VectorClear(ePlayer->v.velocity);
@@ -639,8 +636,11 @@ void Player_Spawn(edict_t *ePlayer)
 	ePlayer->monster.think_die	= Player_Die;
 	ePlayer->monster.think_pain = Player_Pain;
 
+	Server.bPlayersSpawned = true;
+
 	if(bIsMultiplayer)
 	{
+#ifdef GAME_OPENKATANA
 		switch((int)cvServerGameMode.value)
 		{
 		// TODO: Check what model this player has set in a cvar
@@ -698,12 +698,13 @@ void Player_Spawn(edict_t *ePlayer)
 			Deathmatch_Spawn(ePlayer);
 			break;
 		}
+#endif
 	}
 	else	// [29/7/2013] Singleplayer ~hogsy
 	{
 		Server_UpdateClientMenu(ePlayer,MENU_STATE_HUD,true);
 
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 		// [18/5/2013] Initial weapon should be the IonBlaster ? Mainly for testing ~hogsy
 		{
 			Item_t	*iDaikatana = Item_GetItem(WEAPON_DAIKATANA);
@@ -719,6 +720,28 @@ void Player_Spawn(edict_t *ePlayer)
 				}
 			}
 		}
+#elif GAME_ADAMAS
+		{
+			Item_t *iBlazer = Item_GetItem(WEAPON_BLAZER);
+
+			if(iBlazer)
+			{
+				Weapon_t *wStartWeapon;
+
+				Item_AddInventory(iBlazer,ePlayer);
+
+				// Give us some ammo too! ~hogsy
+				ePlayer->local.iBulletAmmo = 250;
+
+				wStartWeapon = Weapon_GetWeapon(WEAPON_BLAZER);
+				if(wStartWeapon)
+					Weapon_SetActive(wStartWeapon,ePlayer);
+			}
+		}
+
+		// On our first life, notify the player on how to play. ~hogsy
+		if(Server.iLives == 2)
+			Engine.CenterPrint(ePlayer,"Walk forwards to begin the round!\nDon't get killed.");
 #endif
 	}
 
@@ -800,7 +823,7 @@ void Player_Jump(edict_t *ePlayer)
 	ePlayer->v.flags		-= FL_ONGROUND;
 	ePlayer->v.button[2]	= 0;
 
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	if(ePlayer->local.acro_finished > Server.dTime)
 	{
 		ePlayer->v.velocity[2] += 440.0f;
@@ -808,20 +831,17 @@ void Player_Jump(edict_t *ePlayer)
 		sprintf(cJumpSound,"player/acroboost.wav");
 	}
 	else
+#endif
 	{
 		ePlayer->v.velocity[2] += 250.0f;
 
 		sprintf(cJumpSound,"player/playerjump%i.wav",rand()%3+5);
 	}
-#else	// [30/10/2013] Changed to else, this has to be something! ~hogsy
-	sprintf(cJumpSound,"player/jump%i.wav",rand()%3);
-#endif
 
 	Sound(ePlayer,CHAN_VOICE,cJumpSound,255,ATTN_NORM);
 
 	ePlayer->v.punchangle[0] += 3.0f;
 
-	// [7/2/2013] TODO: Bleh this can be done WAY more cleanly ;) ~hogsy
 	if((ePlayer->v.velocity[0] == 0) && (ePlayer->v.velocity[1] == 0))
 		Entity_Animate(ePlayer,PlayerAnimation_Jump);
 	else
@@ -967,6 +987,18 @@ void Player_DeathThink(edict_t *ent)
 
 		if(!ent->local.fSpawnDelay)
 		{
+#ifdef GAME_ADAMAS
+			if(!Server.iLives)
+				Engine.Server_Restart();
+			else
+			{
+				Server.iLives--;
+
+				Engine.CenterPrint(ent,va("You have %i lives remaining!\n",Server.iLives));
+
+				Player_Spawn(ent);
+			}
+#else
 			// [25/8/2012] We don't respawn in singleplayer ~hogsy
 			// [23/3/2013] Oops! Fixed, we were checking for the wrong case here :) ~hogsy
 			if(bIsMultiplayer)
@@ -977,6 +1009,7 @@ void Player_DeathThink(edict_t *ent)
 				Engine.Server_Restart();
 				return;
 			}
+#endif
 		}
 	}
 

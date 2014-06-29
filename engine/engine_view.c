@@ -36,7 +36,6 @@ cvar_t	v_iyaw_level		= { "v_iyaw_level",		"0.3",		false	};
 cvar_t	v_iroll_level		= { "v_iroll_level",	"0.1",		false	};
 cvar_t	v_ipitch_level		= { "v_ipitch_level",	"0.3",		false	};
 cvar_t	v_idlescale			= { "v_idlescale",		"0",		false	};
-cvar_t	crosshair			= {	"crosshair",		"1",		true	};
 cvar_t	gl_cshiftpercent	= {	"gl_cshiftpercent",	"100",		false	};
 
 float	v_dmg_time, v_dmg_roll, v_dmg_pitch;
@@ -850,7 +849,6 @@ void V_Init (void)
 	Cvar_RegisterVariable (&v_ipitch_level, NULL);
 
 	Cvar_RegisterVariable (&v_idlescale, NULL);
-	Cvar_RegisterVariable (&crosshair, NULL);
 	Cvar_RegisterVariable (&gl_cshiftpercent, NULL);
 
 	Cvar_RegisterVariable (&scr_ofsx, NULL);

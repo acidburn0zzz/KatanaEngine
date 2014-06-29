@@ -34,6 +34,11 @@ void Server_ChangeLevel(const char *ccNewLevel)
 	Cbuf_AddText(va("changelevel %s\n",ccNewLevel));
 }
 
+char *Server_GetLevelName(void)
+{
+	return sv.name;
+}
+
 edict_t *Server_FindRadius(vec3_t origin,float radius)
 {
 	int		i,j;
@@ -626,6 +631,7 @@ void Game_Initialize(void)
 	Import.Server_Restart			= Host_Restart_f;
 	Import.Server_ChangeLevel		= Server_ChangeLevel;
 	Import.Server_AmbientSound		= Game_AmbientSound;
+	Import.Server_GetLevelName		= Server_GetLevelName;
 
 	Game = (ModuleExport_t*)pModule_Load(hGameInstance,va("%s/"MODULE_GAME,com_gamedir),"Game_Main",&Import);
 	if(!Game)

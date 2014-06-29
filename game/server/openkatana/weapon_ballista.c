@@ -13,7 +13,7 @@ EntityFrame_t BallistaAnimation_Deploy [] =
 
 void Ballista_Deploy(edict_t *ent)
 {
-	WEAPON_Animate(ent,BallistaAnimation_Deploy);
+	Weapon_Animate(ent,BallistaAnimation_Deploy);
 }
 
 void Ballista_LogTouch(edict_t *ent, edict_t *other)

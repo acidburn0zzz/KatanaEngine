@@ -9,7 +9,11 @@
 
 Weapon_t Weapons[] =
 {
-#ifdef OPENKATANA
+	{
+		WEAPON_NONE
+	},
+
+#ifdef GAME_OPENKATANA
 	{
 		WEAPON_KATANA,
 		DAIKATANA_MODEL_VIEW,
@@ -120,7 +124,16 @@ Weapon_t Weapons[] =
 		AM_BULLET,
 		Glock_PrimaryAttack
 	},
-#elif ICTUS
+#elif GAME_ADAMAS
+	{
+		WEAPON_BLAZER,
+		BLAZER_MODEL_VIEW,
+		Blazer_Deploy,
+
+		// Primary
+		AM_BULLET,
+		Blazer_PrimaryAttack
+	},
 #endif
 
 	{	0,	NULL,	NULL,	AM_NONE, NULL,	AM_NONE,	NULL	}
@@ -219,7 +232,8 @@ void Weapon_Precache(void)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"weapons/sidewinder/sidewindersplash.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"weapons/sidewinder/sidewinderunderwaterfire.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"weapons/sidewinder/sidewinderunderwaterflyby.wav");
-#elif ICTUS
+#elif GAME_ADAMAS
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,BLAZER_MODEL_VIEW);
 #endif
 }
 
@@ -241,27 +255,31 @@ void Weapon_BulletProjectile(edict_t *eEntity,float fSpread,int iDamage,vec_t *v
 		return;
 	else
 	{
-			if(tTrace.ent && tTrace.ent->v.bTakeDamage)
-				MONSTER_Damage(tTrace.ent,eEntity,iDamage,DAMAGE_TYPE_NONE);
-			else
+		char	cSmoke[6];
+
+		if(tTrace.ent && tTrace.ent->v.bTakeDamage)
+			MONSTER_Damage(tTrace.ent,eEntity,iDamage,DAMAGE_TYPE_NONE);
+		else
+		{
+			edict_t *eSmoke = Spawn();
+			if(eSmoke)
 			{
-				edict_t *eSmoke = Spawn();
-				if(eSmoke)
-				{
-					char cSound[32];
+				char cSound[32];
 
-					eSmoke->v.think			= Entity_Remove;
-					eSmoke->v.dNextThink	= Server.dTime+0.5;
+				eSmoke->v.think			= Entity_Remove;
+				eSmoke->v.dNextThink	= Server.dTime+0.5;
 
-					Entity_SetOrigin(eSmoke,tTrace.endpos);
+				Entity_SetOrigin(eSmoke,tTrace.endpos);
 
-					PHYSICS_SOUND_RICOCHET(cSound);
+				PHYSICS_SOUND_RICOCHET(cSound);
 
-					Sound(eSmoke,CHAN_BODY,cSound,255,ATTN_NORM);
-				}
-
-				Engine.Particle(tTrace.endpos,vec3_origin,10,"smoke",12);
+				Sound(eSmoke,CHAN_BODY,cSound,255,ATTN_NORM);
 			}
+
+			PARTICLE_SMOKE(cSmoke);
+
+			Engine.Particle(tTrace.endpos,vec3_origin,15,cSmoke,15);
+		}
 	}
 }
 
@@ -309,6 +327,10 @@ void Weapon_SetActive(Weapon_t *wWeapon,edict_t *eEntity)
 			break;
 		case AM_C4BOMB:
 			eEntity->v.iPrimaryAmmo = eEntity->local.iC4Ammo;
+			break;
+#elif GAME_ADAMAS
+		case AM_BULLET:
+			eEntity->v.iPrimaryAmmo = eEntity->local.iBulletAmmo;
 			break;
 #endif
 		case AM_MELEE:
@@ -386,6 +408,11 @@ bool Weapon_CheckPrimaryAmmo(Weapon_t *wWeapon,edict_t *eEntity)
 		if(eEntity->local.iC4Ammo)
 			return true;
 		break;
+#elif GAME_ADAMAS
+	case AM_BULLET:
+		if(eEntity->local.iBulletAmmo)
+			return true;
+		break;
 #endif
 	case AM_MELEE:
 	case AM_SWITCH:
@@ -445,9 +472,11 @@ void Weapon_CheckFrames(edict_t *eEntity)
 
 	eEntity->v.iWeaponFrame = eEntity->local.iWeaponFrames[eEntity->local.iWeaponAnimationCurrent].iFrame;
 
+#ifdef GAME_OPENKATANA
 	if(eEntity->local.attackb_finished > Server.dTime)
 		eEntity->local.fWeaponAnimationTime = ((float)Server.dTime)+eEntity->local.iWeaponFrames[eEntity->local.iWeaponAnimationCurrent].fSpeed * 0.2f;
 	else
+#endif
 		eEntity->local.fWeaponAnimationTime = ((float)Server.dTime)+eEntity->local.iWeaponFrames[eEntity->local.iWeaponAnimationCurrent].fSpeed;
 
 	if(eEntity->local.iWeaponFrames[eEntity->local.iWeaponAnimationCurrent].Function)
@@ -456,7 +485,7 @@ void Weapon_CheckFrames(edict_t *eEntity)
 	eEntity->local.iWeaponAnimationCurrent++;
 }
 
-void WEAPON_Animate(edict_t *ent,EntityFrame_t *eFrames)
+void Weapon_Animate(edict_t *ent,EntityFrame_t *eFrames)
 {
 	int i;
 
@@ -475,9 +504,11 @@ void WEAPON_Animate(edict_t *ent,EntityFrame_t *eFrames)
 
 	ent->local.iWeaponFrames = eFrames;
 
+#ifdef GAME_OPENKATANA
 	if(ent->local.attackb_finished > Server.dTime)
 		ent->local.fWeaponAnimationTime = ((float)Server.dTime)+eFrames[0].fSpeed*0.5f;
 	else
+#endif
 		ent->local.fWeaponAnimationTime = ((float)Server.dTime)+eFrames[0].fSpeed;
 }
 
@@ -534,11 +565,13 @@ void Weapon_PrimaryAttack(edict_t *eEntity)
 	{
 		Engine.MakeVectors(eEntity->v.v_angle);
 
+#ifdef GAME_OPENKATANA
 		// [15/8/2013] Why write this out again and again for every weapon? Just do it here! ~hogsy
 		if(Entity_IsPlayer(eEntity) && ((eEntity->v.velocity[0] == 0) && (eEntity->v.velocity[1] == 0)))
 			// [15/8/2013] But let's not forget that the Daikatana is a special case :) ~hogsy
 			if(wCurrentWeapon->iItem != WEAPON_DAIKATANA)
 				Entity_Animate(eEntity,PlayerAnimation_Fire);
+#endif
 
 		wCurrentWeapon->Primary(eEntity);
 	}
@@ -579,14 +612,14 @@ void Weapon_CheatCommand(edict_t *eEntity)
 #if 0
 	Item_AddInventory(Item_GetItem(WEAPON_GLOCK),eEntity);
 #endif
-#elif ICTUS
-#endif
-
-	eEntity->v.impulse = 0;
 
 	wWeapon = Weapon_GetWeapon(WEAPON_DAIKATANA);
 	if(wWeapon)
 		Weapon_SetActive(wWeapon,eEntity);
+#elif GAME_ADAMAS
+#endif
+
+	eEntity->v.impulse = 0;
 }
 
 void Weapon_CheckInput(edict_t *eEntity)
@@ -602,6 +635,7 @@ void Weapon_CheckInput(edict_t *eEntity)
 
 		switch((int)eEntity->v.impulse)
 		{
+#ifdef GAME_OPENKATANA
 		case 1:
 			iNewWeapon = WEAPON_IONBLASTER;
 			break;
@@ -622,6 +656,12 @@ void Weapon_CheckInput(edict_t *eEntity)
 			break;
 		case 7:
 			iNewWeapon = WEAPON_IONRIFLE;
+#endif
+		case 1:
+			iNewWeapon = WEAPON_BLAZER;
+			break;
+		default:
+			iNewWeapon = WEAPON_NONE;
 		}
 
 		// [29/7/2013] Check our actual inventory! ~hogsy

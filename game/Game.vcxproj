@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Adamas|Win32">
+      <Configuration>Adamas</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -14,7 +18,7 @@
     <ProjectGuid>{6BA71186-7156-4A79-ABAD-FC46D4492EA0}</ProjectGuid>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <RootNamespace>Menu</RootNamespace>
-    <ProjectName>OpenKatana</ProjectName>
+    <ProjectName>Game</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -30,6 +34,13 @@
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120_xp</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -37,6 +48,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -69,38 +83,112 @@
       <AdditionalDependencies>platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.;./server;./client;../shared;../platform/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_AFX_SECURE_NO_WARNINGS;_ATL_SECURE_NO_WARNINGS;GAME_ADAMAS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>..\..\..\game.x86.dll</OutputFile>
+      <AdditionalLibraryDirectories>..\platform\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\shared_math.c" />
     <ClCompile Include="client\client_effects.c" />
     <ClCompile Include="client\client_main.c" />
     <ClCompile Include="game_main.c" />
+    <ClCompile Include="server\adamas\adamas_blazer.c" />
+    <ClCompile Include="server\adamas\adamas_hurler.c" />
+    <ClCompile Include="server\adamas\adamas_player.c" />
     <ClCompile Include="server\monster_bot.c" />
-    <ClCompile Include="server\openkatana\mode_ctf.c" />
-    <ClCompile Include="server\openkatana\mode_deathmatch.c" />
-    <ClCompile Include="server\openkatana\mode_vektar.c" />
-    <ClCompile Include="server\openkatana\monster_inmater.c" />
-    <ClCompile Include="server\openkatana\monster_lasergat.c" />
-    <ClCompile Include="server\openkatana\monster_prisoner.c" />
-    <ClCompile Include="server\openkatana\weapon_axe.c" />
-    <ClCompile Include="server\openkatana\weapon_ballista.c" />
-    <ClCompile Include="server\openkatana\weapon_barrier.c" />
-    <ClCompile Include="server\openkatana\weapon_c4vizatergo.c" />
-    <ClCompile Include="server\openkatana\weapon_crossbow.c" />
-    <ClCompile Include="server\openkatana\weapon_daikatana.c" />
-    <ClCompile Include="server\openkatana\weapon_discus.c" />
-    <ClCompile Include="server\openkatana\weapon_glock.c" />
-    <ClCompile Include="server\openkatana\weapon_greekfire.c" />
-    <ClCompile Include="server\openkatana\weapon_hermes.c" />
-    <ClCompile Include="server\openkatana\weapon_ionblaster.c" />
-    <ClCompile Include="server\openkatana\weapon_ionrifle.c" />
-    <ClCompile Include="server\openkatana\weapon_kineticore.c" />
-    <ClCompile Include="server\openkatana\weapon_midas.c" />
-    <ClCompile Include="server\openkatana\weapon_pulserifle.c" />
-    <ClCompile Include="server\openkatana\weapon_shockwave.c" />
-    <ClCompile Include="server\openkatana\weapon_shotcycler6.c" />
-    <ClCompile Include="server\openkatana\weapon_sidewinder.c" />
-    <ClCompile Include="server\openkatana\weapon_trident.c" />
-    <ClCompile Include="server\openkatana\weapon_zeus.c" />
+    <ClCompile Include="server\openkatana\mode_ctf.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\mode_deathmatch.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\mode_vektar.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\monster_inmater.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\monster_lasergat.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\monster_prisoner.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_axe.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_ballista.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_barrier.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_c4vizatergo.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_crossbow.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_daikatana.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_discus.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_glock.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_greekfire.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_hermes.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_ionblaster.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_ionrifle.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_kineticore.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_midas.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_pulserifle.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_shockwave.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_shotcycler6.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_sidewinder.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_trident.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_zeus.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="server\server_area.c" />
     <ClCompile Include="server\server_deco.c" />
     <ClCompile Include="server\server_entity.c" />

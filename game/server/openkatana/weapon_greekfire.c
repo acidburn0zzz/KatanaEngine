@@ -2,7 +2,7 @@
 
 void GreekFire_Deploy(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,1,7,0.1f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,1,7,0.1f,0,0,0,FALSE);
 }
 
 void GreekfireTouch(edict_t *ent, edict_t *other)
@@ -63,7 +63,7 @@ void GreekFire_Throw(edict_t *ent)
 // [4/7/2012] Renamed to GreekFire_PrimaryAttack ~hogsy
 void GreekFire_PrimaryAttack(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,8,25,0.08f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,8,25,0.08f,0,0,0,FALSE);
 
 	ent->v.iPrimaryAmmo = ent->local.greekfire_ammo--;
 

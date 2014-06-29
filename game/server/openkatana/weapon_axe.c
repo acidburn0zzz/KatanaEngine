@@ -46,7 +46,7 @@ EntityFrame_t AxeAnimation_Attack2 [] =
 
 void Axe_Deploy(edict_t *ent)
 {
-	WEAPON_Animate(ent,AxeAnimation_Deploy);
+	Weapon_Animate(ent,AxeAnimation_Deploy);
 }
 
 void AxeHit(edict_t *ent)
@@ -91,9 +91,9 @@ void Axe_PrimaryAttack(edict_t *ent)
 	Sound(ent,CHAN_WEAPON,"weapons/axe/axeswing.wav",255,ATTN_NORM);
 
 	if(rand()%2 == 1)
-		WEAPON_Animate(ent,AxeAnimation_Attack1);
+		Weapon_Animate(ent,AxeAnimation_Attack1);
 	else
-		WEAPON_Animate(ent,AxeAnimation_Attack2);
+		Weapon_Animate(ent,AxeAnimation_Attack2);
 
 	if(ent->local.attackb_finished > Server.dTime)	// No attack boost...
 		ent->local.dAttackFinished = Server.dTime+0.25;

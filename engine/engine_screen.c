@@ -99,8 +99,6 @@ cvar_t	scr_showturtle		= { "showturtle",   "0" };
 cvar_t	scr_showpause		= { "showpause",    "1" };
 cvar_t	scr_printspeed		= {"scr_printspeed","8"};
 
-extern	cvar_t	crosshair;
-
 bool	bScreenInitialized;		// ready to draw
 
 qpic_t	*scr_ram,*scr_net,*scr_turtle;
@@ -309,13 +307,6 @@ void SCR_Conwidth_f (void)
 	vid.conheight = vid.conwidth *Video.iHeight/Video.iWidth;
 }
 
-void SCR_LoadPics (void)
-{
-	Client_PrecacheResource(RESOURCE_TEXTURE,"textures/sprites/crosshair");
-	Client_PrecacheResource(RESOURCE_TEXTURE,"textures/sprites/disc");
-	Client_PrecacheResource(RESOURCE_TEXTURE,"textures/interface/net");
-}
-
 void Screen_ResetFPS(void);
 
 void SCR_Init (void)
@@ -341,8 +332,6 @@ void SCR_Init (void)
 	Cmd_AddCommand("screenshot",SCR_ScreenShot_f);
 	Cmd_AddCommand("sizeup",SCR_SizeUp_f);
 	Cmd_AddCommand("sizedown",SCR_SizeDown_f);
-
-	SCR_LoadPics(); //johnfitz
 
 	bScreenInitialized = true;
 }
@@ -554,16 +543,6 @@ void SCR_DrawPause (void)
 		return;
 
 	scr_tileclear_updates = 0; //johnfitz
-}
-
-void SCR_DrawCrosshair (void)
-{
-	if(!crosshair.value || cls.state != ca_connected)
-		return;
-
-	GL_SetCanvas(CANVAS_CROSSHAIR);
-
-	Draw_ExternPic("textures/sprites/crosshair",1.0f,-4,-4,16,16);
 }
 
 //=============================================================================
@@ -899,7 +878,6 @@ void SCR_UpdateScreen (void)
 	{
 		Menu->Draw();
 
-		SCR_DrawCrosshair(); //johnfitz
 		SCR_DrawNet();
 		SCR_DrawTurtle();
 		SCR_DrawPause();

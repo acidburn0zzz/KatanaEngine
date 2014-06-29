@@ -702,13 +702,8 @@ void CL_ParseClientdata (void)
 		cl.stats[STAT_AMMO] = i;
 
 	i = MSG_ReadByte ();
-#if 1
 	if(cl.stats[STAT_ACTIVEWEAPON] != i)
 		cl.stats[STAT_ACTIVEWEAPON] = i;
-#else
-	if(cl.stats[STAT_ACTIVEWEAPON] != (1<<i))
-		cl.stats[STAT_ACTIVEWEAPON] = (1<<i);
-#endif
 
 	//johnfitz -- PROTOCOL_FITZQUAKE
 	if (bits & SU_WEAPON2)
@@ -923,10 +918,7 @@ void CL_ParseServerMessage(void)
 				Host_Error ("CL_ParseServerMessage: svc_updatefrags > MAX_SCOREBOARD");
 
 			cl.scores[i].frags = MSG_ReadShort();
-
-			// [22/11/2013] STAT_FRAGS was originally unused, so that's fixed now ~hogsy
-			if(i == (cl.viewentity-1))
-				cl.stats[STAT_FRAGS] = cl.scores[i].frags;
+			cl.stats[STAT_FRAGS] = cl.scores[i].frags;
 			break;
 		case svc_updatecolors:
 			i = MSG_ReadByte ();
@@ -977,7 +969,7 @@ void CL_ParseServerMessage(void)
 		case svc_foundsecret:
 			cl.stats[STAT_SECRETS]++;
 			break;
-		case svc_updatestat:
+		case SVC_UPDATESTAT:
 			i = MSG_ReadByte ();
 			if(i < 0 || i >= STAT_NONE)
 				Sys_Error("svc_updatestat: %i is invalid",i);

@@ -29,6 +29,15 @@
     <Filter Include="Server\OpenKatana">
       <UniqueIdentifier>{4259e5cd-2758-4ffd-b12a-2cd605141b33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Server\Adamas">
+      <UniqueIdentifier>{3ce32b8b-7fe2-4c52-b919-1f54a8b51b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server\Adamas\Weapons">
+      <UniqueIdentifier>{dabf2891-434e-495d-ae13-edb8ce0cd4e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server\Adamas\Monsters">
+      <UniqueIdentifier>{7b21ad05-bc3d-492e-8ff2-6351e1fb5d95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\shared_math.c">
@@ -160,6 +169,15 @@
     </ClCompile>
     <ClCompile Include="client\client_effects.c">
       <Filter>Client</Filter>
+    </ClCompile>
+    <ClCompile Include="server\adamas\adamas_player.c">
+      <Filter>Server\Adamas</Filter>
+    </ClCompile>
+    <ClCompile Include="server\adamas\adamas_blazer.c">
+      <Filter>Server\Adamas\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\adamas\adamas_hurler.c">
+      <Filter>Server\Adamas\Monsters</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

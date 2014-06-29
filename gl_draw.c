@@ -305,8 +305,6 @@ void Draw_LoadPics (void)
 
 extern gltexture_t *playertextures[MAX_SCOREBOARD];
 
-void SCR_LoadPics(void);
-
 void Draw_NewGame (void)
 {
 	cachepic_t	*pic;
@@ -322,7 +320,6 @@ void Draw_NewGame (void)
 
 	// reload wad pics
 	Draw_LoadPics();
-	SCR_LoadPics();
 
 	// empty lmp cache
 	for (pic = menu_cachepics, i = 0; i < menu_numcachepics; pic++, i++)

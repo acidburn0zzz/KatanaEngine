@@ -178,14 +178,14 @@ void Shotcycler_Deploy(edict_t *ent)
 	// [24/8/2012] TODO: Call our deploy sound ~hogsy
 	Sound(ent,CHAN_WEAPON,"weapons/shotcycler6/shotcyclerready.wav",255,ATTN_NORM);
 
-	WEAPON_Animate(ent,ShotcyclerAnimation_Deploy);
+	Weapon_Animate(ent,ShotcyclerAnimation_Deploy);
 }
 
 void Shotcycler_Reload(edict_t *ent)
 {
 	ent->local.iShotCycle = 6;
 
-	WEAPON_Animate(ent,ShotcyclerAnimation_Reload);
+	Weapon_Animate(ent,ShotcyclerAnimation_Reload);
 
 	ent->local.dAttackFinished = Server.dTime+2;
 }
@@ -235,5 +235,5 @@ void Shotcycler_PrimaryAttack(edict_t *ent)
 	Weapon_BulletProjectile(ent,5.0f,5,vForward);
 #endif
 
-	WEAPON_Animate(ent,ShotcyclerAnimation_Fire);
+	Weapon_Animate(ent,ShotcyclerAnimation_Fire);
 }

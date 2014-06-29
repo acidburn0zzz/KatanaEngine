@@ -4,7 +4,7 @@
 
 void PulseRifle_Deploy(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,1,15,0.1f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,1,15,0.1f,0,0,0,FALSE);
 }
 
 void PulseRifle_PrimaryAttack(edict_t *ent)
@@ -13,9 +13,9 @@ void PulseRifle_PrimaryAttack(edict_t *ent)
 
 #if 0
 	if(rand()%2 == 1)
-		//WEAPON_Animate(ent,FALSE,0,15,0.05f,10,19,0,FALSE);
+		//Weapon_Animate(ent,FALSE,0,15,0.05f,10,19,0,FALSE);
 	else
-		//WEAPON_Animate(ent,FALSE,16,27,0.05f,10,19,0,FALSE);
+		//Weapon_Animate(ent,FALSE,16,27,0.05f,10,19,0,FALSE);
 #endif
 
 	ent->v.effects |= EF_MUZZLEFLASH;

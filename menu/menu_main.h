@@ -12,16 +12,26 @@
 #include "shared_engine.h"
 #include "shared_game.h"
 
-#define	MENU_BASEPATH	"textures/sprites/menu/"
+#define	MENU_BASEPATH	"textures/interface/menu/"
 #define HUD_BASEPATH	"textures/interface/hud/"
 #define EDITOR_BASEPATH	MENU_BASEPATH"editor/"
 
 extern ModuleImport_t	Engine;
 
-int	iMenuState;	// Global menu state.
+extern	cvar_t	cvShowMenu,
+				cvShowHealth,
+				cvShowAmmo,
+				cvShowCrosshair,
+				cvCrosshairScale;
+
+int	iMenuState,				// Global menu state.
+	iMenuWidth,iMenuHeight;	// Menu scale.
 
 void	Menu_AddState(int iState);
 void	Menu_SetState(int iState);
 void	Menu_RemoveState(int iState);
+void	Menu_GetScreenSize(void);
+
+char *va(char *format,...);	// Temporary convenience function, please don't get comfortable with this :(
 
 #endif

@@ -17,10 +17,12 @@ typedef struct
 #define	MONSTER_VEHICLE		2	// Vehicles
 // [15/8/2013] Anything greater than 2 is assumed to be an enemy by the engine ~hogsy
 // [28/6/2013] Move into their own header ~hogsy
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 #define	MONSTER_PRISONER	3
 #define	MONSTER_LASERGAT	4
 #define	MONSTER_INMATER		5
+#elif GAME_ADAMAS
+#define MONSTER_HURLER	3
 #endif
 
 /*	Various states for the AI.

@@ -76,6 +76,10 @@ MonsterRelationship_t MonsterRelationship[]=
 	{	MONSTER_PRISONER,	MONSTER_PLAYER,		RELATIONSHIP_LIKE	},
 	{	MONSTER_PRISONER,	MONSTER_LASERGAT,	RELATIONSHIP_HATE	},
 	{	MONSTER_PRISONER,	MONSTER_INMATER,	RELATIONSHIP_HATE	},
+#else
+	// Hurler
+	{	MONSTER_HURLER,		MONSTER_PLAYER,		RELATIONSHIP_HATE	},
+	{	MONSTER_HURLER,		MONSTER_HURLER,		RELATIONSHIP_LIKE	},
 #endif
 
 	{	MONSTER_NONE	}
@@ -427,7 +431,16 @@ void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
 	{
 		WriteByte(MSG_ALL,SVC_KILLEDMONSTER);
 
+		Server.iMonsters--;
 		eAttacker->v.iScore++;
+
+#if 0
+		// Update number of frags for client.
+		Engine.SetMessageEntity(eAttacker);
+		Engine.WriteByte(MSG_ONE,SVC_UPDATESTAT);
+		Engine.WriteByte(MSG_ONE,STAT_FRAGS);
+		Engine.WriteByte(MSG_ONE,eAttacker->v.iScore);
+#endif
 	}
 	else if(Entity_IsPlayer(eAttacker) && bIsMultiplayer)
 	{
@@ -473,12 +486,19 @@ void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
 			}
 		}
 
+		// Update number of frags for client.
+		Engine.SetMessageEntity(eAttacker);
+		Engine.WriteByte(MSG_ONE,SVC_UPDATESTAT);
+		Engine.WriteByte(MSG_ONE,STAT_FRAGS);
+		Engine.WriteByte(MSG_ONE,eAttacker->v.iScore);
+
 		// TODO: move Kill messages into mode_deathmatch (?) Create Weapon specific kill messages and more variations! ~eukos
 		Engine.Server_BroadcastPrint(cDeathMessage,eTarget->v.netname,eAttacker->v.netname);
 	}
 	else
 		eTarget->v.bTakeDamage = false;
 
+#ifdef GAME_OPENKATANA
     // [22/4/2014] Drop the currently equipped item for the player to pick up! ~hogsy
     {
         Weapon_t *wActive = Weapon_GetCurrentWeapon(eTarget);
@@ -493,6 +513,7 @@ void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
             Item_Spawn(eDroppedItem);
         }
     }
+#endif
 
 	if(eTarget->monster.think_die)
 		eTarget->monster.think_die(eTarget,eAttacker);
@@ -511,14 +532,18 @@ void MONSTER_Damage(edict_t *target,edict_t *inflictor,int iDamage, int iDamageT
 		multiply on each call and then slowly
 		decrease after sometime.
 	*/
-	if(!target->v.bTakeDamage || target->v.flags & FL_GODMODE)
-		return;
-	if(!Entity_CanDamage(inflictor, target, iDamageType))
+	if(!target->v.bTakeDamage || (target->v.flags & FL_GODMODE) || !Entity_CanDamage(inflictor, target, iDamageType))
 		return;
 
 	// [28/8/2012] Blood is now handled here :) ~hogsy
 	if(target->local.bBleed)
-		Engine.Particle(target->v.origin,target->v.velocity,10.0f,"blood",20);
+	{
+		char	cBlood[6];
+
+		PARTICLE_BLOOD(cBlood);
+
+		Engine.Particle(target->v.origin,target->v.velocity,10.0f,cBlood,20);
+	}
 
 	// [3/10/2012] Only do this for clients ~hogsy
 	if(Entity_IsPlayer(inflictor))
@@ -723,8 +748,6 @@ void Monster_SetTargets(edict_t *eMonster)
 			{
 				eMonster->monster.eEnemy	= eMonster->monster.eTarget;
 				eMonster->monster.eTarget	= NULL;
-
-				Monster_SetThink(eMonster,THINK_ATTACKING);
 			}
 		}
 	}

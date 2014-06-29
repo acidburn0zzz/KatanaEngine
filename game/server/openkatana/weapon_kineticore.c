@@ -2,7 +2,7 @@
 
 void Kineticore_Deploy(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,1,14,0.1f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,1,14,0.1f,0,0,0,FALSE);
 }
 
 void Kineticore_IceballExplode(edict_t *ent)
@@ -96,7 +96,7 @@ void Kineticore_PrimaryAttack(edict_t *ent)
 		return;
 	}
 
-	//WEAPON_Animate(ent,FALSE,27,37,0.3f,10,19,0,FALSE);
+	//Weapon_Animate(ent,FALSE,27,37,0.3f,10,19,0,FALSE);
 
 	ent->v.iPrimaryAmmo = ent->local.kineticore_ammo--;
 	ent->local.kineticore_ammo2--;

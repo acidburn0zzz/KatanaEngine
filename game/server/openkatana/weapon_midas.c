@@ -2,7 +2,7 @@
 
 void Midas_Deploy(edict_t *ent)
 {
-	//WEAPON_Animate(ent,FALSE,1,7,0.1f,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,1,7,0.1f,0,0,0,FALSE);
 }
 
 void Midas_CloudThink(edict_t *ent)
@@ -74,5 +74,5 @@ void Midas_PrimaryAttack(edict_t *ent)
 	else
 		ent->local.dAttackFinished = Server.dTime+1.0;
 
-	//WEAPON_Animate(ent,FALSE,8,20,0.5,0,0,0,FALSE);
+	//Weapon_Animate(ent,FALSE,8,20,0.5,0,0,0,FALSE);
 }

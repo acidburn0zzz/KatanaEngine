@@ -23,18 +23,24 @@ void Point_NullSpawn(edict_t *eEntity)
 	Entity_SetOrigin(eEntity,eEntity->v.origin);
 }
 
+#ifdef GAME_OPENKATANA
 void Prisoner_Spawn(edict_t *ePrisoner);	// [2/10/2012] See monster_prisoner.c ~hogsy
 void LaserGat_Spawn(edict_t *eLaserGat);	// [14/2/2013] See monster_lasergat.c ~hogsy
 void Inmater_Spawn(edict_t *eInmater);		// [3/3/2013] See monster_inmater.c ~hogsy
+#elif GAME_ADAMAS
+void Hurler_Spawn(edict_t *eHurler);
+#endif
 
 void Point_MonsterSpawn(edict_t *eMonster)
 {
 	if(cvServerMonsters.value <= 0)
 		ENTITY_REMOVE(eMonster);
 
+	Server.iMonsters++;
+
 	switch(eMonster->local.style)
 	{
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	case MONSTER_PRISONER:
 		eMonster->v.cClassname = "monster_prisoner";
 		Prisoner_Spawn(eMonster);
@@ -47,9 +53,18 @@ void Point_MonsterSpawn(edict_t *eMonster)
 		eMonster->v.cClassname = "monster_inmater";
 		Inmater_Spawn(eMonster);
 		break;
+#elif GAME_ADAMAS
+	case MONSTER_HURLER:
+		eMonster->v.cClassname = "monster_hurler";
+		Hurler_Spawn(eMonster);
+		break;
 #endif
 	default:
 		Engine.Con_Warning("Invalid monster type (%i)!\n",eMonster->local.style);
+
+		// Reduce the monster count. ~hogsy
+		Server.iMonsters--;
+
 		Entity_Remove(eMonster);
 	}
 }

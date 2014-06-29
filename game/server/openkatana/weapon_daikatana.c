@@ -84,7 +84,7 @@ EntityFrame_t DaikatanaAnimation_Attack2 [] =
 
 void Daikatana_Deploy(edict_t *ent)
 {
-	WEAPON_Animate(ent,DaikatanaAnimation_Deploy);
+	Weapon_Animate(ent,DaikatanaAnimation_Deploy);
 }
 
 void Daikatana_Hit(edict_t *ent)
@@ -132,12 +132,12 @@ void Daikatana_PrimaryAttack(edict_t *ent)
 {
 	if(rand()%2 == 1)
 	{
-		WEAPON_Animate(ent,DaikatanaAnimation_Attack1);
+		Weapon_Animate(ent,DaikatanaAnimation_Attack1);
 		Entity_Animate(ent,PlayerAnimation_KatanaAttack1);
 	}
 	else
 	{
-		WEAPON_Animate(ent,DaikatanaAnimation_Attack2);
+		Weapon_Animate(ent,DaikatanaAnimation_Attack2);
 		Entity_Animate(ent,PlayerAnimation_KatanaAttack2);
 	}
 

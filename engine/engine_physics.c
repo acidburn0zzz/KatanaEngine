@@ -859,9 +859,7 @@ void SV_WalkMove(edict_t *ent)
 		return;		// don't stair up while jumping
 	else if(ent->v.movetype != MOVETYPE_WALK)
 		return;		// gibbed by a trigger
-	else if(sv_nostep.value)
-		return;
-	else if(sv_player->v.flags & FL_WATERJUMP)
+	else if(sv_nostep.value || (sv_player->v.flags & FL_WATERJUMP))
 		return;
 
 	Math_VectorCopy (ent->v.origin, nosteporg);
