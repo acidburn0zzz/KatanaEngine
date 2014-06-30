@@ -88,6 +88,13 @@ typedef struct
 	vec3_t	vVertex;
 } OBJVertex_t;
 
+typedef struct
+{
+	int	iTriangles;
+
+	OBJVertex_t	*ovVertex;
+} OBJ_t;
+
 /*
 	IQM Format
 */
@@ -201,8 +208,8 @@ typedef struct
 #define	BSP_VERSION	4
 #define	BSP_VERSION_4	// Enable support for version 4 feature set.
 
-#define	BSP_HEADER		((' '<<24)+('P'<<16)+('S'<<8)+'B')	// For easy identification.
-#define	BSP_HEADER_SIZE	4									// "BSP" followed by version number.
+#define	BSP_HEADER		(('L'<<24)+('V'<<16)+('E'<<8)+'L')	// For easy identification.
+#define	BSP_HEADER_SIZE	8									// "BSP" followed by version number.
 
 #define	BSP_MAX_HULLS			4
 #define	BSP_MAX_LEAFS			32768			//0x400000
@@ -286,7 +293,7 @@ typedef struct
 
 typedef struct
 {
-	int			iVersion;
+	int			iIdent,iVersion;
 	BSPLump_t	bLumps[HEADER_LUMPS];
 } BSPHeader_t;
 

@@ -400,9 +400,11 @@ void R_DrawEntitiesOnList(bool bAlphaPass) //johnfitz -- added parameter
 			case MODEL_TYPE_MD2:
 				Alias_Draw(currententity);
 				break;
+#if 0
 			case MODEL_TYPE_OBJ:
 				Model_DrawOBJ(currententity);
 				break;
+#endif
 			case MODEL_BRUSH:
 				Brush_Draw(currententity);
 				break;

@@ -482,7 +482,8 @@ static void EmitNodeFaces_r( node_t *node )
 		return;
 
 	node->firstface = numfaces;
-	for( face = node->faces; face; face = face->next ) {
+	for( face = node->faces; face; face = face->next ) 
+	{
 		if( numfaces == BSP_MAX_FACES )
 			Error( "numfaces == BSP_MAX_FACES" );
 

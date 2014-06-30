@@ -38,16 +38,6 @@ BRUSH MODELS
 ==============================================================================
 */
 
-
-//
-// in memory representation
-//
-// !!! if this is changed, it must be changed in asm_draw.h too !!!
-typedef struct
-{
-	vec3_t		position;
-} mvertex_t;
-
 #define	SIDE_FRONT	0
 #define	SIDE_BACK	1
 #define	SIDE_ON		2
@@ -240,7 +230,7 @@ typedef struct model_s
 	mleaf_t		*leafs;
 
 	int			numvertexes;
-	mvertex_t	*vertexes;
+	BSPVertex_t	*vertexes;
 
 	int			numedges;
 	medge_t		*edges;

@@ -572,7 +572,7 @@ void Model_LoadBSPEntities(BSPLump_t *blLump)
 void Model_LoadBSPVertexes(BSPLump_t *blLump)
 {
 	BSPVertex_t	*in;
-	mvertex_t	*out;
+	BSPVertex_t	*out;
 	int			i, count;
 
 	in = (void *)(mod_base+blLump->iFileOffset);
@@ -580,16 +580,16 @@ void Model_LoadBSPVertexes(BSPLump_t *blLump)
 		Sys_Error ("Model_LoadBSPVertexes: funny lump size in %s",loadmodel->name);
 
 	count	= blLump->iFileLength/sizeof(*in);
-	out		= (mvertex_t*)Hunk_AllocName(count*sizeof(*out),loadname);
+	out		= (BSPVertex_t*)Hunk_AllocName(count*sizeof(*out),loadname);
 
 	loadmodel->vertexes		= out;
 	loadmodel->numvertexes	= count;
 
 	for(i = 0; i < count; i++,in++,out++)
 	{
-		out->position[0]	= LittleFloat(in->fPoint[0]);
-		out->position[1]	= LittleFloat(in->fPoint[1]);
-		out->position[2]	= LittleFloat(in->fPoint[2]);
+		out->fPoint[0]	= LittleFloat(in->fPoint[0]);
+		out->fPoint[1]	= LittleFloat(in->fPoint[1]);
+		out->fPoint[2]	= LittleFloat(in->fPoint[2]);
 	}
 }
 
@@ -688,7 +688,7 @@ void CalcSurfaceExtents (msurface_t *s)
 	float	mins[2], maxs[2];
 	double	val;
 	int		i,j, e;
-	mvertex_t	*v;
+	BSPVertex_t	*v;
 	mtexinfo_t	*tex;
 	int		bmins[2], bmaxs[2];
 
@@ -708,9 +708,9 @@ void CalcSurfaceExtents (msurface_t *s)
 		for (j=0 ; j<2 ; j++)
 		{
 			// [24/11/2013] Double cast, suggestion from LordHavoc ~hogsy
-			val =	(double)	v->position[0]*tex->vecs[j][0]+
-								v->position[1]*tex->vecs[j][1]+
-								v->position[2]*tex->vecs[j][2]+
+			val =	(double)	v->fPoint[0]*tex->vecs[j][0]+
+								v->fPoint[1]*tex->vecs[j][1]+
+								v->fPoint[2]*tex->vecs[j][2]+
 								tex->vecs[j][3];
 			if (val < mins[j])
 				mins[j] = val;
@@ -759,9 +759,9 @@ void Mod_PolyForUnlitSurface (msurface_t *fa)
 		lindex = loadmodel->surfedges[fa->firstedge + i];
 
 		if (lindex > 0)
-			vec = loadmodel->vertexes[loadmodel->edges[lindex].v[0]].position;
+			vec = loadmodel->vertexes[loadmodel->edges[lindex].v[0]].fPoint;
 		else
-			vec = loadmodel->vertexes[loadmodel->edges[-lindex].v[1]].position;
+			vec = loadmodel->vertexes[loadmodel->edges[-lindex].v[1]].fPoint;
 		Math_VectorCopy(vec,verts[numverts]);
 		numverts++;
 	}
@@ -783,7 +783,7 @@ void Mod_PolyForUnlitSurface (msurface_t *fa)
 void Mod_CalcSurfaceBounds(msurface_t *s)
 {
 	int			i, e;
-	mvertex_t	*v;
+	BSPVertex_t	*v;
 
 	s->mins[0] = s->mins[1] = s->mins[2] = 9999;
 	s->maxs[0] = s->maxs[1] = s->maxs[2] = -9999;
@@ -796,19 +796,19 @@ void Mod_CalcSurfaceBounds(msurface_t *s)
 		else
 			v = &loadmodel->vertexes[loadmodel->edges[-e].v[1]];
 
-		if (s->mins[0] > v->position[0])
-			s->mins[0] = v->position[0];
-		if (s->mins[1] > v->position[1])
-			s->mins[1] = v->position[1];
-		if (s->mins[2] > v->position[2])
-			s->mins[2] = v->position[2];
+		if (s->mins[0] > v->fPoint[0])
+			s->mins[0] = v->fPoint[0];
+		if (s->mins[1] > v->fPoint[1])
+			s->mins[1] = v->fPoint[1];
+		if (s->mins[2] > v->fPoint[2])
+			s->mins[2] = v->fPoint[2];
 
-		if (s->maxs[0] < v->position[0])
-			s->maxs[0] = v->position[0];
-		if (s->maxs[1] < v->position[1])
-			s->maxs[1] = v->position[1];
-		if (s->maxs[2] < v->position[2])
-			s->maxs[2] = v->position[2];
+		if (s->maxs[0] < v->fPoint[0])
+			s->maxs[0] = v->fPoint[0];
+		if (s->maxs[1] < v->fPoint[1])
+			s->maxs[1] = v->fPoint[1];
+		if (s->maxs[2] < v->fPoint[2])
+			s->maxs[2] = v->fPoint[2];
 	}
 }
 
@@ -858,7 +858,7 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 		if (i == -1)
 			out->samples = NULL;
 		else
-			out->samples = loadmodel->lightdata + (i * 3); //johnfitz -- lit support via lordhavoc (was "+ i")
+			out->samples = loadmodel->lightdata+(i*3); //johnfitz -- lit support via lordhavoc (was "+ i")
 
 		//johnfitz -- this section rewritten
 		if(!Q_strncasecmp(out->texinfo->texture->name,"sky",3)) // sky surface //also note -- was Q_strncmp, changed to match qbsp
@@ -919,20 +919,20 @@ void Model_LoadBSPNodes(BSPLump_t *blLump)
 	{
 		for (j=0 ; j<3 ; j++)
 		{
-			out->minmaxs[j] = LittleShort (in->fMins[j]);
-			out->minmaxs[3+j] = LittleShort (in->fMaxs[j]);
+			out->minmaxs[j]		= LittleFloat(in->fMins[j]);
+			out->minmaxs[3+j]	= LittleFloat(in->fMaxs[j]);
 		}
 
 		p = LittleLong(in->iPlaneNum);
 		out->plane = loadmodel->planes + p;
 
-		out->firstsurface = (unsigned short)LittleShort (in->usFirstFace); //johnfitz -- explicit cast as unsigned short
-		out->numsurfaces = (unsigned short)LittleShort (in->usNumFaces); //johnfitz -- explicit cast as unsigned short
+		out->firstsurface	= LittleLong (in->usFirstFace); //johnfitz -- explicit cast as unsigned short
+		out->numsurfaces	= LittleLong (in->usNumFaces); //johnfitz -- explicit cast as unsigned short
 
 		for (j=0 ; j<2 ; j++)
 		{
 			//johnfitz -- hack to handle nodes > 32k, adapted from darkplaces
-			p = (unsigned short)LittleShort(in->iChildren[j]);
+			p = (unsigned short)LittleLong(in->iChildren[j]);
 			if (p < count)
 				out->children[j] = loadmodel->nodes + p;
 			else
@@ -1093,7 +1093,7 @@ void Mod_MakeHull0 (void)
 void Model_LoadBSPMarkSurfaces(BSPLump_t *blLump)
 {
 	int		i, j, count;
-	short		*in;
+	int		*in;
 	msurface_t **out;
 
 	in = (void *)(mod_base + blLump->iFileOffset);
@@ -1107,7 +1107,7 @@ void Model_LoadBSPMarkSurfaces(BSPLump_t *blLump)
 
 	for ( i=0 ; i<count ; i++)
 	{
-		j = (unsigned short)LittleShort(in[i]); //johnfitz -- explicit cast as unsigned short
+		j = LittleLong(in[i]);
 		if (j >= loadmodel->numsurfaces)
 			Sys_Error ("Mod_ParseMarksurfaces: bad surface number");
 		out[i] = loadmodel->surfaces + j;
@@ -1724,9 +1724,16 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 
 bool Model_LoadOBJ(model_t *mModel,void *Buffer)
 {
+	char	cExtension[4];
+	OBJ_t	*oObject;
+
 	mModel->mType	= MODEL_TYPE_OBJ;
 
-#if 0
+	// Check if the file is a valid OBJ or not...
+	ExtractFileExtension(mModel->name,cExtension);
+	if(Q_strcmp(cExtension,".obj"))
+		return false;
+
 	// Parse OBJ file...
 	for(;;)
 	{
@@ -1736,7 +1743,12 @@ bool Model_LoadOBJ(model_t *mModel,void *Buffer)
 			break;
 
 		if(!Q_strcmp(cLine,"v"))
-		{}
+		{
+			fscanf(Buffer,"%f %f %f\n",
+				&oObject->ovVertex->vVertex[0],
+				&oObject->ovVertex->vVertex[1],
+				&oObject->ovVertex->vVertex[2]);
+		}
 		else if(!Q_strcmp(cLine,"vt"))
 		{}
 		else if(!Q_strcmp(cLine,"vn"))
@@ -1744,13 +1756,8 @@ bool Model_LoadOBJ(model_t *mModel,void *Buffer)
 		else if(!Q_strcmp(cLine,"f"))
 		{}
 	}
-#endif
 
 	return false;
-}
-
-void Model_DrawOBJ(entity_t *eEntity)
-{
 }
 
 /**/

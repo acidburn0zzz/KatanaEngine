@@ -296,10 +296,10 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
                     voModel[iVert].vVertex[j]	= mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+translate1[j];
                     voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
 
-					voModel[iVert].vTextureCoord[1][0]	=
-					voModel[iVert].vTextureCoord[0][0]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/mModel->skinwidth;
-					voModel[iVert].vTextureCoord[1][1]	=
-					voModel[iVert].vTextureCoord[0][1]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/mModel->skinheight;
+//					voModel[iVert].vTextureCoord[1][0]	=
+//					voModel[iVert].vTextureCoord[0][0]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/mModel->skinwidth;
+//					voModel[iVert].vTextureCoord[1][1]	=
+//					voModel[iVert].vTextureCoord[0][1]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/mModel->skinheight;
 
                     if(bShading)
                         voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;

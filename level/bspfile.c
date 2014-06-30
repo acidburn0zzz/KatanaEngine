@@ -201,16 +201,16 @@ int SB_Tell (swappedbuffer_t *sbuf)
 	return sbuf->index - sbuf->start;
 }
 
-void	LoadBSPFile (char *filename)
+void LoadBSPFile(char *filename)
 {
 	int				i, j, headerend;
 	swappedbuffer_t	sb;
 	BSPLump_t		lumps[HEADER_LUMPS], *lump;
 
-// load file into buffer
+	// Load file into buffer
 	SB_LoadFile(&sb, filename);
 
-// check header
+	// Check the header of the level...
 	i = SB_ReadInt(&sb);
 	if(i != BSP_HEADER)
 		Error("Invalid file type!");
@@ -436,8 +436,7 @@ void WriteBSPFile (char *filename)
 	printf ("Allocated %f MB (%d bytes) for file buffer\n", bspsize*(1.0f/(1024.0f*1024.0f)), bspsize);
 
 	// write header
-	SB_ZeroFill(&sb,BSP_HEADER_SIZE); // filled in later
-	SB_ZeroFill(&sb,sizeof(lumps));	// filled in later
+	SB_ZeroFill(&sb,sizeof(lumps)+BSP_HEADER_SIZE);	// filled in later
 
 	// write lumps and pad each one to a multiple of 4 bytes
 	lump = &lumps[LUMP_PLANES];

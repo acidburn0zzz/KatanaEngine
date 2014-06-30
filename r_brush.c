@@ -813,7 +813,7 @@ int AllocBlock (int w, int h, int *x, int *y)
 }
 
 
-mvertex_t	*r_pcurrentvertbase;
+BSPVertex_t	*r_pcurrentvertbase;
 model_t		*currentmodel;
 
 int	nColinElim;
@@ -857,12 +857,12 @@ void BuildSurfaceDisplayList (msurface_t *fa)
 		if (lindex > 0)
 		{
 			r_pedge = &pedges[lindex];
-			vec = r_pcurrentvertbase[r_pedge->v[0]].position;
+			vec = r_pcurrentvertbase[r_pedge->v[0]].fPoint;
 		}
 		else
 		{
 			r_pedge = &pedges[-lindex];
-			vec = r_pcurrentvertbase[r_pedge->v[1]].position;
+			vec = r_pcurrentvertbase[r_pedge->v[1]].fPoint;
 		}
 		s = Math_DotProduct(vec, fa->texinfo->vecs[0]) + fa->texinfo->vecs[0][3];
 		s /= fa->texinfo->texture->width;
