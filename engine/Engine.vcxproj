@@ -513,7 +513,6 @@
     <ClCompile Include="..\pr_edict.c" />
     <ClCompile Include="..\r_brush.c" />
     <ClCompile Include="..\r_world.c" />
-    <ClCompile Include="..\sbar.c" />
     <ClCompile Include="..\shared\shared_math.c" />
     <ClCompile Include="..\shared\shared_png.c" />
     <ClCompile Include="..\snd_dma.c" />

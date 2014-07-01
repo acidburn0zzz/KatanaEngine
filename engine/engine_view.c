@@ -258,7 +258,7 @@ void V_SetContentsColor(int contents)
 {
 	switch(contents)
 	{
-	case CONTENTS_LAVA:
+	case BSP_CONTENTS_LAVA:
 		cl.cshifts[CSHIFT_CONTENTS] = cshift_lava;
 		break;
 	case BSP_CONTENTS_SLIME:

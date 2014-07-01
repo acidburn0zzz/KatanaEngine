@@ -11,7 +11,7 @@
 //#define   PARANOID    // Speed sapping error checking.
 //#define	KATANA_VIDEO_NEXT		// New renderer.
 #define	KATANA_PHYSICS_ODE		// ODE physics support.
-#define KATANA_AUDIO_OPENAL
+#define KATANA_AUDIO_OPENAL		// OpenAL implementation.
 #ifndef _WIN32	// [21/1/2013] Only Linux release is currently using this... ~hogsy
 #define	KATANA_NETWORK_NEXT	// New network system.
 #endif
@@ -24,7 +24,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	680	// 6/6/2014
+#define ENGINE_VERSION_BUILD	705	// 30/6/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"
@@ -40,10 +40,6 @@
 #define DIR_PARTICLES	"textures/particles/"
 #define DIR_FLARES		"textures/flares/"
 #define DIR_EFFECTS		"textures/effects/"
-
-//	Default extensions.
-#define	EXTENSION_MAP	".map"
-#define EXTENSION_MODEL	".md2"
 
 typedef unsigned char byte;
 
@@ -68,15 +64,6 @@ enum
 	MSG_INIT		// Write to the init string
 };
 
-/*	Various flags for different
-	commands/variables. Most of these are
-	probably not even used.
-*/
-#define COMMAND_USER			"$user"			// Replaces "$user" with current username.
-#define SCRIPT_FLAG_ENTITYPATH	"$entityscript"
-#define SCRIPT_FLAG_TEXTUREPATH	"$texturepath"
-#define SCRIPT_FLAG_BASEPATH	"$basepath"		// Our directory.
-
 #define CMDLINE_LENGTH	256
 
 #define	MAX_ENT_LEAFS	16
@@ -100,11 +87,6 @@ enum
 #define CONTENT_SLIME				-4		// Horrible slime to slow us up!
 #define CONTENT_LAVA				-5		// Lava... IT BURNS!
 #define	CONTENT_SKY					-6		// It's the sky!!
-
-#define	SPAWNFLAG_NOT_EASY			256		// Not spawned on easy.
-#define	SPAWNFLAG_NOT_MEDIUM		512		// Not spawned on medium.
-#define	SPAWNFLAG_NOT_HARD			1024	// Not spawned on hard.
-#define	SPAWNFLAG_NOT_DEATHMATCH	2048	// Not spawned in multiplayer.
 
 /*	Attenuation is used for the
 	Sound function and that
@@ -171,7 +153,6 @@ enum
 #define	EF_BRIGHTLIGHT 		4
 #define	EF_DIMLIGHT 		8
 #define	EF_GLOW_RED			16
-//#define EF_GLOW_GREEN		64
 #define EF_LIGHT_GREEN		64
 #define	EF_MOTION_ROTATE	128				// Client-side rotation
 #define EF_MOTION_FLOAT		256				// Adds a nice floating motion for the entity

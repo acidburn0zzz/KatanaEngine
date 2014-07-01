@@ -1,5 +1,5 @@
-// brush.c
-
+/*	Copyright (C) 2011-2014 OldTimes Software
+*/
 #include "bsp5.h"
 
 int			numbrushfaces;
@@ -535,30 +535,30 @@ brush_t *LoadBrush (mbrush_t *mb, int brushnum, int hullnum)
 
 	for (f = mb->faces;f;f = f->next)
 	{
-		name = miptex[texinfo[f->texinfo].miptex];
+		name = miptex[texinfo[f->texinfo].iMipTex];
 		if (hullnum == 0)
 			// textures which don't show up in the drawing hull
 			if(!Q_strcasecmp(name,"clip"))
 				return NULL;
 	}
 
-	name = miptex[texinfo[mb->faces->texinfo].miptex];
+	name = miptex[texinfo[mb->faces->texinfo].iMipTex];
 
 	if (name[0] == '*')		// entities never use water merging
 	{
 		if(!Q_strncasecmp(name+1,"lava",4))
-			contents = CONTENTS_LAVA;
+			contents = BSP_CONTENTS_LAVA;
 		else if(!Q_strncasecmp(name+1,"slime",5))
 			contents = BSP_CONTENTS_SLIME;
 		else
 			contents = BSP_CONTENTS_WATER;
 	}
 	else if (!Q_strncasecmp (name, "sky",3) && hullnum == 0)
-		contents = CONTENTS_SKY;
+		contents = BSP_CONTENTS_SKY;
 	else
 		contents = BSP_CONTENTS_SOLID;
 
-	if (hullnum && contents != BSP_CONTENTS_SOLID && contents != CONTENTS_SKY)
+	if (hullnum && contents != BSP_CONTENTS_SOLID && contents != BSP_CONTENTS_SKY)
 		return NULL;		// water brushes don't show up in clipping hulls
 
 	// no seperate textures on clip hull

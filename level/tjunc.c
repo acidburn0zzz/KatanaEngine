@@ -196,14 +196,6 @@ wedge_t	*FindEdge (vec3_t p1, vec3_t p2, vec_t *t1, vec_t *t2)
 	return w;
 }
 
-
-/*
-===============
-AddVert
-
-===============
-*/
-
 void AddVert (wedge_t *w, vec_t t)
 {
 	wvert_t	*v, *newv;

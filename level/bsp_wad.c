@@ -305,10 +305,10 @@ void WriteMiptex (void)
 		m = FindMipTexFile(miptex[i]);
 		if(m)
 		{
-			if(miptex_data + m->size-dtexdata >= MAX_MAP_MIPTEX)
+			if(miptex_data + m->size-dtexdata >= BSP_MAX_MIPTEX)
 			{
 				miptex_lumps->dataofs[i] = -1;
-				printf(" (MAX_MAP_MIPTEX exceeded)\n");
+				printf(" (BSP_MAX_MIPTEX exceeded)\n");
 			}
 			else if (ReadMipTexFile(m, miptex_data))
 			{
@@ -341,10 +341,10 @@ void WriteMiptex (void)
 		}
 		else
 		{
-			if (miptex_data + (sizeof(miptex_t)+16*16+8*8+4*4+2*2) - dtexdata >= MAX_MAP_MIPTEX)
+			if (miptex_data + (sizeof(miptex_t)+16*16+8*8+4*4+2*2) - dtexdata >= BSP_MAX_MIPTEX)
 			{
 				miptex_lumps->dataofs[i] = -1;
-				printf(" (MAX_MAP_MIPTEX exceeded)\n");
+				printf(" (BSP_MAX_MIPTEX exceeded)\n");
 			}
 			else
 			{

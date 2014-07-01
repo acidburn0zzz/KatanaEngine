@@ -816,7 +816,7 @@ void Host_Changelevel_f (void)
 	}
 	else if(!sv.active || cls.demoplayback)
 	{
-		Con_Printf ("Only the server may changelevel\n");
+		Con_Printf("Only the server may changelevel\n");
 		return;
 	}
 

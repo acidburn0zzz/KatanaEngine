@@ -6,28 +6,28 @@ static node_t *Bsp2Prt_BuildTree_r( int nodenum )
 
 	if( nodenum < 0 ) 
 	{
-		dleaf_t *leaf = &dleafs[-1-nodenum];
+		BSPLeaf_t *leaf = &dleafs[-1-nodenum];
 
-		n = AllocNode ();
+		n = AllocNode();
 		n->planenum = PLANENUM_LEAF;
-		n->contents = leaf->contents;
+		n->contents = leaf->iContents;
 	} 
 	else 
 	{
 		int		side;
 		plane_t plane;
-		dnode_t *node = &dnodes[nodenum];
+		BSPNode_t *node = &dnodes[nodenum];
 
 		n = AllocNode ();
-		plane.dist = dplanes[node->planenum].dist;
-		VectorCopy( dplanes[node->planenum].normal, plane.normal );
+		plane.dist = dplanes[node->iPlaneNum].fDist;
+		VectorCopy( dplanes[node->iPlaneNum].fNormal, plane.normal );
 		n->planenum = FindPlane( &plane, &side );
 
 		if( side )
 			Error( "Bad node plane" );
 
-		n->children[0] = Bsp2Prt_BuildTree_r( node->children[0] );
-		n->children[1] = Bsp2Prt_BuildTree_r( node->children[1] );
+		n->children[0] = Bsp2Prt_BuildTree_r( node->iChildren[0] );
+		n->children[1] = Bsp2Prt_BuildTree_r( node->iChildren[1] );
 	}
 
 	return n;
@@ -36,17 +36,17 @@ static node_t *Bsp2Prt_BuildTree_r( int nodenum )
 static void Bsp2Prt_GetWorldBounds( vec3_t mins, vec3_t maxs )
 {
 	int			i, j, e;
-	dface_t		*face;
+	BSPFace_t	*face;
 	BSPVertex_t	*v;
 	vec3_t		point;
 
 	ClearBounds( mins, maxs );
 
-	for( i = 0, face = dfaces; i < dmodels[0].numfaces; i++, face++ ) 
+	for( i = 0, face = dfaces; i < dmodels[0].iNumFaces; i++, face++ ) 
 	{
-		for( j = 0; j < face->numedges; j++ ) 
+		for( j = 0; j < face->iNumEdges; j++ ) 
 		{
-			e = dsurfedges[face->firstedge + j];
+			e = dsurfedges[face->iFirstEdge + j];
 			if( e >= 0 )
 				v = dvertexes + dedges[e].v[0];
 			else

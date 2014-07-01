@@ -244,7 +244,6 @@ model_t *Model_Load(model_t *mModel)
 	case MD2_HEADER:
 		Model_LoadMD2(mModel,buf);
 		break;
-#ifdef BSP_VERSION_4	// BSP header support.
 	case BSP_HEADER:
 		Model_LoadBSP(mModel,buf);
 		break;
@@ -254,16 +253,6 @@ model_t *Model_Load(model_t *mModel)
 
 		Con_Warning("Unsupported model type! (%s)\n",mModel->name);
 		return NULL;
-#else
-	case BSP_HEADER:
-	default:
-		// OBJ files don't have "headers" so let the function just give it a quick look over.
-		if(Model_LoadOBJ(mModel,buf))
-			break;
-
-		Model_LoadBSP(mModel,buf);
-		break;
-#endif
 	}
 
 	return mModel;
@@ -582,8 +571,8 @@ void Model_LoadBSPEntities(BSPLump_t *blLump)
 
 void Model_LoadBSPVertexes(BSPLump_t *blLump)
 {
-	dvertex_t	*in;
-	mvertex_t	*out;
+	BSPVertex_t	*in;
+	BSPVertex_t	*out;
 	int			i, count;
 
 	in = (void *)(mod_base+blLump->iFileOffset);
@@ -591,16 +580,16 @@ void Model_LoadBSPVertexes(BSPLump_t *blLump)
 		Sys_Error ("Model_LoadBSPVertexes: funny lump size in %s",loadmodel->name);
 
 	count	= blLump->iFileLength/sizeof(*in);
-	out		= (mvertex_t*)Hunk_AllocName(count*sizeof(*out),loadname);
+	out		= (BSPVertex_t*)Hunk_AllocName(count*sizeof(*out),loadname);
 
 	loadmodel->vertexes		= out;
 	loadmodel->numvertexes	= count;
 
 	for(i = 0; i < count; i++,in++,out++)
 	{
-		out->position[0]	= LittleFloat(in->point[0]);
-		out->position[1]	= LittleFloat(in->point[1]);
-		out->position[2]	= LittleFloat(in->point[2]);
+		out->fPoint[0]	= LittleFloat(in->fPoint[0]);
+		out->fPoint[1]	= LittleFloat(in->fPoint[1]);
+		out->fPoint[2]	= LittleFloat(in->fPoint[2]);
 	}
 }
 
@@ -629,11 +618,11 @@ void Model_LoadBSPEdges(BSPLump_t *blLump)
 
 void Model_LoadBSPTextureInfo(BSPLump_t *blLump)
 {
-	texinfo_t *in;
-	mtexinfo_t *out;
-	int 	i, j, count, miptex;
-	float	len1, len2;
-	int missing = 0; //johnfitz
+	BSPTextureInfo_t	*in;
+	mtexinfo_t			*out;
+	int 				i, j, count, miptex;
+	float				len1, len2;
+	int					missing = 0; //johnfitz
 
 	in = (void *)(mod_base + blLump->iFileOffset);
 	if (blLump->iFileLength % sizeof(*in))
@@ -647,7 +636,7 @@ void Model_LoadBSPTextureInfo(BSPLump_t *blLump)
 	for ( i=0 ; i<count ; i++, in++, out++)
 	{
 		for (j=0 ; j<8 ; j++)
-			out->vecs[0][j] = LittleFloat (in->vecs[0][j]);
+			out->vecs[0][j] = LittleFloat (in->v[0][j]);
 
 		len1 = Math_Length(out->vecs[0]);
 		len2 = Math_Length(out->vecs[1]);
@@ -667,17 +656,17 @@ void Model_LoadBSPTextureInfo(BSPLump_t *blLump)
 			out->mipadjust = 1 / floor( (len1+len2)/2 + 0.1 );
 #endif
 
-		miptex = LittleLong (in->miptex);
-		out->flags = LittleLong (in->flags);
+		miptex = LittleLong (in->iMipTex);
+		out->flags = LittleLong (in->iFlags);
 
 		//johnfitz -- rewrote this section
 		if (miptex >= loadmodel->numtextures-1 || !loadmodel->textures[miptex])
 		{
-			if (out->flags & TEX_SPECIAL)
+			if(out->flags & BSP_TEXTURE_SPECIAL)
 				out->texture = loadmodel->textures[loadmodel->numtextures-1];
 			else
 				out->texture = loadmodel->textures[loadmodel->numtextures-2];
-			out->flags |= TEX_MISSING;
+			out->flags |= BSP_TEXTURE_MISSING;
 			missing++;
 		}
 		else
@@ -699,7 +688,7 @@ void CalcSurfaceExtents (msurface_t *s)
 	float	mins[2], maxs[2];
 	double	val;
 	int		i,j, e;
-	mvertex_t	*v;
+	BSPVertex_t	*v;
 	mtexinfo_t	*tex;
 	int		bmins[2], bmaxs[2];
 
@@ -719,9 +708,9 @@ void CalcSurfaceExtents (msurface_t *s)
 		for (j=0 ; j<2 ; j++)
 		{
 			// [24/11/2013] Double cast, suggestion from LordHavoc ~hogsy
-			val =	(double)	v->position[0]*tex->vecs[j][0]+
-								v->position[1]*tex->vecs[j][1]+
-								v->position[2]*tex->vecs[j][2]+
+			val =	(double)	v->fPoint[0]*tex->vecs[j][0]+
+								v->fPoint[1]*tex->vecs[j][1]+
+								v->fPoint[2]*tex->vecs[j][2]+
 								tex->vecs[j][3];
 			if (val < mins[j])
 				mins[j] = val;
@@ -738,7 +727,7 @@ void CalcSurfaceExtents (msurface_t *s)
 		s->texturemins[i] = bmins[i]*16;
 		s->extents[i] = (bmaxs[i]-bmins[i])*16;
 
-		if(!(tex->flags & TEX_SPECIAL) && s->extents[i] > 2000) //johnfitz -- was 512 in glquake, 256 in winquake
+		if(!(tex->flags & BSP_TEXTURE_SPECIAL) && s->extents[i] > 2000) //johnfitz -- was 512 in glquake, 256 in winquake
 			Con_Warning("Bad surface extents\n");
 	}
 }
@@ -770,9 +759,9 @@ void Mod_PolyForUnlitSurface (msurface_t *fa)
 		lindex = loadmodel->surfedges[fa->firstedge + i];
 
 		if (lindex > 0)
-			vec = loadmodel->vertexes[loadmodel->edges[lindex].v[0]].position;
+			vec = loadmodel->vertexes[loadmodel->edges[lindex].v[0]].fPoint;
 		else
-			vec = loadmodel->vertexes[loadmodel->edges[-lindex].v[1]].position;
+			vec = loadmodel->vertexes[loadmodel->edges[-lindex].v[1]].fPoint;
 		Math_VectorCopy(vec,verts[numverts]);
 		numverts++;
 	}
@@ -794,7 +783,7 @@ void Mod_PolyForUnlitSurface (msurface_t *fa)
 void Mod_CalcSurfaceBounds(msurface_t *s)
 {
 	int			i, e;
-	mvertex_t	*v;
+	BSPVertex_t	*v;
 
 	s->mins[0] = s->mins[1] = s->mins[2] = 9999;
 	s->maxs[0] = s->maxs[1] = s->maxs[2] = -9999;
@@ -807,19 +796,19 @@ void Mod_CalcSurfaceBounds(msurface_t *s)
 		else
 			v = &loadmodel->vertexes[loadmodel->edges[-e].v[1]];
 
-		if (s->mins[0] > v->position[0])
-			s->mins[0] = v->position[0];
-		if (s->mins[1] > v->position[1])
-			s->mins[1] = v->position[1];
-		if (s->mins[2] > v->position[2])
-			s->mins[2] = v->position[2];
+		if (s->mins[0] > v->fPoint[0])
+			s->mins[0] = v->fPoint[0];
+		if (s->mins[1] > v->fPoint[1])
+			s->mins[1] = v->fPoint[1];
+		if (s->mins[2] > v->fPoint[2])
+			s->mins[2] = v->fPoint[2];
 
-		if (s->maxs[0] < v->position[0])
-			s->maxs[0] = v->position[0];
-		if (s->maxs[1] < v->position[1])
-			s->maxs[1] = v->position[1];
-		if (s->maxs[2] < v->position[2])
-			s->maxs[2] = v->position[2];
+		if (s->maxs[0] < v->fPoint[0])
+			s->maxs[0] = v->fPoint[0];
+		if (s->maxs[1] < v->fPoint[1])
+			s->maxs[1] = v->fPoint[1];
+		if (s->maxs[2] < v->fPoint[2])
+			s->maxs[2] = v->fPoint[2];
 	}
 }
 
@@ -827,7 +816,7 @@ void GL_SubdivideSurface(msurface_t *fa);
 
 void Model_LoadBSPFaces(BSPLump_t *blLump)
 {
-	dface_t		*in;
+	BSPFace_t	*in;
 	msurface_t 	*out;
 	int			i, count, surfnum;
 	int			planenum, side;
@@ -843,18 +832,19 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 
 	for ( surfnum=0 ; surfnum<count ; surfnum++, in++, out++)
 	{
-		out->firstedge = LittleLong(in->firstedge);
-		out->numedges = LittleShort(in->numedges);
+		out->firstedge	= LittleLong(in->iFirstEdge);
+		out->numedges	= LittleLong(in->iNumEdges);
 		out->flags = 0;
 
-		planenum = LittleShort(in->planenum);
-		side = LittleShort(in->side);
+		planenum = LittleLong(in->iPlaneNum);
+
+		side = LittleLong(in->iSide);
 		if (side)
 			out->flags |= SURF_PLANEBACK;
 
 		out->plane = loadmodel->planes + planenum;
 
-		out->texinfo = loadmodel->texinfo + LittleShort (in->texinfo);
+		out->texinfo = loadmodel->texinfo+LittleLong(in->iTexInfo);
 
 		CalcSurfaceExtents (out);
 
@@ -862,13 +852,13 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 
 	// lighting info
 
-		for (i=0 ; i<MAXLIGHTMAPS ; i++)
-			out->styles[i] = in->styles[i];
-		i = LittleLong(in->lightofs);
+		for (i=0 ; i<BSP_MAX_LIGHTMAPS ; i++)
+			out->styles[i] = in->bStyles[i];
+		i = LittleLong(in->iLightOffset);
 		if (i == -1)
 			out->samples = NULL;
 		else
-			out->samples = loadmodel->lightdata + (i * 3); //johnfitz -- lit support via lordhavoc (was "+ i")
+			out->samples = loadmodel->lightdata+(i*3); //johnfitz -- lit support via lordhavoc (was "+ i")
 
 		//johnfitz -- this section rewritten
 		if(!Q_strncasecmp(out->texinfo->texture->name,"sky",3)) // sky surface //also note -- was Q_strncmp, changed to match qbsp
@@ -885,7 +875,7 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 
 			GL_SubdivideSurface (out);
 		}
-		else if(out->texinfo->flags & TEX_MISSING) // texture is missing from bsp
+		else if(out->texinfo->flags & BSP_TEXTURE_MISSING) // texture is missing from bsp
 		{
 			if(out->samples) //lightmapped
 				out->flags |= SURF_NOTEXTURE;
@@ -912,7 +902,7 @@ void Mod_SetParent (mnode_t *node, mnode_t *parent)
 void Model_LoadBSPNodes(BSPLump_t *blLump)
 {
 	int			i, j, count, p;
-	dnode_t		*in;
+	BSPNode_t	*in;
 	mnode_t 	*out;
 
 	in = (void *)(mod_base + blLump->iFileOffset);
@@ -929,20 +919,20 @@ void Model_LoadBSPNodes(BSPLump_t *blLump)
 	{
 		for (j=0 ; j<3 ; j++)
 		{
-			out->minmaxs[j] = LittleShort (in->mins[j]);
-			out->minmaxs[3+j] = LittleShort (in->maxs[j]);
+			out->minmaxs[j]		= LittleFloat(in->fMins[j]);
+			out->minmaxs[3+j]	= LittleFloat(in->fMaxs[j]);
 		}
 
-		p = LittleLong(in->planenum);
+		p = LittleLong(in->iPlaneNum);
 		out->plane = loadmodel->planes + p;
 
-		out->firstsurface = (unsigned short)LittleShort (in->firstface); //johnfitz -- explicit cast as unsigned short
-		out->numsurfaces = (unsigned short)LittleShort (in->numfaces); //johnfitz -- explicit cast as unsigned short
+		out->firstsurface	= LittleLong (in->usFirstFace); //johnfitz -- explicit cast as unsigned short
+		out->numsurfaces	= LittleLong (in->usNumFaces); //johnfitz -- explicit cast as unsigned short
 
 		for (j=0 ; j<2 ; j++)
 		{
 			//johnfitz -- hack to handle nodes > 32k, adapted from darkplaces
-			p = (unsigned short)LittleShort(in->children[j]);
+			p = (unsigned short)LittleLong(in->iChildren[j]);
 			if (p < count)
 				out->children[j] = loadmodel->nodes + p;
 			else
@@ -965,7 +955,7 @@ void Model_LoadBSPNodes(BSPLump_t *blLump)
 
 void Model_LoadBSPLeafs(BSPLump_t *blLump)
 {
-	dleaf_t 	*in;
+	BSPLeaf_t 	*in;
 	mleaf_t 	*out;
 	int			i, j, count, p;
 
@@ -982,17 +972,17 @@ void Model_LoadBSPLeafs(BSPLump_t *blLump)
 	{
 		for (j=0 ; j<3 ; j++)
 		{
-			out->minmaxs[j] = LittleShort (in->mins[j]);
-			out->minmaxs[3+j] = LittleShort (in->maxs[j]);
+			out->minmaxs[j]		= LittleFloat(in->fMins[j]);
+			out->minmaxs[3+j]	= LittleFloat(in->fMaxs[j]);
 		}
 
-		p = LittleLong(in->contents);
+		p = LittleLong(in->iContents);
 		out->contents = p;
 
-		out->firstmarksurface = loadmodel->marksurfaces + (unsigned short)LittleShort(in->firstmarksurface); //johnfitz -- unsigned short
-		out->nummarksurfaces = (unsigned short)LittleShort(in->nummarksurfaces); //johnfitz -- unsigned short
+		out->firstmarksurface	= loadmodel->marksurfaces+LittleLong(in->uiFirstMarkSurface);
+		out->nummarksurfaces	= LittleLong(in->uiNumMarkSurfaces);
 
-		p = LittleLong(in->visofs);
+		p = LittleLong(in->iVisibilityOffset);
 		if (p == -1)
 			out->compressed_vis = NULL;
 		else
@@ -1000,7 +990,7 @@ void Model_LoadBSPLeafs(BSPLump_t *blLump)
 		out->efrags = NULL;
 
 		for (j=0 ; j<4 ; j++)
-			out->ambient_sound_level[j] = in->ambient_level[j];
+			out->ambient_sound_level[j] = in->bAmbientLevel[j];
 
 		//johnfitz -- removed code to mark surfaces as SURF_UNDERWATER
 	}
@@ -1008,8 +998,8 @@ void Model_LoadBSPLeafs(BSPLump_t *blLump)
 
 void Model_LoadBSPClipNodes(BSPLump_t *blLump)
 {
-	dclipnode_t *in;
-	mclipnode_t *out; //johnfitz -- was dclipnode_t
+	BSPClipNode_t *in;
+	BSPClipNode_t *out; //johnfitz -- was dclipnode_t
 	int			i, count;
 	hull_t		*hull;
 
@@ -1017,7 +1007,7 @@ void Model_LoadBSPClipNodes(BSPLump_t *blLump)
 	if (blLump->iFileLength % sizeof(*in))
 		Sys_Error ("Model_LoadBSPClipNodes: funny lump size in %s",loadmodel->name);
 	count = blLump->iFileLength / sizeof(*in);
-	out = (mclipnode_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
+	out = (BSPClipNode_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
 
 	loadmodel->clipnodes = out;
 	loadmodel->numclipnodes = count;
@@ -1048,20 +1038,20 @@ void Model_LoadBSPClipNodes(BSPLump_t *blLump)
 
 	for (i=0 ; i<count ; i++, out++, in++)
 	{
-		out->planenum = LittleLong(in->planenum);
+		out->iPlaneNum = LittleLong(in->iPlaneNum);
 
 		//johnfitz -- bounds check
-		if (out->planenum < 0 || out->planenum >= loadmodel->numplanes)
-			Host_Error ("Model_LoadBSPClipNodes: planenum out of bounds! (%i)",out->planenum);
+		if (out->iPlaneNum < 0 || out->iPlaneNum >= loadmodel->numplanes)
+			Host_Error ("Model_LoadBSPClipNodes: planenum out of bounds! (%i)",out->iPlaneNum);
 		//johnfitz
 
 		//johnfitz -- support clipnodes > 32k
-		out->children[0] = (unsigned short)LittleShort(in->children[0]);
-		out->children[1] = (unsigned short)LittleShort(in->children[1]);
-		if (out->children[0] >= count)
-			out->children[0] -= 65536;
-		if (out->children[1] >= count)
-			out->children[1] -= 65536;
+		out->iChildren[0]	= LittleLong(in->iChildren[0]);
+		out->iChildren[1]	= LittleLong(in->iChildren[1]);
+		if (out->iChildren[0] >= count)
+			out->iChildren[0] -= 65536;
+		if (out->iChildren[1] >= count)
+			out->iChildren[1] -= 65536;
 		//johnfitz
 	}
 }
@@ -1070,8 +1060,8 @@ void Model_LoadBSPClipNodes(BSPLump_t *blLump)
 */
 void Mod_MakeHull0 (void)
 {
-	mnode_t		*in, *child;
-	mclipnode_t *out; //johnfitz -- was dclipnode_t
+	mnode_t			*in, *child;
+	BSPClipNode_t	*out; //johnfitz -- was dclipnode_t
 	int			i, j, count;
 	hull_t		*hull;
 
@@ -1079,7 +1069,7 @@ void Mod_MakeHull0 (void)
 
 	in = loadmodel->nodes;
 	count = loadmodel->numnodes;
-	out = (mclipnode_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
+	out = (BSPClipNode_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
 
 	hull->clipnodes = out;
 	hull->firstclipnode = 0;
@@ -1088,14 +1078,14 @@ void Mod_MakeHull0 (void)
 
 	for (i=0 ; i<count ; i++, out++, in++)
 	{
-		out->planenum = in->plane - loadmodel->planes;
+		out->iPlaneNum = in->plane - loadmodel->planes;
 		for (j=0 ; j<2 ; j++)
 		{
 			child = in->children[j];
 			if (child->contents < 0)
-				out->children[j] = child->contents;
+				out->iChildren[j] = child->contents;
 			else
-				out->children[j] = child - loadmodel->nodes;
+				out->iChildren[j] = child - loadmodel->nodes;
 		}
 	}
 }
@@ -1103,7 +1093,7 @@ void Mod_MakeHull0 (void)
 void Model_LoadBSPMarkSurfaces(BSPLump_t *blLump)
 {
 	int		i, j, count;
-	short		*in;
+	int		*in;
 	msurface_t **out;
 
 	in = (void *)(mod_base + blLump->iFileOffset);
@@ -1117,7 +1107,7 @@ void Model_LoadBSPMarkSurfaces(BSPLump_t *blLump)
 
 	for ( i=0 ; i<count ; i++)
 	{
-		j = (unsigned short)LittleShort(in[i]); //johnfitz -- explicit cast as unsigned short
+		j = LittleLong(in[i]);
 		if (j >= loadmodel->numsurfaces)
 			Sys_Error ("Mod_ParseMarksurfaces: bad surface number");
 		out[i] = loadmodel->surfaces + j;
@@ -1147,13 +1137,13 @@ void Model_LoadBSPPlanes(BSPLump_t *blLump)
 {
 	int			i, j;
 	mplane_t	*out;
-	dplane_t 	*in;
+	BSPPlane_t 	*in;
 	int			count;
 	int			bits;
 
 	in = (void *)(mod_base + blLump->iFileOffset);
 	if (blLump->iFileLength % sizeof(*in))
-		Sys_Error ("Model_LoadBSPPlanes: funny lump size in %s",loadmodel->name);
+		Sys_Error ("Model_LoadBSPPlanes: funny lump size in %s\n",loadmodel->name);
 	count = blLump->iFileLength / sizeof(*in);
 	out = (mplane_t*)Hunk_AllocName ( count*2*sizeof(*out), loadname);
 
@@ -1165,14 +1155,14 @@ void Model_LoadBSPPlanes(BSPLump_t *blLump)
 		bits = 0;
 		for (j=0 ; j<3 ; j++)
 		{
-			out->normal[j] = LittleFloat (in->normal[j]);
+			out->normal[j] = LittleFloat(in->fNormal[j]);
 			if (out->normal[j] < 0)
 				bits |= 1<<j;
 		}
 
-		out->dist = LittleFloat (in->dist);
-		out->type = LittleLong (in->type);
-		out->signbits = bits;
+		out->dist		= LittleFloat(in->fDist);
+		out->type		= LittleLong(in->iType);
+		out->signbits	= bits;
 	}
 }
 
@@ -1189,8 +1179,8 @@ float RadiusFromBounds (vec3_t mins, vec3_t maxs)
 
 void Model_LoadBSPSubmodels(BSPLump_t *blLump)
 {
-	dmodel_t	*in;
-	dmodel_t	*out;
+	BSPModel_t	*in;
+	BSPModel_t	*out;
 	int			i, j, count;
 
 	in = (void *)(mod_base+blLump->iFileOffset);
@@ -1198,7 +1188,7 @@ void Model_LoadBSPSubmodels(BSPLump_t *blLump)
 		Sys_Error ("Model_LoadBSPSubmodels: funny lump size in %s",loadmodel->name);
 
 	count	= blLump->iFileLength/sizeof(*in);
-	out		= (dmodel_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
+	out		= (BSPModel_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
 
 	loadmodel->submodels	= out;
 	loadmodel->numsubmodels = count;
@@ -1207,24 +1197,24 @@ void Model_LoadBSPSubmodels(BSPLump_t *blLump)
 	{
 		for(j = 0; j < 3; j++)
 		{	// spread the mins / maxs by a pixel
-			out->mins[j]	= LittleFloat (in->mins[j]) - 1;
-			out->maxs[j]	= LittleFloat (in->maxs[j]) + 1;
-			out->origin[j]	= LittleFloat (in->origin[j]);
+			out->fMins[j]	= LittleFloat(in->fMins[j])-1;
+			out->fMaxs[j]	= LittleFloat(in->fMaxs[j])+1;
+			out->fOrigin[j]	= LittleFloat(in->fOrigin[j]);
 		}
 
 		for (j=0 ; j<MAX_MAP_HULLS ; j++)
-			out->headnode[j] = LittleLong (in->headnode[j]);
+			out->iHeadNode[j] = LittleLong (in->iHeadNode[j]);
 
-		out->visleafs = LittleLong (in->visleafs);
-		out->firstface = LittleLong (in->firstface);
-		out->numfaces = LittleLong (in->numfaces);
+		out->iVisLeafs	= LittleLong(in->iVisLeafs);
+		out->iFirstFace = LittleLong(in->iFirstFace);
+		out->iNumFaces	= LittleLong(in->iNumFaces);
 	}
 
 	// johnfitz -- check world visleafs -- adapted from bjp
 	out = loadmodel->submodels;
 
-	if (out->visleafs > BSP_MAX_LEAFS)
-		Sys_Error ("Model_LoadBSPSubmodels: too many visleafs (%d, max = %d) in %s", out->visleafs, BSP_MAX_LEAFS, loadmodel->name);
+	if(out->iVisLeafs > BSP_MAX_LEAFS)
+		Sys_Error ("Model_LoadBSPSubmodels: too many visleafs (%d, max = %d) in %s", out->iVisLeafs, BSP_MAX_LEAFS, loadmodel->name);
 	//johnfitz
 }
 
@@ -1237,14 +1227,14 @@ void Model_LoadBSPSubmodels(BSPLump_t *blLump)
 */
 void Mod_BoundsFromClipNode (model_t *mod, int hull, int nodenum)
 {
-	mplane_t	*plane;
-	mclipnode_t	*node;
+	mplane_t		*plane;
+	BSPClipNode_t	*node;
 
 	if (nodenum < 0)
 		return; //hit a leafnode
 
 	node = &mod->clipnodes[nodenum];
-	plane = mod->hulls[hull].planes + node->planenum;
+	plane = mod->hulls[hull].planes + node->iPlaneNum;
 	switch (plane->type)
 	{
 
@@ -1271,15 +1261,15 @@ void Mod_BoundsFromClipNode (model_t *mod, int hull, int nodenum)
 		break;
 	}
 
-	Mod_BoundsFromClipNode (mod, hull, node->children[0]);
-	Mod_BoundsFromClipNode (mod, hull, node->children[1]);
+	Mod_BoundsFromClipNode (mod, hull, node->iChildren[0]);
+	Mod_BoundsFromClipNode (mod, hull, node->iChildren[1]);
 }
 
 void Model_LoadBSP(model_t *mod,void *buffer)
 {
 	int			version,i,j;
 	BSPHeader_t	*bhHeader;
-	dmodel_t 	*bm;
+	BSPModel_t 	*bm;
 	float		radius; //johnfitz
 
 	bhHeader = (BSPHeader_t*)buffer;
@@ -1329,18 +1319,18 @@ void Model_LoadBSP(model_t *mod,void *buffer)
 	{
 		bm = &mod->submodels[i];
 
-		mod->hulls[0].firstclipnode = bm->headnode[0];
+		mod->hulls[0].firstclipnode = bm->iHeadNode[0];
 		for (j=1 ; j<MAX_MAP_HULLS ; j++)
 		{
-			mod->hulls[j].firstclipnode = bm->headnode[j];
+			mod->hulls[j].firstclipnode = bm->iHeadNode[j];
 			mod->hulls[j].lastclipnode	= mod->numclipnodes-1;
 		}
 
-		mod->firstmodelsurface = bm->firstface;
-		mod->nummodelsurfaces = bm->numfaces;
+		mod->firstmodelsurface	= bm->iFirstFace;
+		mod->nummodelsurfaces	= bm->iNumFaces;
 
-		Math_VectorCopy (bm->maxs, mod->maxs);
-		Math_VectorCopy (bm->mins, mod->mins);
+		Math_VectorCopy (bm->fMaxs, mod->maxs);
+		Math_VectorCopy (bm->fMins, mod->mins);
 
 		//johnfitz -- calculate rotate bounds and yaw bounds
 		radius = RadiusFromBounds (mod->mins, mod->maxs);
@@ -1357,7 +1347,7 @@ void Model_LoadBSP(model_t *mod,void *buffer)
 		}
 		//johnfitz
 
-		mod->numleafs = bm->visleafs;
+		mod->numleafs = bm->iVisLeafs;
 
 		if (i < mod->numsubmodels-1)
 		{
@@ -1734,9 +1724,16 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 
 bool Model_LoadOBJ(model_t *mModel,void *Buffer)
 {
+	char	cExtension[4];
+	OBJ_t	*oObject;
+
 	mModel->mType	= MODEL_TYPE_OBJ;
 
-#if 0
+	// Check if the file is a valid OBJ or not...
+	ExtractFileExtension(mModel->name,cExtension);
+	if(Q_strcmp(cExtension,".obj"))
+		return false;
+
 	// Parse OBJ file...
 	for(;;)
 	{
@@ -1746,7 +1743,12 @@ bool Model_LoadOBJ(model_t *mModel,void *Buffer)
 			break;
 
 		if(!Q_strcmp(cLine,"v"))
-		{}
+		{
+			fscanf(Buffer,"%f %f %f\n",
+				&oObject->ovVertex->vVertex[0],
+				&oObject->ovVertex->vVertex[1],
+				&oObject->ovVertex->vVertex[2]);
+		}
 		else if(!Q_strcmp(cLine,"vt"))
 		{}
 		else if(!Q_strcmp(cLine,"vn"))
@@ -1754,13 +1756,8 @@ bool Model_LoadOBJ(model_t *mModel,void *Buffer)
 		else if(!Q_strcmp(cLine,"f"))
 		{}
 	}
-#endif
 
 	return false;
-}
-
-void Model_DrawOBJ(entity_t *eEntity)
-{
 }
 
 /**/

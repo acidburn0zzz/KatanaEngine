@@ -3,18 +3,13 @@
 
 int		outleafs;
 
-/*
-===========
-PointInLeaf
-
-Vic: rewrote to be faster
-LordHavoc: shortened a little
-===========
+/*	Vic: rewrote to be faster
+	LordHavoc: shortened a little
 */
 node_t	*PointInLeaf (node_t *node, vec3_t point)
 {
 	while (!node->contents)
-		node = node->children[PlaneDiff( point, &mapplanes[node->planenum] ) <= 0];
+		node = node->children[PlaneDiff2( point, &mapplanes[node->planenum] ) <= 0];
 	return node;
 }
 
@@ -79,7 +74,7 @@ bool RecursiveFillOutside (node_t *l, int hullnum, bool fill)
 	portal_t	*p;
 	int			s;
 
-	if (l->contents == BSP_CONTENTS_SOLID || l->contents == CONTENTS_SKY)
+	if (l->contents == BSP_CONTENTS_SOLID || l->contents == BSP_CONTENTS_SKY)
 		return false;
 
 	if (l->valid == valid)

@@ -72,7 +72,7 @@ int	GetThreadWork (void)
 
 void (*workfunction) (int);
 
-void ThreadWorkerFunction (int threadnum)
+void ThreadWorkerFunction(int threadnum)
 {
 	int		work;
 

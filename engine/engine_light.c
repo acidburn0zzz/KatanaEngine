@@ -317,7 +317,7 @@ loc0:
 				line3 = smax*3;
 				lightmap = surf->samples+((dt>>4)*smax+(ds>>4))*3; // LordHavoc: *3 for color
 
-				for (maps = 0;maps < MAXLIGHTMAPS && surf->styles[maps] != 255;maps++)
+				for (maps = 0;maps < BSP_MAX_LIGHTMAPS && surf->styles[maps] != 255;maps++)
 				{
 					scale = (float) d_lightstylevalue[surf->styles[maps]] * 1.0 / 256.0;
 					r00 += (float)lightmap[0]*scale;

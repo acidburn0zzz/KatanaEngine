@@ -88,6 +88,13 @@ typedef struct
 	vec3_t	vVertex;
 } OBJVertex_t;
 
+typedef struct
+{
+	int	iTriangles;
+
+	OBJVertex_t	*ovVertex;
+} OBJ_t;
+
 /*
 	IQM Format
 */
@@ -198,14 +205,39 @@ typedef struct
 	BSP Format
 */
 
-#define	BSP_HEADER	(('K'<<24)+('P'<<16)+('S'<<8)+'B')
-
 #define	BSP_VERSION	4
 #define	BSP_VERSION_4	// Enable support for version 4 feature set.
 
-#define	BSP_MAX_HULLS		16
-#define	BSP_MAX_LEAFS		32767
-#define	BSP_MAX_ENTITIES	32768
+#define	BSP_HEADER		(('L'<<24)+('V'<<16)+('E'<<8)+'L')	// For easy identification.
+#define	BSP_HEADER_SIZE	8									// "BSP" followed by version number.
+
+#define	BSP_MAX_HULLS			4
+#define	BSP_MAX_LEAFS			32768			//0x400000
+#define	BSP_MAX_ENTITIES		32768
+#define	BSP_MAX_VERTS			65535			//0x100000
+#define	BSP_MAX_MODELS			4096
+#define	BSP_MAX_BRUSHES			32768			//0x100000
+#define	BSP_MAX_ENTSTRING		0x100000		//0x400000
+#define	BSP_MAX_PLANES			65536			//0x200000
+#define	BSP_MAX_NODES			32767			//0x200000
+#define	BSP_MAX_CLIPNODES		32767			//0x800000
+#define	BSP_MAX_FACES			65536			//0x200000
+#define	BSP_MAX_MARKSURFACES	65535			//0x400000
+#define	BSP_MAX_TEXINFO			BSP_MAX_FACES	//0x100000
+#define	BSP_MAX_EDGES			0x100000		//0x400000
+#define	BSP_MAX_SURFEDGES		0x200000		//0x800000
+#define	BSP_MAX_MIPTEX			0x800000		//0x1000000
+#define	BSP_MAX_LIGHTING		0x400000		//0x1000000
+#define	BSP_MAX_LIGHTMAPS		4
+#define	BSP_MAX_VISIBILITY		0x400000		//0x1000000
+
+enum
+{
+	BSP_TEXTURE_SPECIAL = 1,	// Used for sky or water.
+	BSP_TEXTURE_SKIP,			// Surface to be skipped during rendering (and lighting).
+
+	BSP_TEXTURE_MISSING			// Indicates that the texture is missing.
+};
 
 /*	Different content types
 	set for brushes by Katana Level.
@@ -217,6 +249,11 @@ typedef struct
 #define	BSP_CONTENTS_SOLID	-2	// Solid brush.
 #define	BSP_CONTENTS_WATER	-3	// Water
 #define BSP_CONTENTS_SLIME  -4
+#define BSP_CONTENTS_LAVA	-5	// Lava content.
+#define	BSP_CONTENTS_SKY	-7	// Sky content.
+#define	BSP_CONTENTS_0		-9
+#define	BSP_CONTENTS_DOWN	-14	// Down current.
+#define	BSP_CONTENTS_ORIGIN	-15	// Origin brush, removed during CSG time.
 
 enum
 {
@@ -256,18 +293,18 @@ typedef struct
 
 typedef struct
 {
-	int			iIdentification,
-				iVersion;
+	int			iIdent,iVersion;
 	BSPLump_t	bLumps[HEADER_LUMPS];
 } BSPHeader_t;
 
 typedef struct
 {
-	float	fMins[3],fMaxs[3];
-	float	fOrigin[3];
-	int		iHeadNode[BSP_MAX_HULLS];
-	int		iVisLeafs;
-	int		iFirstFace,iNumFaces;
+	float	fMins[3],fMaxs[3],
+			fOrigin[3];
+
+	int		iHeadNode[BSP_MAX_HULLS],
+			iVisLeafs,
+			iFirstFace,iNumFaces;
 } BSPModel_t;
 
 typedef struct
@@ -284,39 +321,43 @@ typedef struct
 
 typedef struct
 {
-	int					iPlaneNum;
-	short				sChildren[2];
-	short				sMins[3],sMaxs[3];
-	unsigned	short	usFirstFace;
-	unsigned	short	usNumFaces;
+	int					iPlaneNum,
+						iChildren[2];
+
+	float				fMins[3],fMaxs[3];
+
+	unsigned	int		usFirstFace;
+	unsigned	int		usNumFaces;
 } BSPNode_t;
 
 typedef struct
 {
-	int		iPlaneNum;
-	short	sChildren[2];
+	int		iPlaneNum,
+			iChildren[2];
 } BSPClipNode_t;
 
 typedef struct
 {
 	float	v[2][4];
-	int		iMipTex;
-	int		iFlags;
+	int		iMipTex,
+			iFlags;
 } BSPTextureInfo_t;
 
 typedef struct
 {
-	unsigned	short	v[2];
+	unsigned	int	v[2];
 } BSPEdge_t;
 
 typedef struct
 {
-	short	sPlaneNum;
-	short	sSide;
-	int		iFirstEdge;
-	short	sNumEdges;
-	short	sTexInfo;
-	byte	bStyles[BSP_MAX_HULLS];
+	int		iPlaneNum,
+			iSide,
+			iFirstEdge,
+			iNumEdges,
+			iTexInfo;
+
+	byte	bStyles[4];
+
 	int		iLightOffset;
 } BSPFace_t;
 
@@ -325,10 +366,10 @@ typedef struct
 	int					iContents,
 						iVisibilityOffset;
 
-	short				sMins[3],sMaxs[3];
+	float				fMins[3],fMaxs[3];
 
-	unsigned	short	usFirstMarkSurface,
-						usNumMarkSurfaces;
+	unsigned	int		uiFirstMarkSurface,
+						uiNumMarkSurfaces;
 
 	byte				bAmbientLevel[BSP_AMBIENT_END];
 } BSPLeaf_t;

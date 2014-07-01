@@ -75,9 +75,9 @@ extern	int			minlight;
 extern	int			ambientlight;
 
 // light_face.c
-void LightFace( dface_t *f, const lightchain_t *lightchain, const directlight_t **novislight, int novislights, const vec3_t faceorg );
+void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_t **novislight, int novislights, const vec3_t faceorg );
 
 // light_trace.c
-dleaf_t *Light_PointInLeaf( const vec3_t point );
+BSPLeaf_t *Light_PointInLeaf( const vec3_t point );
 int Light_PointContents( const vec3_t p );
 void Light_TraceLine( lightTrace_t *trace, const vec3_t start, const vec3_t end, bool hitsky );

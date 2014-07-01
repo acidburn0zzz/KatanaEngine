@@ -16,13 +16,13 @@ typedef struct mbrush_s
 } mbrush_t;
 
 extern	int			nummapbrushes;
-extern	mbrush_t	mapbrushes[MAX_MAP_BRUSHES];
+extern	mbrush_t	mapbrushes[BSP_MAX_BRUSHES];
 
 extern	int			nummapplanes;
-extern	plane_t		mapplanes[MAX_MAP_PLANES];
+extern	plane_t		mapplanes[BSP_MAX_PLANES];
 
 extern	int			nummiptex;
-extern	char		miptex[MAX_MAP_TEXINFO][128]; // LordHavoc: was [16]
+extern	char		miptex[BSP_MAX_TEXINFO][128]; // LordHavoc: was [16]
 
 void 	LoadMapFile (char *filename);
 

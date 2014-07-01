@@ -38,16 +38,6 @@ BRUSH MODELS
 ==============================================================================
 */
 
-
-//
-// in memory representation
-//
-// !!! if this is changed, it must be changed in asm_draw.h too !!!
-typedef struct
-{
-	vec3_t		position;
-} mvertex_t;
-
 #define	SIDE_FRONT	0
 #define	SIDE_BACK	1
 #define	SIDE_ON		2
@@ -93,7 +83,7 @@ typedef struct texture_s
 // !!! if this is changed, it must be changed in asm_draw.h too !!!
 typedef struct
 {
-	unsigned short	v[2];
+	unsigned int	v[2];
 	unsigned int	cachededgeoffset;
 } medge_t;
 
@@ -139,12 +129,11 @@ typedef struct msurface_s
 	mtexinfo_t	*texinfo;
 
 // lighting info
-	int			dlightframe;
-	int			dlightbits;
+	int			dlightframe,dlightbits;
 
 	int			lightmaptexturenum;
-	byte		styles[MAXLIGHTMAPS];
-	int			cached_light[MAXLIGHTMAPS];	// values currently used in lightmap
+	byte		styles[BSP_MAX_LIGHTMAPS];
+	int			cached_light[BSP_MAX_LIGHTMAPS];	// values currently used in lightmap
 	bool		cached_dlight;				// TRUE if dynamic light in cache
 	byte		*samples;		// [numstyles*surfsize]
 } msurface_t;
@@ -160,14 +149,12 @@ typedef struct mnode_s
 	struct mnode_s	*parent;
 
 // node specific
-	mplane_t	*plane;
+	mplane_t		*plane;
 	struct mnode_s	*children[2];
 
-	unsigned short		firstsurface;
-	unsigned short		numsurfaces;
+	unsigned int	firstsurface,
+					numsurfaces;
 } mnode_t;
-
-
 
 typedef struct mleaf_s
 {
@@ -184,28 +171,23 @@ typedef struct mleaf_s
 	efrag_t		*efrags;
 
 	msurface_t	**firstmarksurface;
-	int			nummarksurfaces;
+	unsigned int	nummarksurfaces;
 	int			key;			// BSP sequence number for leaf's contents
-	byte		ambient_sound_level[NUM_AMBIENTS];
+	byte		ambient_sound_level[BSP_AMBIENT_END];
 } mleaf_t;
-
-//johnfitz -- for clipnodes>32k
-typedef struct mclipnode_s
-{
-	int			planenum;
-	int			children[2]; // negative numbers are contents
-} mclipnode_t;
-//johnfitz
 
 // !!! if this is changed, it must be changed in asm_i386.h too !!!
 typedef struct
 {
-	mclipnode_t	*clipnodes; //johnfitz -- was dclipnode_t
-	mplane_t	*planes;
-	int			firstclipnode;
-	int			lastclipnode;
-	vec3_t		clip_mins;
-	vec3_t		clip_maxs;
+	BSPClipNode_t	*clipnodes; //johnfitz -- was dclipnode_t
+
+	mplane_t		*planes;
+
+	int				firstclipnode;
+	int				lastclipnode;
+
+	vec3_t			clip_mins;
+	vec3_t			clip_maxs;
 } hull_t;
 
 //
@@ -239,7 +221,7 @@ typedef struct model_s
 	int			firstmodelsurface, nummodelsurfaces;
 
 	int			numsubmodels;
-	dmodel_t	*submodels;
+	BSPModel_t	*submodels;
 
 	int			numplanes;
 	mplane_t	*planes;
@@ -248,7 +230,7 @@ typedef struct model_s
 	mleaf_t		*leafs;
 
 	int			numvertexes;
-	mvertex_t	*vertexes;
+	BSPVertex_t	*vertexes;
 
 	int			numedges;
 	medge_t		*edges;
@@ -266,7 +248,7 @@ typedef struct model_s
 	int				*surfedges;
 
 	int				numclipnodes;
-	mclipnode_t		*clipnodes; //johnfitz -- was dclipnode_t
+	BSPClipNode_t	*clipnodes; //johnfitz -- was dclipnode_t
 
 	int				nummarksurfaces;
 	msurface_t		**marksurfaces;

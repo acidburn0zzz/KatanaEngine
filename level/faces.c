@@ -11,11 +11,6 @@ the outside filling stage can remove some of them so a better bsp can be generat
 
 //===========================================================================
 
-/*
-===========
-AllocFace
-===========
-*/
 face_t *AllocFace( void )
 {
 	face_t	*f;
@@ -28,11 +23,6 @@ face_t *AllocFace( void )
 	return f;
 }
 
-/*
-===========
-FreeFace
-===========
-*/
 void FreeFace( face_t *f )
 {
 	if( f->winding )
@@ -65,11 +55,6 @@ face_t *NewFaceFromFace( face_t *in )
 
 //===========================================================================
 
-/*
-==================
-SplitFace
-==================
-*/
 void SplitFace( face_t *in, plane_t *split, face_t **front, face_t **back )
 {
 	winding_t	*frontw, *backw;
@@ -108,16 +93,16 @@ void SplitFace( face_t *in, plane_t *split, face_t **front, face_t **back )
 */
 int SubdivideFace( face_t *f, face_t **prevptr )
 {
-	int			i, axis;
-	int			subdivides;
-	vec_t		mins, maxs, v;
-	plane_t		plane;
-	winding_t	*w;
-	face_t		*front, *back, *next;
-	texinfo_t	*tex = &texinfo[f->texturenum];
+	int					i, axis;
+	int					subdivides;
+	vec_t				mins, maxs, v;
+	plane_t				plane;
+	winding_t			*w;
+	face_t				*front, *back, *next;
+	BSPTextureInfo_t	*tex = &texinfo[f->texturenum];
 
 	// special (non-surface cached) faces don't need subdivision
-	if( tex->flags & TEX_SPECIAL )
+	if( tex->iFlags & BSP_TEXTURE_SPECIAL )
 		return 0;
 
 	subdivides = 0;
@@ -131,7 +116,7 @@ int SubdivideFace( face_t *f, face_t **prevptr )
 			w = f->winding;
 			for( i = 0; i < w->numpoints; i++ )
 			{
-				v = DotProduct( w->points[i], tex->vecs[axis] );
+				v = DotProduct( w->points[i], tex->v[axis] );
 				if( v < mins )
 					mins = v;
 				if( v > maxs )
@@ -142,7 +127,7 @@ int SubdivideFace( face_t *f, face_t **prevptr )
 				break;
 
 			// split it
-			VectorCopy( tex->vecs[axis], plane.normal );
+			VectorCopy( tex->v[axis], plane.normal );
 			v = VectorNormalize( plane.normal );
 			if( !v )
 				Error( "SubdivideFace: zero length normal" );
@@ -360,12 +345,12 @@ typedef struct hashvert_s
 
 #define	NUM_HASH		8192
 
-static	hashvert_t	hvertex[MAX_MAP_VERTS];
+static	hashvert_t	hvertex[BSP_MAX_VERTS];
 static	hashvert_t	*hvert_p;
 
 static	hashvert_t	*hashverts[NUM_HASH];
 
-static	face_t		*edgefaces[MAX_MAP_EDGES][2];
+static	face_t		*edgefaces[BSP_MAX_EDGES][2];
 static	int			firstmodeledge;
 
 static	vec3_t		hash_min, hash_scale;
@@ -459,18 +444,13 @@ static int GetVertex( vec3_t in, int planenum )
 	return hv->num;
 }
 
-/*
-==================
-EmitFaceEdge
-
-Don't allow four way edges
-==================
+/*	Don't allow four way edges
 */
 static int EmitFaceEdge( vec3_t p1, vec3_t p2, face_t *f )
 {
-	int		i;
-	int		v1, v2;
-	dedge_t	*edge;
+	int			i;
+	int			v1, v2;
+	BSPEdge_t	*edge;
 
 	v1 = GetVertex( p1, f->planenum );
 	v2 = GetVertex( p2, f->planenum );
@@ -494,7 +474,7 @@ static int EmitFaceEdge( vec3_t p1, vec3_t p2, face_t *f )
 static void EmitNodeFaces_r( node_t *node )
 {
 	int			i;
-	dface_t		*f;
+	BSPFace_t	*f;
 	face_t		*face;
 	winding_t	*w;
 
@@ -502,26 +482,27 @@ static void EmitNodeFaces_r( node_t *node )
 		return;
 
 	node->firstface = numfaces;
-	for( face = node->faces; face; face = face->next ) {
-		if( numfaces == MAX_MAP_FACES )
-			Error( "numfaces == MAX_MAP_FACES" );
+	for( face = node->faces; face; face = face->next ) 
+	{
+		if( numfaces == BSP_MAX_FACES )
+			Error( "numfaces == BSP_MAX_FACES" );
 
 		f = &dfaces[numfaces];	// emit a face
-		f->planenum = node->outputplanenum;
-		f->side = face->planeside;
-		f->texinfo = face->texturenum;
-		f->lightofs = -1;
-		for( i = 0; i < MAXLIGHTMAPS; i++ )
-			f->styles[i] = 255;
+		f->iPlaneNum = node->outputplanenum;
+		f->iSide = face->planeside;
+		f->iTexInfo = face->texturenum;
+		f->iLightOffset = -1;
+		for( i = 0; i < BSP_MAX_LIGHTMAPS; i++ )
+			f->bStyles[i] = 255;
 
 		// add the face and mergable neighbors to it
-		f->firstedge = numsurfedges;
+		f->iFirstEdge = numsurfedges;
 		for( i = 0, w = face->winding; i < w->numpoints; i++ ) {
-			if( numsurfedges == MAX_MAP_SURFEDGES )
-				Error( "numsurfedges == MAX_MAP_SURFEDGES" );
+			if( numsurfedges == BSP_MAX_SURFEDGES )
+				Error( "numsurfedges == BSP_MAX_SURFEDGES" );
 			dsurfedges[numsurfedges++] = EmitFaceEdge( w->points[i], w->points[(i+1) % w->numpoints], face );
 		}
-		f->numedges = numsurfedges - f->firstedge;
+		f->iNumEdges = numsurfedges - f->iFirstEdge;
 
 		face->outputnumber = numfaces++;
 	}

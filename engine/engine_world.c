@@ -74,9 +74,9 @@ HULL BOXES
 */
 
 
-static	hull_t		box_hull;
-static	mclipnode_t	box_clipnodes[6]; //johnfitz -- was dclipnode_t
-static	mplane_t	box_planes[6];
+static	hull_t			box_hull;
+static	BSPClipNode_t	box_clipnodes[6];
+static	mplane_t		box_planes[6];
 
 /*	Set up the planes and clipnodes so that the six floats of a bounding box
 	can just be stored out and get a proper hull_t structure.
@@ -93,15 +93,15 @@ void SV_InitBoxHull (void)
 
 	for (i=0 ; i<6 ; i++)
 	{
-		box_clipnodes[i].planenum = i;
+		box_clipnodes[i].iPlaneNum = i;
 
 		side = i&1;
 
-		box_clipnodes[i].children[side] = BSP_CONTENTS_EMPTY;
+		box_clipnodes[i].iChildren[side] = BSP_CONTENTS_EMPTY;
 		if (i != 5)
-			box_clipnodes[i].children[side^1] = i + 1;
+			box_clipnodes[i].iChildren[side^1] = i + 1;
 		else
-			box_clipnodes[i].children[side^1] = BSP_CONTENTS_SOLID;
+			box_clipnodes[i].iChildren[side^1] = BSP_CONTENTS_SOLID;
 
 		box_planes[i].type = i>>1;
 		box_planes[i].normal[i>>1] = 1;
@@ -456,9 +456,9 @@ void SV_LinkEdict(edict_t *ent,bool touch_triggers)
 
 int SV_HullPointContents (hull_t *hull, int num, vec3_t p)
 {
-	float		d;
-	mclipnode_t	*node; //johnfitz -- was dclipnode_t
-	mplane_t	*plane;
+	float			d;
+	BSPClipNode_t	*node;
+	mplane_t		*plane;
 
 	while (num >= 0)
 	{
@@ -466,16 +466,16 @@ int SV_HullPointContents (hull_t *hull, int num, vec3_t p)
 			Sys_Error ("SV_HullPointContents: bad node number");
 
 		node = hull->clipnodes + num;
-		plane = hull->planes + node->planenum;
+		plane = hull->planes + node->iPlaneNum;
 
 		if (plane->type < 3)
 			d = p[plane->type] - plane->dist;
 		else
 			d = Math_DotProduct (plane->normal, p) - plane->dist;
 		if (d < 0)
-			num = node->children[1];
+			num = node->iChildren[1];
 		else
-			num = node->children[0];
+			num = node->iChildren[0];
 	}
 
 	return num;
@@ -486,7 +486,7 @@ int SV_PointContents (vec3_t p)
 	int		cont;
 
 	cont = SV_HullPointContents (&sv.worldmodel->hulls[0], 0, p);
-	if (cont <= CONTENTS_CURRENT_0 && cont >= CONTENTS_CURRENT_DOWN)
+	if (cont <= BSP_CONTENTS_0 && cont >= BSP_CONTENTS_DOWN)
 		cont = BSP_CONTENTS_WATER;
 	return cont;
 }
@@ -516,13 +516,13 @@ edict_t	*SV_TestEntityPosition (edict_t *ent)
 
 bool SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec3_t p1, vec3_t p2, trace_t *trace)
 {
-	float		t1,t2,
-				frac,
-				midf;
-	int			i,side;
-	mclipnode_t	*node; //johnfitz -- was dclipnode_t
-	mplane_t	*plane;
-	vec3_t		mid;
+	float			t1,t2,
+					frac,
+					midf;
+	int				i,side;
+	BSPClipNode_t	*node;
+	mplane_t		*plane;
+	vec3_t			mid;
 
 // check for empty
 	if (num < 0)
@@ -547,7 +547,7 @@ bool SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec3_t 
 
 	// Find the point distances
 	node	= hull->clipnodes+num;
-	plane	= hull->planes+node->planenum;
+	plane	= hull->planes+node->iPlaneNum;
 
 	if (plane->type < 3)
 	{
@@ -562,9 +562,9 @@ bool SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec3_t 
 
 #if 1
 	if (t1 >= 0 && t2 >= 0)
-		return SV_RecursiveHullCheck (hull, node->children[0], p1f, p2f, p1, p2, trace);
+		return SV_RecursiveHullCheck (hull, node->iChildren[0], p1f, p2f, p1, p2, trace);
 	if (t1 < 0 && t2 < 0)
-		return SV_RecursiveHullCheck (hull, node->children[1], p1f, p2f, p1, p2, trace);
+		return SV_RecursiveHullCheck (hull, node->iChildren[1], p1f, p2f, p1, p2, trace);
 #else
 	if ( (t1 >= DIST_EPSILON && t2 >= DIST_EPSILON) || (t2 > t1 && t1 >= 0) )
 		return SV_RecursiveHullCheck (hull, node->children[0], p1f, p2f, p1, p2, trace);
@@ -590,7 +590,7 @@ bool SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec3_t 
 	side = (t1 < 0);
 
 // move up to the node
-	if(!SV_RecursiveHullCheck (hull, node->children[side], p1f, midf, p1, mid, trace) )
+	if(!SV_RecursiveHullCheck (hull, node->iChildren[side], p1f, midf, p1, mid, trace) )
 		return false;
 
 #ifdef PARANOID
@@ -602,9 +602,9 @@ bool SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec3_t 
 	}
 #endif
 
-	if(SV_HullPointContents (hull, node->children[side^1], mid) != BSP_CONTENTS_SOLID)
+	if(SV_HullPointContents (hull, node->iChildren[side^1], mid) != BSP_CONTENTS_SOLID)
 // go past the node
-		return SV_RecursiveHullCheck (hull, node->children[side^1], midf, p2f, mid, p2, trace);
+		return SV_RecursiveHullCheck (hull, node->iChildren[side^1], midf, p2f, mid, p2, trace);
 
 	if(trace->bAllSolid)
 		return false;		// never got out of the solid area

@@ -377,7 +377,7 @@ bool PortalSidesVisible (portal_t *p)
 {
 	if (p->nodes[0]->contents == p->nodes[1]->contents)
 		return true;
-	if (transwater && p->nodes[0]->contents != BSP_CONTENTS_SOLID && p->nodes[1]->contents != BSP_CONTENTS_SOLID && p->nodes[0]->contents != CONTENTS_SKY && p->nodes[1]->contents != CONTENTS_SKY)
+	if (transwater && p->nodes[0]->contents != BSP_CONTENTS_SOLID && p->nodes[1]->contents != BSP_CONTENTS_SOLID && p->nodes[0]->contents != BSP_CONTENTS_SKY && p->nodes[1]->contents != BSP_CONTENTS_SKY)
 		return true;
 	return false;
 }
