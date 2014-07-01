@@ -21,14 +21,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // net_ser.h
 
 int			Serial_Init (void);
-void		Serial_Listen (qboolean state);
-void		Serial_SearchForHosts (qboolean xmit);
+void		Serial_Listen (bool state);
+void		Serial_SearchForHosts (bool xmit);
 qsocket_t	*Serial_Connect (char *host);
 qsocket_t 	*Serial_CheckNewConnections (void);
 int			Serial_GetMessage (qsocket_t *sock);
 int			Serial_SendMessage (qsocket_t *sock, sizebuf_t *data);
 int			Serial_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data);
-qboolean	Serial_CanSendMessage (qsocket_t *sock);
-qboolean	Serial_CanSendUnreliableMessage (qsocket_t *sock);
+bool	Serial_CanSendMessage (qsocket_t *sock);
+bool	Serial_CanSendUnreliableMessage (qsocket_t *sock);
 void		Serial_Close (qsocket_t *sock);
 void		Serial_Shutdown (void);

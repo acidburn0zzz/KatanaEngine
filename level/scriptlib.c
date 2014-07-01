@@ -1,7 +1,7 @@
 #include "cmdlib.h"
 
 char	token[MAXTOKEN];
-qboolean	unget;
+bool	unget;
 char	*script_p;
 int		scriptline;
 
@@ -12,7 +12,7 @@ void StartTokenParsing (char *data)
 	unget = false;
 }
 
-qboolean GetToken (qboolean crossline)
+bool GetToken (bool crossline)
 {
 	char    *token_p, *temp;
 

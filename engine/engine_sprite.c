@@ -1,5 +1,6 @@
 /*	Copyright (C) 2011-2014 OldTimes Software
 */
+#include "quakedef.h"
 
 #include "engine_video.h"
 

@@ -235,7 +235,7 @@ int main(int argc,char **argv)
 	transwater		= true;
 	forcevis		= true;
 	waterlightmap	= true;
-	subdivide_size	= 1024;	//240;
+	subdivide_size	= 1024;
 
 	for (; i < argc; i++)
 	{

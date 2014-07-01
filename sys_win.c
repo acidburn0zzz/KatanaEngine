@@ -25,7 +25,9 @@
 
 #include <SDL.h>
 
-#include "platform/include/platform_window.h"
+// Platform library
+#include "platform_window.h"
+#include "platform_filesystem.h"
 
 #ifdef _WIN32
 #include "winquake.h"
@@ -200,35 +202,6 @@ SYSTEM IO
 
 ===============================================================================
 */
-
-void Sys_Init(void)
-{
-#if 0
-	LARGE_INTEGER	PerformanceFreq;
-	unsigned int	lowpart, highpart;
-
-	if (!QueryPerformanceFrequency (&PerformanceFreq))
-		Sys_Error ("No hardware timer available");
-
-	// get 32 out of the 64 time bits such that we have around
-	// 1 microsecond resolution
-	lowpart		= (unsigned int)PerformanceFreq.LowPart;
-	highpart	= (unsigned int)PerformanceFreq.HighPart;
-	lowshift	= 0;
-
-	while (highpart || (lowpart > 2000000.0))
-	{
-		lowshift++;
-		lowpart >>= 1;
-		lowpart |= (highpart & 1) << 31;
-		highpart >>= 1;
-	}
-
-	pfreq = 1.0 / (double)lowpart;
-#endif
-
-	Sys_InitFloatTime();
-}
 
 void Sys_Error(char *error, ...)
 {
@@ -529,6 +502,9 @@ bool System_Main(int iArgumentCount,char *cArguments[])
 			epParameters.memsize = atoi(com_argv[t])*1024;
 	}
 
+	// Create any directories we need here; before anything else is done.
+	pFileSystem_CreateDirectory(PATH_LOGS);
+
 	epParameters.membase = malloc(epParameters.memsize);
 	if(!epParameters.membase)
 		Sys_Error("Not enough memory free (%imb)!\nCheck disk space.\n",epParameters.memsize);
@@ -562,7 +538,7 @@ bool System_Main(int iArgumentCount,char *cArguments[])
 	}
 #endif
 
-	Sys_Init();
+	Sys_InitFloatTime();
 
 #ifndef KATANA_AUDIO_OPENAL
 	// Because sound is off until we become active

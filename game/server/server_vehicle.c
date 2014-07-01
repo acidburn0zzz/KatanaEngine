@@ -20,8 +20,8 @@ void Vehicle_Kill(edict_t *eVehicle,edict_t *eAttacker)
 	if(eVehicle->v.iHealth <= VEHICLE_MAX_DAMAGE)
 	{
 		// [12/4/2013] TODO: Explode! ~hogsy
-		eVehicle->v.deadflag = DEAD_DEAD;
-		eVehicle->v.movetype = MOVETYPE_NONE;
+		eVehicle->monster.iState	= STATE_DEAD;
+		eVehicle->v.movetype		= MOVETYPE_NONE;
 
 		if(eVehicle->Vehicle.Kill)
 			eVehicle->Vehicle.Kill(eVehicle,eAttacker);
@@ -32,7 +32,7 @@ void Vehicle_Kill(edict_t *eVehicle,edict_t *eAttacker)
 */
 void Vehicle_Damage(edict_t *eVehicle,edict_t *eAttacker,int iDamage)
 {
-	if(eVehicle->v.deadflag == DEAD_DEAD)
+	if(eVehicle->monster.iState == STATE_DEAD)
 		return;
 
 	eVehicle->v.iHealth -= iDamage;

@@ -123,7 +123,7 @@ int CL_GetMessage (void)
 		return 1;
 	}
 
-	while (1)
+	for(;;)
 	{
 		r = NET_GetMessage (cls.netcon);
 		if(r != 1 && r != 2)
@@ -233,22 +233,16 @@ void CL_Record_f (void)
 	cls.forcetrack = track;
 	fprintf (cls.demofile, "%i\n", cls.forcetrack);
 
-	cls.demorecording = TRUE;
+	cls.demorecording = true;
 }
 
-
-/*
-====================
-CL_PlayDemo_f
-
-play [demoname]
-====================
+/*	play [demoname]
 */
 void CL_PlayDemo_f (void)
 {
 	char	name[256];
-	int c;
-	qboolean neg = FALSE;
+	int		c;
+	bool	neg = false;
 
 	if (cmd_source != src_command)
 		return;

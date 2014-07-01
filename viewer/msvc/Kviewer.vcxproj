@@ -67,7 +67,7 @@
       <PrecompiledHeaderOutputFile>.\Release\MD2 Viewer.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\Release\</ObjectFileName>
       <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>.\;.\..\..\external\mxtx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\..\..\external\mxtx\include;.\..\..\shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\shared\shared_png.h" />
     <ClInclude Include="..\src\anorms.h" />
     <ClInclude Include="..\src\gl_window.h" />
     <ClInclude Include="..\src\gl_model.h" />

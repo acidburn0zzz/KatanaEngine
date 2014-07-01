@@ -2,7 +2,7 @@
 
 #include "mem.h"
 
-static qboolean mem_initialized = false;
+static bool mem_initialized = false;
 
 typedef struct chunkheader_s
 {

@@ -3,62 +3,62 @@
 #include "server_physics.h"
 
 /*
-	Server-side physics.
+	Server-Side Physics
 */
 
 #define PHYSICS_MAXVELOCITY	2000.0f
 
-void Server_CheckVelocity(edict_t *ent)
+void Physics_CheckVelocity(edict_t *eEntity)
 {
 	int i;
 
 	for(i = 0; i < 3; i++)
 	{
-		if(IS_NAN(ent->v.velocity[i]))
+		if(IS_NAN(eEntity->v.velocity[i]))
 		{
-			Engine.Con_DPrintf("Got a NaN velocity on %s\n",ent->v.cClassname);
-			ent->v.velocity[i] = 0;
+			Engine.Con_DPrintf("Got a NaN velocity on %s\n",eEntity->v.cClassname);
+			eEntity->v.velocity[i] = 0;
 		}
 
-		if(IS_NAN(ent->v.origin[i]))
+		if(IS_NAN(eEntity->v.origin[i]))
 		{
-			Engine.Con_DPrintf("Got a NaN origin on %s\n",ent->v.cClassname);
-			ent->v.origin[i] = 0;
+			Engine.Con_DPrintf("Got a NaN origin on %s\n",eEntity->v.cClassname);
+			eEntity->v.origin[i] = 0;
 		}
 
-		if(ent->v.velocity[i] > PHYSICS_MAXVELOCITY)
-			ent->v.velocity[i] = PHYSICS_MAXVELOCITY;
-		else if(ent->v.velocity[i] < -PHYSICS_MAXVELOCITY)
-			ent->v.velocity[i] = -PHYSICS_MAXVELOCITY;
+		if(eEntity->v.velocity[i] > PHYSICS_MAXVELOCITY)
+			eEntity->v.velocity[i] = PHYSICS_MAXVELOCITY;
+		else if(eEntity->v.velocity[i] < -PHYSICS_MAXVELOCITY)
+			eEntity->v.velocity[i] = -PHYSICS_MAXVELOCITY;
 	}
 }
 
-void Server_CheckWaterTransition(edict_t *ent)
+void Physics_CheckWaterTransition(edict_t *eEntity)
 {
-	int	iCont = Engine.Server_PointContents(ent->v.origin);
+	int	iCont = Engine.Server_PointContents(eEntity->v.origin);
 
-	if(!ent->v.watertype)
+	if(!eEntity->v.watertype)
 	{
-		ent->v.watertype	= iCont;
-		ent->v.waterlevel	= 1.0f;
+		eEntity->v.watertype	= iCont;
+		eEntity->v.waterlevel	= 1.0f;
 		return;
 	}
 
 	if(iCont <= BSP_CONTENTS_WATER)
 	{
-		ent->v.watertype	= iCont;
-		ent->v.waterlevel	= 1.0f;
+		eEntity->v.watertype	= iCont;
+		eEntity->v.waterlevel	= 1.0f;
 
-		Sound(ent,CHAN_AUTO,PHYSICS_SOUND_SPLASH,15,ATTN_NORM);
+		Sound(eEntity,CHAN_AUTO,PHYSICS_SOUND_SPLASH,15,ATTN_NORM);
 		return;
 	}
 	else
 	{
-		ent->v.watertype	= BSP_CONTENTS_EMPTY;
-		ent->v.waterlevel	= (float)iCont;
+		eEntity->v.watertype	= BSP_CONTENTS_EMPTY;
+		eEntity->v.waterlevel	= (float)iCont;
 	}
 	
-	Sound(ent,CHAN_AUTO,PHYSICS_SOUND_BODY,15,ATTN_NORM);
+	Sound(eEntity,CHAN_AUTO,PHYSICS_SOUND_BODY,15,ATTN_NORM);
 }
 
 // [5/7/2012] Was SV_Impact ~hogsy

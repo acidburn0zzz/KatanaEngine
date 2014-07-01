@@ -528,7 +528,7 @@ typedef struct tab_s
 tab_t	*tablist;
 
 //defs from elsewhere
-extern qboolean	keydown[256];
+extern bool	keydown[256];
 
 typedef struct cmd_function_s
 {

@@ -6,6 +6,7 @@
 
 #include "server_waypoint.h"
 #include "server_vehicle.h"
+#include "server_physics.h"
 
 enum
 {
@@ -22,18 +23,24 @@ void Point_NullSpawn(edict_t *eEntity)
 	Entity_SetOrigin(eEntity,eEntity->v.origin);
 }
 
+#ifdef GAME_OPENKATANA
 void Prisoner_Spawn(edict_t *ePrisoner);	// [2/10/2012] See monster_prisoner.c ~hogsy
 void LaserGat_Spawn(edict_t *eLaserGat);	// [14/2/2013] See monster_lasergat.c ~hogsy
 void Inmater_Spawn(edict_t *eInmater);		// [3/3/2013] See monster_inmater.c ~hogsy
+#elif GAME_ADAMAS
+void Hurler_Spawn(edict_t *eHurler);
+#endif
 
 void Point_MonsterSpawn(edict_t *eMonster)
 {
 	if(cvServerMonsters.value <= 0)
 		ENTITY_REMOVE(eMonster);
 
+	Server.iMonsters++;
+
 	switch(eMonster->local.style)
 	{
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	case MONSTER_PRISONER:
 		eMonster->v.cClassname = "monster_prisoner";
 		Prisoner_Spawn(eMonster);
@@ -46,9 +53,18 @@ void Point_MonsterSpawn(edict_t *eMonster)
 		eMonster->v.cClassname = "monster_inmater";
 		Inmater_Spawn(eMonster);
 		break;
+#elif GAME_ADAMAS
+	case MONSTER_HURLER:
+		eMonster->v.cClassname = "monster_hurler";
+		Hurler_Spawn(eMonster);
+		break;
 #endif
 	default:
 		Engine.Con_Warning("Invalid monster type (%i)!\n",eMonster->local.style);
+
+		// Reduce the monster count. ~hogsy
+		Server.iMonsters--;
+
 		Entity_Remove(eMonster);
 	}
 }
@@ -653,7 +669,7 @@ void Point_EffectUse(edict_t *eEntity)
 	{
 		case 1:
 			// [15/8/2013] Updated ~hogsy
-			Entity_RadiusDamage(eEntity,MONSTER_RANGE_MEDIUM,eEntity->local.iDamage);
+			Entity_RadiusDamage(eEntity,MONSTER_RANGE_MEDIUM,eEntity->local.iDamage, eEntity->local.iDamageType);
 			break;
 		case 2:
 			Engine.WriteByte(MSG_BROADCAST,SVC_TEMPENTITY);
@@ -692,9 +708,18 @@ void Point_EffectSpawn(edict_t *eEntity)
 	Damage
 */
 
+enum
+{
+	DAMAGE_NORMAL,
+	DAMAGE_BURN,
+	DAMAGE_FREEZE,
+	DAMAGE_EXPLODE,
+	DAMAGE_GRAVITY
+};
+
 void Point_DamageUse(edict_t *eEntity)
 {
-	MONSTER_Damage(eEntity->local.activator,eEntity,eEntity->local.iDamage);
+	MONSTER_Damage(eEntity->local.activator,eEntity,eEntity->local.iDamage,DAMAGE_TYPE_NONE);
 
 	Engine.Con_Warning("JIRTT %i", eEntity->local.iDamage);
 }
@@ -703,6 +728,9 @@ void Point_DamageSpawn(edict_t *eEntity)
 {
 	if(!eEntity->local.iDamage)
 		eEntity->local.iDamage = 10;
+
+	if(!eEntity->local.style)
+		eEntity->local.style = 0;
 
 	eEntity->v.use = Point_DamageUse;
 

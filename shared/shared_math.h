@@ -5,7 +5,7 @@
 
 // OBSOLETE: ALL OF THIS IS BEING TRANSITIONED INTO PLATFORM_MATH
 
-#include "../platform/include/platform.h"
+#include "platform.h"
 #include "platform_math.h"
 
 typedef int fixed8_t;
@@ -70,8 +70,6 @@ vec_t	Math_Length(vec3_t a);
 vec_t	Math_VectorNormalize(vec3_t a);
 vec_t	Math_ColorNormalize(vec3_t in,vec3_t out);
 vec_t	Math_DotProduct(vec3_t a,vec3_t b);
-
-MathVector_t	Math_VectorToAngles(vec3_t vValue);
 
 #define	CLAMP(mini,x,maxi)				Math_Clamp(mini,x,maxi)						// [4/2/2014] TODO: Replace all CLAMP calls with Math_Clamp! ~hogsy
 

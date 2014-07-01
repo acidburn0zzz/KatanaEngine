@@ -2,6 +2,15 @@
 */
 #include "menu_main.h"
 
+/*	Called by the engine.
+	Handles all input given by the engine which is sent when our main-menu is open.
+*/
+void Input_Key(int iKey)
+{
+	switch(iKey)
+	{}
+}
+
 /*	Toggles whether the menu will be displayed or not.
 */
 void Input_ToggleMenu(void)

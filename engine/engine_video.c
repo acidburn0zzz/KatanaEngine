@@ -1,6 +1,6 @@
 /*	Copyright (C) 2011-2014 OldTimes Software
 */
-#include "engine_video.h"
+#include "quakedef.h"
 
 /*
 	KatRenderer is our future renderer code, I imagine most of this
@@ -14,10 +14,15 @@
 		- Move all/most API-specific code here.
 */
 
+// Main header
+#include "engine_video.h"
+
 #include "engine_game.h"
 #include "engine_input.h"
 #include "engine_menu.h"
+#include "engine_console.h"
 
+// Platform library
 #include "platform_window.h"
 
 SDL_Window		*sMainWindow;
@@ -28,18 +33,21 @@ SDL_GLContext	sMainContext;
 #define VIDEO_MAX_SAMPLES	16
 #define VIDEO_MIN_SAMPLES	0
 
-cvar_t	cvShowModels			= {	"video_showmodels",			"1",    false,  false,  "Toggles models."                                   };
-cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",	true,   false,  "Changes the number of samples."	                };
-cvar_t	cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",	true,   false,  "Changes the number of buffers."                    };
-cvar_t	cvFullscreen			= {	"video_fullscreen",			"0",	true,   false,  "1: Fullscreen, 0: Windowed"	                    };
-cvar_t	cvWidth					= {	"video_width",				"640",	true,   false,  "Sets the width of the window."	                    };
-cvar_t	cvHeight				= {	"video_height",				"480",	true,   false,  "Sets the height of the window."	                };
-cvar_t	cvVerticalSync			= {	"video_verticalsync",		"1",	true	                                                            };
-cvar_t  cvVideoDebug            = { "video_debug",              "0",    false,  false,  "Provides debugging information for the renderer."  };
+cvar_t	cvShowModels			= {	"video_showmodels",			"1",			false,  false,  "Toggles models."                                   };
+cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",			true,   false,  "Changes the number of samples."	                };
+cvar_t	cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",			true,   false,  "Changes the number of buffers."                    };
+cvar_t	cvFullscreen			= {	"video_fullscreen",			"0",			true,   false,  "1: Fullscreen, 0: Windowed"	                    };
+cvar_t	cvWidth					= {	"video_width",				"640",			true,   false,  "Sets the width of the window."	                    };
+cvar_t	cvHeight				= {	"video_height",				"480",			true,   false,  "Sets the height of the window."	                };
+cvar_t	cvVerticalSync			= {	"video_verticalsync",		"1",			true	                                                            };
+cvar_t	cvVideoDebugLog			= {	"video_debuglog",			"log_video",	true,	false,	"The name of the output log for video debugging."	};
 
 gltexture_t	*gDepthTexture;
 
-bool bVideoIgnoreCapabilities = false;
+bool	bVideoIgnoreCapabilities = false;
+bool	bVideoDebug	= false;
+
+void Video_DebugCommand(void);
 
 /*	Initialize the renderer
 */
@@ -57,7 +65,6 @@ void Video_Initialize(void)
 	Video.bActive				=			// Window is intially assumed active.
 	Video.bUnlocked				= true;		// Video mode is initially locked.
 
-    Cvar_RegisterVariable(&cvVideoDebug,NULL);
 	Cvar_RegisterVariable(&cvMultisampleSamples,NULL);
 	Cvar_RegisterVariable(&cvMultisampleBuffers,NULL);
 	Cvar_RegisterVariable(&cvShowModels,NULL);
@@ -65,8 +72,10 @@ void Video_Initialize(void)
 	Cvar_RegisterVariable(&cvWidth,NULL);
 	Cvar_RegisterVariable(&cvHeight,NULL);
 	Cvar_RegisterVariable(&cvVerticalSync,NULL);
+	Cvar_RegisterVariable(&cvVideoDebugLog,NULL);
 
 	Cmd_AddCommand("video_restart",Video_UpdateWindow);
+	Cmd_AddCommand("video_debug",Video_DebugCommand);
 
 	// [28/7/2013] Moved check here and corrected, seems more secure ~hogsy
 	if(SDL_VideoInit(NULL) < 0)
@@ -83,6 +92,20 @@ void Video_Initialize(void)
 	// [31/10/2013] Get hardware capabilities ~hogsy
 	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,&Video.fMaxAnisotropy);
 }
+
+/*
+	Video Commands
+*/
+
+void Video_DebugCommand(void)
+{
+	if(!bVideoDebug)
+		bVideoDebug = true;
+
+	Console_ClearLog(cvVideoDebugLog.string);
+}
+
+/**/
 
 /*	Clears the color and depth buffers.
 */
@@ -117,20 +140,27 @@ void Video_DrawDepthBuffer(void)
 	//Video_DrawFill()
 }
 
-/*	Set the gamma level.
-	Unfinished
-*/
-void Video_SetGamma(float fAmount)
-{
-#if 0
-	if(!SDL_SetWindowGammaRamp(sMainWindow, RAMPY DAMP! WHOOOOOO!
-		Con_Warning("Failed to set gamma level!\n");
-#endif
-}
-
 /*
 	Window Management
 */
+
+/*	Set the gamma level.
+	Based on Darkplaces implementation.
+*/
+void Video_SetGamma(unsigned short *usRamp,int iRampSize)
+{
+	if(!SDL_SetWindowGammaRamp(sMainWindow,usRamp,usRamp+iRampSize,usRamp+iRampSize*2))
+		Con_Warning("Failed to set gamma level!\n");
+}
+
+/*	Get gamma level.
+	Based on the Darkplaces implementation.
+*/
+void Video_GetGamma(unsigned short *usRamp,int iRampSize)
+{
+	if(!SDL_GetWindowGammaRamp(sMainWindow,usRamp,usRamp+iRampSize,usRamp+iRampSize*2))
+		Con_Warning("Failed to get gamma level!\n");
+}
 
 /*	Create our window.
 */
@@ -155,12 +185,12 @@ bool Video_CreateWindow(void)
 	// [15/8/2012] Figure out what resolution we're going to use ~hogsy
 	if(COM_CheckParm("-window"))
 	{
-		Video.bFullscreen	= false;
+		Video.bFullscreen	=
 		Video.bUnlocked		= false;
 	}
 	else
 		// [15/8/2012] Otherwise set us as fullscreen ~hogsy
-		Video.bFullscreen = (bool)cvFullscreen.value;
+		Video.bFullscreen = cvFullscreen.bValue;
 
 	if(COM_CheckParm("-width"))
 	{
@@ -168,7 +198,7 @@ bool Video_CreateWindow(void)
 		Video.bUnlocked	= false;
 	}
 	else
-		Video.iWidth = (int)cvWidth.value;
+		Video.iWidth = cvWidth.iValue;
 
 	if(COM_CheckParm("-height"))
 	{
@@ -176,15 +206,26 @@ bool Video_CreateWindow(void)
 		Video.bUnlocked	= false;
 	}
 	else
-		Video.iHeight = (int)cvHeight.value;
+		Video.iHeight = cvHeight.iValue;
 
 	if(!Video.bFullscreen)
 		iFlags &= ~SDL_WINDOW_FULLSCREEN;
 
+#ifdef KATANA_VIDEO_NEXT
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,2);
+#endif
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,8);
+#if 0
+	SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,8);
+	SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,8);
+	SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,8);
+	SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,8);
+#endif
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
@@ -301,7 +342,7 @@ bool Video_CreateWindow(void)
 	glClearColor(0,0,0,0);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
-	glAlphaFunc(GL_GREATER,0.666f);
+	glAlphaFunc(GL_GREATER,0.4f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glShadeModel(GL_SMOOTH);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
@@ -318,7 +359,7 @@ bool Video_CreateWindow(void)
 	vid.conwidth		= Math_Clamp(320,vid.conwidth,Video.iWidth);
 	vid.conwidth		&= 0xFFFFFFF8;
 	vid.conheight		= vid.conwidth*Video.iHeight/Video.iWidth;
-	Video.bVerticalSync	= (bool)cvVerticalSync.value;
+	Video.bVerticalSync	= cvVerticalSync.bValue;
 
 	return true;
 }
@@ -338,22 +379,22 @@ void Video_UpdateWindow(void)
 		return;
 	}
 
-	Video.iWidth	= (int)cvWidth.value;
-	Video.iHeight	= (int)cvHeight.value;
+	Video.iWidth	= cvWidth.iValue;
+	Video.iHeight	= cvHeight.iValue;
 
 	SDL_SetWindowSize(sMainWindow,Video.iWidth,Video.iHeight);
 
-	if(Video.bVerticalSync != (bool)cvVerticalSync.value)
+	if(Video.bVerticalSync != cvVerticalSync.bValue)
 	{
-		SDL_GL_SetSwapInterval((int)cvVerticalSync.value);
+		SDL_GL_SetSwapInterval(cvVerticalSync.iValue);
 
-		Video.bVerticalSync = (bool)cvVerticalSync.value;
+		Video.bVerticalSync = cvVerticalSync.bValue;
 	}
 
 	// [16/7/2013] There's gotta be a cleaner way of doing this... Ugh ~hogsy
-	if(Video.bFullscreen != (bool)cvFullscreen.value)
+	if(Video.bFullscreen != cvFullscreen.bValue)
 	{
-		if(SDL_SetWindowFullscreen(sMainWindow,(SDL_bool)cvFullscreen.value) < 0)
+		if(SDL_SetWindowFullscreen(sMainWindow,(SDL_bool)cvFullscreen.bValue) < 0)
 		{
 			Con_Warning("Failed to set window mode!\n%s",SDL_GetError());
 
@@ -361,7 +402,7 @@ void Video_UpdateWindow(void)
 			Cvar_SetValue(cvFullscreen.name,(float)Video.bFullscreen);
 		}
 		else
-			Video.bFullscreen = (bool)cvFullscreen.value;
+			Video.bFullscreen = cvFullscreen.bValue;
 	}
 
 	if(!cvFullscreen.value)
@@ -397,8 +438,8 @@ void Video_SetTexture(gltexture_t *gTexture)
 
 	glBindTexture(GL_TEXTURE_2D,gTexture->texnum);
 
-	if(cvVideoDebug.value)
-        Con_Printf("Video: Bound texture (%s) (%i)\n",gTexture->name,Video.uiActiveUnit);
+	if(bVideoDebug)
+		Console_WriteToLog(cvVideoDebugLog.string,"Video: Bound texture (%s) (%i)\n",gTexture->name,Video.uiActiveUnit);
 }
 
 /*  Changes the active blending mode.
@@ -458,14 +499,16 @@ void Video_SelectTexture(unsigned int uiTarget)
         break;
     default:
         Sys_Error("Unknown texture unit! (%i)\n",uiTarget);
+		// Return to resolve VS warning.
+		return;
     }
 
 	glActiveTextureARB(uiUnit);
 
 	Video.uiActiveUnit = uiTarget;
 
-	if(cvVideoDebug.value)
-        Con_Printf("Video: Texture Unit %i\n",Video.uiActiveUnit);
+	if(bVideoDebug)
+		Console_WriteToLog(cvVideoDebugLog.string,"Video: Texture Unit %i\n",Video.uiActiveUnit);
 }
 
 void Video_DisableMultitexture(void)
@@ -487,8 +530,10 @@ void Video_EnableMultitexture(void)
 /*	Draw terrain.
 	Unfinished
 */
-void Video_DrawTerrain(VideoObject_t *voTerrain,vec3_t vScale)
+void Video_DrawTerrain(VideoObject_t *voTerrain)
 {
+	if(!voTerrain)
+		Sys_Error("Invalid video object!\n");
 }
 
 /*  Draw a simple rectangle.
@@ -541,6 +586,8 @@ void Video_DrawObject(
         default:
             // [16/3/2014] Anything else and give us an error ~hogsy
             Sys_Error("Unknown object primitive type! (%i)\n",vpPrimitiveType);
+			// Return to resolve VS warning.
+			return;
         }
 
         glBegin(gPrimitive);
@@ -627,8 +674,8 @@ void Video_EnableCapabilities(unsigned int iCapabilities)
 
 		if(iCapabilities & vcCapabilityList[i].uiFirst)
 		{
-            if(cvVideoDebug.value)
-                Con_Printf("Video: Enabling %s\n",vcCapabilityList[i].ccIdentifier);
+            if(bVideoDebug)
+				Console_WriteToLog(cvVideoDebugLog.string,"Video: Enabling %s\n",vcCapabilityList[i].ccIdentifier);
 
             if(!sbVideoCleanup && !bVideoIgnoreCapabilities)
                 // [24/2/2014] Collect up a list of the new capabilities we set ~hogsy
@@ -655,8 +702,8 @@ void Video_DisableCapabilities(unsigned int iCapabilities)
 
 		if(iCapabilities & vcCapabilityList[i].uiFirst)
 		{
-            if(cvVideoDebug.value)
-                Con_Printf("Video: Disabling %s\n",vcCapabilityList[i].ccIdentifier);
+            if(bVideoDebug)
+                Console_WriteToLog(cvVideoDebugLog.string,"Video: Disabling %s\n",vcCapabilityList[i].ccIdentifier);
 
             if(!sbVideoCleanup && !bVideoIgnoreCapabilities)
                 // [24/2/2014] Collect up a list of the new capabilities we disabled ~hogsy
@@ -673,13 +720,13 @@ void Video_DisableCapabilities(unsigned int iCapabilities)
 */
 void Video_ResetCapabilities(bool bClearActive)
 {
-    if(cvVideoDebug.value)
-        Con_Printf("Video: Resetting capabilities...\n");
+    if(bVideoDebug)
+        Console_WriteToLog(cvVideoDebugLog.string,"Video: Resetting capabilities...\n");
 
 	if(bClearActive)
 	{
-        if(cvVideoDebug.value)
-            Con_Printf("Video: Clearing active capabilities...\n");
+        if(bVideoDebug)
+            Console_WriteToLog(cvVideoDebugLog.string,"Video: Clearing active capabilities...\n");
 
         sbVideoCleanup = true;
 
@@ -706,8 +753,8 @@ void Video_ResetCapabilities(bool bClearActive)
         sbVideoIgnoreDepth  = true;
 		sbVideoCleanup      = false;
 
-		if(cvVideoDebug.value)
-            Con_Printf("Video: Finished clearing capabilities.\n");
+		if(bVideoDebug)
+            Console_WriteToLog(cvVideoDebugLog.string,"Video: Finished clearing capabilities.\n");
 	}
 
     // [7/5/2014] Clear out capability list ~hogsy
@@ -761,23 +808,21 @@ void Video_ProcessShader(int iType)
 void Video_Process(void)
 {
 #ifndef KATANA_VIDEO_NEXT	// Legacy renderer
-    if(cvVideoDebug.value)
-        Con_Printf("Video: Start of frame\n");
+    if(bVideoDebug)
+        Console_WriteToLog(cvVideoDebugLog.string,"Video: Start of frame\n");
 
 	SCR_UpdateScreen();
-
-//	Menu->Draw();
 
     // [31/3/2014] Draw any ATB windows ~hogsy
 	TwDraw();
 
 	GL_EndRendering();
 
-    if(cvVideoDebug.value)
+    if(bVideoDebug)
     {
-        Con_Printf("Video: End of frame\n");
-        if(cvVideoDebug.value != 2)
-            Cvar_SetValue("video_debug",0);
+        Console_WriteToLog(cvVideoDebugLog.string,"Video: End of frame\n");
+        
+		bVideoDebug = false;
     }
 #else	// New renderer
 	static vec4_t vLight =

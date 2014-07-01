@@ -16,6 +16,10 @@
 	to edit the map	from a single window with a realtime preview
 	of the map in view...
 */
+#include "quakedef.h"
+
+// Main header
+#include "engine_editor.h"
 
 #include "engine_video.h"
 #include "engine_input.h"
@@ -23,8 +27,11 @@
 #include "engine_console.h"
 #include "engine_menu.h"
 
+// Platform library
 #include "platform_module.h"
 #include "platform_filesystem.h"
+
+cvar_t	cvEditorLightPreview	= {	"editor_lightpreview",	"0",	false,	false,	"Enables a preview showing the radius of each light."	};
 
 pINSTANCE hToolInstance;
 
@@ -62,6 +69,8 @@ void Editor_Initialize(void)
 	Editor.bEnabled = false;
 
 	Cmd_AddCommand("editor",Editor_Launch);
+
+	Cvar_RegisterVariable(&cvEditorLightPreview,NULL);
 
 	if(COM_CheckParm("-editor"))
 		Editor_Launch();

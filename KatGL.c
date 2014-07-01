@@ -258,7 +258,6 @@ void R_DrawString(int x,int y,char *msg)
 */
 void Draw_Shadow(entity_t *ent)
 {
-	MD2_t		*pmd2;
 	lerpdata_t	lerpdata;
 	float		fShadowMatrix[16] =
 	{	1,		0,		0,		0,
@@ -278,7 +277,11 @@ void Draw_Shadow(entity_t *ent)
 	fShadowScale[0] = fShadowScale[1] = 20.0f;
 #endif
 
-	if(ent == &cl.viewent || R_CullModelForEntity(ent) || r_shadows.value <= 0 || (!fShadowScale[0] || !fShadowScale[1]))
+	if(ent == &cl.viewent || R_CullModelForEntity(ent) || (!fShadowScale[0] || !fShadowScale[1]))
+		return;
+
+	// Allow us to cast shadows from entities that use bmodels. ~hogsy
+	if(!strstr(ent->model->name,".") || !strstr(ent->model->name,"/"))
 		return;
 
 	Light_GetSample(ent->origin);
@@ -303,16 +306,16 @@ void Draw_Shadow(entity_t *ent)
 		Video_EnableCapabilities(VIDEO_BLEND);
 		Video_DisableCapabilities(VIDEO_ALPHA_TEST);
 
-		Video_SetBlend(VIDEO_BLEND_ONE,VIDEO_DEPTH_FALSE);
+		Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
 
-		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+		//glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 
 		glTranslatef(ent->origin[0],ent->origin[1],ent->origin[2]);
 		glTranslatef(0,0,-lheight+0.1f);
 
 		Video_DrawFill(voShadow);
 
-		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+		//glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 
 		glTranslatef(0,0,lheight+0.1);
 		glPopMatrix();
@@ -320,10 +323,9 @@ void Draw_Shadow(entity_t *ent)
 		Video_ResetCapabilities(true);
 	}
 
-	// TODO: Texture projection (RTT)
-
-	if(r_shadows.value >= 2)
+	if((r_shadows.value >= 2) && (ent->model->mType == MODEL_TYPE_MD2))
 	{
+		MD2_t			*pmd2;
 		DynamicLight_t	*dlLight;
 		vec3_t			vDistance;
 
@@ -351,11 +353,12 @@ void Draw_Shadow(entity_t *ent)
 
 		// [30/7/2013] Went over this and cleaned it up. Several major oversights when I originally revised it ~hogsy
 		glPushMatrix();
-		glDepthMask(false);
 
 		Video_ResetCapabilities(false);
+
 		Video_EnableCapabilities(VIDEO_BLEND|VIDEO_STENCIL_TEST);
 		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+		Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
 
 		glStencilFunc(GL_EQUAL,1,2);
 		glColor4f(0,0,0,fShadowAlpha);
@@ -372,9 +375,8 @@ void Draw_Shadow(entity_t *ent)
 
 		glColor3f(1.0f,1.0f,1.0f);
 
-		Video_ResetCapabilities(true);
-
-		glDepthMask(true);
 		glPopMatrix();
+
+		Video_ResetCapabilities(true);
 	}
 }

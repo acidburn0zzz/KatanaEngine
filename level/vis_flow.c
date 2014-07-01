@@ -66,7 +66,7 @@ If keepon is true, an exactly on-plane winding will be saved, otherwise
 it will be clipped away.
 ==================
 */
-viswinding_t *ClipVisWinding (viswinding_t *in, plane_t *split, qboolean keepon)
+viswinding_t *ClipVisWinding (viswinding_t *in, plane_t *split, bool keepon)
 {
 	int				i, j;
 	vec_t			dists[MAX_POINTS_ON_VISWINDING + 1];
@@ -228,7 +228,7 @@ order goes source, pass, target.  If the order goes pass, source, target then
 flipclip should be set.
 ==============
 */
-viswinding_t *ClipToSeperators (viswinding_t *source, viswinding_t *pass, viswinding_t *target, qboolean flipclip)
+viswinding_t *ClipToSeperators (viswinding_t *source, viswinding_t *pass, viswinding_t *target, bool flipclip)
 {
 	int			i, j, k, l;
 	plane_t		plane;
@@ -236,7 +236,7 @@ viswinding_t *ClipToSeperators (viswinding_t *source, viswinding_t *pass, viswin
 	vec_t		d, epcompare;
 	vec_t		length;
 //	int			counts[3];
-	qboolean		fliptest;
+	bool		fliptest;
 
 // check all combinations
 	for (i=0 ; i<source->numpoints ; i++)
@@ -379,13 +379,8 @@ cliptoseperatorscontinue:
 
 
 
-/*
-==================
-RecursiveLeafFlow
-
-Flood fill through the leafs
-If src_portal is NULL, this is the originating leaf
-==================
+/*	Flood fill through the leafs
+	If src_portal is NULL, this is the originating leaf
 */
 void RecursiveLeafFlow (int leafnum, threaddata_t *thread, pstack_t *prevstack)
 {
@@ -396,7 +391,7 @@ void RecursiveLeafFlow (int leafnum, threaddata_t *thread, pstack_t *prevstack)
 	leaf_t 		*leaf;
 	int			i, j;
 	long		*test, *might, *vis;
-	qboolean		more;
+	bool		more;
 
 	c_chains++;
 

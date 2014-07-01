@@ -364,10 +364,10 @@ void LinkConvexFaces( surface_t *planelist, node_t *leafnode )
 		case BSP_CONTENTS_SLIME:
 			c_slime++;
 			break;
-		case CONTENTS_LAVA:
+		case BSP_CONTENTS_LAVA:
 			c_lava++;
 			break;
-		case CONTENTS_SKY:
+		case BSP_CONTENTS_SKY:
 			c_sky++;
 			break;
 		default:

@@ -109,3 +109,15 @@ int Menu_GetState(MenuType_t mtType)
 
 	return 0;
 }
+
+/*
+	Rendering
+*/
+
+#if 0
+void Menu_DrawCharacter(int iX,int iY,int iCharacterNum)
+{}
+
+void Menu_Draw(void)
+{}
+#endif

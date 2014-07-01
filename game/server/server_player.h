@@ -18,7 +18,7 @@ extern	EntityFrame_t	PlayerAnimation_KatanaAttack1[];
 extern	EntityFrame_t	PlayerAnimation_KatanaAttack2[];
 
 void Player_PostThink(edict_t *ePlayer);
-void Player_PreThink(edict_t *ent);
+void Player_PreThink(edict_t *ePlayer);
 void Player_Spawn(edict_t *self);
 void Player_Jump(edict_t *self);
 #ifdef OPENKATANA

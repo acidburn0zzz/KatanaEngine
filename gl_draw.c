@@ -1,23 +1,21 @@
-/*
-Copyright (C) 1996-2001 Id Software, Inc.
-Copyright (C) 2002-2009 John Fitzgibbons and others
-Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 1996-2001 Id Software, Inc.
+	Copyright (C) 2002-2009 John Fitzgibbons and others
+	Copyright (C) 2011-2014 OldTimes Software
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include "quakedef.h"
 
@@ -199,13 +197,11 @@ void Draw_ExternPic(char *path,float alpha,int x,int y,int w,int h)
 	{
 		VideoObject_t voPicture	[]=
 		{
-			{	{	x,		y,		0	},	{	{	0,		0		}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
-			{	{	x+w,	y,		0	},	{	{	1.0f,	0		}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
+			{	{	x,	y,	0	},	{	{	0,	0	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
+			{	{	x+w,	y,	0	},	{	{	1.0f,	0	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
 			{	{	x+w,	y+h,	0	},	{	{	1.0f,	1.0f	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
-			{	{	x,		y+h,	0	},	{	{	0,		1.0f	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	}
+			{	{	x,	y+h,	0	},	{	{	0,	1.0f	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	}
 		};
-
-		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 
 		Video_DrawFill(voPicture);
 
@@ -309,8 +305,6 @@ void Draw_LoadPics (void)
 
 extern gltexture_t *playertextures[MAX_SCOREBOARD];
 
-void SCR_LoadPics(void);
-
 void Draw_NewGame (void)
 {
 	cachepic_t	*pic;
@@ -326,7 +320,6 @@ void Draw_NewGame (void)
 
 	// reload wad pics
 	Draw_LoadPics();
-	SCR_LoadPics();
 
 	// empty lmp cache
 	for (pic = menu_cachepics, i = 0; i < menu_numcachepics; pic++, i++)
@@ -396,8 +389,15 @@ void Draw_Character(int x,int y,int num)
 			{	{	x,		y+8,	0	},	{	{	fcol,		frow+size	}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	}
 		};
 
+		Video_ResetCapabilities(false);
+
+		Video_DisableCapabilities(VIDEO_ALPHA_TEST);
+		Video_EnableCapabilities(VIDEO_BLEND);
+
 		Video_SetTexture(gCharTexture);
 		Video_DrawFill(voCharacter);
+
+		Video_ResetCapabilities(true);
 	}
 }
 
@@ -424,23 +424,6 @@ void Draw_Pic(int x,int y,qpic_t *pic)
 
         Video_DrawFill(voPicture);
     }
-}
-
-/*	Only used for the player color selection menu
-*/
-void Draw_TransPicTranslate (int x, int y, qpic_t *pic, int top, int bottom)
-{
-	static int oldtop = -2,oldbottom = -2;
-
-	if(top != oldtop || bottom != oldbottom)
-	{
-		oldtop		= top;
-		oldbottom	= bottom;
-
-		TexMgr_ReloadImage(((glpic_t*)pic->data)->gltexture,top,bottom);
-	}
-
-	Draw_Pic(x,y,pic);
 }
 
 void Draw_ConsoleBackground(void)

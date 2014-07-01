@@ -6,13 +6,13 @@
 int			nummapbrushfaces;
 
 int			nummapbrushes;
-mbrush_t	mapbrushes[MAX_MAP_BRUSHES];
+mbrush_t	mapbrushes[BSP_MAX_BRUSHES];
 
 int			nummapplanes;
-plane_t		mapplanes[MAX_MAP_PLANES];
+plane_t		mapplanes[BSP_MAX_PLANES];
 
 int			nummiptex;
-char		miptex[MAX_MAP_TEXINFO][128]; // LordHavoc: was [16]
+char		miptex[BSP_MAX_TEXINFO][128]; // LordHavoc: was [16]
 
 int mapversion = 0;
 
@@ -36,8 +36,8 @@ int	FindPlane( plane_t *dplane, int *side )
 		if( DotProduct( dp->normal, pl.normal ) > 1.0 - ANGLE_EPSILON && fabs( dp->dist - pl.dist ) < DIST_EPSILON )
 			return i; // regular match
 
-	if( nummapplanes == MAX_MAP_PLANES )
-		Error( "FindPlane: nummapplanes == MAX_MAP_PLANES" );
+	if( nummapplanes == BSP_MAX_PLANES )
+		Error( "FindPlane: nummapplanes == BSP_MAX_PLANES" );
 
 	dot = VectorLength( dplane->normal );
 	if( dot < 1.0 - ANGLE_EPSILON || dot > 1.0 + ANGLE_EPSILON )
@@ -56,8 +56,8 @@ int FindMiptex( char *name )
 		if( !strcmp( name, miptex[i] ) )
 			return i;
 
-	if( nummiptex == MAX_MAP_TEXINFO )
-		Error ("nummiptex == MAX_MAP_TEXINFO");
+	if( nummiptex == BSP_MAX_TEXINFO )
+		Error ("nummiptex == BSP_MAX_TEXINFO");
 
 	strcpy( miptex[i], name );
 
@@ -66,25 +66,28 @@ int FindMiptex( char *name )
 
 /*	Returns a global texinfo number
 */
-int	FindTexinfo( texinfo_t *t )
+int	FindTexinfo( BSPTextureInfo_t *t )
 {
-	int			i, j;
-	texinfo_t	*tex;
+	int					i, j;
+	BSPTextureInfo_t	*tex;
 
 	// set the special flag
-	if((miptex[t->miptex][0] == '*' && !waterlightmap) || !Q_strncasecmp (miptex[t->miptex],"sky",3))
-		t->flags |= TEX_SPECIAL;
+	if((miptex[t->iMipTex][0] == '*' && !waterlightmap) || !Q_strncasecmp (miptex[t->iMipTex],"sky",3))
+		t->iFlags |= BSP_TEXTURE_SPECIAL;
+	// Support nodraw surfaces.
+	else if(!Q_strncasecmp(miptex[t->iMipTex],"nodraw",6))
+		t->iFlags |= BSP_TEXTURE_SKIP;
 
 	tex = texinfo;
 	for( i = 0; i < numtexinfo; i++, tex++ )
 	{
-		if( t->miptex != tex->miptex )
+		if( t->iMipTex != tex->iMipTex )
 			continue;
-		if( t->flags != tex->flags )
+		if( t->iFlags != tex->iFlags )
 			continue;
 
 		for( j = 0; j < 8; j++ )
-			if( t->vecs[0][j] != tex->vecs[0][j] )
+			if( t->v[0][j] != tex->v[0][j] )
 				break;
 
 		if( j != 8 )
@@ -94,8 +97,8 @@ int	FindTexinfo( texinfo_t *t )
 	}
 
 	// allocate a new texture
-	if( numtexinfo == MAX_MAP_TEXINFO )
-		Error( "numtexinfo == MAX_MAP_TEXINFO" );
+	if( numtexinfo == BSP_MAX_TEXINFO )
+		Error( "numtexinfo == BSP_MAX_TEXINFO" );
 
 	texinfo[i] = *t;
 
@@ -116,13 +119,13 @@ brushtype_t;
 
 void ParseBrushFace (entity_t *ent, mbrush_t **brushpointer, brushtype_t brushtype)
 {
-	int			i,j,
-                hltexdef,bpface,brushplane;
-	vec_t		planepts[3][3], t1[3], t2[3], d, rotate, scale[2], vecs[2][4], ang, sinv, cosv, bp[2][3];
-	mface_t		*f, *f2;
-	plane_t	    plane;
-	texinfo_t	tx;
-	mbrush_t	*b;
+	int					i,j,
+						hltexdef,bpface,brushplane;
+	vec_t				planepts[3][3], t1[3], t2[3], d, rotate, scale[2], vecs[2][4], ang, sinv, cosv, bp[2][3];
+	mface_t				*f, *f2;
+	plane_t				plane;
+	BSPTextureInfo_t	tx;
+	mbrush_t			*b;
 
 	if (brushtype == BRUSHTYPE_PATCHDEF2 || brushtype == BRUSHTYPE_PATCHDEF3)
 		return;
@@ -217,7 +220,7 @@ void ParseBrushFace (entity_t *ent, mbrush_t **brushpointer, brushtype_t brushty
 		// )
 		GetToken (false);
 		GetToken (false);
-		tx.miptex = FindMiptex (token);
+		tx.iMipTex = FindMiptex (token);
 		rotate = 0;
 		scale[0] = 1;
 		scale[1] = 1;
@@ -226,7 +229,7 @@ void ParseBrushFace (entity_t *ent, mbrush_t **brushpointer, brushtype_t brushty
 	{
 		// if the texture name contains a / then this is a q2/q3 brushface
 		// strip off the path, wads don't use a path on texture names
-		tx.miptex = FindMiptex (token);
+		tx.iMipTex = FindMiptex (token);
 		GetToken (false);
 		if (!strcmp(token, "["))
 		{
@@ -316,14 +319,14 @@ void ParseBrushFace (entity_t *ent, mbrush_t **brushpointer, brushtype_t brushty
 		vecs[1][0] = -as*bc;
 		vecs[1][1] = -as*bs;
 		vecs[1][2] = -ac;
-		tx.vecs[0][0] = bp[0][0] * vecs[0][0] + bp[0][1] * vecs[1][0];
-		tx.vecs[0][1] = bp[0][0] * vecs[0][1] + bp[0][1] * vecs[1][1];
-		tx.vecs[0][2] = bp[0][0] * vecs[0][2] + bp[0][1] * vecs[1][2];
-		tx.vecs[0][3] = bp[0][0] * vecs[0][3] + bp[0][1] * vecs[1][3] + bp[0][2];
-		tx.vecs[1][0] = bp[1][0] * vecs[0][0] + bp[1][1] * vecs[1][0];
-		tx.vecs[1][1] = bp[1][0] * vecs[0][1] + bp[1][1] * vecs[1][1];
-		tx.vecs[1][2] = bp[1][0] * vecs[0][2] + bp[1][1] * vecs[1][2];
-		tx.vecs[1][3] = bp[1][0] * vecs[0][3] + bp[1][1] * vecs[1][3] + bp[1][2];
+		tx.v[0][0] = bp[0][0]*vecs[0][0]+bp[0][1]*vecs[1][0];
+		tx.v[0][1] = bp[0][0]*vecs[0][1]+bp[0][1]*vecs[1][1];
+		tx.v[0][2] = bp[0][0]*vecs[0][2]+bp[0][1]*vecs[1][2];
+		tx.v[0][3] = bp[0][0]*vecs[0][3]+bp[0][1]*vecs[1][3]+bp[0][2];
+		tx.v[1][0] = bp[1][0]*vecs[0][0]+bp[1][1]*vecs[1][0];
+		tx.v[1][1] = bp[1][0]*vecs[0][1]+bp[1][1]*vecs[1][1];
+		tx.v[1][2] = bp[1][0]*vecs[0][2]+bp[1][1]*vecs[1][2];
+		tx.v[1][3] = bp[1][0]*vecs[0][3]+bp[1][1]*vecs[1][3]+bp[1][2];
 	}
 	else if (hltexdef)
 	{
@@ -331,8 +334,8 @@ void ParseBrushFace (entity_t *ent, mbrush_t **brushpointer, brushtype_t brushty
 		for (i = 0; i < 2; i++)
 		{
 			for (j = 0; j < 3; j++)
-				tx.vecs[i][j] = vecs[i][j] * scale[i];
-			tx.vecs[i][3] = vecs[i][3] /*+ DotProduct(origin, tx.vecs[i])*/;
+				tx.v[i][j] = vecs[i][j] * scale[i];
+			tx.v[i][3] = vecs[i][3] /*+ DotProduct(origin, tx.vecs[i])*/;
 // Sajt: ripped the commented out bit from the HL compiler code, not really sure what it is exactly doing
 // 'origin': origin set on bmodel by origin brush or origin key
 		}
@@ -357,27 +360,27 @@ void ParseBrushFace (entity_t *ent, mbrush_t **brushpointer, brushtype_t brushty
 			if (fabs(plane.normal[0]) < fabs(plane.normal[1]))
 			{
 				// Y primary
-				VectorSet4(tx.vecs[0],  cosv*scale[0],  0,  sinv*scale[0], vecs[0][3]);
-				VectorSet4(tx.vecs[1],  sinv*scale[1],  0, -cosv*scale[1], vecs[1][3]);
+				VectorSet4(tx.v[0],  cosv*scale[0],  0,  sinv*scale[0], vecs[0][3]);
+				VectorSet4(tx.v[1],  sinv*scale[1],  0, -cosv*scale[1], vecs[1][3]);
 			}
 			else
 			{
 				// X primary
-				VectorSet4(tx.vecs[0],  0,  cosv*scale[0],  sinv*scale[0], vecs[0][3]);
-				VectorSet4(tx.vecs[1],  0,  sinv*scale[1], -cosv*scale[1], vecs[1][3]);
+				VectorSet4(tx.v[0],  0,  cosv*scale[0],  sinv*scale[0], vecs[0][3]);
+				VectorSet4(tx.v[1],  0,  sinv*scale[1], -cosv*scale[1], vecs[1][3]);
 			}
 		}
 		else if (fabs(plane.normal[2]) < fabs(plane.normal[1]))
 		{
 			// Y primary
-			VectorSet4(tx.vecs[0],  cosv*scale[0],  0,  sinv*scale[0], vecs[0][3]);
-			VectorSet4(tx.vecs[1],  sinv*scale[1],  0, -cosv*scale[1], vecs[1][3]);
+			VectorSet4(tx.v[0],  cosv*scale[0],  0,  sinv*scale[0], vecs[0][3]);
+			VectorSet4(tx.v[1],  sinv*scale[1],  0, -cosv*scale[1], vecs[1][3]);
 		}
 		else
 		{
 			// Z primary
-			VectorSet4(tx.vecs[0],  cosv*scale[0],  sinv*scale[0], 0, vecs[0][3]);
-			VectorSet4(tx.vecs[1],  sinv*scale[1], -cosv*scale[1], 0, vecs[1][3]);
+			VectorSet4(tx.v[0],  cosv*scale[0],  sinv*scale[0], 0, vecs[0][3]);
+			VectorSet4(tx.v[1],  sinv*scale[1], -cosv*scale[1], 0, vecs[1][3]);
 		}
 		//printf("plane + rotate scale = texture vectors:\n(%f %f %f %f) + [%f %f %f] =\n[%f %f %f %f] [%f %f %f %f]\n", plane.normal[0], plane.normal[1], plane.normal[2], plane.dist, rotate, scale[0], scale[1], tx.vecs[0][0], tx.vecs[0][1], tx.vecs[0][2], tx.vecs[0][3], tx.vecs[1][0], tx.vecs[1][1], tx.vecs[1][2], tx.vecs[1][3]);
 	}
@@ -560,12 +563,12 @@ void LoadMapFile (char *filename)
 {
 	void	*buf;
 
-	num_entities = 0;
-	nummapbrushfaces = 0;
-	nummapbrushes = 0;
-	nummapplanes = 0;
-	nummiptex = 0;
-	mapversion = 0;
+	num_entities		= 0;
+	nummapbrushfaces	= 0;
+	nummapbrushes		= 0;
+	nummapplanes		= 0;
+	nummiptex			= 0;
+	mapversion			= 0;
 
 	qprintf("Loading map file (%s)...\n",filename);
 

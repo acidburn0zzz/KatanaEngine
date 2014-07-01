@@ -21,8 +21,6 @@ enum
 
 void Bot_Spawn(edict_t *ent);
 
-void Server_CheckWaterTransition(edict_t *ent);
-
 void light(edict_t *self);
 
 void CTF_FlagSpawn(edict_t *eFlag);

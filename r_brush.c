@@ -734,7 +734,7 @@ void R_RenderDynamicLightmaps (msurface_t *fa)
 	lightmap_polys[fa->lightmaptexturenum] = fa->polys;
 
 	// check for lightmap modification
-	for (maps=0; maps < MAXLIGHTMAPS && fa->styles[maps] != 255; maps++)
+	for (maps=0; maps < BSP_MAX_LIGHTMAPS && fa->styles[maps] != 255; maps++)
 		if (d_lightstylevalue[fa->styles[maps]] != fa->cached_light[maps])
 			goto dynamic;
 
@@ -813,7 +813,7 @@ int AllocBlock (int w, int h, int *x, int *y)
 }
 
 
-mvertex_t	*r_pcurrentvertbase;
+BSPVertex_t	*r_pcurrentvertbase;
 model_t		*currentmodel;
 
 int	nColinElim;
@@ -857,12 +857,12 @@ void BuildSurfaceDisplayList (msurface_t *fa)
 		if (lindex > 0)
 		{
 			r_pedge = &pedges[lindex];
-			vec = r_pcurrentvertbase[r_pedge->v[0]].position;
+			vec = r_pcurrentvertbase[r_pedge->v[0]].fPoint;
 		}
 		else
 		{
 			r_pedge = &pedges[-lindex];
-			vec = r_pcurrentvertbase[r_pedge->v[1]].position;
+			vec = r_pcurrentvertbase[r_pedge->v[1]].fPoint;
 		}
 		s = Math_DotProduct(vec, fa->texinfo->vecs[0]) + fa->texinfo->vecs[0][3];
 		s /= fa->texinfo->texture->width;
@@ -987,7 +987,7 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 
 		// Add all the lightmaps
 		if (lightmap)
-			for(maps = 0; maps < MAXLIGHTMAPS && surf->styles[maps] != 255; maps++)
+			for(maps = 0; maps < BSP_MAX_LIGHTMAPS && surf->styles[maps] != 255; maps++)
 			{
 				// [16/5/2013] Let us scale the lightmap ~hogsy
 				scale = d_lightstylevalue[surf->styles[maps]];

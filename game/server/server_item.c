@@ -4,24 +4,13 @@
 
 /*
 	Item handling code, including inventory crap!
-	TODO:
-		Currently we rely on numbered defines...
-		This is fine but the problem is they can become
-		incredibly unorganised overtime, especially when
-		it's static. So instead item numbers should be
-		defined over an enum and we should probably
-		get the item by a string name instead because
-		then we don't have to worry about that ever
-		changing.
-		???
-		Profit.
 */
 
 #include "server_item.h"
 
 Item_t Items[] =
 {
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 	// Ammo
 	{	AMMO_IONBALLS,		"Ion Cells",			"models/ammo/ammo_ionblaster.md2",	"items/weaponpickup.wav"	},
 	{	AMMO_C4BOMBS,		"C4 Bombs",				"models/ammo/ammo_c4viz.md2",		"items/weaponpickup.wav"	},
@@ -40,6 +29,7 @@ Item_t Items[] =
 
 	// Unused weapons
 	{	WEAPON_GLOCK,		"Glock",		"models/weapons/w_glock.md2",		"items/weaponpickup.wav"	},
+	{   WEAPON_LASERS,      "Lasers",       "",                                 ""                          },
 
 	// Items
 	{	ITEM_PLASTEELARMOR,	"PLASTEEL ARMOR",	"models/plasteel.md2",		"items/armorpickup1.wav"					},
@@ -51,6 +41,9 @@ Item_t Items[] =
 	{	ITEM_ACROBOOST,		"ACRO BOOST",		"models/acroboost.md2",		"items/boostpickup1.wav"					},
 	{	ITEM_OXYLUNG,		"OXYLUNG",			"models/oxylung.md2",		"artifacts/oxylung/oxylungpickup.wav"		},
 	{	ITEM_ENVIROSUIT,	"ENVIROSUIT",		"models/envirosuit.md2",	"artifacts/envirosuit/envirosuitpickup.wav"	},
+#elif GAME_ADAMAS
+	{	WEAPON_BLAZER,		"Blazer",			"models/weapon.bsp",		"items/weaponpickup.wav"	},
+	{	ITEM_LIFE,			"Extra Life",		"models/life.bsp",			"items/weaponpickup.wav"	},
 #endif
 
 	{	0	}
@@ -284,7 +277,7 @@ void Item_Touch(edict_t *eItem,edict_t *eOther)
 			if(iVizatergo)
 			{
 				eOther->local.iC4Ammo += 15;
-				
+
 				Item_AddInventory(iVizatergo,eOther);
 			}
 		}
@@ -347,6 +340,10 @@ void Item_Touch(edict_t *eItem,edict_t *eOther)
 		break;
 	case AMMO_SHOCKWAVE:
 		eOther->local.shockwave_ammo += 1;
+		break;
+#elif GAME_ADAMAS
+	case ITEM_LIFE:
+		Server.iLives++;
 		break;
 #endif
 	default:

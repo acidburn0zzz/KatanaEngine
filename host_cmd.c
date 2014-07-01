@@ -816,7 +816,7 @@ void Host_Changelevel_f (void)
 	}
 	else if(!sv.active || cls.demoplayback)
 	{
-		Con_Printf ("Only the server may changelevel\n");
+		Con_Printf("Only the server may changelevel\n");
 		return;
 	}
 
@@ -1484,19 +1484,19 @@ void Host_Spawn_f(void)
 //
 // send some stats
 //
-	MSG_WriteByte (&host_client->message, svc_updatestat);
+	MSG_WriteByte (&host_client->message, SVC_UPDATESTAT);
 	MSG_WriteByte (&host_client->message, STAT_TOTALSECRETS);
 	MSG_WriteLong (&host_client->message, pr_global_struct.total_secrets);
 
-	MSG_WriteByte (&host_client->message, svc_updatestat);
+	MSG_WriteByte (&host_client->message, SVC_UPDATESTAT);
 	MSG_WriteByte (&host_client->message, STAT_TOTALMONSTERS);
 	MSG_WriteLong (&host_client->message, pr_global_struct.total_monsters);
 
-	MSG_WriteByte (&host_client->message, svc_updatestat);
+	MSG_WriteByte (&host_client->message, SVC_UPDATESTAT);
 	MSG_WriteByte (&host_client->message, STAT_SECRETS);
 	MSG_WriteLong (&host_client->message, pr_global_struct.found_secrets);
 
-	MSG_WriteByte(&host_client->message,svc_updatestat);
+	MSG_WriteByte(&host_client->message,SVC_UPDATESTAT);
 	MSG_WriteByte(&host_client->message,STAT_MONSTERS);
 	MSG_WriteLong(&host_client->message,pr_global_struct.iKilledMonsters);
 

@@ -102,6 +102,8 @@ edict_t *Entity_SpawnPoint(edict_t *eEntity,int iType)
 			Engine.Con_Warning("Unknown team type for spawn point! (%i)",eEntity->local.pTeam);
 			return NULL;
 		}
+		// [27/4/2014] Oops, forgot to break here ~hogsy
+		break;
 	case INFO_PLAYER_SUPERFLY:
 	case INFO_PLAYER_MIKIKO:
 	default:
@@ -110,19 +112,17 @@ edict_t *Entity_SpawnPoint(edict_t *eEntity,int iType)
 
 	eSpawnPoint = Engine.Server_FindEntity(Server.eWorld,cStartName,true);
 	if(eSpawnPoint)
-	{
 		if(iType == eSpawnPoint->local.style)
 			return eSpawnPoint;
-	}
 
 	return NULL;
 }
 
 /*	Simple function for checking if an entity can be damaged or not.
 */
-bool Entity_CanDamage(edict_t *eEntity,edict_t *eTarget)
+bool Entity_CanDamage(edict_t *eEntity,edict_t *eTarget, int iDamageType)
 {
-	if(eTarget->v.bTakeDamage)
+	if(eTarget->v.bTakeDamage && (!eTarget->local.iDamageType || (eTarget->local.iDamageType == iDamageType)))
 		return true;
 
 	return false;
@@ -130,7 +130,7 @@ bool Entity_CanDamage(edict_t *eEntity,edict_t *eTarget)
 
 /*	Damage entities within a specific radius.
 */
-void Entity_RadiusDamage(edict_t *eInflictor,float fRadius,int iDamage)
+void Entity_RadiusDamage(edict_t *eInflictor,float fRadius,int iDamage,int iDamageType)
 {
 	int		i;
 	float	fDistance;
@@ -168,8 +168,8 @@ void Entity_RadiusDamage(edict_t *eInflictor,float fRadius,int iDamage)
 					fDistance = fDistance/2.0f;
 
 				if(fDistance > 0)
-					if(Entity_CanDamage(eInflictor,eTarget))
-						MONSTER_Damage(eTarget,eInflictor,(int)fDistance);
+					if(Entity_CanDamage(eInflictor,eTarget, iDamageType))
+						MONSTER_Damage(eTarget,eInflictor,(int)fDistance,iDamageType);
 			}
 		}
 
@@ -253,4 +253,28 @@ void Entity_Animate(edict_t *eEntity,EntityFrame_t *efAnimation)
 
 	eEntity->local.dAnimationTime	= Server.dTime+((double)efAnimation[1].fSpeed);
 	eEntity->local.iFrames			= efAnimation;
+}
+
+/*
+	Type Checks
+*/
+
+/*	Is the given monster a player?
+*/
+bool Entity_IsPlayer(edict_t *eEntity)
+{
+	if(eEntity->monster.iType == MONSTER_PLAYER)
+		return true;
+
+	return false;
+}
+
+/*	Is the given monster a monster? (this is dumb...)
+*/
+bool Entity_IsMonster(edict_t *eEntity)
+{
+	if((eEntity->monster.iType != MONSTER_PLAYER) && (eEntity->monster.iType > MONSTER_VEHICLE))
+		return true;
+
+	return false;
 }

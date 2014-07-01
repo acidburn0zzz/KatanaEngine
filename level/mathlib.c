@@ -26,11 +26,6 @@ vec_t Q_rint( vec_t n )
 		return ( vec_t )(( int )(n - 0.5));
 }
 
-/*
-=================
-ClearBounds
-=================
-*/
 void ClearBounds( vec3_t mins, vec3_t maxs )
 {
 	int		i;
@@ -41,11 +36,6 @@ void ClearBounds( vec3_t mins, vec3_t maxs )
 	}
 }
 
-/*
-=================
-AddPointToBounds
-=================
-*/
 void AddPointToBounds( vec3_t v, vec3_t mins, vec3_t maxs )
 {
 	int		i;
@@ -58,11 +48,6 @@ void AddPointToBounds( vec3_t v, vec3_t mins, vec3_t maxs )
 	}
 }
 
-/*
-=================
-RadiusFromBounds
-=================
-*/
 vec_t RadiusFromBounds( vec3_t mins, vec3_t maxs )
 {
 	vec_t mind, maxd;
@@ -171,12 +156,7 @@ void NormalizePlane( plane_t *dp )
 	}
 }
 
-/*
-=================
-PlaneCompare
-=================
-*/
-qboolean PlaneCompare( plane_t *p1, plane_t *p2 )
+bool PlaneCompare( plane_t *p1, plane_t *p2 )
 {
 	int		i;
 

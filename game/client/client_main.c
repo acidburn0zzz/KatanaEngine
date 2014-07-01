@@ -105,6 +105,8 @@ void Client_ParseTemporaryEntity(void)
 			}
 		}
 		break;
+	case CTE_PARTICLE_FIELD:
+		break;
 	default:
 		Engine.Con_Warning("Unknown temporary entity type (%i)!\n",iType);
 		// [19/6/2013] TODO: Need to disconnect here! ~hogsy

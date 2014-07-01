@@ -74,27 +74,35 @@ void Input_Initialize(void)
 
 	for(i = 0; i < SDL_NumJoysticks(); i++)
 	{
+		Con_Printf(" Opening ");
+
 		if(SDL_IsGameController(i))
 		{
 			cController[i].sGameController = SDL_GameControllerOpen(i);
 
-			Con_Printf(" Opening Controller (%i): ",i);
+			Con_Printf("Controller ");
         }
 		else
+		{
 			cController[i].sJoystick = SDL_JoystickOpen(i);
+
+			Con_Printf("Joystick ");
+		}
+
+		Con_Printf("(%i): ",i);
 
 		if(cController[i].sJoystick || cController[i].sGameController)
 		{
-            Con_Printf("Success");
+            Con_Printf("Success\n");
 
 			iNumControllers++;
         }
         else
-            Con_Printf("Failed!");
+            Con_Printf("Failed!\n");
 	}
 
 	if(iNumControllers > 0)
-		Con_Printf(" Found %i controller(s)\n",iNumControllers);
+		Con_Printf(" Found %i input device(s)\n",iNumControllers);
 	else
 	{
 		// [30/1/2013] No controllers found, disable event processing ~hogsy
@@ -215,9 +223,6 @@ int Input_ConvertKey(int iKey)
 		case SDLK_SLASH:		return '/';
 		default:    			return iKey;
 	}
-
-	// [9/1/2013] We'd never reach here but compiler complain anyway ~hogsy
-	return 0;
 }
 
 /*
@@ -424,8 +429,8 @@ void Input_ActivateMouse(void)
 	if(bMouseActive)
 		return;
 
-//	SDL_ShowCursor(false);
-//	SDL_SetWindowGrab(sMainWindow,SDL_TRUE);
+	SDL_ShowCursor(false);
+	SDL_SetWindowGrab(sMainWindow,SDL_TRUE);
 	SDL_WarpMouseInWindow(sMainWindow,Video.iWidth/2,Video.iHeight/2);
 
 	bMouseActive = true;
@@ -436,8 +441,8 @@ void Input_DeactivateMouse(void)
 	if(!bMouseActive)
 		return;
 
-//	SDL_ShowCursor(true);
-//	SDL_SetWindowGrab(sMainWindow,SDL_FALSE);
+	SDL_ShowCursor(true);
+	SDL_SetWindowGrab(sMainWindow,SDL_FALSE);
 
 	bMouseActive = false;
 }

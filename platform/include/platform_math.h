@@ -65,6 +65,8 @@ typedef struct
 #define Math_Random()	((rand() & 0x7fff)/((float)0x7fff))
 #define Math_CRandom()	(2.0f*((float)Math_Random()-0.5f))
 
+MathVector_t	Math_VectorToAngles(vec3_t vValue);
+
 #ifdef __cplusplus
 }
 #endif

@@ -26,8 +26,6 @@ ddef_t				*pr_fielddefs,
 GlobalVariables_t	pr_global_struct;	//*pr_global_struct;
 float				*pr_globals;			// same as pr_global_struct
 
-ddef_t *ED_FieldAtOfs (int ofs);
-
 #define	MAX_FIELD_LEN	128
 
 /*	Sets everything to null for the specified entity.
@@ -104,44 +102,6 @@ void ED_Free (edict_t *ed)
 	ed->freetime = sv.time;
 }
 
-ddef_t *ED_FieldAtOfs (int ofs)
-{
-#if 0
-	ddef_t		*def;
-	int			i;
-
-	for (i=0 ; i<progs->numfielddefs ; i++)
-	{
-		def = &pr_fielddefs[i];
-		if (def->ofs == ofs)
-			return def;
-	}
-	return NULL;
-#endif
-	Con_Printf("ED_FieldAtOfs\n");
-	return NULL;
-}
-
-ddef_t *ED_FindField (char *name)
-{
-#if 0
-	ddef_t		*def;
-	int			i;
-
-	for (i=0 ; i<progs->numfielddefs ; i++)
-	{
-		def = &pr_fielddefs[i];
-		if(!Q_strcmp(pr_strings + def->s_name,name) )
-			return def;
-	}
-
-	return NULL;
-#else
-	Con_Printf("ED_FindField\n");
-	return NULL;
-#endif
-}
-
 eval_t *GetEdictFieldValue(edict_t *ed, char *field)
 {
 #if 0
@@ -180,7 +140,6 @@ Done:
 */
 char *PR_ValueString (EntityType_t type, eval_t *val)
 {
-#if 0
 	static char	line[256];
 	ddef_t		*def;
 
@@ -189,31 +148,23 @@ char *PR_ValueString (EntityType_t type, eval_t *val)
 	switch (type)
 	{
 	case EV_STRING:
-		sprintf (line, "%s", val->string);
+		sprintf(line, "%s", val->string);
 		break;
 	case ev_entity:
-		sprintf (line, "entity %i", NUM_FOR_EDICT(PROG_TO_EDICT(val->edict)) );
-		break;
-	case ev_field:
-		def = ED_FieldAtOfs ( val->_int );
-		sprintf (line, ".%s", pr_strings + def->s_name);
+		sprintf(line,"entity %i",NUM_FOR_EDICT(PROG_TO_EDICT(val->edict)) );
 		break;
 	case EV_FLOAT:
-		sprintf (line, "%5.1f", val->_float);
+		sprintf(line, "%5.1f", val->_float);
 		break;
 	case EV_VECTOR:
-		sprintf (line, "'%5.1f %5.1f %5.1f'", val->vector[0], val->vector[1], val->vector[2]);
+		sprintf(line, "'%5.1f %5.1f %5.1f'", val->vector[0], val->vector[1], val->vector[2]);
 		break;
 	default:
-		sprintf (line, "bad type %i", type);
+		sprintf(line, "bad type %i", type);
 		break;
 	}
 
 	return line;
-#else
-	Con_Printf("PR_ValueString\n");
-	return NULL;
-#endif
 }
 
 /*	Returns a string describing *data in a type specific manner
@@ -221,12 +172,12 @@ char *PR_ValueString (EntityType_t type, eval_t *val)
 */
 char *PR_UglyValueString(EntityType_t type, eval_t *val)
 {
-#if 0
 	static char	line[256];
 	ddef_t		*def;
 
 	type &= ~DEF_SAVEGLOBAL;
 
+#if 0
 	switch (type)
 	{
 	case EV_STRING:
@@ -234,10 +185,6 @@ char *PR_UglyValueString(EntityType_t type, eval_t *val)
 		break;
 	case ev_entity:
 		sprintf (line, "%i", NUM_FOR_EDICT(PROG_TO_EDICT(val->edict)));
-		break;
-	case ev_field:
-		def = ED_FieldAtOfs ( val->_int );
-		sprintf (line, "%s", pr_strings + def->s_name);
 		break;
 	case EV_FLOAT:
 		sprintf (line, "%f", val->_float);
@@ -249,12 +196,9 @@ char *PR_UglyValueString(EntityType_t type, eval_t *val)
 		sprintf (line, "bad type %i", type);
 		break;
 	}
+#endif
 
 	return line;
-#else
-	Con_Printf("PR_UglyValueString\n");
-	return NULL;
-#endif
 }
 
 /*	For debugging

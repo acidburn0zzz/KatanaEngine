@@ -120,12 +120,7 @@ void *LeafThread(void)
 	return NULL;
 }
 
-/*
-===============
-LeafFlow
-
-Builds the entire visibility list for a leaf
-===============
+/*	Builds the entire visibility list for a leaf
 */
 int		totalvis;
 
@@ -178,7 +173,7 @@ void LeafFlow (int leafnum)
 		for( i = 0; i < leafnum; i++, data += bitbytes ) {
 			if( !memcmp( data, outbuffer, bitbytes ) ) {
 				c_reused++;
-				dleafs[leafnum+1].visofs = dleafs[i+1].visofs;
+				dleafs[leafnum+1].iVisibilityOffset = dleafs[i+1].iVisibilityOffset;
 				return;
 			}
 		}
@@ -198,7 +193,7 @@ void LeafFlow (int leafnum)
 	if (vismap_p > vismap_end)
 		Error ("Vismap expansion overflow");
 
-	dleafs[leafnum+1].visofs = dest-vismap;	// leaf 0 is a common solid
+	dleafs[leafnum+1].iVisibilityOffset = dest-vismap;	// leaf 0 is a common solid
 
 	memcpy (dest, compressed, i);
 }
@@ -265,7 +260,7 @@ sep_t *Findpassages (viswinding_t *source, viswinding_t *pass)
 	double		d;
 	double		length;
 	int			counts[3];
-	qboolean	fliptest;
+	bool		fliptest;
 	sep_t		*sep, *list;
 
 	list = NULL;
@@ -475,7 +470,7 @@ void LoadPortals (char *name)
 	originalvismapsize = portalleafs*((portalleafs+7)/8);
 
 	vismap = vismap_p = dvisdata;
-	vismap_end = vismap + MAX_MAP_VISIBILITY;
+	vismap_end = vismap + BSP_MAX_VISIBILITY;
 
 	for (i=0, p=portals ; i<numportals ; i++)
 	{

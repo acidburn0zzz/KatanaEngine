@@ -600,7 +600,7 @@ void SV_WriteClientdataToMessage (edict_t *ent, sizebuf_t *msg)
 	// Send a damage message
 	if (ent->v.dmg_take || ent->v.dmg_save)
 	{
-		other = PROG_TO_EDICT(ent->v.dmg_inflictor);
+		other = ent->v.eDamageInflictor;
 
 		MSG_WriteByte(msg,SVC_DAMAGE);
 		MSG_WriteByte(msg,ent->v.dmg_save);
@@ -658,7 +658,7 @@ void SV_WriteClientdataToMessage (edict_t *ent, sizebuf_t *msg)
 	if(ent->v.iWeaponFrame)
 		bits |= SU_WEAPONFRAME;
 
-	if(ent->v.armorvalue)
+	if(ent->v.iArmorValue)
 		bits |= SU_ARMOR;
 
 	bits |= SU_WEAPON;
@@ -666,7 +666,7 @@ void SV_WriteClientdataToMessage (edict_t *ent, sizebuf_t *msg)
 	//johnfitz -- PROTOCOL_FITZQUAKE
 	if (bits & SU_WEAPON && SV_ModelIndex(ent->v.cViewModel) & 0xFF00)
 		bits |= SU_WEAPON2;
-	if ((int)ent->v.armorvalue & 0xFF00)
+	if ((int)ent->v.iArmorValue & 0xFF00)
 		bits |= SU_ARMOR2;
 	if(ent->v.iPrimaryAmmo & 0xFF00)
 		bits |= SU_AMMO2;
@@ -710,7 +710,7 @@ void SV_WriteClientdataToMessage (edict_t *ent, sizebuf_t *msg)
 	if (bits & SU_WEAPONFRAME)
 		MSG_WriteByte(msg,ent->v.iWeaponFrame);
 	if (bits & SU_ARMOR)
-		MSG_WriteByte(msg,ent->v.armorvalue);
+		MSG_WriteByte(msg,ent->v.iArmorValue);
 	if (bits & SU_WEAPON)
 		MSG_WriteByte (msg,SV_ModelIndex(ent->v.cViewModel));
 
@@ -722,7 +722,7 @@ void SV_WriteClientdataToMessage (edict_t *ent, sizebuf_t *msg)
 	if (bits & SU_WEAPON2)
 		MSG_WriteByte (msg, SV_ModelIndex(ent->v.cViewModel) >> 8);
 	if (bits & SU_ARMOR2)
-		MSG_WriteByte (msg,(int)ent->v.armorvalue >> 8);
+		MSG_WriteByte (msg,ent->v.iArmorValue >> 8);
 	if (bits & SU_AMMO2)
 		MSG_WriteByte (msg,ent->v.iPrimaryAmmo >> 8);
 	if (bits & SU_WEAPONFRAME2)

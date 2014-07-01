@@ -32,6 +32,9 @@
     <ClCompile Include="menu_input.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="menu_hud.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include=".\menu_main.h">

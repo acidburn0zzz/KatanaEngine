@@ -76,7 +76,7 @@ static	unsigned HashVec (vec3_t vec)
 //============================================================================
 
 // Vic: changed this to qboolean
-qboolean CanonicalVector (vec3_t vec)
+bool CanonicalVector (vec3_t vec)
 {
 	vec_t length;
 
@@ -195,14 +195,6 @@ wedge_t	*FindEdge (vec3_t p1, vec3_t p2, vec_t *t1, vec_t *t2)
 	w->head.t = 99999;
 	return w;
 }
-
-
-/*
-===============
-AddVert
-
-===============
-*/
 
 void AddVert (wedge_t *w, vec_t t)
 {

@@ -162,7 +162,6 @@ void M_DrawPic (int x, int y, qpic_t *pic)
 
 void M_DrawTransPicTranslate (int x, int y, qpic_t *pic, int top, int bottom) //johnfitz -- more parameters
 {
-	Draw_TransPicTranslate(x, y, pic, top, bottom); //johnfitz -- simplified becuase centering is handled elsewhere
 }
 
 void M_DrawTextBox (int x, int y, int width, int lines)
@@ -1470,10 +1469,10 @@ char	serialConfig_phone[16];
 
 void M_Menu_SerialConfig_f (void)
 {
-	int		n;
-	int		port;
-	int		baudrate;
-	qboolean	useModem;
+	int		n,
+			port,
+			baudrate;
+	bool	useModem;
 
 	key_dest = key_menu;
 	m_state = m_serialconfig;
@@ -2197,7 +2196,7 @@ episode_t	episodes[] =
 int	startepisode;
 int	startlevel;
 int maxplayers;
-qboolean m_serverInfoMessage = FALSE;
+bool m_serverInfoMessage = FALSE;
 double m_serverInfoMessageTime;
 
 void M_Menu_GameOptions_f (void)
@@ -2442,7 +2441,7 @@ void M_GameOptions_Key (int key)
 //=============================================================================
 /* SEARCH MENU */
 
-qboolean	searchComplete = FALSE;
+bool	searchComplete = false;
 double		searchCompleteTime;
 
 void M_Menu_Search_f (void)
@@ -2498,7 +2497,7 @@ void M_Search_Draw (void)
 /* SLIST MENU */
 
 int		slist_cursor;
-qboolean slist_sorted;
+bool slist_sorted;
 
 void M_Menu_ServerList_f (void)
 {

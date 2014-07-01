@@ -27,7 +27,7 @@
 
 extern cvar_t r_drawflat;
 
-cvar_t r_oldwater		= {	"r_oldwater",		"1"	};
+cvar_t r_oldwater		= {	"r_oldwater",		"1",	true,	false	};
 cvar_t r_waterquality	= {	"r_waterquality",	"8"	};
 cvar_t r_waterwarp		= {	"r_waterwarp",		"1"	};
 
@@ -216,8 +216,9 @@ void Warp_DrawWaterPoly(glpoly_t *p)
 		Math_VectorCopy(v,vWave);
 
 		// [20/1/2013] Added in subtle water bobbing, based on this code http://www.quake-1.com/docs/quakesrc.org/26.html ~hogsy
-		vWave[2] = v[2]+2.0f*(float)sin(v[0]*0.025f+cl.time)*(float)sin(v[2]*0.05f+cl.time)
-			+2.0f*(float)sin(v[1]*0.025f+cl.time*2.0f)*(float)sin(v[2]*0.05f+cl.time);
+		vWave[2] =	v[2]+
+					2.0f*(float)sin(v[0]*0.025f+cl.time)*(float)sin(v[2]*0.05f+cl.time)+
+					2.0f*(float)sin(v[1]*0.025f+cl.time*2.0f)*(float)sin(v[2]*0.05f+cl.time);
 
 		glVertex3fv(vWave);
 	}

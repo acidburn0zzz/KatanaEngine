@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2013 OldTimes Software
+	Copyright (C) 2011-2014 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -36,7 +36,6 @@ extern	qpic_t		*draw_disc;	// also used on sbar
 void Draw_Init (void);
 void Draw_Character (int x, int y, int num);
 void Draw_Pic (int x, int y, qpic_t *pic);
-void Draw_TransPicTranslate (int x, int y, qpic_t *pic, int top, int bottom); //johnfitz -- more parameters
 void Draw_ConsoleBackground (void); //johnfitz -- removed parameter int lines
 void Draw_BeginDisc (void);
 void Draw_TileClear (int x,int y,int w,int h);

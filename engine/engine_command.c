@@ -30,6 +30,10 @@ void Cmd_ForwardToServer(void);
 
 #define	MAX_ALIAS_NAME	32
 
+/*	Sub-commands.
+*/
+#define COMMAND_USER			"$user"			// Replaces "$user" with current username.
+
  //johnfitz -- mirrored in common.c
 
 typedef struct cmdalias_s
@@ -559,7 +563,7 @@ void Cmd_AddCommand (char *cmd_name, xcommand_t function)
 	//johnfitz
 }
 
-qboolean Cmd_Exists (char *cmd_name)
+bool Cmd_Exists (char *cmd_name)
 {
 	cmd_function_t	*cmd;
 

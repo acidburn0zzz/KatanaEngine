@@ -60,7 +60,7 @@ void R_MarkSurfaces (void)
 			nearwaterportal = true;
 
 	// Choose vis data
-	if (r_novis.value || r_viewleaf->contents == BSP_CONTENTS_SOLID || r_viewleaf->contents == CONTENTS_SKY)
+	if (r_novis.value || r_viewleaf->contents == BSP_CONTENTS_SOLID || r_viewleaf->contents == BSP_CONTENTS_SKY)
 		vis = &mod_novis[0];
 	else if(nearwaterportal)
 		vis = SV_FatPVS (r_origin, cl.worldmodel);
@@ -87,7 +87,7 @@ void R_MarkSurfaces (void)
 	{
 		if (vis[i>>3] & (1<<(i&7)))
 		{
-			if (r_oldskyleaf.value || leaf->contents != CONTENTS_SKY)
+			if (r_oldskyleaf.value || leaf->contents != BSP_CONTENTS_SKY)
 				for (j=0, mark = leaf->firstmarksurface; j<leaf->nummarksurfaces; j++, mark++)
 					(*mark)->visframe = r_visframecount;
 

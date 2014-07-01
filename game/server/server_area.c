@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2013 OldTimes Software
+/*	Copyright (C) 2011-2014 OldTimes Software
 */
 #include "server_main.h"
 
@@ -76,7 +76,7 @@ void Area_CalculateMovement(edict_t *eArea,vec3_t vTDest,float fSpeed,void (*Fun
 	eArea->local.think1	= Function;
 
 	eArea->v.think		= Area_CalculateMovementDone;
-	eArea->v.dNextThink	= eArea->local.ltime+fTravelTime;
+	eArea->v.dNextThink	= eArea->v.ltime+fTravelTime;
 }
 
 /*
@@ -212,7 +212,6 @@ void Area_BreakableSpawn(edict_t *eArea)
 
 	switch(eArea->local.style)
 	{
-#ifdef GAME_OPENKATANA
 		case BREAKABLE_GLASS:
 			Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_GLASS0);
 			Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_GLASS1);
@@ -245,7 +244,6 @@ void Area_BreakableSpawn(edict_t *eArea)
 			Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/metal_gibs2.md2");
 			Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/metal_gibs3.md2");
 			break;
-#endif
 		default:
 			Engine.Con_Warning("area_breakable: Unknown style\n");
 	}
@@ -278,7 +276,7 @@ void Area_RotateBlocked(edict_t *eArea,edict_t *eOther)
 	if(eOther->v.iHealth <= 0)
 		return;
 
-	MONSTER_Damage(eOther,eArea,eArea->local.iDamage);
+	MONSTER_Damage(eOther,eArea,eArea->local.iDamage, 0);
 }
 
 void Area_RotateTouch(edict_t *eArea,edict_t *eOther)
@@ -442,7 +440,7 @@ void Area_DoorUse(edict_t *eArea)
 
 void Area_DoorBlocked(edict_t *eArea, edict_t *eOther)
 {
-	MONSTER_Damage(eOther,eArea,eArea->local.iDamage);
+	MONSTER_Damage(eOther,eArea,eArea->local.iDamage,0);
 }
 
 void Area_DoorSpawn(edict_t *eArea)
@@ -573,7 +571,7 @@ void Area_TriggerSpawn(edict_t *eArea)
 
 	eArea->v.TouchFunction = Area_TriggerTouch;
 
-	eArea->Physics.iSolid	= SOLID_TRIGGER;
+	eArea->Physics.iSolid = SOLID_TRIGGER;
 
 	Entity_SetModel(eArea,eArea->v.model);
 	Entity_SetOrigin(eArea,eArea->v.origin);
@@ -648,12 +646,16 @@ void Area_WallUse(edict_t *eArea)
 
 void Area_WallSpawn(edict_t *eArea)
 {
+	if(!eArea->v.model)
+	{
+		Engine.Con_Warning("Area entity with no model!\n");
+		ENTITY_REMOVE(eArea);
+	}
+
 	if(eArea->v.cName)
 		eArea->v.use = Area_WallUse;
 
 	eArea->v.movetype = MOVETYPE_PUSH;
-
-	eArea->Physics.iSolid = SOLID_BSP;
 
 	eArea->local.iValue	= 1;
 
@@ -734,7 +736,7 @@ void Area_ButtonUse(edict_t *eArea)
 
 void Area_ButtonBlocked(edict_t *eArea, edict_t *eOther)
 {
-	MONSTER_Damage(eOther,eArea,eArea->local.iDamage);
+	MONSTER_Damage(eOther,eArea,eArea->local.iDamage,0);
 }
 
 void Area_ButtonSpawn(edict_t *eArea)
@@ -812,8 +814,9 @@ void Area_PlatformSpawnTouchbox(edict_t *eArea)
 	eTrigger = Spawn();
 	eTrigger->v.TouchFunction = Area_PlatformSpawnTouchboxTouch;
 	eTrigger->v.movetype = MOVETYPE_NONE;
-	eTrigger->Physics.iSolid = SOLID_TRIGGER;
 	eTrigger->v.enemy = eArea;
+
+	eTrigger->Physics.iSolid = SOLID_TRIGGER;
 
 	vTrigMin[0] = eArea->v.mins[0] - 25;
 	vTrigMin[1] = eArea->v.mins[1] - 25;
@@ -909,7 +912,7 @@ void Area_PlatformUse(edict_t *eArea)
 
 void Area_PlatformBlocked(edict_t *eArea, edict_t *eOther)
 {
-	MONSTER_Damage(eOther,eArea,eArea->local.iDamage);
+	MONSTER_Damage(eOther,eArea,eArea->local.iDamage,0);
 }
 
 void Area_PlatformSpawn(edict_t *eArea)
@@ -1024,7 +1027,7 @@ void Area_NoclipSpawn(edict_t *eArea)
 void Area_PushTouch(edict_t *eArea, edict_t *eOther)
 {
 	// [9/12/2013] TODO: Make this optional? Would be cool to throw monsters and other crap around... ~hogsy
-	if(eOther->monster.iType != MONSTER_PLAYER)
+	if(!Entity_IsPlayer(eOther))
 		return;
 
 	Math_VectorScale(eArea->v.movedir,eArea->local.speed*10,eOther->v.velocity);

@@ -17,7 +17,10 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+#include "quakedef.h"
+
 #include "engine_video.h"
+#include "engine_editor.h"
 
 int	r_dlightframecount;
 
@@ -58,77 +61,81 @@ void Light_Animate(void)
 void Light_Draw(void)
 {
 	int				i;
-	DynamicLight_t	*dLight;
+	DynamicLight_t	*dlLight;
 
-	if(!gl_flashblend.value)
+	if(!gl_flashblend.bValue && !cvEditorLightPreview.bValue)
 		return;
 
 	// Because the count hasn't advanced yet for this frame.
 	r_dlightframecount = r_framecount+1;
 
-	glDepthMask(false);
-	glDisable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE,GL_ONE);
+	Video_ResetCapabilities(false);
 
-	dLight = cl_dlights;
-	for(i = 0; i < MAX_DLIGHTS; i++,dLight++)
+	Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+	Video_EnableCapabilities(VIDEO_BLEND);
+	Video_SetBlend(VIDEO_BLEND_ONE,VIDEO_DEPTH_FALSE);
+
+	dlLight = cl_dlights;
+	for(i = 0; i < MAX_DLIGHTS; i++,dlLight++)
 	{
+		if(cvEditorLightPreview.bValue && dlLight->bLightmap)
+			continue;
 		// [5/5/2012] Ugh some lights are inverted... ~hogsy
-		if(((dLight->die < cl.time) && dLight->die) || !dLight->radius)
+		else if(((dlLight->die < cl.time) && dlLight->die) || !dlLight->radius)
 			continue;
 
 		{
-			int		i,j;
-			float	a,a2,b,rad;
-			vec3_t	v;
+			int				i,j,c = 0;
+			float			a,a2,b,rad;
+			vec3_t			v;
+			VideoObject_t	voLight[17];
 
-			Math_VectorSubtract(dLight->origin,r_origin,v);
+			Math_VectorSubtract(dlLight->origin,r_origin,v);
 
-			rad = dLight->radius*0.35f;
+			rad = dlLight->radius*0.35f;
 			if(Math_Length(v) < rad)
 			{
 				// view is inside the dlight
-				a2 = dLight->radius*0.0003f;
+				a2 = dlLight->radius*0.0003f;
 				vViewBlend[3] = b = vViewBlend[3]+a2*(1-vViewBlend[3]);
 				a2 = a2/b;
 
 				// [7/5/2012] Make sure it shows the lights colour ~hogsy
-				vViewBlend[0] = vViewBlend[1]*(1-a2)+((1.0f/255)*dLight->color[RED])*a2;
-				vViewBlend[1] = vViewBlend[1]*(1-a2)+((1.0f/255)*dLight->color[GREEN])*a2;
-				vViewBlend[2] = vViewBlend[2]*(1-a2)+((1.0f/255)*dLight->color[BLUE])*a2;
+				vViewBlend[0] = vViewBlend[1]*(1-a2)+((1.0f/255)*dlLight->color[RED])*a2;
+				vViewBlend[1] = vViewBlend[1]*(1-a2)+((1.0f/255)*dlLight->color[GREEN])*a2;
+				vViewBlend[2] = vViewBlend[2]*(1-a2)+((1.0f/255)*dlLight->color[BLUE])*a2;
 				return;
 			}
 
-			glBegin(GL_TRIANGLE_FAN);
 			// [7/5/2012] Make sure it shows the lights colour ~hogsy
-			glColor3ub(dLight->color[RED],dLight->color[GREEN],dLight->color[BLUE]);
+			glColor3ub(dlLight->color[RED],dlLight->color[GREEN],dlLight->color[BLUE]);
 
 			for(i = 0; i < 3; i++)
-				v[i] = dLight->origin[i]-vpn[i]*rad;
+				v[i] = dlLight->origin[i]-vpn[i]*rad;
 
-			glVertex3fv(v);
-			glColor3f(0,0,0);
+			Math_VectorCopy(v,voLight[0].vVertex);
 
-			for(i = 16; i >= 0; i--)
+			for(i = 16; i >= 0; i--,c++)
 			{
+				vec3_t	vColour;
+
 				a = i/16.0f*pMath_PI*2.0f;
 
 				for(j = 0; j < 3; j++)
-					v[j] = dLight->origin[j]+vright[j]*cos(a)*rad+vup[j]*sin(a)*rad;
+					v[j] = dlLight->origin[j]+vright[j]*cos(a)*rad+vup[j]*sin(a)*rad;
 
-				glVertex3fv(v);
+				Math_VectorCopy(v,voLight[c].vVertex);
+				Math_ColorNormalize(dlLight->color,vColour);
+				Math_VectorCopy(vColour,voLight[c].vColour);
+
+				voLight[c].vColour[3] = 0.5f;
 			}
 
-			glEnd();
+			Video_DrawObject(voLight,VIDEO_PRIMITIVE_TRIANGLE_FAN,17,false);
 		}
 	}
 
-	glColor3f(1.0f,1.0f,1.0f);
-	glDisable(GL_BLEND);
-	glEnable(GL_TEXTURE_2D);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	glDepthMask(true);
+	Video_ResetCapabilities(true);
 }
 
 void Light_MarkLights(DynamicLight_t *light,int bit,mnode_t *node)
@@ -310,7 +317,7 @@ loc0:
 				line3 = smax*3;
 				lightmap = surf->samples+((dt>>4)*smax+(ds>>4))*3; // LordHavoc: *3 for color
 
-				for (maps = 0;maps < MAXLIGHTMAPS && surf->styles[maps] != 255;maps++)
+				for (maps = 0;maps < BSP_MAX_LIGHTMAPS && surf->styles[maps] != 255;maps++)
 				{
 					scale = (float) d_lightstylevalue[surf->styles[maps]] * 1.0 / 256.0;
 					r00 += (float)lightmap[0]*scale;
@@ -454,14 +461,15 @@ void R_AddDynamicLights(msurface_t *surf)
 		cgreen	= cl_dlights[lnum].color[GREEN];
 		cblue	= cl_dlights[lnum].color[BLUE];
 
-		for (t = 0 ; t<tmax ; t++)
+		for(t = 0; t < tmax; t++)
 		{
-			td = local[1] - t*16;
-			if (td < 0)
+			td = local[1]-t*16;
+			if(td < 0)
 				td = -td;
-			for (s=0 ; s<smax ; s++)
+
+			for(s = 0; s < smax; s++)
 			{
-				sd = local[0] - s*16;
+				sd = local[0]-s*16;
 				if (sd < 0)
 					sd = -sd;
 				if (sd > td)

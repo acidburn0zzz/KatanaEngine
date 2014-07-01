@@ -15,7 +15,7 @@ typedef struct
 } lerpdata_t;
 
 void Alias_SetupFrame(MD2_t *mModel,lerpdata_t *ldLerp);
-void Alias_Draw(void);
+void Alias_Draw(entity_t *eEntity);
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData);
 
 #endif

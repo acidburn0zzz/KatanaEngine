@@ -9,9 +9,8 @@
 #include "shared_server.h"
 
 // Base includes
-#include "server_mode.h"
 #include "server_physics.h"
-#include "server_player.h"
+#include "server_mode.h"
 #include "server_monster.h"
 #include "server_misc.h"
 
@@ -48,13 +47,15 @@ bool Server_SpawnEntity(edict_t *ent);
 
 edict_t	*Entity_Spawn(void);
 
-bool Entity_CanDamage(edict_t *eEntity,edict_t *eTarget);
+bool Entity_CanDamage(edict_t *eEntity,edict_t *eTarget,int iDamageType);
+bool Entity_IsPlayer(edict_t *eEntity);
+bool Entity_IsMonster(edict_t *eEntity);
 
 void Entity_SetOrigin(edict_t *eEntity,vec3_t vOrigin);
 void Entity_SetModel(edict_t *eEntity,char *cModelPath);
 void Entity_SetSizeVector(edict_t *eEntity,vec3_t vMin,vec3_t vMax);
 void Entity_SetSize(edict_t *eEntity,float fMinA,float fMinB,float fMinC,float fMaxA,float fMaxB,float fMaxC);
-void Entity_RadiusDamage(edict_t *eInflictor,float fRadius,int iDamage);
+void Entity_RadiusDamage(edict_t *eInflictor,float fRadius,int iDamage,int iDamageType);
 void Entity_Remove(edict_t *eEntity);
 void Entity_CheckFrames(edict_t *eEntity);
 void Entity_ResetAnimation(edict_t *eEntity);

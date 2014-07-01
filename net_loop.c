@@ -1,29 +1,25 @@
-/*
-Copyright (C) 1996-2001 Id Software, Inc.
-Copyright (C) 2002-2009 John Fitzgibbons and others
+/*	Copyright (C) 1996-2001 Id Software, Inc.
+	Copyright (C) 2002-2009 John Fitzgibbons and others
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-// net_loop.c
-
 #include "quakedef.h"
 #include "net_loop.h"
 
-qboolean	localconnectpending = FALSE;
+bool	localconnectpending = false;
 
 qsocket_t	*loop_client = NULL;
 qsocket_t	*loop_server = NULL;
@@ -40,11 +36,11 @@ void Loop_Shutdown (void)
 {
 }
 
-void Loop_Listen (qboolean state)
+void Loop_Listen (bool state)
 {
 }
 
-void Loop_SearchForHosts (qboolean xmit)
+void Loop_SearchForHosts (bool xmit)
 {
 	if (!sv.active)
 		return;
@@ -66,7 +62,7 @@ qsocket_t *Loop_Connect (char *host)
 	if (Q_strcmp(host,"local") != 0)
 		return NULL;
 
-	localconnectpending = TRUE;
+	localconnectpending = true;
 
 	if (!loop_client)
 	{
@@ -81,7 +77,7 @@ qsocket_t *Loop_Connect (char *host)
 
 	loop_client->receiveMessageLength	= 0;
 	loop_client->sendMessageLength		= 0;
-	loop_client->canSend				= TRUE;
+	loop_client->canSend				= true;
 
 	if(!loop_server)
 	{
@@ -96,7 +92,7 @@ qsocket_t *Loop_Connect (char *host)
 
 	loop_server->receiveMessageLength	= 0;
 	loop_server->sendMessageLength		= 0;
-	loop_server->canSend				= TRUE;
+	loop_server->canSend				= true;
 
 	loop_client->driverdata = (void *)loop_server;
 	loop_server->driverdata = (void *)loop_client;
@@ -109,21 +105,21 @@ qsocket_t *Loop_CheckNewConnections (void)
 	if (!localconnectpending)
 		return NULL;
 
-	localconnectpending = FALSE;
+	localconnectpending = false;
 
 	loop_server->sendMessageLength		= 0;
 	loop_server->receiveMessageLength	= 0;
-	loop_server->canSend				= TRUE;
+	loop_server->canSend				= true;
 	loop_client->sendMessageLength		= 0;
 	loop_client->receiveMessageLength	= 0;
-	loop_client->canSend				= TRUE;
+	loop_client->canSend				= true;
 
 	return loop_server;
 }
 
 static int IntAlign(int value)
 {
-	return (value + (sizeof(int) - 1)) & (~(sizeof(int) - 1));
+	return (value+(sizeof(int)-1)) & (~(sizeof(int)-1));
 }
 
 int Loop_GetMessage (qsocket_t *sock)
@@ -216,18 +212,16 @@ int Loop_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data)
 	return 1;
 }
 
-
-qboolean Loop_CanSendMessage (qsocket_t *sock)
+bool Loop_CanSendMessage (qsocket_t *sock)
 {
 	if (!sock->driverdata)
-		return FALSE;
+		return false;
 	return sock->canSend;
 }
 
-
-qboolean Loop_CanSendUnreliableMessage (qsocket_t *sock)
+bool Loop_CanSendUnreliableMessage (qsocket_t *sock)
 {
-	return TRUE;
+	return true;
 }
 
 

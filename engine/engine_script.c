@@ -314,7 +314,7 @@ void Script_Load(/*const */char *ccPath)
 
 			Con_Warning("Invalid field! (%s) (%i)\n",ccPath,iScriptLine);
 		}
-	} while(1);
+	} while(true);
 
 FREE:
 	free(cData);

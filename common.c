@@ -195,7 +195,7 @@ void Q_strcat (char *dest, char *src)
 
 int Q_strcmp (char *s1, char *s2)
 {
-	while (1)
+	for(;;)
 	{
 		if (*s1 != *s2)
 			return -1;              // strings not equal
@@ -204,13 +204,11 @@ int Q_strcmp (char *s1, char *s2)
 		s1++;
 		s2++;
 	}
-
-	return -1;
 }
 
 int Q_strncmp (char *s1, char *s2, int count)
 {
-	while (1)
+	for(;;)
 	{
 		if (!count--)
 			return 0;
@@ -221,8 +219,6 @@ int Q_strncmp (char *s1, char *s2, int count)
 		s1++;
 		s2++;
 	}
-
-	return -1;
 }
 
 int Q_atoi (char *str)
@@ -247,7 +243,7 @@ int Q_atoi (char *str)
 	if (str[0] == '0' && (str[1] == 'x' || str[1] == 'X') )
 	{
 		str += 2;
-		while (1)
+		for(;;)
 		{
 			c = *str++;
 			if (c >= '0' && c <= '9')
@@ -268,15 +264,13 @@ int Q_atoi (char *str)
 //
 // assume decimal
 //
-	while (1)
+	for(;;)
 	{
 		c = *str++;
 		if (c <'0' || c > '9')
 			return val*sign;
 		val = val*10 + c - '0';
 	}
-
-	return 0;
 }
 
 float Q_atof (char *str)
@@ -300,7 +294,7 @@ float Q_atof (char *str)
 	if (str[0] == '0' && (str[1] == 'x' || str[1] == 'X') )
 	{
 		str += 2;
-		while (1)
+		for(;;)
 		{
 			c = *str++;
 			if (c >= '0' && c <= '9')
@@ -321,7 +315,7 @@ float Q_atof (char *str)
 	// Assume decimal
 	decimal = -1;
 	total = 0;
-	while (1)
+	for(;;)
 	{
 		c = *str++;
 		if (c == '.')

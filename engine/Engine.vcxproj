@@ -249,7 +249,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>.;..\;..\shared;..\platform\include;..\external\sdl2\include;..\external\glee;..\external\anttweakbar\include;..\external\openal-soft\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\;..\shared;..\platform\include;..\external\sdl2\include;..\external\glee;..\external\anttweakbar\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_AFX_SECURE_NO_WARNINGS;_ATL_SECURE_NO_WARNINGS;KATANA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
       <BrowseInformation>true</BrowseInformation>
@@ -278,8 +278,8 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <OutputFile>..\bin\engine\engine.x86.dll</OutputFile>
-      <AdditionalDependencies>libOpenAL32.dll.a;opengl32.lib;comctl32.lib;winmm.lib;wsock32.lib;SDL2.lib;anttweakbar.lib;platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\platform\lib;..\external\sdl2\lib\x86;..\external\openal-soft\lib\win32;..\external\anttweakbar\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;comctl32.lib;winmm.lib;wsock32.lib;SDL2.lib;anttweakbar.lib;platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\platform\lib;..\external\sdl2\lib\x86;..\external\anttweakbar\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>
     </Link>
@@ -489,7 +489,6 @@
     <ClCompile Include="..\console.c" />
     <ClCompile Include="..\crc.c" />
     <ClCompile Include="..\external\glee\GLee.c" />
-    <ClCompile Include="..\gl_alias.c" />
     <ClCompile Include="..\gl_draw.c" />
     <ClCompile Include="..\gl_fog.c" />
     <ClCompile Include="..\gl_model.c" />
@@ -514,7 +513,6 @@
     <ClCompile Include="..\pr_edict.c" />
     <ClCompile Include="..\r_brush.c" />
     <ClCompile Include="..\r_world.c" />
-    <ClCompile Include="..\sbar.c" />
     <ClCompile Include="..\shared\shared_math.c" />
     <ClCompile Include="..\shared\shared_png.c" />
     <ClCompile Include="..\snd_dma.c" />
@@ -524,6 +522,7 @@
     <ClCompile Include="..\sv_user.c" />
     <ClCompile Include="..\sys_win.c" />
     <ClCompile Include="..\zone.c" />
+    <ClCompile Include="engine_alias.c" />
     <ClCompile Include="engine_audio.c" />
     <ClCompile Include="engine_client.c" />
     <ClCompile Include="engine_command.c" />
@@ -561,6 +560,7 @@
     <ClInclude Include="..\shared\shared_module.h" />
     <ClInclude Include="..\shared\shared_png.h" />
     <ClInclude Include="..\shared\shared_server.h" />
+    <ClInclude Include="engine_editor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

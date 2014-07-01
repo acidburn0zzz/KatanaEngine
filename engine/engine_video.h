@@ -3,8 +3,6 @@
 #ifndef __ENGINEVIDEO__
 #define __ENGINEVIDEO__
 
-#include "quakedef.h"
-
 #include <SDL.h>
 
 extern cvar_t	cvShowModels,	// Should we draw models?
@@ -85,11 +83,11 @@ typedef enum
 typedef enum
 {
     VIDEO_BLEND_IGNORE, // Don't bother changing blend mode.
-    VIDEO_BLEND_ONE,    // ONE ONE
-    VIDEO_BLEND_TWO,    // RENAME!!!
-    VIDEO_BLEND_THREE,  // GL_DST_COLOR, GL_SRC_COLOR
 
-    VIDEO_BLEND_ZERO    // ZERO ZERO
+    VIDEO_BLEND_ONE,    // ONE			ONE
+    VIDEO_BLEND_TWO,    // SRC_ALPHA	ONE_MINUS_SRC_ALPHA
+    VIDEO_BLEND_THREE,  // DST_COLOR	SRC_COLOR
+    VIDEO_BLEND_ZERO    // ZERO			ZERO
 } VideoBlend_t;
 
 #define VIDEO_DEPTH_TRUE    true

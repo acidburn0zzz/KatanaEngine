@@ -338,7 +338,7 @@ void R_SetupView (void)
 	if (r_waterwarp.value)
 	{
 		int contents = Mod_PointInLeaf (r_origin, cl.worldmodel)->contents;
-		if (contents == BSP_CONTENTS_WATER || contents == BSP_CONTENTS_SLIME || contents == CONTENTS_LAVA)
+		if (contents == BSP_CONTENTS_WATER || contents == BSP_CONTENTS_SLIME || contents == BSP_CONTENTS_LAVA)
 		{
 			//variance is a percentage of width, where width = 2 * tan(fov / 2) otherwise the effect is too dramatic at high FOV and too subtle at low FOV.  what a mess!
 			r_fovx = atan(tan(DEG2RAD(r_refdef.fov_x) / 2) * (0.97 + sin(cl.time * 1.5) * 0.03)) * 2 / M_PI_DIV_180;
@@ -397,9 +397,14 @@ void R_DrawEntitiesOnList(bool bAlphaPass) //johnfitz -- added parameter
 
 		switch(currententity->model->mType)
 		{
-			case MODEL_MD2:
-				Alias_Draw();
+			case MODEL_TYPE_MD2:
+				Alias_Draw(currententity);
 				break;
+#if 0
+			case MODEL_TYPE_OBJ:
+				Model_DrawOBJ(currententity);
+				break;
+#endif
 			case MODEL_BRUSH:
 				Brush_Draw(currententity);
 				break;
@@ -420,13 +425,13 @@ void R_DrawViewModel(void)
 		return;
 
 	currententity = &cl.viewent;
-	if(!currententity->model || currententity->model->mType != MODEL_MD2)
+	if(!currententity->model || currententity->model->mType != MODEL_TYPE_MD2)
 		return;
 
 	// hack the depth range to prevent view model from poking into walls
 	glDepthRange(0,0.3);
 
-	Alias_Draw();
+	Alias_Draw(currententity);
 
 	glDepthRange(0,1);
 }
@@ -584,7 +589,7 @@ void R_ShowTris(void)
 			case MODEL_BRUSH:
 				R_DrawBrushModel_ShowTris (currententity);
 				break;
-			case MODEL_MD2:
+			case MODEL_TYPE_MD2:
 				R_DrawAliasModel_ShowTris (currententity);
 				break;
 			case MODEL_SPRITE:
@@ -601,7 +606,7 @@ void R_ShowTris(void)
 			&& cl.stats[STAT_HEALTH] > 0
 			&& !(cl.items & IT_INVISIBILITY)
 			&& currententity->model
-			&& currententity->model->mType == MODEL_MD2)
+			&& currententity->model->mType == MODEL_TYPE_MD2)
 		{
 			glDepthRange(0,0.3);
 			R_DrawAliasModel_ShowTris(currententity);
@@ -629,9 +634,7 @@ void R_DrawShadows (void)
 	{
 		currententity = cl_visedicts[i];
 
-		if(currententity->model->mType != MODEL_MD2)
-			continue;
-		else if(currententity == &cl.viewent)
+		if(currententity == &cl.viewent)
 			return;
 
 		Draw_Shadow(currententity);
