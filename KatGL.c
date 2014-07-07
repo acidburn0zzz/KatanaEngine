@@ -4,7 +4,6 @@
 
 /*
 	Contains all basic drawing routines.
-	Any API-specific code towards OpenGL should only be here!
 	TODO:
 		Rename to engine_draw!
 */
@@ -258,14 +257,15 @@ void R_DrawString(int x,int y,char *msg)
 */
 void Draw_Shadow(entity_t *ent)
 {
-	lerpdata_t	lerpdata;
-	float		fShadowMatrix[16] =
+	MathVector_t	mvLightVector;
+	lerpdata_t		lerpdata;
+	float			fShadowMatrix[16] =
 	{	1,		0,		0,		0,
 		0,		1,		0,		0,
 		0,		0,		0,		0,
 		0,		0,		0.1f,	1	};
-	float		lheight,fShadowScale[2],
-				fShadowAlpha = 0;
+	float			lheight,fShadowScale[2],
+					fShadowAlpha = 0;
 
 	if(ENTALPHA_DECODE(ent->alpha) <= 0)
 		return;
@@ -281,6 +281,7 @@ void Draw_Shadow(entity_t *ent)
 		return;
 
 	// Allow us to cast shadows from entities that use bmodels. ~hogsy
+	// TODO: Add a flag for this, rather than checking a string everytime... ~hogsy
 	if(!strstr(ent->model->name,".") || !strstr(ent->model->name,"/"))
 		return;
 
@@ -308,14 +309,10 @@ void Draw_Shadow(entity_t *ent)
 
 		Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
 
-		//glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-
 		glTranslatef(ent->origin[0],ent->origin[1],ent->origin[2]);
 		glTranslatef(0,0,-lheight+0.1f);
 
 		Video_DrawFill(voShadow);
-
-		//glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 
 		glTranslatef(0,0,lheight+0.1);
 		glPopMatrix();
