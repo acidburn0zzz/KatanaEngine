@@ -31,3 +31,4 @@ Release/Menu.lib
 Release/Example Game.lib
 *.dll
 bin/engine/logs/
+/.project
