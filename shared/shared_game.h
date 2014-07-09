@@ -15,8 +15,15 @@ typedef struct link_s
 
 enum
 {
-	DAMAGE_TYPE_NONE,
-	DAMAGE_TYPE_EXPLOSIVE
+	DAMAGE_TYPE_NORMAL,
+	DAMAGE_TYPE_EXPLOSIVE,
+	DAMAGE_TYPE_BURN,
+	DAMAGE_TYPE_FREEZE,
+	DAMAGE_TYPE_EXPLODE,
+	DAMAGE_TYPE_GRAVITY,
+	DAMAGE_TYPE_CRUSH,
+
+	DAMAGE_TYPE_NONE
 };
 
 typedef struct edict_s edict_t;
@@ -107,8 +114,7 @@ typedef struct
 	int			frame;
 	float		skin;
 	int			effects;
-	vec3_t		mins;
-	vec3_t		maxs;
+	vec3_t		mins,maxs;
 	vec3_t		size;
 	void		(*TouchFunction)(edict_t *eEntity,edict_t *eOther);
 	void		(*use)(edict_t *ent);

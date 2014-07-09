@@ -115,15 +115,6 @@ char *BotNames[] =
 	"[BOT] Castor"
 };
 
-enum
-{
-	BOT_DEFAULT,
-#ifdef OPENKATANA
-	BOT_MIKIKO,
-	BOT_SUPERFLY
-#endif
-};
-
 void Bot_Run(edict_t *ent);
 void Bot_Pain(edict_t *ent,edict_t *other);
 void Bot_Die(edict_t *ent,edict_t *other);
@@ -194,12 +185,21 @@ void Bot_Spawn(edict_t *eBot)
 
 	eBot->local.bBleed	= true;
 
-	// [16/7/2012] Must be set after teams are set up ~hogsy
-	eSpawnPoint = Entity_SpawnPoint(eBot,iSpawnType);
-	if(!eSpawnPoint)
+	eBot->monster.Think = Bot_Think;
+
+    // Mikiko and Superfly are set manually to avoid issues... ~hogsy
+	if(eBot->local.style == BOT_DEFAULT)
 	{
-		Engine.Con_Warning("%s failed to find spawnpoint!\n",eBot->v.netname);
-		ENTITY_REMOVE(eBot);
+        // [16/7/2012] Must be set after teams are set up ~hogsy
+        eSpawnPoint = Entity_SpawnPoint(eBot,iSpawnType);
+        if(!eSpawnPoint)
+        {
+            Engine.Con_Warning("%s failed to find spawnpoint!\n",eBot->v.netname);
+            ENTITY_REMOVE(eBot);
+        }
+
+        Entity_SetOrigin(eBot,eSpawnPoint->v.origin);
+        SetAngle(eBot,eSpawnPoint->v.angles);
 	}
 
 	// [15/7/2012] Set the initial state to awake ~hogsy
@@ -209,8 +209,6 @@ void Bot_Spawn(edict_t *eBot)
 	eBot->monster.iType			= MONSTER_PLAYER;
 
 	Entity_SetModel(eBot,eBot->v.model);
-	Entity_SetOrigin(eBot,eSpawnPoint->v.origin);
-	SetAngle(eBot,eSpawnPoint->v.angles);
 	Entity_SetSize(eBot,-16.0f,-16.0f,-24.0f,16.0f,16.0f,32.0f);
 
 	Monster_SetState(eBot,STATE_AWAKE);

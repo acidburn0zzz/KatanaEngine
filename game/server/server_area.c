@@ -20,8 +20,6 @@ void Area_SetMoveDirection(vec3_t vAngles,vec3_t vMoveDirection)
 			vDown		= { 0,	-2, 0	},
 			vMoveDown	= { 0,	0,	-1	};
 
-	Engine.Con_Printf("Area_SetMoveDirection\n");
-
 	if(Math_VectorCompare(vAngles,vUp))
 		Math_VectorCopy(vMoveUp,vMoveDirection);
 	else if(Math_VectorCompare(vAngles,vDown))
@@ -34,8 +32,6 @@ void Area_SetMoveDirection(vec3_t vAngles,vec3_t vMoveDirection)
 
 void Area_CalculateMovementDone(edict_t *eArea)
 {
-	Engine.Con_Printf("Area_CalculateMovementDone\n");
-
 	Entity_SetOrigin(eArea,eArea->local.finaldest);
 
 	// [17/7/2012] Simplified ~hogsy
@@ -50,25 +46,12 @@ void Area_CalculateMovement(edict_t *eArea,vec3_t vTDest,float fSpeed,void (*Fun
 	vec3_t	vdestdelta;
 	float	fTravelTime;
 
-	Engine.Con_Printf("Area_CalculateMovement\n");
-
 	Math_VectorCopy(vTDest,eArea->local.finaldest);
-
-	Engine.Con_Printf("TDEST: %i(X) %i(Y) %i(Z)\nORIGIN: %i(X) %i(Y) %i(Z)\n",
-					  vTDest[0],vTDest[1],vTDest[2],
-					  eArea->v.origin[0],eArea->v.origin[1],eArea->v.origin[2]);
 
 	// [14/10/2013] Simplified ~hogsy
 	Math_VectorSubtract(vTDest,eArea->v.origin,vdestdelta);
 
-	Engine.Con_Printf("VDEST: %i(X) %i(Y) %i(Z)\n",
-		(int)vdestdelta[0],
-		(int)vdestdelta[1],
-		(int)vdestdelta[2]);
-
 	fTravelTime = (float)Math_VectorLength(vdestdelta)/fSpeed;
-
-	Engine.Con_Printf("traveltime: %f\n",fTravelTime);
 
 	// [13/12/2013] Simplified ~hogsy
 	Math_VectorScale(vdestdelta,1.0f/fTravelTime,eArea->v.velocity);
@@ -276,7 +259,7 @@ void Area_RotateBlocked(edict_t *eArea,edict_t *eOther)
 	if(eOther->v.iHealth <= 0)
 		return;
 
-	MONSTER_Damage(eOther,eArea,eArea->local.iDamage, 0);
+	MONSTER_Damage(eOther,eArea,eArea->local.iDamage,DAMAGE_TYPE_CRUSH);
 }
 
 void Area_RotateTouch(edict_t *eArea,edict_t *eOther)
@@ -504,7 +487,7 @@ void Area_ChangeLevelTouch(edict_t *eArea,edict_t *eOther)
 {
 	// [2/1/2013] TODO: If coop wait for eOther players? ~hogsy
 
-	if((eOther->monster.iType != MONSTER_PLAYER))
+	if(!Entity_IsPlayer(eOther))
 		return;
 
 #if 0

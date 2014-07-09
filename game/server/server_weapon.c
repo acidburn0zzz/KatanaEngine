@@ -414,6 +414,7 @@ bool Weapon_CheckPrimaryAmmo(Weapon_t *wWeapon,edict_t *eEntity)
 			return true;
 		break;
 #endif
+    case AM_PROJECTILE:
 	case AM_MELEE:
 	case AM_SWITCH:
 	case AM_NONE:
@@ -656,10 +657,11 @@ void Weapon_CheckInput(edict_t *eEntity)
 			break;
 		case 7:
 			iNewWeapon = WEAPON_IONRIFLE;
-#endif
+#elif GAME_ADAMAS
 		case 1:
 			iNewWeapon = WEAPON_BLAZER;
 			break;
+#endif
 		default:
 			iNewWeapon = WEAPON_NONE;
 		}

@@ -101,12 +101,33 @@ void Point_Start(edict_t *ent)
 		if(	(ent->local.style != INFO_PLAYER_START)		&&
 			(ent->local.style != INFO_PLAYER_MIKIKO)	&&
 			(ent->local.style != INFO_PLAYER_SUPERFLY))
+        {
+            Engine.Con_Warning("Invalid start style! (%i)\n",ent->local.style);
+
 			ENTITY_REMOVE(ent);
+        }
+
+        if(ent->local.style == INFO_PLAYER_SUPERFLY)
+        {
+            ent->local.style = BOT_SUPERFLY;
+
+            Bot_Spawn(ent);
+        }
+        else if(ent->local.style == INFO_PLAYER_MIKIKO)
+        {
+            ent->local.style = BOT_MIKIKO;
+
+            Bot_Spawn(ent);
+        }
 		break;
 #ifdef OPENKATANA
 	case MODE_CAPTURETHEFLAG:
 		if((ent->local.style != INFO_PLAYER_CTF) || !ent->local.pTeam)
+        {
+            Engine.Con_Warning("Invalid start style! (%i)\n",ent->local.style);
+
 			ENTITY_REMOVE(ent);
+        }
 
 		if(ent->local.pTeam == TEAM_RED)
 			ent->v.cClassname = "point_start_red";
@@ -118,12 +139,20 @@ void Point_Start(edict_t *ent)
 			(ent->local.style != INFO_PLAYER_MIKIKO)	&&
 			(ent->local.style != INFO_PLAYER_SUPERFLY)	&&
 			(ent->local.style != INFO_PLAYER_COOP))
+        {
+            Engine.Con_Warning("Invalid start style! (%i)\n",ent->local.style);
+
 			ENTITY_REMOVE(ent);
+        }
 		break;
 	case MODE_DEATHMATCH:
 	case MODE_VEKTAR:
 		if(ent->local.style != INFO_PLAYER_DEATHMATCH)
+        {
+            Engine.Con_Warning("Invalid start style! (%i)\n",ent->local.style);
+
 			ENTITY_REMOVE(ent);
+        }
 
 		ent->v.cClassname = "point_start_deathmatch";
 		break;
@@ -708,15 +737,6 @@ void Point_EffectSpawn(edict_t *eEntity)
 	Damage
 */
 
-enum
-{
-	DAMAGE_NORMAL,
-	DAMAGE_BURN,
-	DAMAGE_FREEZE,
-	DAMAGE_EXPLODE,
-	DAMAGE_GRAVITY
-};
-
 void Point_DamageUse(edict_t *eEntity)
 {
 	MONSTER_Damage(eEntity->local.activator,eEntity,eEntity->local.iDamage,DAMAGE_TYPE_NONE);
@@ -942,7 +962,6 @@ void Point_LogicThink(edict_t *eEntity)
 
 void Point_LogicSpawn(edict_t *eEntity)
 {
-
 	if(!eEntity->local.cTarget1)
 	{
 		Engine.Con_Warning("No target1 set for point_logic! (%i %i %i)\n",
