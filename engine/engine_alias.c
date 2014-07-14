@@ -248,8 +248,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
 #if 1 // new
-	int					i,j,k,
-						iVert = 0;
+	int					i,j,k,iVert;
 	float               fAlpha;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
 	MD2TriangleVertex_t	*mtvVertices,
@@ -284,7 +283,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	{
 		mtTriangles	= (MD2Triangle_t*)((uint8_t*)mModel+mModel->ofs_tris);
 
-		for(i = 0; i < mModel->numtris; i++,iVert++,mtTriangles++)
+		for(iVert = 0,i = 0; i < mModel->numtris; i++,iVert++,mtTriangles++)
 		{
 			if(!mtTriangles)
 				break;
@@ -294,12 +293,10 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
                 for(j = 0; j < 3; j++)
                 {
                     voModel[iVert].vVertex[j]	= mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+translate1[j];
-                    voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
+//                    voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
 
-//					voModel[iVert].vTextureCoord[1][0]	=
-//					voModel[iVert].vTextureCoord[0][0]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/mModel->skinwidth;
-//					voModel[iVert].vTextureCoord[1][1]	=
-//					voModel[iVert].vTextureCoord[0][1]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/mModel->skinheight;
+					//voModel[iVert].vTextureCoord[0][0]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/mModel->skinwidth;
+					//voModel[iVert].vTextureCoord[0][1]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/mModel->skinheight;
 
                     if(bShading)
                         voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;

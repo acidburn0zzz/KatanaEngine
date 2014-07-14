@@ -8,7 +8,7 @@
 		<Build>
 			<Target title="x64">
 				<Option platforms="Windows;Unix;" />
-				<Option output="../../../game.x64.so" prefix_auto="0" extension_auto="0" />
+				<Option output="../bin/openkatana/game.x64.so" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="../../../../../dev/ProjectKatana/trunk/bin" />
 				<Option object_output="obj/Release/" />
 				<Option type="3" />
@@ -57,19 +57,19 @@
 		<Linker>
 			<Add directory="../platform/lib" />
 		</Linker>
-		<Unit filename="../../../../katana-engine/trunk/shared/shared_client.h" />
-		<Unit filename="../../../../katana-engine/trunk/shared/shared_editor.h" />
-		<Unit filename="../../../../katana-engine/trunk/shared/shared_engine.h" />
-		<Unit filename="../../../../katana-engine/trunk/shared/shared_flags.h" />
-		<Unit filename="../../../../katana-engine/trunk/shared/shared_formats.h" />
-		<Unit filename="../../../../katana-engine/trunk/shared/shared_input.h" />
-		<Unit filename="../../../../katana-engine/trunk/shared/shared_math.h" />
-		<Unit filename="../../../../katana-engine/trunk/shared/shared_menu.h" />
-		<Unit filename="../../../../katana-engine/trunk/shared/shared_module.h" />
-		<Unit filename="../../../../katana-engine/trunk/shared/shared_server.h" />
+		<Unit filename="../shared/shared_client.h" />
+		<Unit filename="../shared/shared_editor.h" />
+		<Unit filename="../shared/shared_engine.h" />
+		<Unit filename="../shared/shared_flags.h" />
+		<Unit filename="../shared/shared_game.h" />
+		<Unit filename="../shared/shared_input.h" />
 		<Unit filename="../shared/shared_math.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../shared/shared_math.h" />
+		<Unit filename="../shared/shared_menu.h" />
+		<Unit filename="../shared/shared_module.h" />
+		<Unit filename="../shared/shared_server.h" />
 		<Unit filename="client/cl_player.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -206,7 +206,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="server/server_weapon.h" />
-		<Unit filename="shared/KatShared.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

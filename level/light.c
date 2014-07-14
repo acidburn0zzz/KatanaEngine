@@ -219,6 +219,7 @@ void ParseLightEntities( void )
 		if( !vec[0] )
 			vec[0] = 1;
 		if (vec[0] != 1)
+		{
 			if (vec[0] <= 0)
 			{
 				l->type		= LIGHTTYPE_NONE;
@@ -226,6 +227,7 @@ void ParseLightEntities( void )
 			}
 			else
 				l->radius /= vec[0];
+        }
 
 		l->radius *= globallightradiusscale;
 		l->clampradius = l->radius;

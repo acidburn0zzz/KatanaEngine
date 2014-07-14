@@ -739,9 +739,7 @@ void Point_EffectSpawn(edict_t *eEntity)
 
 void Point_DamageUse(edict_t *eEntity)
 {
-	MONSTER_Damage(eEntity->local.activator,eEntity,eEntity->local.iDamage,DAMAGE_TYPE_NONE);
-
-	Engine.Con_Warning("JIRTT %i", eEntity->local.iDamage);
+	MONSTER_Damage(eEntity->local.activator,eEntity,eEntity->local.iDamage,eEntity->local.style);
 }
 
 void Point_DamageSpawn(edict_t *eEntity)
@@ -750,7 +748,7 @@ void Point_DamageSpawn(edict_t *eEntity)
 		eEntity->local.iDamage = 10;
 
 	if(!eEntity->local.style)
-		eEntity->local.style = 0;
+		eEntity->local.style = DAMAGE_TYPE_NORMAL;
 
 	eEntity->v.use = Point_DamageUse;
 

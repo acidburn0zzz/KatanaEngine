@@ -3200,3 +3200,284 @@
 	"server_main.h"
 	"server_waypoint.h"
 
+1404758672 source:/home/hogsy/git/ProjectKatana/shared/shared_math.c
+	"shared_math.h"
+	<xmmintrin.h>
+	"quakedef.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/shared/shared_math.h
+	"platform.h"
+	"platform_math.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/platform/include/platform.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"platform_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<Windows.h>
+	<WindowsX.h>
+	<CommCtrl.h>
+	<direct.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+
+1404758672 /home/hogsy/git/ProjectKatana/platform/include/platform_inttypes.h
+	"platform_stdint.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/platform/include/platform_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1404758672 /home/hogsy/git/ProjectKatana/platform/include/platform_math.h
+	"platform.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/client/cl_player.c
+	"client_main.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/client/client_main.h
+	"game_main.h"
+	"shared_client.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/game_main.h
+	"platform.h"
+	"shared_flags.h"
+	"shared_module.h"
+	"shared_math.h"
+	"shared_menu.h"
+	"shared_formats.h"
+	"shared_game.h"
+	"game_resources.h"
+
+1405350871 /home/hogsy/git/ProjectKatana/shared/shared_flags.h
+
+1404758672 /home/hogsy/git/ProjectKatana/shared/shared_module.h
+
+1404758672 /home/hogsy/git/ProjectKatana/shared/shared_menu.h
+
+1404758672 /home/hogsy/git/ProjectKatana/shared/shared_formats.h
+
+1405254829 /home/hogsy/git/ProjectKatana/shared/shared_game.h
+	"platform.h"
+	"shared_math.h"
+	"shared_client.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/shared/shared_client.h
+
+1404758672 /home/hogsy/git/ProjectKatana/game/game_resources.h
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/client/client_main.c
+	"client_main.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/game_main.c
+	"game_main.h"
+	"platform_module.h"
+	"server_player.h"
+	"client_main.h"
+	"server_physics.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/platform/include/platform_module.h
+	"platform.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/server/server_player.h
+	"server_main.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/server/server_main.h
+	"game_main.h"
+	"shared_game.h"
+	"shared_server.h"
+	"server_physics.h"
+	"server_mode.h"
+	"server_monster.h"
+	"server_misc.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/shared/shared_server.h
+
+1404758672 /home/hogsy/git/ProjectKatana/game/server/server_physics.h
+	"server_main.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/server/server_mode.h
+	"server_main.h"
+
+1404863375 /home/hogsy/git/ProjectKatana/game/server/server_monster.h
+	"server_main.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/server/server_misc.h
+	"server_main.h"
+
+1404863710 source:/home/hogsy/git/ProjectKatana/game/server/monster_bot.c
+	"server_main.h"
+	"server_monster.h"
+	"server_waypoint.h"
+	"server_weapon.h"
+	"server_player.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/server/server_waypoint.h
+	"server_main.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/server/server_weapon.h
+	"server_main.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/mode_ctf.c
+	"server_mode.h"
+	"server_monster.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/mode_deathmatch.c
+	"server_main.h"
+	"server_item.h"
+	"server_weapon.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/server/server_item.h
+	"shared_game.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/mode_vektar.c
+	"mode_vektar.h"
+	"server_waypoint.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/server/openkatana/mode_vektar.h
+	"server_mode.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/monster_inmater.c
+	"server_monster.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/monster_lasergat.c
+	"server_monster.h"
+	"server_waypoint.h"
+	"server_weapon.h"
+	"server_item.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/monster_prisoner.c
+	"server_monster.h"
+	"server_waypoint.h"
+	"server_weapon.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_axe.c
+	"server_weapon.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_ballista.c
+	"server_weapon.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_barrier.c
+	"server_weapon.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_c4vizatergo.c
+	"server_weapon.h"
+	"server_player.h"
+	"server_physics.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_daikatana.c
+	"server_weapon.h"
+	"server_player.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_discus.c
+	"server_main.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_glock.c
+	"server_weapon.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_greekfire.c
+	"server_main.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_ionblaster.c
+	"server_weapon.h"
+	"server_player.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_ionrifle.c
+	"server_weapon.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_kineticore.c
+	"server_main.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_midas.c
+	"server_main.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_pulserifle.c
+	"server_weapon.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_shockwave.c
+	"server_weapon.h"
+	"server_player.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_shotcycler6.c
+	"server_weapon.h"
+	"server_player.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_sidewinder.c
+	"server_weapon.h"
+	"server_player.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_trident.c
+	"server_main.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/openkatana/weapon_zeus.c
+	"server_main.h"
+
+1404845890 source:/home/hogsy/git/ProjectKatana/game/server/server_area.c
+	"server_main.h"
+	"server_waypoint.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/server_deco.c
+	"server_main.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/server_entity.c
+	"server_main.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/server_item.c
+	"server_main.h"
+	"server_item.h"
+
+1404862618 source:/home/hogsy/git/ProjectKatana/game/server/server_main.c
+	"server_main.h"
+	"server_waypoint.h"
+	"server_weapon.h"
+	"server_item.h"
+	"openkatana/mode_vektar.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/server_misc.c
+	"server_misc.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/server_monster.c
+	"server_monster.h"
+	"server_player.h"
+	"server_item.h"
+	"server_weapon.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/server_physics.c
+	"server_physics.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/server_player.c
+	"server_player.h"
+	"server_waypoint.h"
+	"server_vehicle.h"
+	"server_weapon.h"
+	"server_item.h"
+
+1404758672 /home/hogsy/git/ProjectKatana/game/server/server_vehicle.h
+	"server_main.h"
+
+1405350215 source:/home/hogsy/git/ProjectKatana/game/server/server_point.c
+	"server_main.h"
+	"server_waypoint.h"
+	"server_vehicle.h"
+	"server_physics.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/server_vehicle.c
+	"server_vehicle.h"
+
+1404758672 source:/home/hogsy/git/ProjectKatana/game/server/server_waypoint.c
+	"server_waypoint.h"
+
+1404820113 source:/home/hogsy/git/ProjectKatana/game/server/server_weapon.c
+	"server_weapon.h"
+	"server_item.h"
+	"server_player.h"
+

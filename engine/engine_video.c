@@ -342,7 +342,7 @@ bool Video_CreateWindow(void)
 	glClearColor(0,0,0,0);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
-	glAlphaFunc(GL_GREATER,0.4f);
+	glAlphaFunc(GL_GREATER,0.25f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glShadeModel(GL_SMOOTH);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
@@ -551,7 +551,8 @@ void Video_DrawObject(
 	unsigned            int	uiTriangles,
 	bool				    bMultiTexture)
 {
-	int i;
+    GLenum  gPrimitive;
+	int     i;
 
 	if(!voObject)
         Sys_Error("Invalid video object!\n");
@@ -572,28 +573,25 @@ void Video_DrawObject(
 	}
 
     // [11/3/2014] Support different primitive types; TODO: Move into its own function? ~hogsy
+    switch(vpPrimitiveType)
     {
-        GLenum gPrimitive;
+    case VIDEO_PRIMITIVE_TRIANGLES:
+        gPrimitive = GL_TRIANGLES;
+        break;
+    case VIDEO_PRIMITIVE_TRIANGLE_FAN:
+        gPrimitive = GL_TRIANGLE_FAN;
+        break;
+    default:
+        // [16/3/2014] Anything else and give us an error ~hogsy
+        Sys_Error("Unknown object primitive type! (%i)\n",vpPrimitiveType);
+        // Return to resolve VS warning.
+        return;
+    }
 
-        switch(vpPrimitiveType)
-        {
-        case VIDEO_PRIMITIVE_TRIANGLES:
-            gPrimitive = GL_TRIANGLES;
-            break;
-        case VIDEO_PRIMITIVE_TRIANGLE_FAN:
-            gPrimitive = GL_TRIANGLE_FAN;
-            break;
-        default:
-            // [16/3/2014] Anything else and give us an error ~hogsy
-            Sys_Error("Unknown object primitive type! (%i)\n",vpPrimitiveType);
-			// Return to resolve VS warning.
-			return;
-        }
+#if 0
+    glBegin(gPrimitive);
 
-        glBegin(gPrimitive);
-	}
-
-	for(i = 0; i < uiTriangles; i++)
+    for(i = 0; i < uiTriangles; i++)
 	{
 		if(!r_showtris.value)
 		{
@@ -611,8 +609,6 @@ void Video_DrawObject(
 		glVertex3fv(voObject[i].vVertex);
 	}
 
-	glEnd();
-
 	if(r_showtris.value > 0)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
@@ -621,6 +617,13 @@ void Video_DrawObject(
 
 		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
 	}
+#else
+    glEnableClientState(GL_COLOR_ARRAY);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3,GL_FLOAT,3,&voObject);
+    glVertexPoi
+	glDrawArrays(gPrimitive,0,uiTriangles);
+#endif
 
 	bVideoIgnoreCapabilities = false;
 
@@ -821,7 +824,7 @@ void Video_Process(void)
     if(bVideoDebug)
     {
         Console_WriteToLog(cvVideoDebugLog.string,"Video: End of frame\n");
-        
+
 		bVideoDebug = false;
     }
 #else	// New renderer

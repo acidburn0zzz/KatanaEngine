@@ -21,8 +21,9 @@
 #define INPUT_MIN_ZONE			3000
 
 // [29/7/2012] Changing mouselook over to a cvar ~hogsy
-cvar_t	cvInputMouseLook	= {	"input_mouselook",		"1",	true,   false,  "Enables and disables the ability to use the mouse to look around."	};
-cvar_t	cvInputMouseFilter	= {	"input_mousefilter",	"0",	true,   false,  "Filters out mouse input so it responds more smoothly."	            };
+cvar_t	cvInputMouseLook	= {	"input_mouselook",		"1",	true,   false,  "Enables and disables the ability to use the mouse to look around."	    },
+        cvInputMouseFilter	= {	"input_mousefilter",	"0",	true,   false,  "Filters out mouse input so it responds more smoothly."	                },
+        cvInputMouseGrab    = { "input_mousegrab",      "1",    true,   false,  "If enabled, the mouse is automatically hidden and limited to window."  };
 
 extern cvar_t	joy_pitchsensitivity;
 
@@ -59,6 +60,7 @@ void Input_Initialize(void)
 	// [29/7/2012] Register input cvars ~hogsy
 	Cvar_RegisterVariable(&cvInputMouseLook,NULL);
 	Cvar_RegisterVariable(&cvInputMouseFilter,NULL);
+	Cvar_RegisterVariable(&cvInputMouseGrab,NULL);
 
 	Cmd_AddCommand("input_tweak",Input_OpenTweakMenu);
 
@@ -429,9 +431,12 @@ void Input_ActivateMouse(void)
 	if(bMouseActive)
 		return;
 
-	SDL_ShowCursor(false);
-	SDL_SetWindowGrab(sMainWindow,SDL_TRUE);
-	SDL_WarpMouseInWindow(sMainWindow,Video.iWidth/2,Video.iHeight/2);
+    if(cvInputMouseGrab.bValue)
+    {
+        SDL_ShowCursor(false);
+        SDL_SetWindowGrab(sMainWindow,SDL_TRUE);
+        SDL_WarpMouseInWindow(sMainWindow,Video.iWidth/2,Video.iHeight/2);
+	}
 
 	bMouseActive = true;
 }

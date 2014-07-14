@@ -141,7 +141,6 @@ Done:
 char *PR_ValueString (EntityType_t type, eval_t *val)
 {
 	static char	line[256];
-	ddef_t		*def;
 
 	type &= ~DEF_SAVEGLOBAL;
 
@@ -173,7 +172,6 @@ char *PR_ValueString (EntityType_t type, eval_t *val)
 char *PR_UglyValueString(EntityType_t type, eval_t *val)
 {
 	static char	line[256];
-	ddef_t		*def;
 
 	type &= ~DEF_SAVEGLOBAL;
 

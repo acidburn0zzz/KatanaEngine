@@ -210,25 +210,25 @@ void R_DrawSequentialPoly(msurface_t *s)
         R_RenderDynamicLightmaps(s);
         R_UploadLightmap(s->lightmaptexturenum);
 
-        glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_EXT);
-        glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB_EXT,GL_MODULATE);
-        glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB_EXT,GL_PREVIOUS_EXT);
-        glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB_EXT,GL_TEXTURE);
-        glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,4);
+        glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE);
+        glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB,GL_MODULATE);
+        glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB,GL_PREVIOUS);
+        glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB,GL_TEXTURE);
+        glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE,4);
 
         glBegin(GL_TRIANGLE_FAN);
 
         fVert = s->polys->verts[0];
         for(i = 0; i < s->polys->numverts; i++,fVert += VERTEXSIZE)
         {
-            glMultiTexCoord2fARB(VIDEO_TEXTURE0,fVert[3],fVert[4]);
-            glMultiTexCoord2fARB(VIDEO_TEXTURE1,fVert[5],fVert[6]);
+            glMultiTexCoord2fv(VIDEO_TEXTURE0,fVert+3);
+            glMultiTexCoord2fv(VIDEO_TEXTURE1,fVert+5);
             glVertex3fv(fVert);
         }
 
         glEnd();
 
-        glTexEnvf(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,1.0f);
+        glTexEnvf(GL_TEXTURE_ENV,GL_RGB_SCALE,1.0f);
         glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 
         Video_SelectTexture(0);

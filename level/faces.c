@@ -482,7 +482,7 @@ static void EmitNodeFaces_r( node_t *node )
 		return;
 
 	node->firstface = numfaces;
-	for( face = node->faces; face; face = face->next ) 
+	for( face = node->faces; face; face = face->next )
 	{
 		if( numfaces == BSP_MAX_FACES )
 			Error( "numfaces == BSP_MAX_FACES" );
@@ -515,16 +515,6 @@ static void EmitNodeFaces_r( node_t *node )
 
 void EmitNodeFaces( node_t *headnode )
 {
-	vec_t	radius;
-	vec3_t	maxs, mins;
-
-//	qprintf( "--- EmitNodeFaces ---\n" );
-
-	// origin points won't allways be inside the map, so extend the hash area
-	radius = RadiusFromBounds( headnode->mins, headnode->maxs );
-	VectorSet( maxs, radius, radius, radius );
-	VectorSet( mins, -radius, -radius, -radius );
-
 	InitHash( headnode->mins, headnode->maxs );
 
 	firstmodeledge = numedges;
