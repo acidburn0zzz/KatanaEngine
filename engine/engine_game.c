@@ -556,9 +556,9 @@ void Game_WriteEntity(int mode,edict_t *ent)
 	MSG_WriteShort(Game_WriteDest(mode),NUM_FOR_EDICT(ent));
 }
 
-void Game_AddCommand(char *c,void *f)
+void Game_AddCommand(char *c,void (*Function)(void))
 {
-	Cmd_AddCommand(c,(xcommand_t*)f);
+	Cmd_AddCommand(c,(xcommand_t*)Function);
 }
 
 // [28/7/2012] Added Game_SetMessageEntity ~hogsy
@@ -645,7 +645,7 @@ void Game_Initialize(void)
 	{
 		pModule_Unload(hGameInstance);
 
-		// [10/5/2013] Simplified the path given here for simplicity sake ~hogsy
-		Sys_Error("Failed to load %s/"MODULE_GAME"!\n",com_gamedir);
+        // Let the user know the module failed to load. ~hogsy
+		Sys_Error("Failed to load %s/%s."PLATFORM_CPU""pMODULE_EXTENSION"!\nCheck log for details.",com_gamedir,MODULE_GAME);
 	}
 }

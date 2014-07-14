@@ -613,14 +613,14 @@ void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_
 	{
 		for( j = 0, sample = l.sample[i]; j < l.numsamples; j++, sample++ )
 		{
-			int red, green, blue, white, tn[3];
-			vec3_t n;
+			int red, green, blue, white;
 
 			red   = (int)sample->c[0];
 			green = (int)sample->c[1];
 			blue  = (int)sample->c[2];
 			white = (int)((sample->c[0] + sample->c[1] + sample->c[2])*(1.0/3.0));
 
+#if 0
 			// output tangentspace normalmap instead of modelspace, this is
 			// done by doing a matrix multiply on the normal vector with the
 			// tangent matrix
@@ -634,6 +634,7 @@ void LightFace( BSPFace_t *f, const lightchain_t *lightchain, const directlight_
 			tn[0] = (int)(DotProduct(n,tangentvectors[0])*128+128);
 			tn[1] = (int)(DotProduct(n,tangentvectors[1])*128+128);
 			tn[2] = (int)(DotProduct(n,tangentvectors[2])*128+128);
+#endif
 
 			*lit++ = bound(0,red,255);
 			*lit++ = bound(0,green,255);

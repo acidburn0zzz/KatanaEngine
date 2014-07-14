@@ -8,6 +8,7 @@
 		<Project filename="menu/Menu.cbp" />
 		<Project filename="launcher/Launcher.cbp">
 			<Depends filename="engine/Engine.cbp" />
+			<Depends filename="game/Game.cbp" />
 			<Depends filename="menu/Menu.cbp" />
 		</Project>
 		<Project filename="platform/Platform.cbp" />
