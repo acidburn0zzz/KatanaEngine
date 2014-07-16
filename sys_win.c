@@ -36,7 +36,6 @@
 #include "errno.h"
 #include "resource.h"
 
-#include "engine_main.h"
 #include "KatEditor.h"      // [7/10/2013] TODO: Rename to engine_editor ~hogsy
 #include "engine_console.h"
 #include "engine_video.h"
@@ -226,10 +225,10 @@ void Sys_Error(char *error, ...)
 	{
 		//sprintf(text2,"ERROR: %s\n",text);
 
-		starttime = Sys_FloatTime ();
+		starttime = System_DoubleTime ();
 		sc_return_on_enter = true;	// so Enter will get us out of here
 
-		while(!Sys_ConsoleInput() && ((Sys_FloatTime()-starttime) < CONSOLE_ERROR_TIMEOUT))
+		while(!Sys_ConsoleInput() && ((System_DoubleTime()-starttime) < CONSOLE_ERROR_TIMEOUT))
 		{
 		}
 	}
@@ -299,19 +298,17 @@ void Sys_Quit(void)
 	exit(0);
 }
 
-double Sys_FloatTime(void)
+double System_DoubleTime(void)
 {
-#ifndef GIPL
 	// [19/7/2013] Copied over from QuakeSpasm ~hogsy
 	return SDL_GetTicks()/1000.0;
-#endif
 }
 
 void Sys_InitFloatTime (void)
 {
 	int		j;
 
-	Sys_FloatTime ();
+	System_DoubleTime ();
 
 	j = COM_CheckParm("-starttime");
 
@@ -480,9 +477,9 @@ bool System_Main(int iArgumentCount,char *cArguments[])
 			epParameters.memsize = MAXIMUM_MEMORY;
 	}
 #else
-	epParameters.memsize = MAXIMUM_MEMORY;
+	
+	epParameters.memsize	= MAXIMUM_MEMORY;
 #endif
-
 	epParameters.basedir	= ".";
 	epParameters.cachedir	= NULL;
 	epParameters.argc		= iArgumentCount;
@@ -549,20 +546,20 @@ bool System_Main(int iArgumentCount,char *cArguments[])
 
 	Host_Initialize(&epParameters);
 
-	oldtime = Sys_FloatTime();
+	oldtime = System_DoubleTime();
 
 	for(;;)
 	{
 		if(bIsDedicated)
 		{
-			newtime = Sys_FloatTime ();
+			newtime = System_DoubleTime ();
 			time = newtime - oldtime;
 
 			while(time < sys_ticrate.value)
 			{
 				SDL_Delay(1);
 
-				newtime = Sys_FloatTime ();
+				newtime = System_DoubleTime ();
 				time = newtime-oldtime;
 			}
 		}
@@ -577,7 +574,7 @@ bool System_Main(int iArgumentCount,char *cArguments[])
 			else
 				Video.bSkipUpdate = false;
 
-			newtime = Sys_FloatTime();
+			newtime = System_DoubleTime();
 			time = newtime - oldtime;
 		}
 

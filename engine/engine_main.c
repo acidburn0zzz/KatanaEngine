@@ -18,7 +18,7 @@ bool Engine_Initialize(int argc,char *argv[])
 
 	for(;;)
     {
-        dNewTime        = Sys_FloatTime();
+        dNewTime        = System_DoubleTime();
         dCurrentTime    = dNewTime-dOldTime;
 
         Host_Frame(dCurrentTime);

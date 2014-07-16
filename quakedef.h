@@ -70,6 +70,7 @@
 #include "shared_engine.h"
 #include "shared_formats.h"
 
+#include "engine_main.h"
 #include "bspfile.h"
 #include "draw.h"
 #include "cvar.h"
@@ -77,7 +78,6 @@
 #include "net.h"
 #include "protocol.h"
 #include "cmd.h"
-#include "sbar.h"
 #include "sound.h"
 #include "render.h"
 #include "client.h"

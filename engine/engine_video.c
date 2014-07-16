@@ -552,7 +552,6 @@ void Video_DrawObject(
 	bool				    bMultiTexture)
 {
     GLenum  gPrimitive;
-	int     i;
 
 	if(!voObject)
         Sys_Error("Invalid video object!\n");
@@ -588,10 +587,10 @@ void Video_DrawObject(
         return;
     }
 
-#if 0
+#if 1
     glBegin(gPrimitive);
 
-    for(i = 0; i < uiTriangles; i++)
+    for(int i = 0; i < uiTriangles; i++)
 	{
 		if(!r_showtris.value)
 		{
@@ -617,11 +616,12 @@ void Video_DrawObject(
 
 		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
 	}
+
+	glEnd();
 #else
     glEnableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3,GL_FLOAT,3,&voObject);
-    glVertexPoi
 	glDrawArrays(gPrimitive,0,uiTriangles);
 #endif
 

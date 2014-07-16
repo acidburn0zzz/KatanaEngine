@@ -22,10 +22,6 @@
 
 #include <windows.h>
 
-#ifndef SERVERONLY
-extern DWORD gSndBufSize;
-#endif
-
 extern bool	winsock_lib_initialized;
 
 extern HANDLE	hinput, houtput;

@@ -21,7 +21,6 @@
 
 #include "common/SCRIPLIB.H"
 
-#include "engine_main.h"
 #include "engine_console.h"
 
 #include "platform_filesystem.h"

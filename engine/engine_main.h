@@ -14,4 +14,7 @@ typedef struct
 
 Global_t	Global;
 
+// System
+double System_DoubleTime(void);
+
 #endif

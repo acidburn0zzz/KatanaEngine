@@ -880,12 +880,12 @@ void Con_NotifyBox(char *text)
 
 	do
 	{
-		t1 = Sys_FloatTime ();
+		t1 = System_DoubleTime ();
 
 		Video_Process();
 		Input_Process();
 
-		t2 = Sys_FloatTime();
+		t2 = System_DoubleTime();
 
 		realtime += t2-t1;		// make the cursor blink
 	} while(key_count < 0);

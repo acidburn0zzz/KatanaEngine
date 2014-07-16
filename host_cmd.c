@@ -1447,7 +1447,7 @@ void Host_Spawn_f(void)
 
 		Game->Game_Init(SERVER_CLIENTCONNECT,sv_player,sv.time);
 
-		if ((Sys_FloatTime() - host_client->netconnection->connecttime) <= sv.time)
+		if ((System_DoubleTime() - host_client->netconnection->connecttime) <= sv.time)
 			Sys_Printf ("%s entered the game\n", host_client->name);
 
 		Game->Server_SpawnPlayer(eClient);

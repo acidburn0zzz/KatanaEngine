@@ -19,7 +19,6 @@
 */
 #include "quakedef.h"
 
-#include "engine_main.h"
 #include "engine_console.h"
 #include "engine_game.h"
 #include "engine_menu.h"
@@ -399,7 +398,7 @@ void Host_ShutdownServer(bool crash)
 		CL_Disconnect ();
 
 // flush any pending messages - like the score!!!
-	start = Sys_FloatTime();
+	start = System_DoubleTime();
 	do
 	{
 		count = 0;
@@ -419,7 +418,7 @@ void Host_ShutdownServer(bool crash)
 				}
 			}
 		}
-		if ((Sys_FloatTime() - start) > 3.0)
+		if ((System_DoubleTime() - start) > 3.0)
 			break;
 	}
 	while (count);
@@ -557,7 +556,7 @@ void _Host_Frame (float time)
 		return;			// Something bad happened, or the server disconnected
 
 	// decide the simulation time
-	if(!Host_FilterTime (time))
+	if(!Host_FilterTime(time))
 		return;			// don't run too fast, or packets will flood out
 
 	Input_Process();
@@ -603,13 +602,13 @@ void _Host_Frame (float time)
 	}
 
 	if(host_speeds.value)
-		time1 = Sys_FloatTime();
+		time1 = System_DoubleTime();
 
 	Video_Process();
 	Audio_Process();
 
 	if(host_speeds.value)
-		time2 = Sys_FloatTime ();
+		time2 = System_DoubleTime ();
 
 	if(cls.signon == SIGNONS)
 		CL_DecayLights();
@@ -617,7 +616,7 @@ void _Host_Frame (float time)
 	if (host_speeds.value)
 	{
 		pass1 = (time1-time3)*1000;
-		time3 = Sys_FloatTime();
+		time3 = System_DoubleTime();
 		pass2 = (time2-time1)*1000;
 		pass3 = (time3-time2)*1000;
 		Con_Printf("%3i Total\n%3i Server\n%3i Graphics\n%3i Sound\n",
@@ -640,9 +639,9 @@ void Host_Frame (float time)
 		return;
 	}
 
-	time1 = Sys_FloatTime ();
+	time1 = System_DoubleTime ();
 	_Host_Frame (time);
-	time2 = Sys_FloatTime ();
+	time2 = System_DoubleTime ();
 
 	timetotal += time2 - time1;
 	timecount++;
