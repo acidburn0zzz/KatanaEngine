@@ -81,9 +81,6 @@ void M_Main_Draw (void);
 		void M_ModemConfig_Draw (void);
 		void M_LanConfig_Draw (void);
 		void M_GameOptions_Draw (void);
-		void M_Search_Draw (void);
-		void M_ServerList_Draw (void);
-	void M_Options_Draw (void);
 		void M_Keys_Draw (void);
 		void M_Video_Draw (void);
 	void M_Help_Draw (void);
@@ -340,19 +337,6 @@ void M_DrawIcons(int menu,int optionnum)
 		break;
 	}
 }
-
-void M_DrawBaseMenu(void)
-{
-	float alpha;
-
-	if(!sv.active)
-		alpha = 1;
-	else
-		alpha = 0.7f;
-
-	Draw_ExternPic("textures/sprites/menuback",alpha,0,0,Video.iWidth,Video.iHeight);
-	Draw_ExternPic("textures/sprites/sidelogo",1,0,0,Video.iWidth/5,Video.iHeight);
-}
 //=============================================================================
 
 int m_save_demonum;
@@ -404,7 +388,6 @@ void M_Menu_Main_f (void)
 
 void M_Main_Draw (void)
 {
-	M_DrawBaseMenu();
 	M_DrawIcons(MENU_MAIN,m_main_cursor);
 }
 
@@ -466,7 +449,6 @@ void M_Menu_SinglePlayer_f (void)
 
 void M_SinglePlayer_Draw (void)
 {
-	M_DrawBaseMenu();
 	M_DrawIcons(MENU_NEW,m_singleplayer_cursor);
 }
 
@@ -1105,12 +1087,6 @@ void M_Menu_Options_f (void)
 	key_dest = key_menu;
 	m_state = m_options;
 	m_entersound = true;
-}
-
-void M_Options_Draw (void)
-{
-	M_DrawBaseMenu();
-	M_DrawIcons(MENU_OPTIONS,options_cursor);
 }
 
 void M_Options_Key (int k)
@@ -2456,43 +2432,6 @@ void M_Menu_Search_f (void)
 
 }
 
-
-void M_Search_Draw (void)
-{
-	qpic_t	*p;
-	int x;
-
-	p = Draw_CachePic ("gfx/p_multi.lmp");
-	M_DrawPic ( (320-p->width)/2, 4, p);
-	x = (320/2) - ((12*8)/2) + 4;
-	M_DrawTextBox (x-8, 32, 12, 1);
-	M_Print (x, 40, "Searching...");
-
-	if(slistInProgress)
-	{
-		NET_Poll();
-		return;
-	}
-
-	if (! searchComplete)
-	{
-		searchComplete = TRUE;
-		searchCompleteTime = realtime;
-	}
-
-	if (hostCacheCount)
-	{
-		M_Menu_ServerList_f ();
-		return;
-	}
-
-	M_PrintWhite ((320/2) - ((22*8)/2), 64, "No Quake servers found");
-	if ((realtime - searchCompleteTime) < 3.0)
-		return;
-
-	M_Menu_LanConfig_f ();
-}
-
 //=============================================================================
 /* SLIST MENU */
 
@@ -2598,93 +2537,6 @@ void M_ServerList_Key (int k)
 
 //=============================================================================
 /* Menu Subsystem */
-
-void M_Draw (void)
-{
-	if(m_state == m_none || key_dest != key_menu)
-		return;
-
-	if (!m_recursiveDraw)
-	{
-		if (scr_con_current)
-		{
-			Draw_ConsoleBackground();
-
-			S_ExtraUpdate();
-		}
-
-		Draw_FadeScreen(); //johnfitz -- fade even if console fills screen
-	}
-	else
-		m_recursiveDraw = false;
-
-	if (m_entersound)
-	{
-		S_LocalSound ("misc/menu2.wav");
-		m_entersound = false;
-	}
-
-	S_ExtraUpdate ();
-}
-
-#if 0
-	switch(m_state)
-	{
-	case m_none:
-		return;
-	case m_main:
-		M_Main_Key (key);
-		return;
-	case m_singleplayer:
-		M_SinglePlayer_Key (key);
-		return;
-	case m_load:
-		M_Load_Key (key);
-		return;
-	case m_save:
-		M_Save_Key (key);
-		return;
-	case m_multiplayer:
-		M_MultiPlayer_Key (key);
-		return;
-	case m_setup:
-		M_Setup_Key (key);
-		return;
-	case m_net:
-		M_Net_Key (key);
-		return;
-	case m_options:
-		M_Options_Key (key);
-		return;
-	case m_keys:
-		M_Keys_Key (key);
-		return;
-	case m_video:
-		M_Video_Key (key);
-		return;
-	case m_help:
-		M_Help_Key (key);
-		return;
-	case m_quit:
-		M_Quit_Key (key);
-		return;
-	case m_serialconfig:
-		M_SerialConfig_Key (key);
-		return;
-	case m_modemconfig:
-		M_ModemConfig_Key (key);
-		return;
-	case m_lanconfig:
-		M_LanConfig_Key (key);
-		return;
-	case m_gameoptions:
-		M_GameOptions_Key (key);
-		return;
-	case m_slist:
-		M_ServerList_Key (key);
-		return;
-	}
-#endif
 
 void M_ConfigureNetSubsystem(void)
 {

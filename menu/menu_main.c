@@ -27,49 +27,48 @@ enum
 {
 	MENU_NONE,
 
-	MENU_MAIN,						// Main Menu
-	MENU_LOAD,						// Load Game
-	MENU_QUIT,						// Quit Game
+	MENU_MAIN,									// Main Menu
+		MENU_LOAD,								// Load Game
+		MENU_QUIT,								// Quit Game
 	MENU_MAIN_END,
 
-	MENU_NEW,						// New Game
-	MENU_NEW_EPISODE1,
-	MENU_NEW_EPISODE2,
-	MENU_NEW_EPISODE3,
-	MENU_NEW_EPISODE4,
+	MENU_NEW,									// New Game
+		MENU_NEW_EPISODE1,
+		MENU_NEW_EPISODE2,
+		MENU_NEW_EPISODE3,
+		MENU_NEW_EPISODE4,
 	MENU_NEW_END,
 
-	MENU_MULTI,						// Multiplayer
-	MENU_MULTI_JOIN,				// Join Game
-	MENU_MULTI_JOIN_NETWORK,		// Network
-	MENU_MULTI_JOIN_INTERNET,		// Internet
-	MENU_MULTI_JOIN_MODEM,			// Modem
-	MENU_MULTI_JOIN_DIRECT,			// Direct Connect
-	MENU_MULTI_NEW,					// New Game
-	MENU_MULTI_NEW_NETWORK,			// Network
-	MENU_MULTI_NEW_MODEM,			// Modem
-	MENU_MULTI_NEW_DIRECT,			// Direct Connect
-	MENU_MULTI_SETUP,				// Player Setup
-	MENU_MULTI_SETUP_GAME,			// Game Name
-	MENU_MULTI_SETUP_NAME,			// Player Name
-	MENU_MULTI_SETUP_PORT,			// Network Port
+	MENU_MULTI,									// Multiplayer
+		MENU_MULTI_JOIN,						// Join Game
+			MENU_MULTI_JOIN_NETWORK,			// Network
+			MENU_MULTI_JOIN_INTERNET,			// Internet
+			MENU_MULTI_JOIN_MODEM,				// Modem
+			MENU_MULTI_JOIN_DIRECT,				// Direct Connect
+		MENU_MULTI_NEW,							// New Game
+			MENU_MULTI_NEW_NETWORK,				// Network
+			MENU_MULTI_NEW_MODEM,				// Modem
+			MENU_MULTI_NEW_DIRECT,				// Direct Connect
+		MENU_MULTI_SETUP,						// Player Setup
+			MENU_MULTI_SETUP_GAME,				// Game Name
+			MENU_MULTI_SETUP_NAME,				// Player Name
+			MENU_MULTI_SETUP_PORT,				// Network Port
 	MENU_MULTI_END,
 
-	MENU_OPTIONS,						// Options
-	MENU_OPTIONS_SOUND,					// Options / Sound Volume
-	MENU_OPTIONS_CD,					// Options / CD Volume
-	MENU_OPTIONS_CONTROL,				// Options / Customize Control
-	MENU_OPTIONS_MOUSE,					// Mouse Config
-	MENU_OPTIONS_VIDEO,					// Video Mode
-	MENU_OPTIONS_MISC,					// Misc Settings
-	MENU_OPTIONS_MISC_SCREEN,			// Screen Size
-	MENU_OPTIONS_MISC_CROSSHAIR,		// Options / Misc / Crosshair
-	MENU_OPTIONS_MISC_CROSSHAIR_SCALE,	// Options / Misc / Crosshair Scale
-	MENU_OPTIONS_MISC_BRIGHTNESS,		// Brightness
-	MENU_OPTIONS_MISC_RUN,				// Always Run
-	MENU_OPTIONS_MISC_LOOKSPRING,		// Lookspring
-	MENU_OPTIONS_MISC_LOOKSTRAFE,		// Lookstrafe
-
+	MENU_OPTIONS,								// Options
+		MENU_OPTIONS_SOUND,						// Options / Sound Volume
+		MENU_OPTIONS_CD,						// Options / CD Volume
+		MENU_OPTIONS_CONTROL,					// Options / Customize Control
+		MENU_OPTIONS_MOUSE,						// Mouse Config
+		MENU_OPTIONS_VIDEO,						// Video Mode
+		MENU_OPTIONS_MISC,						// Misc Settings
+			MENU_OPTIONS_MISC_SCREEN,			// Screen Size
+			MENU_OPTIONS_MISC_CROSSHAIR,		// Options / Misc / Crosshair
+			MENU_OPTIONS_MISC_CROSSHAIR_SCALE,	// Options / Misc / Crosshair Scale
+			MENU_OPTIONS_MISC_BRIGHTNESS,		// Brightness
+			MENU_OPTIONS_MISC_RUN,				// Always Run
+			MENU_OPTIONS_MISC_LOOKSPRING,		// Lookspring
+			MENU_OPTIONS_MISC_LOOKSTRAFE,		// Lookstrafe
 	MENU_OPTIONS_END
 };
 
@@ -141,8 +140,10 @@ void Menu_Initialize(void)
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"ammo");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"health");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"messenger");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"inventory");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"cross");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"armor");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"crosshair0");
 #elif GAME_ADAMAS
     Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"health");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"ammo");
@@ -292,16 +293,21 @@ void Menu_Draw(void)
 
 #if 1
 	if(iMenuState & MENU_STATE_LOADING)
+	{
 		// [21/5/2013] TODO: Switch to element ~hogsy
 		Engine.DrawPic(MENU_BASEPATH"loading",1.0f,(iMenuWidth-256)/2,(iMenuHeight-32)/2,256,32);
-
-	if(iMenuState & MENU_STATE_PAUSED)
+		return;
+	}
+	else if(iMenuState & MENU_STATE_PAUSED)
+	{
 		Engine.DrawPic(MENU_BASEPATH"paused",1.0f,0,0,32,64);
+		return;
+	}
 
-	if((iMenuState & MENU_STATE_HUD) && !(iMenuState & MENU_STATE_SCOREBOARD))
+	if((iMenuState & MENU_STATE_HUD) && (!(iMenuState & MENU_STATE_SCOREBOARD) && !(iMenuState & MENU_STATE_MENU)))
 		HUD_Draw();
 
-	if(iMenuState & MENU_STATE_SCOREBOARD)
+	if(iMenuState & MENU_STATE_SCOREBOARD && !(iMenuState & MENU_STATE_MENU))
 	{
 		// [10/11/2013] TEMP: Added for MP test ~hogsy
 		Engine.DrawFill((iMenuWidth/2),(iMenuHeight/2),128,35,0,0,0,0.7f);
@@ -309,6 +315,10 @@ void Menu_Draw(void)
 		Engine.DrawString(270,20,va("%d",Engine.Client_GetStat(STAT_FRAGS)));
 	}
 
+	if(iMenuState & MENU_STATE_MENU)
+	{
+		Engine.DrawFill(0,0,iMenuWidth,iMenuHeight,0,0,0,0.7f);
+	}
 #if 0
 	for(i = 0; i < iMenuElements; i++)
 	{
