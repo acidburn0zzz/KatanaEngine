@@ -2236,18 +2236,6 @@ void M_GameOptions_Draw (void)
 	else
 		M_Print (160, 80, "Nightmare difficulty");
 
-	M_Print (0, 88, "       Frag Limit");
-	if (fraglimit.value == 0)
-		M_Print (160, 88, "none");
-	else
-		M_Print (160, 88, va("%i frags", (int)fraglimit.value));
-
-	M_Print (0, 96, "       Time Limit");
-	if (timelimit.value == 0)
-		M_Print (160, 96, "none");
-	else
-		M_Print (160, 96, va("%i minutes", (int)timelimit.value));
-
 	M_Print (0, 112, "         Episode");
 	M_Print (160, 112, episodes[startepisode].description);
 
@@ -2314,22 +2302,6 @@ void M_NetStart_Change (int dir)
 			Cvar_SetValue ("skill", 0);
 		if (skill.value < 0)
 			Cvar_SetValue ("skill", 3);
-		break;
-
-	case 5:
-		Cvar_SetValue ("fraglimit", fraglimit.value + dir*10);
-		if (fraglimit.value > 100)
-			Cvar_SetValue ("fraglimit", 0);
-		if (fraglimit.value < 0)
-			Cvar_SetValue ("fraglimit", 100);
-		break;
-
-	case 6:
-		Cvar_SetValue ("timelimit", timelimit.value + dir*5);
-		if (timelimit.value > 60)
-			Cvar_SetValue ("timelimit", 0);
-		if (timelimit.value < 0)
-			Cvar_SetValue ("timelimit", 60);
 		break;
 
 	case 7:

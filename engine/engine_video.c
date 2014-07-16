@@ -551,7 +551,7 @@ void Video_DrawObject(
 	unsigned            int	uiTriangles,
 	bool				    bMultiTexture)
 {
-    GLenum  gPrimitive;
+    GLenum	gPrimitive;
 
 	if(!voObject)
         Sys_Error("Invalid video object!\n");
@@ -587,7 +587,7 @@ void Video_DrawObject(
         return;
     }
 
-#if 1
+#if 0
     glBegin(gPrimitive);
 
     for(int i = 0; i < uiTriangles; i++)
@@ -619,10 +619,36 @@ void Video_DrawObject(
 
 	glEnd();
 #else
-    glEnableClientState(GL_COLOR_ARRAY);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3,GL_FLOAT,3,&voObject);
-	glDrawArrays(gPrimitive,0,uiTriangles);
+	{
+		MathVector_t	
+			mvVertexArray[4096],	//= (MathVector_t*)calloc(uiTriangles,sizeof(MathVector_t)),
+			mvColourArray[4096],	//= (MathVector_t*)calloc(uiTriangles,sizeof(MathVector_t)),
+			mvTextureArray[4096];
+
+		for(int i = 0; i < uiTriangles; i++)
+		{
+			Math_VectorToMV(voObject[i].vVertex,mvVertexArray[i]);
+			Math_VectorToMV(voObject[i].vColour,mvColourArray[i]);
+			Math_VectorToMV(voObject[i].vTextureCoord[0],mvTextureArray[i]);
+		}
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+
+		if(!r_showtris.bValue)
+		{
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glEnableClientState(GL_COLOR_ARRAY);
+
+			glColorPointer(3,GL_FLOAT,0,mvColourArray);
+			glTexCoordPointer(2,GL_FLOAT,0,mvTextureArray);
+		}
+
+		glVertexPointer(3,GL_FLOAT,0,mvVertexArray);
+		glDrawArrays(gPrimitive,0,uiTriangles);
+
+		//free(mvVertexArray);
+		//free(mvColourArray);
+	}
 #endif
 
 	bVideoIgnoreCapabilities = false;

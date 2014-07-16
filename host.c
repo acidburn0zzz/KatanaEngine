@@ -62,11 +62,7 @@ cvar_t	host_timescale	= {	"host_timescale",	"0"						};	//johnfitz
 cvar_t	max_edicts		= {	"max_edicts",		"2048",	true			};	//johnfitz
 cvar_t	sys_ticrate		= {	"sys_ticrate",		"0.05"					};	// dedicated server
 cvar_t	serverprofile	= {	"serverprofile",	"0"						};
-cvar_t	fraglimit		= {	"fraglimit",		"0",	false,	true	};
-cvar_t	timelimit		= {	"timelimit",		"0",	false,	true	};
 cvar_t	teamplay		= {	"teamplay",			"0",	false,	true	};
-cvar_t	samelevel		= {	"samelevel",		"0"						};
-cvar_t	noexit			= {	"noexit",			"0",	false,	true	};
 cvar_t	skill			= {	"skill",			"1"						};	// 0 - 3
 cvar_t	deathmatch		= {	"deathmatch",		"0"						};	// 0, 1, or 2
 cvar_t	coop			= {	"coop",				"0"						};	// 0 or 1
@@ -207,11 +203,7 @@ void Host_InitLocal (void)
 	Cvar_RegisterVariable(&devstats, NULL); //johnfitz
 	Cvar_RegisterVariable(&sys_ticrate, NULL);
 	Cvar_RegisterVariable(&serverprofile, NULL);
-	Cvar_RegisterVariable(&fraglimit, NULL);
-	Cvar_RegisterVariable(&timelimit, NULL);
 	Cvar_RegisterVariable(&teamplay, NULL);
-	Cvar_RegisterVariable(&samelevel, NULL);
-	Cvar_RegisterVariable(&noexit, NULL);
 	Cvar_RegisterVariable(&skill, NULL);
 	Cvar_RegisterVariable(&developer, NULL);
 	Cvar_RegisterVariable(&deathmatch, NULL);
@@ -556,7 +548,7 @@ void _Host_Frame (float time)
 		return;			// Something bad happened, or the server disconnected
 
 	// decide the simulation time
-	if(!Host_FilterTime(time))
+	if(!Host_FilterTime (time))
 		return;			// don't run too fast, or packets will flood out
 
 	Input_Process();
