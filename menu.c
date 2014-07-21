@@ -157,10 +157,6 @@ void M_DrawPic (int x, int y, qpic_t *pic)
 	Draw_Pic(x, y, pic);
 }
 
-void M_DrawTransPicTranslate (int x, int y, qpic_t *pic, int top, int bottom) //johnfitz -- more parameters
-{
-}
-
 void M_DrawTextBox (int x, int y, int width, int lines)
 {
 	int		cx, cy;
@@ -795,7 +791,6 @@ void M_Setup_Draw (void)
 	p = Draw_CachePic ("gfx/bigbox.lmp");
 	M_DrawTransPic (160, 64, p);
 	p = Draw_CachePic ("gfx/menuplyr.lmp");
-	M_DrawTransPicTranslate (172, 72, p, setup_top, setup_bottom);
 
 	M_DrawCharacter (56, setup_cursor_table [setup_cursor], 12+((int)(realtime*4)&1));
 

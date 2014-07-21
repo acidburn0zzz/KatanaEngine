@@ -343,7 +343,7 @@ bool Video_CreateWindow(void)
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 	glAlphaFunc(GL_GREATER,0.25f);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	glShadeModel(GL_SMOOTH);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -503,7 +503,7 @@ void Video_SelectTexture(unsigned int uiTarget)
 		return;
     }
 
-	glActiveTextureARB(uiUnit);
+	glActiveTexture(uiUnit);
 
 	Video.uiActiveUnit = uiTarget;
 
@@ -619,20 +619,24 @@ void Video_DrawObject(
 
 	glEnd();
 #else
-	{
-		MathVector_t	
-			mvVertexArray[4096],	//= (MathVector_t*)calloc(uiTriangles,sizeof(MathVector_t)),
-			mvColourArray[4096],	//= (MathVector_t*)calloc(uiTriangles,sizeof(MathVector_t)),
-			mvTextureArray[4096];
+#define	MAX_TRIANGLE_COUNT	4096
 
-		for(int i = 0; i < uiTriangles; i++)
+	{
+		int				i;
+		MathVector_t	
+			mvVertexArray[MAX_TRIANGLE_COUNT],	//= (MathVector_t*)calloc(uiTriangles,sizeof(MathVector_t)),
+			mvColourArray[MAX_TRIANGLE_COUNT];	//= (MathVector_t*)calloc(uiTriangles,sizeof(MathVector_t)),
+		vec2_t	vTextureArray[MAX_TRIANGLE_COUNT];
+
+		for(i = 0; i < uiTriangles; i++)
 		{
 			Math_VectorToMV(voObject[i].vVertex,mvVertexArray[i]);
 			Math_VectorToMV(voObject[i].vColour,mvColourArray[i]);
-			Math_VectorToMV(voObject[i].vTextureCoord[0],mvTextureArray[i]);
+			Math_VectorCopy(voObject[i].vTextureCoord[0],vTextureArray[i]);
 		}
 
 		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(3,GL_FLOAT,0,mvVertexArray);
 
 		if(!r_showtris.bValue)
 		{
@@ -640,10 +644,9 @@ void Video_DrawObject(
 			glEnableClientState(GL_COLOR_ARRAY);
 
 			glColorPointer(3,GL_FLOAT,0,mvColourArray);
-			glTexCoordPointer(2,GL_FLOAT,0,mvTextureArray);
+			glTexCoordPointer(2,GL_FLOAT,0,vTextureArray);
 		}
 
-		glVertexPointer(3,GL_FLOAT,0,mvVertexArray);
 		glDrawArrays(gPrimitive,0,uiTriangles);
 
 		//free(mvVertexArray);

@@ -158,6 +158,9 @@
     <ClCompile Include="engine_menu.c">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="engine_font.c">
+      <Filter>Video</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\shared_client.h">

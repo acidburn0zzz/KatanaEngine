@@ -92,7 +92,7 @@ typedef enum
 
 #define VIDEO_DEPTH_TRUE    true
 #define VIDEO_DEPTH_FALSE   false
-#define VIDEO_DEPTH_IGNORE  -1
+#define VIDEO_DEPTH_IGNORE  -1		// Don't bother changing depth mode.
 
 // Shader Types
 #define VIDEO_SHADER_VERTEX     0

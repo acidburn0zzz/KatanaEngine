@@ -240,9 +240,9 @@ void R_SetupModelLighting(vec3_t vOrigin)
 	if(currententity->effects & EF_FULLBRIGHT)
 		Math_VectorSet(1.0f,vLightColour);
 
-    shadedots = r_avertexnormal_dots[((int)((cl.time*200.0f)*(SHADEDOT_QUANT/360.0f))) & (SHADEDOT_QUANT-1)];
-
 	Math_VectorScale(vLightColour,1.0f/200.0f,vLightColour);
+
+    shadedots = r_avertexnormal_dots[((int)((cl.time*200.0)*(SHADEDOT_QUANT/360))) & (SHADEDOT_QUANT-1)];
 }
 
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
@@ -293,10 +293,10 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
                 for(j = 0; j < 3; j++)
                 {
                     voModel[iVert].vVertex[j]	= mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+translate1[j];
-//                    voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
+                    //voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
 
-					//voModel[iVert].vTextureCoord[0][0]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/mModel->skinwidth;
-					//voModel[iVert].vTextureCoord[0][1]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/mModel->skinheight;
+					voModel[iVert].vTextureCoord[0][0]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/mModel->skinwidth;
+					voModel[iVert].vTextureCoord[0][1]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/mModel->skinheight;
 
                     if(bShading)
                         voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;

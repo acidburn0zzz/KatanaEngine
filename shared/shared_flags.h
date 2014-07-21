@@ -24,7 +24,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	716	// 17/7/2014
+#define ENGINE_VERSION_BUILD	719	// 22/7/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"
@@ -77,11 +77,12 @@ enum
 */
 enum
 {
-	RESOURCE_MODEL,		// States that the precache should be used for a model
-	RESOURCE_PARTICLE,	// States that the precache should be used for a particle
-	RESOURCE_FLARE,		// States that the precache should be used for a flare
-	RESOURCE_SOUND,		// States that the precache should be used for a sound
-    RESOURCE_TEXTURE	// States that the precache should be used for a texture
+	RESOURCE_MODEL,		// States that the precache should be used for a model.
+	RESOURCE_PARTICLE,	// States that the precache should be used for a particle.
+	RESOURCE_FLARE,		// States that the precache should be used for a flare.
+	RESOURCE_SOUND,		// States that the precache should be used for a sound.
+	RESOURCE_FONT,		// States that the precache should be used for a font.
+    RESOURCE_TEXTURE	// States that the precache should be used for a texture.
 };
 
 #define CONTENT_SLIME				-4		// Horrible slime to slow us up!
