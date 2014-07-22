@@ -201,17 +201,20 @@ void GL_SubdivideSurface(msurface_t *fa)
 
 void Warp_DrawWaterPoly(glpoly_t *p)
 {
-	vec3_t	vWave;
-	float	*v;
-	int		i;
-
-	glBegin(GL_TRIANGLE_FAN);
+	VideoObject_t	*voWaterPoly = calloc(p->numverts,sizeof(VideoObject_t));
+	vec3_t			vWave;
+	float			*v;
+	int				i;
 
 	v = p->verts[0];
 
 	for(i = 0; i < p->numverts; i++,v += VERTEXSIZE)
 	{
-		glTexCoord2f(WARPCALC(v[3],v[4]),WARPCALC(v[4],v[3]));
+		voWaterPoly[i].vTextureCoord[0][0] = WARPCALC(v[3],v[4]);
+		voWaterPoly[i].vTextureCoord[0][1] = WARPCALC(v[4],v[3]);
+
+		Math_VectorSet(1.0f,voWaterPoly[i].vColour);
+		voWaterPoly[i].vColour[3] = r_wateralpha.value;
 
 		Math_VectorCopy(v,vWave);
 
@@ -220,10 +223,12 @@ void Warp_DrawWaterPoly(glpoly_t *p)
 					2.0f*(float)sin(v[0]*0.025f+cl.time)*(float)sin(v[2]*0.05f+cl.time)+
 					2.0f*(float)sin(v[1]*0.025f+cl.time*2.0f)*(float)sin(v[2]*0.05f+cl.time);
 
-		glVertex3fv(vWave);
+		Math_VectorCopy(vWave,voWaterPoly[i].vVertex);
 	}
 
-	glEnd();
+	Video_DrawObject(voWaterPoly,VIDEO_PRIMITIVE_TRIANGLE_FAN,p->numverts,true);
+
+	free(voWaterPoly);
 }
 
 //==============================================================================

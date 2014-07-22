@@ -438,12 +438,15 @@ void World_DrawWaterTextureChains(void)
 	if (r_drawflat_cheatsafe || r_lightmap_cheatsafe || !r_drawworld_cheatsafe)
 		return;
 
+	Video_ResetCapabilities(false);
+
 	if (r_wateralpha.value < 1.0)
 	{
-		glDepthMask(false);
-		glEnable (GL_BLEND);
+		Video_EnableCapabilities(VIDEO_BLEND);
+
+		Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
+
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		glColor4f (1,1,1,r_wateralpha.value);
 	}
 
 	if (r_oldwater.value)
@@ -502,13 +505,7 @@ void World_DrawWaterTextureChains(void)
 		}
 	}
 
-	if(r_wateralpha.value < 1.0f)
-	{
-		glDepthMask(true);
-		glDisable(GL_BLEND);
-		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
-		glColor3f(1,1,1);
-	}
+	Video_ResetCapabilities(true);
 }
 
 void R_DrawTextureChains_White (void)

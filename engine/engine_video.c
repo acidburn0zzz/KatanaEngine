@@ -33,14 +33,14 @@ SDL_GLContext	sMainContext;
 #define VIDEO_MAX_SAMPLES	16
 #define VIDEO_MIN_SAMPLES	0
 
-cvar_t	cvShowModels			= {	"video_showmodels",			"1",			false,  false,  "Toggles models."                                   };
-cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",			true,   false,  "Changes the number of samples."	                };
-cvar_t	cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",			true,   false,  "Changes the number of buffers."                    };
-cvar_t	cvFullscreen			= {	"video_fullscreen",			"0",			true,   false,  "1: Fullscreen, 0: Windowed"	                    };
-cvar_t	cvWidth					= {	"video_width",				"640",			true,   false,  "Sets the width of the window."	                    };
-cvar_t	cvHeight				= {	"video_height",				"480",			true,   false,  "Sets the height of the window."	                };
-cvar_t	cvVerticalSync			= {	"video_verticalsync",		"1",			true	                                                            };
-cvar_t	cvVideoDebugLog			= {	"video_debuglog",			"log_video",	true,	false,	"The name of the output log for video debugging."	};
+cvar_t	cvShowModels			= {	"video_showmodels",			"1",			false,  false,  "Toggles models."                                   },
+		cvMultisampleSamples	= {	"video_multisamplesamples",	"0",			true,   false,  "Changes the number of samples."	                },
+		cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",			true,   false,  "Changes the number of buffers."                    },
+		cvFullscreen			= {	"video_fullscreen",			"0",			true,   false,  "1: Fullscreen, 0: Windowed"	                    },
+		cvWidth					= {	"video_width",				"640",			true,   false,  "Sets the width of the window."	                    },
+		cvHeight				= {	"video_height",				"480",			true,   false,  "Sets the height of the window."	                },
+		cvVerticalSync			= {	"video_verticalsync",		"0",			true	                                                            },
+		cvVideoDebugLog			= {	"video_debuglog",			"log_video",	true,	false,	"The name of the output log for video debugging."	};
 
 gltexture_t	*gDepthTexture;
 
@@ -268,7 +268,7 @@ bool Video_CreateWindow(void)
 	if(!sMainContext)
 		Sys_Error("Failed to create context!\n%s\n",SDL_GetError());
 
-	SDL_GL_SetSwapInterval(1);
+	SDL_GL_SetSwapInterval(0);
 
 	// [13/8/2012] Get any information that will be presented later ~hogsy
 	gl_vendor		= (char*)glGetString(GL_VENDOR);
@@ -624,14 +624,15 @@ void Video_DrawObject(
 	{
 		int				i;
 		MathVector_t	
-			mvVertexArray[MAX_TRIANGLE_COUNT],	//= (MathVector_t*)calloc(uiTriangles,sizeof(MathVector_t)),
-			mvColourArray[MAX_TRIANGLE_COUNT];	//= (MathVector_t*)calloc(uiTriangles,sizeof(MathVector_t)),
+				mvVertexArray[MAX_TRIANGLE_COUNT];	//= (MathVector_t*)calloc(uiTriangles,sizeof(MathVector_t)),
 		vec2_t	vTextureArray[MAX_TRIANGLE_COUNT];
+		vec4_t	vColourArray[MAX_TRIANGLE_COUNT];
 
 		for(i = 0; i < uiTriangles; i++)
 		{
 			Math_VectorToMV(voObject[i].vVertex,mvVertexArray[i]);
-			Math_VectorToMV(voObject[i].vColour,mvColourArray[i]);
+			Math_VectorCopy(voObject[i].vColour,vColourArray[i]);
+			vColourArray[i][3] = voObject[i].vColour[3];
 			Math_VectorCopy(voObject[i].vTextureCoord[0],vTextureArray[i]);
 		}
 
@@ -643,7 +644,7 @@ void Video_DrawObject(
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			glEnableClientState(GL_COLOR_ARRAY);
 
-			glColorPointer(3,GL_FLOAT,0,mvColourArray);
+			glColorPointer(4,GL_FLOAT,0,vColourArray);
 			glTexCoordPointer(2,GL_FLOAT,0,vTextureArray);
 		}
 

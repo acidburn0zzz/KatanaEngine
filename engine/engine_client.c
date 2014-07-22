@@ -387,7 +387,6 @@ void Client_PrecacheResource(int iType,char *cResource)
 	switch(iType)
 	{
 	case RESOURCE_FONT:
-
 		break;
 	case RESOURCE_MODEL:
 		for(i = 0; i < MAX_MODELS; i++)
