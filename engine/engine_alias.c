@@ -247,7 +247,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 0 // new
+#if 1 // new
 	int					i,j,k,iVert;
 	float               fAlpha;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
@@ -368,7 +368,6 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 				glColor4fv(vColour);
 			}
 
-#if 0
 			if(mModel->gFullbrightTexture[currententity->skinnum])
 			{
 				glMultiTexCoord2fv(VIDEO_TEXTURE0,(float*)order);
@@ -376,7 +375,6 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 			}
 			else
 				glTexCoord2fv((float*)order);
-#endif
 
 			for(i = 0; i < 3; i++)
 			{

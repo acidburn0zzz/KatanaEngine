@@ -734,11 +734,11 @@ void R_RenderDynamicLightmaps (msurface_t *fa)
 	lightmap_polys[fa->lightmaptexturenum] = fa->polys;
 
 	// check for lightmap modification
-	for (maps=0; maps < BSP_MAX_LIGHTMAPS && fa->styles[maps] != 255; maps++)
-		if (d_lightstylevalue[fa->styles[maps]] != fa->cached_light[maps])
+	for(maps = 0; maps < BSP_MAX_LIGHTMAPS && fa->styles[maps] != 255; maps++)
+		if(d_lightstylevalue[fa->styles[maps]] != fa->cached_light[maps])
 			goto dynamic;
 
-	if (fa->dlightframe == r_framecount	// dynamic this frame
+	if(fa->dlightframe == r_framecount	// dynamic this frame
 		|| fa->cached_dlight)			// dynamic previously
 	{
 dynamic:
@@ -766,7 +766,7 @@ dynamic:
 				theRect->h = (fa->light_t-theRect->t)+tmax;
 			base = lightmaps + fa->lightmaptexturenum*LIGHTMAP_BYTES*BLOCK_WIDTH*BLOCK_HEIGHT;
 			base += fa->light_t * BLOCK_WIDTH * LIGHTMAP_BYTES + fa->light_s * LIGHTMAP_BYTES;
-			R_BuildLightMap (fa, base, BLOCK_WIDTH*LIGHTMAP_BYTES);
+			R_BuildLightMap(fa,base,BLOCK_WIDTH*LIGHTMAP_BYTES);
 		}
 	}
 }

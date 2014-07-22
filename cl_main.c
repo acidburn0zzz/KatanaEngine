@@ -239,7 +239,8 @@ DynamicLight_t *Client_AllocDlight(int key)
 			{
 				memset(dlLight,0,sizeof(*dlLight));
 
-				dlLight->key = key;
+				dlLight->key		= key;
+				dlLight->bLightmap	= true;
 
 				Math_VectorSet(1.0f,dlLight->color);
 				return dlLight;
@@ -255,7 +256,8 @@ DynamicLight_t *Client_AllocDlight(int key)
 		{
 			memset(dlLight,0,sizeof(*dlLight));
 
-			dlLight->key = key;
+			dlLight->key		= key;
+			dlLight->bLightmap	= true;
 
 			Math_VectorSet(1.0f,dlLight->color);
 			return dlLight;
@@ -266,7 +268,8 @@ DynamicLight_t *Client_AllocDlight(int key)
 
 	memset(dlLight,0,sizeof(*dlLight));
 
-	dlLight->key = key;
+	dlLight->key		= key;
+	dlLight->bLightmap	= true;
 
 	Math_VectorSet(1.0f,dlLight->color);
 

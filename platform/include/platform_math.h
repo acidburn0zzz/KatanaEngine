@@ -25,14 +25,6 @@ typedef struct
 			vZ;
 } MathVector_t;
 
-typedef struct
-{
-	vec_t	vRed,
-			vGreen,
-			vBlue,
-			vAlpha;
-} MathColourVector_t;
-
 #define pMath_PI 3.14159265358979323846
 
 #define Math_Min(a,b)					(	((a)<(b))?(a):(b)	                    )

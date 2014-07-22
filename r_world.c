@@ -305,58 +305,6 @@ void R_DrawTextureChains_Glow (void)
 	}
 }
 
-void R_DrawTextureChains_Multitexture (void)
-{
-	int			i, j;
-	msurface_t	*s;
-	texture_t	*t;
-	float		*v;
-	bool		bBound;
-
-	for (i=0 ; i<cl.worldmodel->numtextures ; i++)
-	{
-		t = cl.worldmodel->textures[i];
-
-		if (!t || !t->texturechain || t->texturechain->flags & (SURF_DRAWTILED | SURF_NOTEXTURE))
-			continue;
-
-		bBound = false;
-		for(s = t->texturechain; s; s = s->texturechain)
-			if(!s->culled)
-			{
-				if(!bBound) //only bind once we are sure we need this texture
-				{
-					Video_SetTexture((R_TextureAnimation(t,0))->gltexture);
-					Video_EnableMultitexture(); // selects TEXTURE1
-
-					bBound = true;
-				}
-
-				R_RenderDynamicLightmaps(s);
-
-				Video_SetTexture(lightmap_textures[s->lightmaptexturenum]);
-
-				R_UploadLightmap(s->lightmaptexturenum);
-
-				glBegin(GL_TRIANGLE_FAN);
-
-				v = s->polys->verts[0];
-				for(j = 0; j < s->polys->numverts; j++,v += VERTEXSIZE)
-				{
-					glMultiTexCoord2fv(GL_TEXTURE0,v+3);
-					glMultiTexCoord2fv(GL_TEXTURE1,v+5);
-					glVertex3fv(v);
-				}
-
-				glEnd();
-
-				rs_brushpasses++;
-			}
-
-		Video_SelectTexture(0);
-	}
-}
-
 /*	Draws surfs whose textures were missing from the BSP
 */
 void R_DrawTextureChains_NoTexture (void)
@@ -616,11 +564,59 @@ void World_Draw(void)
 
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE);
 		glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB,GL_MODULATE);
-		glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE_EXT,4);
+		glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE,4);
 
 		Video_DisableMultitexture();
 
-		R_DrawTextureChains_Multitexture();
+		{
+			int			i, j;
+			msurface_t	*s;
+			texture_t	*t;
+			float		*v;
+			bool		bBound;
+
+			for(i = 0; i < cl.worldmodel->numtextures; i++)
+			{
+				t = cl.worldmodel->textures[i];
+				if(!t || !t->texturechain || t->texturechain->flags & (SURF_DRAWTILED | SURF_NOTEXTURE))
+					continue;
+
+				bBound = false;
+				for(s = t->texturechain; s; s = s->texturechain)
+					if(!s->culled)
+					{
+						if(!bBound) //only bind once we are sure we need this texture
+						{
+							Video_SetTexture((R_TextureAnimation(t,0))->gltexture);
+							Video_EnableMultitexture(); // selects TEXTURE1
+
+							bBound = true;
+						}
+
+						R_RenderDynamicLightmaps(s);
+
+						Video_SetTexture(lightmap_textures[s->lightmaptexturenum]);
+
+						R_UploadLightmap(s->lightmaptexturenum);
+
+						glBegin(GL_TRIANGLE_FAN);
+
+						v = s->polys->verts[0];
+						for(j = 0; j < s->polys->numverts; j++,v += VERTEXSIZE)
+						{
+							glMultiTexCoord2fv(GL_TEXTURE0,v+3);
+							glMultiTexCoord2fv(GL_TEXTURE1,v+5);
+							glVertex3fv(v);
+						}
+
+						glEnd();
+
+						rs_brushpasses++;
+					}
+
+				Video_SelectTexture(0);
+			}
+		}
 
 		Video_DisableMultitexture();
 
