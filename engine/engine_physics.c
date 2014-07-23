@@ -1130,12 +1130,6 @@ void Physics_ServerFrame(void)
 			case MOVETYPE_FLYBOUNCE:
 				Physics_Toss(eEntity);
 				break;
-#ifdef KATANA_PHYSICS_ODE
-			case MOVETYPE_PHYSICS:
-				{
-				}
-				break;
-#endif
 			default:
 				Con_Warning("Bad movetype set for entity! (%s)",eEntity->v.cClassname);
 			}

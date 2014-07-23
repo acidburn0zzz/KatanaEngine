@@ -217,7 +217,7 @@ void R_PushDlights(void)
 	dLight = cl_dlights;
 	for(i = 0; i < MAX_DLIGHTS; i++,dLight++)
 	{
-		if(((dLight->die < cl.time) && dLight->die) || !dLight->radius)
+		if(((dLight->die < cl.time) && dLight->die) || (!dLight->radius || !dLight->bLightmap))
 			continue;
 
 		Math_VectorCopy(dLight->origin,dLight->transformed);
@@ -394,7 +394,7 @@ DynamicLight_t *Light_GetDynamic(vec3_t vPoint)
 	for(i = 0; i < MAX_DLIGHTS; i++)
 	{
 		// [24/2/2014] If we're not being effected by the lightmap then ignore static light sources ~hogsy
-		if(!bStaticLights && ((cl_dlights[i].bLightmap == false) && cl_dlights[i].radius))
+		if(!bStaticLights && (!cl_dlights[i].bLightmap && cl_dlights[i].radius))
 			continue;
 
 		if(cl_dlights[i].die >= cl.time || (!cl_dlights[i].bLightmap && cl_dlights[i].radius))

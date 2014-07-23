@@ -81,20 +81,22 @@ texture_t *R_TextureAnimation (texture_t *base, int frame)
 
 void DrawGLPoly(glpoly_t *p)
 {
-	float	*v;
-	int		i;
-
-	glBegin(GL_TRIANGLE_FAN);
+	VideoObject_t	voObject[BSP_MAX_VERTS];
+	vec3_t			vVert;
+	float			*v;
+	int				i;
 
 	v = p->verts[0];
-	for(i = 0; i < p->numverts; i++, v += VERTEXSIZE)
+	for(i = 0; i < p->numverts; i++,v += VERTEXSIZE)
 	{
         if(!r_showtris.value)
             glTexCoord2f(v[3],v[4]);
-		glVertex3fv(v);
+
+		Math_VectorCopy(v,vVert);
+		//Math_VectorCopy(vVert,voObject[i].vVertex);
 	}
 
-	glEnd();
+	//Video_DrawObject(voObject,VIDEO_PRIMITIVE_TRIANGLE_FAN,p->numverts,false);
 }
 
 /*
@@ -595,7 +597,7 @@ void Brush_Draw(entity_t *e)
 
 		for(k = 0; k < MAX_DLIGHTS; k++)
 		{
-			if(((cl_dlights[k].die < cl.time) && cl_dlights[k].die) || (!cl_dlights[k].radius))
+			if(((cl_dlights[k].die < cl.time) && cl_dlights[k].die) || (!cl_dlights[k].radius && !cl_dlights[k].bLightmap))
 				continue;
 
 			cl_dlights[k].transformed[0] =

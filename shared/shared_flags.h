@@ -10,7 +10,6 @@
 //#define	KATANA_MODEL_NEXT		// Skeletal animation support.
 //#define   PARANOID    // Speed sapping error checking.
 //#define	KATANA_VIDEO_NEXT		// New renderer.
-#define	KATANA_PHYSICS_ODE		// ODE physics support.
 #define KATANA_AUDIO_OPENAL		// OpenAL implementation.
 #ifndef _WIN32	// [21/1/2013] Only Linux release is currently using this... ~hogsy
 #define	KATANA_NETWORK_NEXT	// New network system.
@@ -24,7 +23,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	720	// 23/7/2014
+#define ENGINE_VERSION_BUILD	721	// 24/7/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"
