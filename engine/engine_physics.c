@@ -1071,6 +1071,47 @@ void Physics_Step(edict_t *ent)
 	Game->Server_CheckWaterTransition(ent);
 }
 
+extern cvar_t	sv_edgefriction;
+
+void Physics_AddFriction(edict_t *eEntity,vec3_t vVelocity,vec3_t vOrigin)
+{
+	float	*vel;
+	float	speed, newspeed, control;
+	vec3_t	start, stop;
+	float	friction;
+	trace_t	trace;
+
+	vel = vVelocity;
+
+	speed = sqrt(vel[0]*vel[0] +vel[1]*vel[1]);
+	if(!speed)
+		return;
+
+	// If the leading edge is over a dropoff, increase friction
+	start[0] = stop[0] = vOrigin[0] + vel[0]/speed*16.0f;
+	start[1] = stop[1] = vOrigin[1] + vel[1]/speed*16.0f;
+	start[2] = vOrigin[2] + eEntity->v.mins[2];
+	stop[2] = start[2] - 34;
+
+	trace = SV_Move(start,vec3_origin,vec3_origin,stop,true,eEntity);
+	if(trace.fraction == 1.0f)
+		friction = eEntity->Physics.fFriction*sv_edgefriction.value;
+	else
+		friction = eEntity->Physics.fFriction;
+
+	// Apply friction
+	control = speed < sv_stopspeed.value ? sv_stopspeed.value : speed;
+	newspeed = speed - host_frametime*control*friction;
+
+	if(newspeed < 0)
+		newspeed = 0;
+	newspeed /= speed;
+
+	vel[0] = vel[0]*newspeed;
+	vel[1] = vel[1]*newspeed;
+	vel[2] = vel[2]*newspeed;
+}
+
 //============================================================================
 
 void Physics_ServerFrame(void)
@@ -1117,6 +1158,7 @@ void Physics_ServerFrame(void)
 				Game->Server_CheckVelocity(eEntity);
 
 				Physics_SetGravity(eEntity);
+				Physics_AddFriction(eEntity,eEntity->v.velocity,eEntity->v.origin);
 
 				SV_WalkMove(eEntity);
 				SV_LinkEdict(eEntity,true);

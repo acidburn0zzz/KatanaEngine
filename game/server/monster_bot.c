@@ -145,6 +145,8 @@ void Bot_Spawn(edict_t *eBot)
 
 		eBot->v.model	= cvServerPlayerModel.string;
 		eBot->v.netname	= BotNames[rand()%sizeof(BotNames)];
+
+		eBot->monster.iType	= MONSTER_PLAYER;
 		break;
 #ifdef OPENKATANA
 	case BOT_MIKIKO:
@@ -152,6 +154,8 @@ void Bot_Spawn(edict_t *eBot)
 
 		eBot->v.model	= "models/mikiko.md2";
 		eBot->v.netname	= "Mikiko Ebihara";
+
+		eBot->monster.iType	= MONSTER_MIKIKO;
 		break;
 	case BOT_SUPERFLY:
 		iSpawnType = INFO_PLAYER_SUPERFLY;
@@ -163,6 +167,8 @@ void Bot_Spawn(edict_t *eBot)
 
 		eBot->v.model	= "models/sprfly.md2";
 		eBot->v.netname	= "Superfly Johnson";
+
+		eBot->monster.iType	= MONSTER_SUPERFLY;
 		break;
 #endif
 	default:
@@ -180,8 +186,12 @@ void Bot_Spawn(edict_t *eBot)
 	eBot->v.iHealth		= 100;
 	eBot->v.iMaxHealth	= (int)cvServerMaxHealth.value;
 	eBot->v.movetype	= MOVETYPE_STEP;
+	eBot->v.bTakeDamage	= true;
 
-	eBot->Physics.iSolid = SOLID_SLIDEBOX;
+	eBot->Physics.iSolid	= SOLID_SLIDEBOX;
+	eBot->Physics.fGravity	= SERVER_GRAVITY;
+	eBot->Physics.fMass		= 1.4f;
+	eBot->Physics.fFriction	= 10.0f;
 
 	eBot->local.bBleed	= true;
 
@@ -206,7 +216,6 @@ void Bot_Spawn(edict_t *eBot)
 	eBot->monster.think_die		= Bot_Die;
 	eBot->monster.think_pain	= Bot_Pain;
 	eBot->monster.Think			= Bot_Think;
-	eBot->monster.iType			= MONSTER_PLAYER;
 
 	Entity_SetModel(eBot,eBot->v.model);
 	Entity_SetSize(eBot,-16.0f,-16.0f,-24.0f,16.0f,16.0f,32.0f);

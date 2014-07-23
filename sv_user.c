@@ -108,45 +108,6 @@ void SV_SetIdealPitch (void)
 	sv_player->v.idealpitch = -dir * sv_idealpitchscale.value;
 }
 
-void SV_UserFriction(void)
-{
-	float	*vel;
-	float	speed, newspeed, control;
-	vec3_t	start, stop;
-	float	friction;
-	trace_t	trace;
-
-	vel = velocity;
-
-	speed = sqrt(vel[0]*vel[0] +vel[1]*vel[1]);
-	if(!speed)
-		return;
-
-	// If the leading edge is over a dropoff, increase friction
-	start[0] = stop[0] = origin[0] + vel[0]/speed*16;
-	start[1] = stop[1] = origin[1] + vel[1]/speed*16;
-	start[2] = origin[2] + sv_player->v.mins[2];
-	stop[2] = start[2] - 34;
-
-	trace = SV_Move(start,vec3_origin,vec3_origin,stop,true,sv_player);
-	if(trace.fraction == 1.0f)
-		friction = sv_player->Physics.fFriction*sv_edgefriction.value;
-	else
-		friction = sv_player->Physics.fFriction;
-
-	// Apply friction
-	control = speed < sv_stopspeed.value ? sv_stopspeed.value : speed;
-	newspeed = speed - host_frametime*control*friction;
-
-	if(newspeed < 0)
-		newspeed = 0;
-	newspeed /= speed;
-
-	vel[0] = vel[0]*newspeed;
-	vel[1] = vel[1]*newspeed;
-	vel[2] = vel[2]*newspeed;
-}
-
 cvar_t	sv_maxspeed		= { "sv_maxspeed",		"320",	false,	true	};
 cvar_t	sv_accelerate	= { "sv_accelerate",	"10"					};
 
@@ -333,7 +294,7 @@ void SV_ClientThink (void)
 			Math_VectorCopy(vWishVelocity, velocity);
 		else if(bIsOnGround)
 		{
-			SV_UserFriction();
+			Physics_AddFriction(sv_player,velocity,origin);
 
 			currentspeed = Math_DotProduct (velocity, wishdir);
 			addspeed = wishspeed - currentspeed;
