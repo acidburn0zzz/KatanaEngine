@@ -38,6 +38,12 @@
     <Filter Include="Server\Adamas\Monsters">
       <UniqueIdentifier>{7b21ad05-bc3d-492e-8ff2-6351e1fb5d95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Server\OpenKatana\Monsters">
+      <UniqueIdentifier>{dec28296-b962-4f23-b16b-5f0f668776cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server\OpenKatana\Weapons">
+      <UniqueIdentifier>{482025ad-b292-4b59-9eb9-8ee63c20530e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\shared_math.c">
@@ -98,75 +104,6 @@
     <ClCompile Include="server\openkatana\mode_vektar.c">
       <Filter>Server\OpenKatana</Filter>
     </ClCompile>
-    <ClCompile Include="server\openkatana\monster_inmater.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\monster_lasergat.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\monster_prisoner.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_axe.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_ballista.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_barrier.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_c4vizatergo.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_crossbow.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_daikatana.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_discus.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_glock.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_greekfire.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_hermes.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_ionblaster.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_ionrifle.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_kineticore.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_midas.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_pulserifle.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_shockwave.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_shotcycler6.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_sidewinder.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_trident.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
-    <ClCompile Include="server\openkatana\weapon_zeus.c">
-      <Filter>Server\OpenKatana</Filter>
-    </ClCompile>
     <ClCompile Include="client\client_effects.c">
       <Filter>Client</Filter>
     </ClCompile>
@@ -178,6 +115,75 @@
     </ClCompile>
     <ClCompile Include="server\adamas\adamas_hurler.c">
       <Filter>Server\Adamas\Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\monster_prisoner.c">
+      <Filter>Server\OpenKatana\Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\monster_lasergat.c">
+      <Filter>Server\OpenKatana\Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\monster_inmater.c">
+      <Filter>Server\OpenKatana\Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_zeus.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_trident.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_sidewinder.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_shotcycler6.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_shockwave.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_pulserifle.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_midas.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_ionrifle.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_glock.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_crossbow.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_ballista.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_axe.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_kineticore.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_ionblaster.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_hermes.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_greekfire.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_discus.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_daikatana.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_c4vizatergo.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="server\openkatana\weapon_barrier.c">
+      <Filter>Server\OpenKatana\Weapons</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

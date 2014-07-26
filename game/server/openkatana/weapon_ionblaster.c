@@ -116,9 +116,9 @@ void IonBlaster_IonBallTouch(edict_t *eIonBall,edict_t *other)
 	else
 		eIonBall->local.hit = true;
 
-	Math_MVToVector(Math_VectorToAngles(eIonBall->v.velocity),eIonBall->v.angles);
 	Math_VectorCopy(eIonBall->v.velocity,vInversed);
 	Math_VectorInverse(vInversed);
+	Math_MVToVector(Math_VectorToAngles(eIonBall->v.velocity),eIonBall->v.angles);
 
 	if(eIonBall->local.hit)
 	{

@@ -380,11 +380,12 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 			{
 				vVertexArray[i] = (verts1[order[2]].v[i]*scale1[i]+translate1[i])*fLerp+(verts2[order[2]].v[i]*scale2[i]+translate2[i])*lLerpData.blend;
 				if(bShading)
-					vColour[i] = (shadedots[verts1->lightnormalindex])*0.5f;
+					vColour[i] = (shadedots[verts1->lightnormalindex])/2.0f;
 			}
 
 			glVertex3fv(vVertexArray);
-			glColor3fv(vColour);
+			if(bShading)
+				glColor3fv(vColour);
 
 			order += 3;
 		} while(--count);

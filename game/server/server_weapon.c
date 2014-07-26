@@ -657,6 +657,7 @@ void Weapon_CheckInput(edict_t *eEntity)
 			break;
 		case 7:
 			iNewWeapon = WEAPON_IONRIFLE;
+			break;
 #elif GAME_ADAMAS
 		case 1:
 			iNewWeapon = WEAPON_BLAZER;

@@ -247,7 +247,10 @@ void Input_OpenTweakMenu(void)
 
     tbInputOptions = TwNewBar("Input Options");
     TwAddVarRW(tbInputOptions,cvInputMouseFilter.name,TW_TYPE_FLOAT,&cvInputMouseFilter.value,"");
-    TwAddButton(tbInputOptions,"Close",(TwButtonCallback)Input_OpenTweakMenu,NULL,"");
+	TwAddVarRW(tbInputOptions,cvInputMouseGrab.name,TW_TYPE_BOOL16,&cvInputMouseFilter.value,"");
+	TwAddVarRW(tbInputOptions,cvInputMouseLook.name,TW_TYPE_BOOL16,&cvInputMouseFilter.value,"");
+	TwAddSeparator(tbInputOptions,"Information","");
+	TwAddVarRO(tbInputOptions,"Controllers",TW_TYPE_INT16,&iNumControllers,"");
 
     bOpen = true;
 }

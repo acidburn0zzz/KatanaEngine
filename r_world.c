@@ -391,11 +391,14 @@ void World_DrawWaterTextureChains(void)
 	if (r_wateralpha.value < 1.0)
 	{
 		Video_EnableCapabilities(VIDEO_BLEND);
-
 		Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
-
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
+
+	glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE);
+	glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB,GL_MODULATE);
+	glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB,GL_TEXTURE);
+	glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB,GL_PRIMARY_COLOR);
+	glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE,4);
 
 	if (r_oldwater.value)
 	{
@@ -452,6 +455,8 @@ void World_DrawWaterTextureChains(void)
 				}
 		}
 	}
+
+	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 
 	Video_ResetCapabilities(true);
 }

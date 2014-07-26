@@ -202,7 +202,7 @@ void GL_SubdivideSurface(msurface_t *fa)
 void Warp_DrawWaterPoly(glpoly_t *p)
 {
 	VideoObject_t	*voWaterPoly = calloc(p->numverts,sizeof(VideoObject_t));
-	vec3_t			vWave;
+	vec3_t			vWave,vLightColour;
 	float			*v;
 	int				i;
 
@@ -210,13 +210,25 @@ void Warp_DrawWaterPoly(glpoly_t *p)
 
 	for(i = 0; i < p->numverts; i++,v += VERTEXSIZE)
 	{
-		voWaterPoly[i].vTextureCoord[0][0] = WARPCALC(v[3],v[4]);
-		voWaterPoly[i].vTextureCoord[0][1] = WARPCALC(v[4],v[3]);
-
-		Math_VectorSet(1.0f,voWaterPoly[i].vColour);
-		voWaterPoly[i].vColour[3] = r_wateralpha.value;
+		voWaterPoly[i].vTextureCoord[0][0]	= WARPCALC(v[3],v[4]);
+		voWaterPoly[i].vTextureCoord[0][1]	= WARPCALC(v[4],v[3]);
+		voWaterPoly[i].vColour[3]			= CLAMP(0,r_wateralpha.value,1.0f);
 
 		Math_VectorCopy(v,vWave);
+
+		// Shitty lit water, use dynamic light points in the future...
+		{
+			MathVector_t	mvLightColour;
+
+			// Use vWave position BEFORE we move it, otherwise the water will flicker.
+			mvLightColour = Light_GetSample(vWave);
+
+			Math_MVToVector(mvLightColour,vLightColour);
+			Math_VectorScale(vLightColour,1.0f/200.0f,vLightColour);
+			Math_VectorDivide(vLightColour,0.2f,vLightColour);
+		}
+
+		Math_VectorCopy(vLightColour,voWaterPoly[i].vColour);
 
 		// [20/1/2013] Added in subtle water bobbing, based on this code http://www.quake-1.com/docs/quakesrc.org/26.html ~hogsy
 		vWave[2] =	v[2]+

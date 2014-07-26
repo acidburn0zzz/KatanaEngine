@@ -28,6 +28,8 @@
 
 #define	BOT_MAX_HEALTH	100
 #define	BOT_MAX_SIGHT	900.0f
+#define	BOT_MAX_SPEED	320.0f	// Must match player speed.
+#define	BOT_MIN_SPEED	200.0f	// Must match player walk speed.
 #define BOT_MIN_HEALTH	-20		// [2/1/2013] Same as in server_player ~hogsy
 
 // [15/7/2012] List of death phrases ~hogsy
@@ -191,7 +193,7 @@ void Bot_Spawn(edict_t *eBot)
 	eBot->Physics.iSolid	= SOLID_SLIDEBOX;
 	eBot->Physics.fGravity	= SERVER_GRAVITY;
 	eBot->Physics.fMass		= 1.4f;
-	eBot->Physics.fFriction	= 10.0f;
+	eBot->Physics.fFriction	= 4.0f;
 
 	eBot->local.bBleed	= true;
 
@@ -229,23 +231,55 @@ void Bot_Spawn(edict_t *eBot)
 
 void Bot_Think(edict_t *eBot)
 {
+	// If the bot isn't dead, then add animations.
+	if(eBot->monster.iState != STATE_DEAD)
+	{
+		if(eBot->v.flags & FL_ONGROUND)
+		{
+			if((	(eBot->v.velocity[0] < -4.0f || eBot->v.velocity[0] > 4.0f)	|| 
+					(eBot->v.velocity[1] < -4.0f || eBot->v.velocity[1] > 4.0f))	&& 
+					(!eBot->local.dAnimationTime || eBot->local.iAnimationEnd == 9))
+				Entity_Animate(eBot,PlayerAnimation_Walk);
+			else if((eBot->v.velocity[0] == 0 || eBot->v.velocity[1] == 0) && (!eBot->local.dAnimationTime || eBot->local.iAnimationEnd > 9))
+			{
+	#ifdef GAME_OPENKATANA
+				if(eBot->v.iActiveWeapon == WEAPON_DAIKATANA)
+					Entity_Animate(eBot,PlayerAnimation_KatanaIdle);
+				else
+	#endif
+					Entity_Animate(eBot,PlayerAnimation_Idle);
+			}
+		}
+	}
+
 	switch(eBot->monster.iThink)
 	{
 	case THINK_IDLE:
-#if 0
-		char	cJumpSound[128];
+#if 1
+		// Add some random movement. ~hogsy
+		if(rand()%120 == 0)
+		{
+			int	iResult = rand()%3;
 
-		// [4/2/2013] TEMP: Some test stuff for monster jumping... LOL ~hogsy
-		if(!(eBot->v.flags & FL_ONGROUND) || eBot->v.iHealth <= 0)
-			return;
+			if(iResult == 0)
+				eBot->v.velocity[0] += BOT_MIN_SPEED;
+			else if(iResult == 1)
+				eBot->v.velocity[0] -= BOT_MIN_SPEED;
 
-		Monster_Jump(eBot,200.0f);
+			iResult = rand()%3;
+			if(iResult == 0)
+				eBot->v.velocity[1] += BOT_MIN_SPEED;
+			else if(iResult == 1)
+				eBot->v.velocity[1] -= BOT_MIN_SPEED;
 
-		sprintf(cJumpSound,"player/playerjump%i.wav",5+(rand()%3));
+			eBot->v.angles[1] = Math_VectorToYaw(eBot->v.velocity);
+		}
+		else if(rand()%150 == 0)
+		{
+			Monster_Jump(eBot,200.0f);
 
-		Sound(eBot,CHAN_VOICE,cJumpSound,255,ATTN_NORM);
-#else
-		Monster_SetTargets(eBot);
+			Entity_Animate(eBot,PlayerAnimation_Jump);
+		}
 #endif
 		break;
 	case THINK_WANDERING:

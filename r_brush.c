@@ -157,7 +157,6 @@ void R_DrawSequentialPoly(msurface_t *s)
             Video_EnableCapabilities(VIDEO_BLEND);
 
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-			glColor4f(1.0f,1.0f,1.0f,fAlpha);
 		}
 
         Video_SetTexture(s->texinfo->texture->gltexture);
@@ -181,10 +180,7 @@ void R_DrawSequentialPoly(msurface_t *s)
 #endif
 
 		if(fAlpha < 1.0f)
-		{
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_REPLACE);
-			glColor3f(1.0f,1.0f,1.0f);
-		}
 	}
 	else
 	{

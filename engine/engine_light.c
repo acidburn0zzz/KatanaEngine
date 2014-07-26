@@ -378,23 +378,22 @@ DynamicLight_t *Light_GetDynamic(vec3_t vPoint)
 	int				i;
 	bool			bStaticLights = true;
 	float			fLightAmount;
-	DynamicLight_t	*dlClosestLight = &cl_dlights[0];
+	DynamicLight_t	*dlClosestLight = NULL;
 	vec3_t			vLightColour;
 
-	if(!cl.worldmodel->lightdata)
-		Math_VectorSet(255.0f,vLightColour);
-	else
-		Math_MVToVector(Light_GetSample(vPoint),vLightColour);
+#if 1
+	Math_MVToVector(Light_GetSample(vPoint),vLightColour);
 
 	// [30/10/2013] Check that we're actually being effected by a lightsource before anything else ~hogsy
-	fLightAmount = (vLightColour[0]+vLightColour[1]+vLightColour[2])/100.0f;
-	if(!fLightAmount)
+	fLightAmount = (vLightColour[0]+vLightColour[1]+vLightColour[2])/200.0f;
+	if(fLightAmount < 0.5f)
 		bStaticLights = false;
+#endif
 
 	for(i = 0; i < MAX_DLIGHTS; i++)
 	{
 		// [24/2/2014] If we're not being effected by the lightmap then ignore static light sources ~hogsy
-		if(!bStaticLights && (!cl_dlights[i].bLightmap && cl_dlights[i].radius))
+		if(!bStaticLights && !cl_dlights[i].bLightmap)
 			continue;
 
 		if(cl_dlights[i].die >= cl.time || (!cl_dlights[i].bLightmap && cl_dlights[i].radius))
@@ -407,16 +406,21 @@ DynamicLight_t *Light_GetDynamic(vec3_t vPoint)
 			fDistance[0] = cl_dlights[i].radius-Math_Length(vDistance);
 			if(fDistance[0] > 0)
 			{
-				Math_VectorSubtract(dlClosestLight->origin,cl_dlights[i].origin,vDistance);
-
-				fDistance[1] = (cl_dlights[i].radius-Math_Length(vDistance));
-				if(fDistance[1] < fDistance[0])
+				if(!dlClosestLight)
 					dlClosestLight = &cl_dlights[i];
+				else
+				{
+					Math_VectorSubtract(dlClosestLight->origin,cl_dlights[i].origin,vDistance);
+
+					fDistance[1] = (cl_dlights[i].radius-Math_Length(vDistance));
+					if(fDistance[1] < fDistance[0])
+						dlClosestLight = &cl_dlights[i];
+				}
 			}
 		}
 	}
 
-	return NULL;
+	return dlClosestLight;
 }
 
 extern unsigned	blocklights[128*128*3];

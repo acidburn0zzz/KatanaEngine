@@ -98,6 +98,8 @@ void Editor_LoadLevel(const char *ccLevel)
 		Con_Warning("Unknown level format! (%s)\n",ccLevel);
 }
 
+void Input_OpenTweakMenu(void);
+
 /*  Command function to allow us to launch the editor.
 */
 void Editor_Launch(void)
@@ -121,6 +123,8 @@ void Editor_Launch(void)
         tbMainMenu = TwNewBar("Editor Menu");
         if(!tbMainMenu)
             Sys_Error("Failed to create editor window!\n");
+
+		TwAddButton(tbMainMenu,"Input Settings",(TwButtonCallback*)Input_OpenTweakMenu,NULL,"");
 	}
 
 #if 0
