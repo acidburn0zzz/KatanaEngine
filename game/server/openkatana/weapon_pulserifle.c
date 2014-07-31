@@ -2,9 +2,44 @@
 */
 #include "server_weapon.h"
 
+EntityFrame_t efPulseRifleDeploy[]=
+{
+	{	NULL,	1,	0.1f,	false	},
+	{	NULL,	2,	0.1f,	false	},
+	{	NULL,	3,	0.1f,	false	},
+	{	NULL,	4,	0.1f,	false	},
+	{	NULL,	5,	0.1f,	false	},
+	{	NULL,	6,	0.1f,	false	},
+	{	NULL,	7,	0.1f,	false	},
+	{	NULL,	8,	0.1f,	false	},
+	{	NULL,	9,	0.1f,	false	},
+	{	NULL,	10,	0.1f,	false	},
+	{	NULL,	11,	0.1f,	false	},
+	{	NULL,	12,	0.1f,	false	},
+	{	NULL,	13,	0.1f,	false	},
+	{	NULL,	14,	0.1f,	false	},
+	{	NULL,	15,	0.1f,	true	}
+};
+
+EntityFrame_t efPulseRifleAttack[]=
+{
+	{	NULL,	16,	0.1f,	false	},
+	{	NULL,	17,	0.1f,	false	},
+	{	NULL,	18,	0.1f,	false	},
+	{	NULL,	19,	0.1f,	false	},
+	{	NULL,	20,	0.1f,	false	},
+	{	NULL,	21,	0.1f,	false	},
+	{	NULL,	22,	0.1f,	false	},
+	{	NULL,	23,	0.1f,	false	},
+	{	NULL,	24,	0.1f,	false	},
+	{	NULL,	25,	0.1f,	false	},
+	{	NULL,	26,	0.1f,	false	},
+	{	NULL,	27,	0.1f,	true	}
+};
+
 void PulseRifle_Deploy(edict_t *ent)
 {
-	//Weapon_Animate(ent,FALSE,1,15,0.1f,0,0,0,FALSE);
+	Weapon_Animate(ent,efPulseRifleDeploy);
 }
 
 void PulseRifle_PrimaryAttack(edict_t *ent)
@@ -16,6 +51,8 @@ void PulseRifle_PrimaryAttack(edict_t *ent)
 		//Weapon_Animate(ent,FALSE,0,15,0.05f,10,19,0,FALSE);
 	else
 		//Weapon_Animate(ent,FALSE,16,27,0.05f,10,19,0,FALSE);
+#else
+	Weapon_Animate(ent,efPulseRifleAttack);
 #endif
 
 	ent->v.effects |= EF_MUZZLEFLASH;
@@ -26,7 +63,7 @@ void PulseRifle_PrimaryAttack(edict_t *ent)
 	ent->local.dAttackFinished	= Server.dTime+0.2;
 
 	// [23/5/2012] Damage set to 5 due to high rate of fire ~hogsy
-//	Weapon_BulletProjectile(ent,0.5f,5);
+	//Weapon_BulletProjectile(ent,0.5f,5);
 }
 
 // [17/7/2012] Revised ~hogsy
@@ -43,7 +80,7 @@ void CorditeExplode(edict_t *ent)
 	// [25/6/2012] Simplified ~hogsy
 	Math_VectorClear(ent->v.velocity);
 
-	RemoveEntity(ent);
+	Entity_Remove(ent);
 }
 
 // [17/7/2012] Revised ~hogsy

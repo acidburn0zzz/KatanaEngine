@@ -381,14 +381,12 @@ DynamicLight_t *Light_GetDynamic(vec3_t vPoint)
 	DynamicLight_t	*dlClosestLight = NULL;
 	vec3_t			vLightColour;
 
-#if 1
 	Math_MVToVector(Light_GetSample(vPoint),vLightColour);
 
 	// [30/10/2013] Check that we're actually being effected by a lightsource before anything else ~hogsy
 	fLightAmount = (vLightColour[0]+vLightColour[1]+vLightColour[2])/200.0f;
-	if(fLightAmount < 0.5f)
+	if(fLightAmount < 0.2f)
 		bStaticLights = false;
-#endif
 
 	for(i = 0; i < MAX_DLIGHTS; i++)
 	{

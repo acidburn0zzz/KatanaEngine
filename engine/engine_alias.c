@@ -247,7 +247,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 1 // new
+#if 0 // new
 	int					i,j,k,iVert;
 	float               fAlpha;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
@@ -556,8 +556,9 @@ void Alias_Draw(entity_t *eEntity)
 
 			Video_SetTexture(gSphereTexture);
 			Video_EnableCapabilities(VIDEO_BLEND|VIDEO_TEXTURE_GEN_S|VIDEO_TEXTURE_GEN_T);
+			Video_SetBlend(VIDEO_BLEND_THREE,VIDEO_DEPTH_IGNORE);
 
-			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD_SIGNED);
+			//glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 		}
 		// [20/8/2013] Or fullbright! ~hogsy
 		else if(gFullbrightTexture)
@@ -566,7 +567,7 @@ void Alias_Draw(entity_t *eEntity)
             Video_EnableCapabilities(VIDEO_BLEND);
 			Video_SetTexture(gFullbrightTexture);
 
-			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
+			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
 		}
 	}
 	else if(r_drawflat_cheatsafe)
@@ -575,7 +576,12 @@ void Alias_Draw(entity_t *eEntity)
 	Alias_DrawModelFrame(mModel,lLerpData);
 
 	if(!r_drawflat_cheatsafe)
+	{
+		Video_SelectTexture(1);
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+		Video_SelectTexture(0);
+		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+	}
 	else
 	{
 		// Restore randomness

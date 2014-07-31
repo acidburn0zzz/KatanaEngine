@@ -60,7 +60,8 @@ mplane_t	*mpMirrorPlane;
 
 cvar_t	r_norefresh				= {	"r_norefresh",			"0"					};
 cvar_t	r_drawentities			= {	"r_drawentities",		"1"					};
-cvar_t	r_drawviewmodel			= {	"r_drawviewmodel",		"1"					};
+cvar_t	r_drawviewmodel			= {	"r_drawviewmodel",		"1"					},
+		cvVideoDrawBrushes		= {	"video_drawbrushes",	"1",		false,	true,	"Toggles whether brushes are drawn in the level."				};
 cvar_t	r_speeds				= {	"r_speeds",				"0"					};
 cvar_t	r_fullbright			= {	"r_fullbright",			"0"					};
 cvar_t	r_lightmap				= {	"r_lightmap",			"0"					};

@@ -94,7 +94,8 @@ extern	int		d_lightstylevalue[256];	// 8.8 fraction of base light value
 
 extern	bool	bEnvironmentMap;
 
-extern	cvar_t	r_drawentities;
+extern	cvar_t	r_drawentities,
+				cvVideoDrawBrushes;
 extern	cvar_t	r_drawworld;
 extern	cvar_t	r_drawviewmodel;
 extern	cvar_t	r_speeds;

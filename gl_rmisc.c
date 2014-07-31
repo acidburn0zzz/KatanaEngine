@@ -156,6 +156,7 @@ void R_Init (void)
 	Cvar_RegisterVariable (&r_lightmap, NULL);
 	Cvar_RegisterVariable (&r_fullbright, NULL);
 	Cvar_RegisterVariable (&r_drawentities, NULL);
+	Cvar_RegisterVariable(&cvVideoDrawBrushes,NULL);
 	Cvar_RegisterVariable (&r_drawviewmodel, NULL);
 	Cvar_RegisterVariable (&r_shadows, NULL);
 	Cvar_RegisterVariable (&r_mirroralpha, NULL);

@@ -13,7 +13,7 @@ void HUD_Draw(void)
 	if(cvShowCrosshair.bValue)
 	{
 		Engine.Client_SetMenuCanvas(CANVAS_CROSSHAIR);
-		Engine.DrawPic(HUD_BASEPATH"crosshair",1.0f,-16,-16,32,32);
+		Engine.DrawPic(va(HUD_BASEPATH"crosshair%i",cvShowCrosshair.iValue-1),1.0f,-16,-16,32,32);
 	}
 
 	// Draw the rest...

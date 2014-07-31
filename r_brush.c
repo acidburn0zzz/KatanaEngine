@@ -556,7 +556,7 @@ void Brush_Draw(entity_t *e)
 	mplane_t	*pplane;
 	model_t		*clmodel;
 
-	if (R_CullModelForEntity(e))
+	if(R_CullModelForEntity(e) || !cvVideoDrawBrushes.bValue)
 		return;
 
 	currententity = e;
@@ -1075,7 +1075,8 @@ void R_RebuildAllLightmaps (void)
 	// For each surface in each model, rebuild lightmap with new scale
 	for(i = 1; i < MAX_MODELS; i++)
 	{
-		if (!(mod = cl.model_precache[i]))
+		mod = cl.model_precache[i];
+		if (!mod)
 			continue;
 
 		fa = &mod->surfaces[mod->firstmodelsurface];
