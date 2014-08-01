@@ -94,6 +94,7 @@
       <OutputFile>..\..\openkatana\menu.x86.dll</OutputFile>
       <AdditionalLibraryDirectories>..\platform\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Adamas|Win32'">

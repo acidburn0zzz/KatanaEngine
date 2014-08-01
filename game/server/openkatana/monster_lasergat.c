@@ -40,7 +40,6 @@ void LaserGat_AimTarget(edict_t *eLaserGat,edict_t *eTarget)
 
 void LaserGat_HandleAim(edict_t *eLaserGat)
 {
-#if 0
 	if(eLaserGat->monster.iThink == THINK_IDLE)
 	{
 		if(!eLaserGat->monster.eTarget)
@@ -51,7 +50,6 @@ void LaserGat_HandleAim(edict_t *eLaserGat)
     }
     else if(eLaserGat->monster.iThink == THINK_ATTACKING)
 		LaserGat_AimTarget(eLaserGat,eLaserGat->monster.eEnemy);
-#endif
 }
 
 void LaserGat_Touch(edict_t *eLaserGat,edict_t *eOther)

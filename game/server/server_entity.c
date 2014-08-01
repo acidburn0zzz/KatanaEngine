@@ -125,8 +125,10 @@ edict_t *Entity_SpawnPoint(edict_t *eEntity,int iType)
 		}
 		// [27/4/2014] Oops, forgot to break here ~hogsy
 		break;
+#ifdef GAME_OPENKATANA
 	case INFO_PLAYER_SUPERFLY:
 	case INFO_PLAYER_MIKIKO:
+#endif
 	default:
 		cStartName = "point_start";
 	}

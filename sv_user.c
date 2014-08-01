@@ -368,7 +368,7 @@ nextmsg:
 
 		MSG_BeginReading ();
 
-		while (1)
+		for(;;)
 		{
 			if(!host_client->active)
 				return false;	// a command caused an error
