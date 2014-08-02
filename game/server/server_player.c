@@ -330,6 +330,21 @@ void Player_CheckFootsteps(edict_t *ePlayer)
 	}
 }
 
+void Player_CheckWater(edict_t *ePlayer)
+{
+	// [2/8/2014] Basic Drowning... ~eukos
+	if(ePlayer->v.waterlevel != 3)
+		ePlayer->local.dAirFinished = Server.dTime + 12;
+	else if(ePlayer->local.dAirFinished < Server.dTime)
+	{
+		if(ePlayer->local.dPainFinished < Server.dTime)
+		{
+			MONSTER_Damage(ePlayer,ePlayer,10, 0);
+			ePlayer->local.dPainFinished = Server.dTime + 1;
+		}
+	}
+}
+
 void Player_PostThink(edict_t *ePlayer)
 {
 	// [25/8/2012] Added iFlag to deal with a particular issue ~hogsy
@@ -433,6 +448,7 @@ void Player_PreThink(edict_t *ePlayer)
 
 	Weapon_CheckFrames(ePlayer);
 	Entity_CheckFrames(ePlayer);
+	Player_CheckWater(ePlayer);
 
 	if(ePlayer->monster.iState == STATE_DEAD)
 	{
