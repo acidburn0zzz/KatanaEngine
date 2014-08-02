@@ -396,7 +396,7 @@ DynamicLight_t *Light_GetDynamic(vec3_t vPoint)
 
 		if(cl_dlights[i].die >= cl.time || (!cl_dlights[i].bLightmap && cl_dlights[i].radius))
 		{
-			float	fDistance[1];
+			float	fDistance[2];
 			vec3_t	vDistance;
 
 			Math_VectorSubtract(vPoint,cl_dlights[i].origin,vDistance);

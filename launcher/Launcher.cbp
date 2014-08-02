@@ -30,6 +30,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="+map test_bsp" />
 				<Compiler>
 					<Add option="-m32" />
 					<Add directory="../external" />
@@ -37,6 +38,8 @@
 				</Compiler>
 				<Linker>
 					<Add library="../platform/lib/libplatformx86.a" />
+					<Add library="libdl.a" />
+					<Add library="X11" />
 				</Linker>
 			</Target>
 		</Build>
