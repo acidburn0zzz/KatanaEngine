@@ -359,3 +359,54 @@
 	"../platform/include/platform.h"
 	"shared_flags.h"
 
+1406997020 source:/home/hogsy/ProjectKatana/launcher/launcher_main.cpp
+	"platform_module.h"
+	"platform_window.h"
+	"shared_flags.h"
+	"shared_module.h"
+	"shared_engine.h"
+
+1406997020 /home/hogsy/ProjectKatana/platform/include/platform_module.h
+	"platform.h"
+
+1406997340 /home/hogsy/ProjectKatana/platform/include/platform.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"platform_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<Windows.h>
+	<WindowsX.h>
+	<CommCtrl.h>
+	<direct.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+
+1406997020 /home/hogsy/ProjectKatana/platform/include/platform_inttypes.h
+	"platform_stdint.h"
+
+1406997020 /home/hogsy/ProjectKatana/platform/include/platform_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1406997020 /home/hogsy/ProjectKatana/platform/include/platform_window.h
+	"platform.h"
+	<X11/Xlib.h>
+
+1406997680 /home/hogsy/ProjectKatana/shared/shared_flags.h
+
+1406997020 /home/hogsy/ProjectKatana/shared/shared_module.h
+
+1406997020 /home/hogsy/ProjectKatana/shared/shared_engine.h
+	"../platform/include/platform.h"
+	"shared_flags.h"
+

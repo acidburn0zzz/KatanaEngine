@@ -3,7 +3,9 @@
 #ifndef __SHAREDFLAGS__
 #define __SHAREDFLAGS__
 
+#ifdef _MSC_VER
 #pragma warning(disable:4100)	// unreferenced formal parameter
+#endif
 
 /*	Define for our future crap.
 	Most of the stuff plopped
