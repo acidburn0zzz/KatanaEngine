@@ -441,8 +441,8 @@ void BSP_RemoveSkipSurfaces(void)
 			ti = texinfo + face->iTexInfo;
 			texture = (miptex_t *) ((byte *) textures + miptexlump->dataofs[ti->iMipTex]);
 			name = texture->name;
-			
-			if(!strcmpi(name,"nodraw"))
+
+			if(!strcasecmp(name,"nodraw"))
 			{
 				// copy each remaining marksurface to previous slot
 				for (k = j; k < leaf->uiNumMarkSurfaces-1; k++)
@@ -460,7 +460,7 @@ void BSP_RemoveSkipSurfaces(void)
 	// loop through all the models, editing surface lists (this takes care of brush entities)
 	for (i = 0, model = dmodels; i < nummodels; i++, model++)
 	{
-		if (i == 0) 
+		if (i == 0)
 			continue; // model 0 is worldmodel
 
 		modfaces = dfaces+model->iFirstFace;
@@ -472,7 +472,7 @@ void BSP_RemoveSkipSurfaces(void)
 			texture = (miptex_t *) ((byte *) textures + miptexlump->dataofs[ti->iMipTex]);
 			name = texture->name;
 
-			if(!strcmpi(name,"nodraw"))
+			if(!strcasecmp(name,"nodraw"))
 			{
 				// copy each remaining face to previous slot
 				for (k = j; k < model->iNumFaces-1; k++)
