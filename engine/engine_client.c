@@ -52,6 +52,9 @@ Particle_t *Client_AllocateParticle(void)
 {
 	Particle_t *pParticle;
 
+	if(cl.bIsPaused || ((key_dest == key_console) && svs.maxclients == 1))
+		return NULL;
+
 	if(!pFreeParticles)
 	{
 		Con_Warning("Failed to allocate particle!\n");
@@ -219,7 +222,7 @@ void Client_ProcessParticles(void)
 
 	// [19/3/2013] Moved up here since we were still going through the below... *sighs* ~hogsy
 	// [7/8/2013] Don't process if there aren't any active particles! ~hogsy
-	if(!active_particles || cl.bIsPaused)
+	if(!active_particles || (cl.bIsPaused || ((key_dest == key_console) && svs.maxclients == 1)))
 		return;
 
 	frametime		= cl.time-cl.oldtime;
