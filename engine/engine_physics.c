@@ -639,7 +639,7 @@ void SV_Physics_Pusher (edict_t *ent)
 	else
 		movetime = host_frametime;
 
-	if (movetime)
+	if(movetime)
 	{
 		if((ent->v.avelocity[0] || ent->v.avelocity[1] || ent->v.avelocity[2])
 			&& ent->Physics.iSolid == SOLID_BSP)

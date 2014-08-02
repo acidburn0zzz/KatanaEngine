@@ -3,16 +3,20 @@
 #ifndef __SHAREDFLAGS__
 #define __SHAREDFLAGS__
 
+#ifdef _MSC_VER
+#pragma warning(disable:4100)	// unreferenced formal parameter
+#endif
+
 /*	Define for our future crap.
 	Most of the stuff plopped
 	within these will be removed
 	from the final OpenKatana branch.	*/
 //#define	KATANA_MODEL_NEXT		// Skeletal animation support.
-//#define   PARANOID    // Speed sapping error checking.
+//#define   PARANOID				// Speed sapping error checking.
 //#define	KATANA_VIDEO_NEXT		// New renderer.
-#define KATANA_AUDIO_OPENAL		// OpenAL implementation.
+#define KATANA_AUDIO_OPENAL			// OpenAL implementation.
 #ifndef _WIN32	// [21/1/2013] Only Linux release is currently using this... ~hogsy
-#define	KATANA_NETWORK_NEXT	// New network system.
+#define	KATANA_NETWORK_NEXT			// New network system.
 #endif
 #define	LIGHTHACK	// Rushed in lighting method thrown up using OpenGL's built-in features.
 
@@ -23,7 +27,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	724	// 31/7/2014
+#define ENGINE_VERSION_BUILD	725	// 1/8/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"

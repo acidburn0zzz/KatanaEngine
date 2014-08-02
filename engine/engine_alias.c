@@ -247,7 +247,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 0 // new
+#if 1 // new
 	int					i,j,k,iVert;
 	float               fAlpha;
 	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
@@ -293,10 +293,12 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
                 for(j = 0; j < 3; j++)
                 {
                     voModel[iVert].vVertex[j]	= mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+translate1[j];
-                    //voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
+                    voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
 
-					//voModel[iVert].vTextureCoord[0][0]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/mModel->skinwidth;
-					//voModel[iVert].vTextureCoord[0][1]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/mModel->skinheight;
+					voModel[iVert].vTextureCoord[1][0]	=
+					voModel[iVert].vTextureCoord[0][0]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/mModel->skinwidth;
+					voModel[iVert].vTextureCoord[1][1]	=
+					voModel[iVert].vTextureCoord[0][1]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/mModel->skinheight;
 
                     if(bShading)
                         voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;
@@ -556,9 +558,8 @@ void Alias_Draw(entity_t *eEntity)
 
 			Video_SetTexture(gSphereTexture);
 			Video_EnableCapabilities(VIDEO_BLEND|VIDEO_TEXTURE_GEN_S|VIDEO_TEXTURE_GEN_T);
-			Video_SetBlend(VIDEO_BLEND_THREE,VIDEO_DEPTH_IGNORE);
 
-			//glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 		}
 		// [20/8/2013] Or fullbright! ~hogsy
 		else if(gFullbrightTexture)

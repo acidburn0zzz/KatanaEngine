@@ -413,6 +413,83 @@ void LoadBSPFile(char *filename)
 	SB_Free(&sb);
 }
 
+// Ripped from RMQ ~hogsy
+void BSP_RemoveSkipSurfaces(void)
+{
+	int					i, j, k, skipcount;
+	unsigned int		*leafmarks;
+	BSPLeaf_t			*leaf;
+	BSPFace_t			*face;
+	BSPTextureInfo_t	*ti;
+	miptex_t			*textures, *texture;
+	char				*name;
+	dmiptexlump_t		*miptexlump;
+	BSPModel_t			*model;
+	BSPFace_t			*modfaces;
+
+	miptexlump = (dmiptexlump_t *) dtexdata;
+	textures = (miptex_t *) dtexdata;
+	skipcount = 0;
+
+	for (i = 0, leaf = dleafs; i < numleafs; i++, leaf++)
+	{
+		leafmarks = dmarksurfaces + leaf->uiFirstMarkSurface;
+
+		for (j = 0; j < leaf->uiNumMarkSurfaces;)
+		{
+			face = dfaces + leafmarks[j];
+			ti = texinfo + face->iTexInfo;
+			texture = (miptex_t *) ((byte *) textures + miptexlump->dataofs[ti->iMipTex]);
+			name = texture->name;
+
+			if(!strcasecmp(name,"nodraw"))
+			{
+				// copy each remaining marksurface to previous slot
+				for (k = j; k < leaf->uiNumMarkSurfaces-1; k++)
+					leafmarks[k] = leafmarks[k + 1];
+
+				// reduce marksurface count by one
+				leaf->uiNumMarkSurfaces--;
+
+				skipcount++;
+			}
+			else j++;
+		}
+	}
+
+	// loop through all the models, editing surface lists (this takes care of brush entities)
+	for (i = 0, model = dmodels; i < nummodels; i++, model++)
+	{
+		if (i == 0)
+			continue; // model 0 is worldmodel
+
+		modfaces = dfaces+model->iFirstFace;
+
+		for (j = 0; j < model->iNumFaces;)
+		{
+			face = modfaces + j;
+			ti = texinfo + face->iTexInfo;
+			texture = (miptex_t *) ((byte *) textures + miptexlump->dataofs[ti->iMipTex]);
+			name = texture->name;
+
+			if(!strcasecmp(name,"nodraw"))
+			{
+				// copy each remaining face to previous slot
+				for (k = j; k < model->iNumFaces-1; k++)
+					modfaces[k] = modfaces[k + 1];
+
+				// reduce face count by one
+				model->iNumFaces--;
+
+				skipcount++;
+			}
+			else j++;
+		}
+	}
+
+	printf("Skipped %i surfaces\n",skipcount);
+}
+
 /*	Swaps the bsp file in place, so it should not be referenced again
 */
 void WriteBSPFile (char *filename)
@@ -423,6 +500,8 @@ void WriteBSPFile (char *filename)
 	int				index;
 	int				bspsize;
 	BSPLump_t		lumps[HEADER_LUMPS],*lump;
+
+	BSP_RemoveSkipSurfaces();
 
 	bspsize = BSP_HEADER_SIZE;
 	bspsize += sizeof(lumps)+20*numplanes+(40+BSP_AMBIENT_END)*numleafs+12*numvertexes;
