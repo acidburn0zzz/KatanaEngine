@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2013 OldTimes Software
+/*	Copyright (C) 2011-2014 OldTimes Software
 */
 #include "server_monster.h"
 

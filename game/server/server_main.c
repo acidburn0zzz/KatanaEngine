@@ -242,6 +242,15 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain3.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain4.wav");
 
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD0);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD1);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD2);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD3);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE0);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE1);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE2);
+	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE3);
+
 #ifdef GAME_OPENKATANA	// [22/4/2013] OpenKatana specific stuff is now here instead ~hogsy
 	// [29/7/2012] Player sounds ~hogsy
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerjump5.wav");
@@ -274,17 +283,6 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"ice");
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"zspark");
 #endif
-
-	// [21/3/2012] Updated ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"pl");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD0);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD1);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD2);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD3);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE0);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE1);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE2);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE3);
 
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,cvServerPlayerModel.string);
 

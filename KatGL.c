@@ -42,6 +42,9 @@ void R_InitExperimental(void)
 		gShadow	= TexMgr_LoadImage(NULL,cvShadowPath.string,iWidth,iHeight,SRC_RGBA,bShadowData,cvShadowPath.string,0,TEXPREF_ALPHA|TEXPREF_PERSIST);
 	else
 		Con_Warning("Failed to load %s!\n",cvShadowPath.string);
+
+	// First slot is reserved.
+	gEffectTexture[0] = notexture;
 }
 
 void R_RocketTrail(vec3_t start, vec3_t end, int type)
@@ -201,12 +204,7 @@ void Draw_Particles(void)
 		VideoObject_t	voParticle[4];
 
 		if(!r_showtris.value)
-		{
-			if(!pParticle->texture)
-				Video_SetTexture(notexture);
-			else
-				Video_SetTexture(gEffectTexture[pParticle->texture]);
-		}
+			Video_SetTexture(gEffectTexture[pParticle->texture]);
 
 		Math_VectorCopy(pParticle->org,voParticle[0].vVertex);
 		Math_Vector4Copy(pParticle->color,voParticle[0].vColour);
