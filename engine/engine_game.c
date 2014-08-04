@@ -454,11 +454,19 @@ void Particle(vec3_t org,vec3_t dir,float scale,char *texture,int count)
 
 	for(i = 0; i < MAX_EFFECTS; i++)
 		if(gEffectTexture[i])
+		{
 			if(!strcmp(texture,gEffectTexture[i]->name))
 			{
 				MSG_WriteByte(&sv.datagram,i);
 				break;
 			}
+		}
+		else
+		{
+			// Otherwise give the texture the initial slot (this points to the notexture).
+			MSG_WriteByte(&sv.datagram,0);
+			break;
+		}
 
 	MSG_WriteByte(&sv.datagram,count);
 }
