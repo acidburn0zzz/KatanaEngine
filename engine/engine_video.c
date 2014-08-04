@@ -644,31 +644,36 @@ void Video_DrawObject(
 		if(uiTriangles > uiVideoArraySize)
 			realloc(vVideoVertexArray,(uiVideoArraySize*2)*sizeof(vVideoVertexArray));
 
-		memset(vVideoVertexArray,0,sizeof(vVideoVertexArray));
-
 		for(i = 0; i < uiTriangles; i++)
 		{
-			Math_VectorCopy(voObject[i].vVertex,vVideoVertexArray[i]);
-			Math_VectorCopy(voObject[i].vColour,vColourArray[i]);
-			Math_VectorCopy(voObject[i].vTextureCoord[0],vTextureArray[i]);
+			if(!r_showtris.value)
+			{
+				Math_VectorCopy(voObject[i].vColour,vColourArray[i]);
+				vColourArray[i][3] = voObject[i].vColour[3];
 
-			vColourArray[i][3] = voObject[i].vColour[3];
+				Math_VectorCopy(voObject[i].vTextureCoord[0],vTextureArray[i]);
+			}
+
+			Math_VectorCopy(voObject[i].vVertex,vVideoVertexArray[i]);
 		}
 
 		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+
 		glVertexPointer(3,GL_FLOAT,0,vVideoVertexArray);
+		glColorPointer(4,GL_FLOAT,0,vColourArray);
 
 		if(!r_showtris.bValue)
 		{
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glEnableClientState(GL_COLOR_ARRAY);
 
-			glColorPointer(4,GL_FLOAT,0,vColourArray);
 			glTexCoordPointer(2,GL_FLOAT,0,vTextureArray);
 		}
 	}
 
 	glDrawArrays(gPrimitive,0,uiTriangles);
+
+	memset(vVideoVertexArray,0,sizeof(vVideoVertexArray));
 #endif
 
 	bVideoIgnoreCapabilities = false;

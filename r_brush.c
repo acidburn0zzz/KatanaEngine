@@ -81,7 +81,7 @@ texture_t *R_TextureAnimation (texture_t *base, int frame)
 
 void DrawGLPoly(glpoly_t *p)
 {
-	VideoObject_t	voObject[BSP_MAX_VERTS];
+	VideoObject_t	voObject[4096];
 	vec3_t			vVert;
 	float			*v;
 	int				i;
@@ -90,13 +90,15 @@ void DrawGLPoly(glpoly_t *p)
 	for(i = 0; i < p->numverts; i++,v += VERTEXSIZE)
 	{
         if(!r_showtris.value)
-            glTexCoord2f(v[3],v[4]);
+		{
+			voObject[i].vTextureCoord[0][0] = v[3];
+			voObject[i].vTextureCoord[0][1]	= v[4];
+		}
 
-		Math_VectorCopy(v,vVert);
-		//Math_VectorCopy(vVert,voObject[i].vVertex);
+		Math_VectorCopy(v,voObject[i].vVertex);
 	}
 
-	//Video_DrawObject(voObject,VIDEO_PRIMITIVE_TRIANGLE_FAN,p->numverts,false);
+	Video_DrawObject(voObject,VIDEO_PRIMITIVE_TRIANGLE_FAN,p->numverts,false);
 }
 
 /*

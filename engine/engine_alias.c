@@ -288,37 +288,30 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	mtvVertices		= &mfFirst->verts[0];
 	mtvLerpVerts	= &mfSecond->verts[0];
 
-	{
-		mtTriangles	= (MD2Triangle_t*)((uint8_t*)mModel+mModel->ofs_tris);
+	mtTriangles	= (MD2Triangle_t*)((uint8_t*)mModel+mModel->ofs_tris);
 
-		for(iVert = i = 0; i < mModel->numtris; i++,mtTriangles++)
-		{
-			if(!mtTriangles)
-				break;
-
-            for(k = 0; k < 3; k++)
+	for(iVert = 0,i = 0; i < mModel->numtris; i++,mtTriangles++)
+        for(k = 0; k < 3; k++)
+        {
+            for(j = 0; j < 3; j++)
             {
-                for(j = 0; j < 3; j++)
-                {
-                    voModel[iVert].vVertex[j]	=	(mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+mfFirst->translate[j])*(1.0f-lLerpData.blend)+
-													(mtvLerpVerts[mtTriangles->index_xyz[k]].v[j]*scale2[j]+mfSecond->translate[j])*lLerpData.blend;
-                    voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
+                voModel[iVert].vVertex[j]	=	(mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+mfFirst->translate[j])*(1.0f-lLerpData.blend)+
+												(mtvLerpVerts[mtTriangles->index_xyz[k]].v[j]*scale2[j]+mfSecond->translate[j])*lLerpData.blend;
+                voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
 
-                    if(bShading)
-						voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;
-                }
-
-				voModel[iVert].vTextureCoord[1][0]	=
-				voModel[iVert].vTextureCoord[0][0]	= (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/(float)mModel->skinwidth;
-				voModel[iVert].vTextureCoord[1][1]	=
-				voModel[iVert].vTextureCoord[0][1]	= (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/(float)mModel->skinheight;
-
-				voModel[iVert].vColour[3] = fAlpha;
-
-				iVert++;
+                if(bShading)
+					voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;
             }
-		}
-	}
+
+			voModel[iVert].vTextureCoord[1][0]	=
+			voModel[iVert].vTextureCoord[0][0]	= (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/(float)mModel->skinwidth;
+			voModel[iVert].vTextureCoord[1][1]	=
+			voModel[iVert].vTextureCoord[0][1]	= (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/(float)mModel->skinheight;
+
+			voModel[iVert].vColour[3] = fAlpha;
+
+			iVert++;
+        }
 
 	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,iVert,true);
 #else // old
