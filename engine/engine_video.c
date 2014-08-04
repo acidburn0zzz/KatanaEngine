@@ -575,23 +575,23 @@ void Video_DrawObject(
     // [8/5/2014] Ignore any additional changes ~hogsy
     bVideoIgnoreCapabilities = true;
 
-	if(r_showtris.value > 0)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-
-		GL_PolygonOffset(OFFSET_SHOWTRIS);
-
+	if(r_showtris.bValue)
 		// [29/10/2013] Disable crap for tris view ~hogsy
-		Video_DisableCapabilities(VIDEO_TEXTURE_2D/*|VIDEO_BLEND*/);
-	}
+		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 
     // [11/3/2014] Support different primitive types; TODO: Move into its own function? ~hogsy
     switch(vpPrimitiveType)
     {
     case VIDEO_PRIMITIVE_TRIANGLES:
-        gPrimitive = GL_TRIANGLES;
+		if(r_showtris.bValue)
+			gPrimitive = GL_LINES;
+		else
+			gPrimitive = GL_TRIANGLES;
         break;
     case VIDEO_PRIMITIVE_TRIANGLE_FAN:
+		if(r_showtris.bValue)
+			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+
         gPrimitive = GL_TRIANGLE_FAN;
         break;
     default:
@@ -622,15 +622,6 @@ void Video_DrawObject(
 		glVertex3fv(voObject[i].vVertex);
 	}
 
-	if(r_showtris.value > 0)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-
-		GL_PolygonOffset(OFFSET_NONE);
-
-		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
-	}
-
 	glEnd();
 #else
 #define	MAX_TRIANGLE_COUNT	4096
@@ -648,11 +639,11 @@ void Video_DrawObject(
 		{
 			if(!r_showtris.value)
 			{
-				Math_VectorCopy(voObject[i].vColour,vColourArray[i]);
-				vColourArray[i][3] = voObject[i].vColour[3];
-
+				Math_Vector4Copy(voObject[i].vColour,vColourArray[i]);
 				Math_VectorCopy(voObject[i].vTextureCoord[0],vTextureArray[i]);
 			}
+			else
+				Math_Vector4Set(1.0f,vColourArray[i]);
 
 			Math_VectorCopy(voObject[i].vVertex,vVideoVertexArray[i]);
 		}
@@ -673,13 +664,17 @@ void Video_DrawObject(
 
 	glDrawArrays(gPrimitive,0,uiTriangles);
 
-	memset(vVideoVertexArray,0,sizeof(vVideoVertexArray));
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
 
-	bVideoIgnoreCapabilities = false;
+	if(r_showtris.bValue)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
-	// [20/10/2013] Reset colour value ~hogsy
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
+		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
+	}
+
+	bVideoIgnoreCapabilities = false;
 }
 
 /*
