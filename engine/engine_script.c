@@ -189,6 +189,11 @@ SKIPSPACE:
 
 		cScriptParse++;
 	}
+	else if(*cScriptParse == '(')
+	{
+		cScriptParse++;
+		cScriptParse++;
+	}
 	else while(*cScriptParse > 32)
 	{
 		*cTokenParse++ = *cScriptParse++;
@@ -259,35 +264,60 @@ typedef struct
 {
 	char	*cKey;
 
-	void	(*Function)(void);
+	void	(*Function)(char *cArg);
 } ScriptKey_t;
 
-void _FileSystem_SetBasePath(void);	// common.c
+void _FileSystem_SetBasePath(char *cArg);		// common.c
+void _FileSystem_AddGameDirectory(char *cArg);	// common.c
+
+void _Material_AddSkin(void);
+
+/*	Allows for console variables to be set from scripts.
+*/
+void _Script_SetConsoleVariable(char *cArguments)
+{
+}
 
 ScriptKey_t	skScriptKeys[]=
 {
-	{	"$basepath",	_FileSystem_SetBasePath	},
+	{	"SetBasePath",			_FileSystem_SetBasePath			},
+	{	"AddGameDirectory",		_FileSystem_AddGameDirectory	},
+
+	// Materials
+	{	"$skin",	_Material_AddSkin	},
 
 	{	0	}
 };
 
 /*	Loads a script.
 */
-void Script_Load(/*const */char *ccPath)
+bool Script_Load(/*const */char *ccPath)
 {
-	char		*cData;
+	char *cData;
 
 	if(LoadFile(ccPath,(void**)&cData) == -1)
-		Sys_Error("Failed to load script! (%s)\n",ccPath);
+	{
+		cData = COM_LoadTempFile(ccPath);
+		if(!cData)
+		{
+			Con_Warning("Failed to load script! (%s)\n",ccPath);
+			return false;
+		}
+	}
 
 	Script_StartTokenParsing(cData);
 
 	if(!Script_GetToken(true))
-		goto FREE;
+	{
+		Con_Warning("Failed to get initial token! (%s) (%i)\n",ccPath,iScriptLine);
+		free(cData);
+		return false;
+	}
 	else if(Q_strcmp(cToken,"{"))
 	{
 		Con_Warning("Missing '{'! (%s) (%i)\n",ccPath,iScriptLine);
-		goto FREE;
+		free(cData);
+		return false;
 	}
 
 	do
@@ -304,11 +334,12 @@ void Script_Load(/*const */char *ccPath)
 			ScriptKey_t	*sKey;
 
 			for(sKey = skScriptKeys; sKey->cKey; sKey++)
-				if(!Q_strcmp(sKey->cKey,cToken))
+				// Remain case sensitive.
+				if(!Q_strcasecmp(sKey->cKey,cToken))
 				{
 					Script_GetToken(false);
 
-					sKey->Function();
+					sKey->Function(cToken);
 					break;
 				}
 
@@ -316,6 +347,7 @@ void Script_Load(/*const */char *ccPath)
 		}
 	} while(true);
 
-FREE:
 	free(cData);
+
+	return true;
 }

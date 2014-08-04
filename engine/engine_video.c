@@ -40,12 +40,17 @@ cvar_t	cvShowModels			= {	"video_showmodels",			"1",			false,  false,  "Toggles 
 		cvWidth					= {	"video_width",				"640",			true,   false,  "Sets the width of the window."	                    },
 		cvHeight				= {	"video_height",				"480",			true,   false,  "Sets the height of the window."	                },
 		cvVerticalSync			= {	"video_verticalsync",		"0",			true	                                                            },
+		cvVideoDraw				= {	"video_draw",				"1",			false,	false,	"If disabled, nothing is drawn."					},
 		cvVideoDebugLog			= {	"video_debuglog",			"log_video",	true,	false,	"The name of the output log for video debugging."	};
 
 gltexture_t	*gDepthTexture;
 
 bool	bVideoIgnoreCapabilities = false;
 bool	bVideoDebug	= false;
+
+vec3_t	*vVideoVertexArray;
+
+unsigned	int	uiVideoArraySize = 4096;
 
 void Video_DebugCommand(void);
 
@@ -65,6 +70,8 @@ void Video_Initialize(void)
 	Video.bActive				=			// Window is intially assumed active.
 	Video.bUnlocked				= true;		// Video mode is initially locked.
 
+	vVideoVertexArray = (vec3_t*)calloc(uiVideoArraySize,sizeof(vec3_t));	//Hunk_AllocName(uiVideoArraySize*sizeof(vec3_t),"vertexarray");;
+
 	Cvar_RegisterVariable(&cvMultisampleSamples,NULL);
 	Cvar_RegisterVariable(&cvMultisampleBuffers,NULL);
 	Cvar_RegisterVariable(&cvShowModels,NULL);
@@ -73,6 +80,7 @@ void Video_Initialize(void)
 	Cvar_RegisterVariable(&cvHeight,NULL);
 	Cvar_RegisterVariable(&cvVerticalSync,NULL);
 	Cvar_RegisterVariable(&cvVideoDebugLog,NULL);
+	Cvar_RegisterVariable(&cvVideoDraw,NULL);
 
 	Cmd_AddCommand("video_restart",Video_UpdateWindow);
 	Cmd_AddCommand("video_debug",Video_DebugCommand);
@@ -474,6 +482,9 @@ void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
             Sys_Error("Unknown blend mode! (%i)\n",voBlendMode);
         }
     }
+
+	if(bVideoDebug)
+		Console_WriteToLog(cvVideoDebugLog.string,"Video: Setting blend mode (%i) (%i)\n",(int)voBlendMode,iDepthType);
 }
 
 /*
@@ -553,10 +564,13 @@ void Video_DrawObject(
 {
     GLenum	gPrimitive;
 
+	if(!cvVideoDraw.bValue)
+		return;
+
 	if(!voObject)
         Sys_Error("Invalid video object!\n");
     else if(!uiTriangles)
-        Sys_Error("Invalid number of triangles for video object!\n");
+        Sys_Error("Invalid number of triangles for video object! (%i)\n",uiTriangles);
 
     // [8/5/2014] Ignore any additional changes ~hogsy
     bVideoIgnoreCapabilities = true;
@@ -622,22 +636,27 @@ void Video_DrawObject(
 #define	MAX_TRIANGLE_COUNT	4096
 
 	{
-		int				i;
-		MathVector_t	
-				mvVertexArray[MAX_TRIANGLE_COUNT];	//= (MathVector_t*)calloc(uiTriangles,sizeof(MathVector_t)),
+		int		i;
 		vec2_t	vTextureArray[MAX_TRIANGLE_COUNT];
 		vec4_t	vColourArray[MAX_TRIANGLE_COUNT];
+		
+		// Triangles count is too high for this object, bump up array size to manage it.
+		if(uiTriangles > uiVideoArraySize)
+			realloc(vVideoVertexArray,(uiVideoArraySize*2)*sizeof(vVideoVertexArray));
+
+		memset(vVideoVertexArray,0,sizeof(vVideoVertexArray));
 
 		for(i = 0; i < uiTriangles; i++)
 		{
-			Math_VectorToMV(voObject[i].vVertex,mvVertexArray[i]);
+			Math_VectorCopy(voObject[i].vVertex,vVideoVertexArray[i]);
 			Math_VectorCopy(voObject[i].vColour,vColourArray[i]);
-			vColourArray[i][3] = voObject[i].vColour[3];
 			Math_VectorCopy(voObject[i].vTextureCoord[0],vTextureArray[i]);
+
+			vColourArray[i][3] = voObject[i].vColour[3];
 		}
 
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glVertexPointer(3,GL_FLOAT,0,mvVertexArray);
+		glVertexPointer(3,GL_FLOAT,0,vVideoVertexArray);
 
 		if(!r_showtris.bValue)
 		{
@@ -647,12 +666,9 @@ void Video_DrawObject(
 			glColorPointer(4,GL_FLOAT,0,vColourArray);
 			glTexCoordPointer(2,GL_FLOAT,0,vTextureArray);
 		}
-
-		glDrawArrays(gPrimitive,0,uiTriangles);
-
-		//free(mvVertexArray);
-		//free(mvColourArray);
 	}
+
+	glDrawArrays(gPrimitive,0,uiTriangles);
 #endif
 
 	bVideoIgnoreCapabilities = false;
@@ -912,6 +928,8 @@ void Video_Shutdown(void)
 {
 	if(!Video.bInitialized)
 		return;
+
+	free(vVideoVertexArray);
 
     TwTerminate();
 

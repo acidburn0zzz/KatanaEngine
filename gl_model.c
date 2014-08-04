@@ -25,6 +25,7 @@
 */
 
 #include "engine_console.h"
+#include "engine_script.h"
 
 model_t	*loadmodel;
 char	loadname[32];	// for hunk tags
@@ -1371,112 +1372,97 @@ ALIAS MODELS
 ==============================================================================
 */
 
+/*
+	Scripting crap
+*/
+
+typedef struct
+{
+	char	*cKey;
+
+	void	(*Function)(MD2_t *mModel,char *cArg);
+} MaterialKey_t;
+
+int	iMaterialCount;
+
+MD2_t	*mCurrentModel;
+
+void _Material_SetDiffuseTexture(MD2_t *mModel,char *cArg)
+{
+	byte *bDiffuseMap = Image_LoadImage(cArg,&mModel->skinwidth,&mModel->skinheight);
+	if(bDiffuseMap)
+		mModel->gDiffuseTexture[iMaterialCount] = TexMgr_LoadImage(loadmodel,cArg,mModel->skinwidth,mModel->skinheight,SRC_RGBA,bDiffuseMap,cArg,0,TEXPREF_ALPHA);
+	else
+		Con_Warning("Failed to load texture %s!\n",cArg);
+}
+
+void _Material_SetFullbrightTexture(MD2_t *mModel,char *cArg)
+{
+	byte *bFullbrightMap = Image_LoadImage(cArg,&mModel->skinwidth,&mModel->skinheight);
+	if(bFullbrightMap)
+		mModel->gFullbrightTexture[iMaterialCount] = TexMgr_LoadImage(loadmodel,cArg,mModel->skinwidth,mModel->skinheight,SRC_RGBA,bFullbrightMap,cArg,0,TEXPREF_ALPHA);
+	else
+		Con_Warning("Failed to load texture %s!\n",cArg);
+}
+
+void _Material_SetSphereTexture(MD2_t *mModel,char *cArg)
+{
+	byte *bSphereMap = Image_LoadImage(cArg,&mModel->skinwidth,&mModel->skinheight);
+	if(bSphereMap)
+		mModel->gSphereTexture[iMaterialCount] = TexMgr_LoadImage(loadmodel,cArg,mModel->skinwidth,mModel->skinheight,SRC_RGBA,bSphereMap,cArg,0,TEXPREF_ALPHA);
+	else
+		Con_Warning("Failed to load texture %s!\n",cArg);
+}
+
+MaterialKey_t	mkMaterialKey[]=
+{
+	{	"$diffuse",			_Material_SetDiffuseTexture		},	// Sets the diffuse texture.
+	{	"$sphere",			_Material_SetSphereTexture		},	// Sets the spheremap texture.
+	{	"$fullbright",		_Material_SetFullbrightTexture	},	// Sets the fullbright texture.
+
+	{	0	}
+};
+
+void _Material_AddSkin(void)
+{
+	iMaterialCount++;
+
+	// Set defaults...
+	mCurrentModel->gDiffuseTexture[iMaterialCount]		= notexture;
+	mCurrentModel->gSphereTexture[iMaterialCount]		= NULL;
+	mCurrentModel->gFullbrightTexture[iMaterialCount]	= NULL;
+}
+
+/*
+	Everything else
+*/
+
 void Model_LoadTextures(MD2_t *mModel)
 {
-	int		i;
-	char	cDiffusePath[MAX_OSPATH],
-			cFullbrightPath[MAX_OSPATH],
-			cSpherePath[MAX_OSPATH],
+	char	cScriptPath[MAX_OSPATH],
 			cOutName[MAX_OSPATH];
-	byte	*bDiffuseMap,
-			*bFullbrightMap,
-			*bSphereMap;
 
-	if(mModel->num_skins < 1 || mModel->num_skins > MD2_MAX_SKINS)
-		Console_ErrorMessage(true,loadmodel->name,va("Invalid number of skins (%i)",mModel->num_skins));
+	COM_StripExtension(loadmodel->name,cOutName);
 
-	for(i = 0; i < mModel->num_skins; i++)
+	sprintf(cScriptPath,"textures/%s.material",cOutName);	//(char*)model+model->ofs_skins+i*MAX_SKINNAME);
+
+	iMaterialCount = -1;
+
+	mCurrentModel = mModel;
+
+	//if(!Script_Load(cScriptPath))
+	// Allow us to load textures without materials.
 	{
-/*		if(pskintype->type == ALIAS_SKIN_GROUP)
-		{
-			// animating skin group.  yuck.
-			pskintype++;
-			pinskingroup = (daliasskingroup_t *)pskintype;
-			groupskins = LittleLong (pinskingroup->numskins);
-			pinskinintervals = (daliasskininterval_t *)(pinskingroup + 1);
+		Con_Warning("Failed to load material! (%s)\n",cScriptPath);
 
-			pskintype = (void *)(pinskinintervals + groupskins);
+		sprintf(cScriptPath,"textures/%s",cOutName);
 
-			for (j=0 ; j<groupskins ; j++)
-			{
-				Mod_FloodFillSkin( skin, pheader->skinwidth, pheader->skinheight );
-				if (j == 0)
-				{
-					texels = Hunk_AllocName(size, loadname);
-					pheader->texels[i] = texels - (byte *)pheader;
-					memcpy (texels, (byte *)(pskintype), size);
-				}
-
-				//johnfitz -- rewritten
-				sprintf (name, "%s:frame%i_%i", loadmodel->name, i,j);
-				offset = (unsigned)(pskintype) - (unsigned)mod_base; //johnfitz
-				if (Mod_CheckFullbrights ((byte *)(pskintype), size))
-				{
-					pheader->gltextures[i][j&3] = TexMgr_LoadImage (loadmodel, name, pheader->skinwidth, pheader->skinheight,
-						SRC_INDEXED, (byte *)(pskintype), loadmodel->name, offset, TEXPREF_PAD | TEXPREF_NOBRIGHT);
-					sprintf (fbr_mask_name, "%s:frame%i_%i_glow", loadmodel->name, i,j);
-					pheader->fbtextures[i][j&3] = TexMgr_LoadImage (loadmodel, fbr_mask_name, pheader->skinwidth, pheader->skinheight,
-						SRC_INDEXED, (byte *)(pskintype), loadmodel->name, offset, TEXPREF_PAD | TEXPREF_FULLBRIGHT);
-				}
-				else
-				{
-					pheader->gltextures[i][j&3] = TexMgr_LoadImage (loadmodel, name, pheader->skinwidth, pheader->skinheight,
-						SRC_INDEXED, (byte *)(pskintype), loadmodel->name, offset, TEXPREF_PAD);
-					pheader->fbtextures[i][j&3] = NULL;
-				}
-				//johnfitz
-
-				pskintype = (daliasskintype_t *)((byte *)(pskintype) + size);
-			}
-			k = j;
-			for (; j < 4; j++)
-				pheader->gltextures[i][j&3] = pheader->gltextures[i][j - k];
-		}
-		else*/
-		{
-			COM_StripExtension(loadmodel->name,cOutName);
-
-			sprintf(cDiffusePath,"textures/%s",cOutName);	//(char*)model+model->ofs_skins+i*MAX_SKINNAME);
-			sprintf(cFullbrightPath,"textures/%s_fbr",cOutName);
-			sprintf(cSpherePath,"textures/%s_spr",cOutName);
-
-#if 0
-			if(pskintype->type == ALIAS_SKIN_GROUP)
-			{
-				pskintype++;
-				pinskingroup = (daliasskingroup_t *)pskintype;
-				groupskins = LittleLong(pinskingroup->numskins);
-
-				for (j=0 ; j<groupskins ; j++)
-				{
-
-				}
-			}
-#endif
-
-			// [24/8/2013] Oops! Nullify the entry if we don't get anything. ~hogsy
-			// [27/11/2013] Just nullify and set everything up here instead ~hogsy
-			mModel->gDiffuseTexture[i]		= notexture;
-			mModel->gSphereTexture[i]		= NULL;
-			mModel->gFullbrightTexture[i]	= NULL;
-
-			bDiffuseMap		= Image_LoadImage(cDiffusePath,&mModel->skinwidth,&mModel->skinheight);
-			bFullbrightMap	= Image_LoadImage(cFullbrightPath,&mModel->skinwidth,&mModel->skinheight);
-			if(bDiffuseMap)
-			{
-				mModel->gDiffuseTexture[i] = TexMgr_LoadImage(loadmodel,cDiffusePath,mModel->skinwidth,mModel->skinheight,SRC_RGBA,bDiffuseMap,cDiffusePath,0,TEXPREF_ALPHA);
-
-				if(bFullbrightMap)
-					mModel->gFullbrightTexture[i] = TexMgr_LoadImage(loadmodel,cFullbrightPath,mModel->skinwidth,mModel->skinheight,SRC_RGBA,bFullbrightMap,cFullbrightPath,0,TEXPREF_ALPHA);
-			}
-			else
-				Con_Warning("Failed to load %s!\n",cDiffusePath);
-
-			bSphereMap = Image_LoadImage(cSpherePath,&mModel->skinwidth,&mModel->skinheight);
-			if(bSphereMap)
-				mModel->gSphereTexture[i] = TexMgr_LoadImage(loadmodel,cSpherePath,mModel->skinwidth,mModel->skinheight,SRC_RGBA,bSphereMap,cSpherePath,0,TEXPREF_ALPHA);
-		}
+		_Material_AddSkin();
+		_Material_SetDiffuseTexture(mModel,cScriptPath);
 	}
+
+	if(iMaterialCount < 0 || iMaterialCount > MD2_MAX_SKINS)
+		Console_ErrorMessage(true,loadmodel->name,va("Invalid number of skins (%i)",iMaterialCount));
 }
 
 /*	Calculate bounds of alias model for nonrotated, yawrotated, and fullrotated cases
@@ -1556,12 +1542,13 @@ void Model_LoadIQM(model_t *mModel,void *Buffer)
 
 void Model_LoadMD2(model_t *mModel,void *Buffer)
 {
-	int				i,j,
-					iVersion,
-					numframes,iSize,*pinglcmd,*poutglcmd,iStartHunk,iEnd,total;
-	MD2_t			*pinmodel,*mMD2Model;
-	MD2Triangle_t	*pintriangles,*pouttriangles;
-	MD2Frame_t		*pinframe,*poutframe;
+	int						i,j,
+							iVersion,
+							numframes,iSize,*pinglcmd,*poutglcmd,iStartHunk,iEnd,total;
+	MD2_t					*pinmodel,*mMD2Model;
+	MD2Triangle_t			*pintriangles,*pouttriangles;
+	MD2Frame_t				*pinframe,*poutframe;
+	MD2TextureCoordinate_t	*pST,*pOutST;
 
 	iStartHunk = Hunk_LowMark();
 
@@ -1605,6 +1592,10 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 		Sys_Error("%s has invalid number of frames (%i)",mModel->name,mMD2Model->num_frames);
 	else if(mMD2Model->num_skins < 0 || mMD2Model->num_skins > MD2_MAX_SKINS)
 		Sys_Error("%s has invalid number of skins (%i)",mModel->name,mMD2Model->num_skins);
+
+#if 0
+	Con_DPrintf("NUMST: %i\n",mMD2Model->num_st);
+#endif
 
 	for(i = 0; i < 7; i++)
 		((int*)&mMD2Model->ofs_skins)[i] += sizeof(mMD2Model);
@@ -1656,7 +1647,19 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 	for(i=0; i < mMD2Model->num_glcmds; i++)
 		*poutglcmd++ = LittleLong(*pinglcmd++);
 
-	mMD2Model->mtcTextureCoord	= (MD2TextureCoordinate_t*)((uint8_t*)pinmodel+pinmodel->ofs_st);
+	// Ugh, kill me.
+	{
+		mMD2Model->mtcTextureCoord = (MD2TextureCoordinate_t*)malloc(mMD2Model->num_st*sizeof(MD2TextureCoordinate_t));
+
+		pST	= (MD2TextureCoordinate_t*)((uint8_t*)pinmodel+LittleLong(pinmodel->ofs_st));
+		for(i = 0; i < mMD2Model->num_st; i++)
+		{
+			mMD2Model->mtcTextureCoord[i].S = LittleShort(pST->S);
+			mMD2Model->mtcTextureCoord[i].T = LittleShort(pST->T);
+
+			pST++;
+		}
+	}
 
 	memcpy
 	(

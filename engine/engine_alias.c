@@ -242,7 +242,16 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 	Math_VectorScale(vLightColour,1.0f/200.0f,vLightColour);
 
-    shadedots = r_avertexnormal_dots[((int)((cl.time*200.0)*(SHADEDOT_QUANT/360))) & (SHADEDOT_QUANT-1)];
+    shadedots = r_avertexnormal_dots[((int)((host_frametime*200.0)*(SHADEDOT_QUANT/360))) & (SHADEDOT_QUANT-1)];
+
+	{
+		int i;
+
+		for(i = 0; i < sizeof(shadedots); i++)
+		{
+			shadedots[i] += (vLightColour[0]*vLightColour[1]*vLightColour[2])/2.0f;
+		}
+	}
 }
 
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
@@ -255,7 +264,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 						*mtvLerpVerts;
 	MD2Triangle_t		*mtTriangles;
 	MD2Frame_t			*mfFirst,*mfSecond;
-	vec3_t				scale1,translate1,
+	vec3_t				scale1,
                         scale2;
 
 	// [20/8/2012] Quick fix ~hogsy
@@ -268,7 +277,6 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	mfSecond	= (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_pose));
 
 	Math_VectorCopy(mfFirst->scale,scale1);
-	Math_VectorCopy(mfFirst->translate,translate1);
 	Math_VectorCopy(mfSecond->scale,scale2);
 
 	// [24/8/2012] Probably not the best way, but it's better than my other method ~hogsy
@@ -283,7 +291,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	{
 		mtTriangles	= (MD2Triangle_t*)((uint8_t*)mModel+mModel->ofs_tris);
 
-		for(iVert = 0,i = 0; i < mModel->numtris; i++,iVert++,mtTriangles++)
+		for(iVert = i = 0; i < mModel->numtris; i++,mtTriangles++)
 		{
 			if(!mtTriangles)
 				break;
@@ -292,23 +300,22 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
             {
                 for(j = 0; j < 3; j++)
                 {
-                    voModel[iVert].vVertex[j]	= mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+translate1[j];
+                    voModel[iVert].vVertex[j]	=	(mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+mfFirst->translate[j])*(1.0f-lLerpData.blend)+
+													(mtvLerpVerts[mtTriangles->index_xyz[k]].v[j]*scale2[j]+mfSecond->translate[j])*lLerpData.blend;
                     voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
 
-					voModel[iVert].vTextureCoord[1][0]	=
-					voModel[iVert].vTextureCoord[0][0]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/mModel->skinwidth;
-					voModel[iVert].vTextureCoord[1][1]	=
-					voModel[iVert].vTextureCoord[0][1]	= mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/mModel->skinheight;
-
                     if(bShading)
-                        voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;
+						voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;
                 }
 
-                voModel[iVert].vColour[3] = fAlpha;
+				voModel[iVert].vTextureCoord[1][0]	=
+				voModel[iVert].vTextureCoord[0][0]	= (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/(float)mModel->skinwidth;
+				voModel[iVert].vTextureCoord[1][1]	=
+				voModel[iVert].vTextureCoord[0][1]	= (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/(float)mModel->skinheight;
 
-                // Hacky!
-                if(k < 2)
-                    iVert++;
+				voModel[iVert].vColour[3] = fAlpha;
+
+				iVert++;
             }
 		}
 	}

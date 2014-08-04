@@ -7,6 +7,6 @@
 
 #include "common/SCRIPLIB.H"
 
-void Script_Load(/*const */char *ccPath);
+bool Script_Load(/*const */char *ccPath);
 
 #endif

@@ -1377,7 +1377,8 @@ pack_t *FileSystem_LoadPackage(char *packfile)
 
 void FileSystem_AddGameDirectory(char *dir)
 {
-	int i;
+	int			i;
+	static	int	iPaths = 0;
 	searchpath_t *search;
 	pack_t *pak;
 	char pakfile[MAX_OSPATH];
@@ -1406,14 +1407,20 @@ void FileSystem_AddGameDirectory(char *dir)
 	}
 }
 
-#include "engine_script.h"
-
 /*	Script specific function that sets the base data path.
-	$basepath
+	SetBasePath
 */
-void _FileSystem_SetBasePath(void)
+void _FileSystem_SetBasePath(char *cArg)
 {
-	strcpy(host_parms.cBasePath,cToken);
+	strcpy(host_parms.cBasePath,cArg);
+}
+
+/*	Script specific function that adds a new data path.
+	AddGameDirectory
+*/
+void _FileSystem_AddGameDirectory(char *cArg)
+{
+	FileSystem_AddGameDirectory(va("%s/%s",host_parms.basedir,cArg));
 }
 
 void FileSystem_Initialize(void)
@@ -1449,7 +1456,8 @@ void FileSystem_Initialize(void)
 		com_cachedir[0] = 0;
 
 	// [5/2/2014] Check out our paths script ~hogsy
-	Script_Load(va("%s/"PATH_ENGINE"/scripts/paths.script",basedir));
+	if(!Script_Load(va("%s/"PATH_ENGINE"/scripts/paths.script",basedir)))
+		Sys_Error("Failed to load paths script!\n");
 
 	// Start up with the default path
 	FileSystem_AddGameDirectory(va("%s/%s",basedir,host_parms.cBasePath));
