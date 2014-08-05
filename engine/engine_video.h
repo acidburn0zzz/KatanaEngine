@@ -123,7 +123,7 @@ void Video_DisableCapabilities(unsigned int iCapabilities);
 void Video_ResetCapabilities(bool bClearActive);
 void Video_Process(void);
 void Video_DrawFill(VideoObject_t *voFill);
-void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,unsigned int uiTriangles,bool bMultiTexture);
+void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,unsigned int uiVerts,bool bMultiTexture);
 void Video_Shutdown(void);
 
 bool Video_CreateWindow(void);

@@ -81,13 +81,22 @@ texture_t *R_TextureAnimation (texture_t *base, int frame)
 
 void DrawGLPoly(glpoly_t *p)
 {
-	VideoObject_t	voObject[24];
+	VideoObject_t	voObject[512];
 	float			*v;
 	int				i;
 
 	v = p->verts[0];
 	for(i = 0; i < p->numverts; i++,v += VERTEXSIZE)
 	{
+		if(r_drawflat_cheatsafe)
+		{
+			srand((unsigned int)p);
+
+			voObject[i].vColour[0]	= rand()%256/255.0;
+			voObject[i].vColour[1]	= rand()%256/255.0;
+			voObject[i].vColour[2]	= rand()%256/255.0;
+		}
+
         if(!r_showtris.value)
 		{
 			voObject[i].vTextureCoord[0][0] = v[3];
@@ -130,7 +139,6 @@ void R_DrawSequentialPoly(msurface_t *s)
             Video_EnableCapabilities(VIDEO_BLEND);
 
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-			glColor4f(1.0f,1.0f,1.0f,fAlpha);
 		}
 
 		Video_SetTexture(tAnimation->gltexture);
@@ -140,10 +148,7 @@ void R_DrawSequentialPoly(msurface_t *s)
 		rs_brushpasses++;
 
 		if(fAlpha < 1.0f)
-		{
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
-			glColor3f(1.0f,1.0f,1.0f);
-		}
 	}
     else if(s->flags & SURF_DRAWTURB)
 	{
@@ -193,7 +198,6 @@ void R_DrawSequentialPoly(msurface_t *s)
             Video_EnableCapabilities(VIDEO_BLEND);
 
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-			glColor4f(1.0f,1.0f,1.0f,fAlpha);
 		}
 		else
             Video_EnableCapabilities(VIDEO_ALPHA_TEST);
@@ -215,17 +219,23 @@ void R_DrawSequentialPoly(msurface_t *s)
         glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB,GL_TEXTURE);
         glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE,4);
 
-        glBegin(GL_TRIANGLE_FAN);
+		{
+			VideoObject_t voBrush[128];
 
-        fVert = s->polys->verts[0];
-        for(i = 0; i < s->polys->numverts; i++,fVert += VERTEXSIZE)
-        {
-            glMultiTexCoord2fv(VIDEO_TEXTURE0,fVert+3);
-            glMultiTexCoord2fv(VIDEO_TEXTURE1,fVert+5);
-            glVertex3fv(fVert);
-        }
+			fVert = s->polys->verts[0];
+			for(i = 0; i < s->polys->numverts; i++,fVert += VERTEXSIZE)
+			{
+				Math_VectorSet(1.0f,voBrush[i].vColour);
 
-        glEnd();
+				Math_VectorCopy(fVert,voBrush[i].vVertex);
+				Math_Vector2Copy((fVert+3),voBrush[i].vTextureCoord[0]);
+				Math_Vector2Copy((fVert+5),voBrush[i].vTextureCoord[1]);
+
+				voBrush[i].vColour[3] = fAlpha;
+			}
+
+			Video_DrawObject(voBrush,VIDEO_PRIMITIVE_TRIANGLE_FAN,s->polys->numverts,true);
+		}
 
         glTexEnvf(GL_TEXTURE_ENV,GL_RGB_SCALE,1.0f);
         glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
@@ -233,10 +243,7 @@ void R_DrawSequentialPoly(msurface_t *s)
         Video_SelectTexture(0);
 
         if(fAlpha < 1.0f)
-        {
             glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_REPLACE);
-			glColor3f(1.0f,1.0f,1.0f);
-        }
 
         rs_brushpasses++;
 	}

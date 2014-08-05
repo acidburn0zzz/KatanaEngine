@@ -56,6 +56,9 @@ typedef struct
 #define	Math_VectorDivide(a,b,c)		{	c[0]=a[0]/b;c[1]=a[1]/b;c[2]=a[2]/b;										}
 #define	Math_VectorToMV(a,b)			(	b.vX=a[0],b.vY=a[1],b.vZ=a[2]												)
 
+#define	Math_Vector2Copy(a,b)			(	b[0]=a[0],b[1]=a[1]	)
+#define	Math_Vector2Set(a,b)			(	b[0]=b[1]=a			)
+
 #define	Math_Vector4Copy(a,b)			(	b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3]	)
 #define	Math_Vector4Set(a,b)			(	b[0]=b[1]=b[2]=b[3]=a					)
 

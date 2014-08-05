@@ -251,8 +251,6 @@ void R_DrawTextureChains_Drawflat (void)
 				if (!s->culled)
 					for (p = s->polys->next; p; p = p->next)
 					{
-						srand((unsigned int) p);
-						glColor3f (rand()%256/255.0, rand()%256/255.0, rand()%256/255.0);
 						DrawGLPoly (p);
 						rs_brushpasses++;
 					}
@@ -262,8 +260,6 @@ void R_DrawTextureChains_Drawflat (void)
 			for (s = t->texturechain; s; s = s->texturechain)
 				if (!s->culled)
 				{
-					srand((unsigned int) s->polys);
-					glColor3f (rand()%256/255.0, rand()%256/255.0, rand()%256/255.0);
 					DrawGLPoly (s->polys);
 					rs_brushpasses++;
 				}
@@ -604,6 +600,7 @@ void World_Draw(void)
 
 						R_UploadLightmap(s->lightmaptexturenum);
 
+#if 1
 						glBegin(GL_TRIANGLE_FAN);
 
 						v = s->polys->verts[0];
@@ -615,6 +612,22 @@ void World_Draw(void)
 						}
 
 						glEnd();
+#else
+						{
+							VideoObject_t	voWorld[64];
+
+							v = s->polys->verts[0];
+							for(j = 0; j < s->polys->numverts; j++,v += VERTEXSIZE)
+							{
+								Math_VectorCopy(v,voWorld[i].vVertex);
+								Math_Vector2Copy((v+3),voWorld[i].vTextureCoord[0]);
+								Math_Vector2Copy((v+5),voWorld[i].vTextureCoord[1]);
+								Math_Vector4Set(1.0f,voWorld[i].vColour);
+							}
+
+							Video_DrawObject(voWorld,VIDEO_PRIMITIVE_TRIANGLE_FAN,s->polys->numverts,true);
+						}
+#endif
 
 						rs_brushpasses++;
 					}

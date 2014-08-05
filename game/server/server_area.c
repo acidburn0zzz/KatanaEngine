@@ -808,7 +808,7 @@ void Area_PlatformSpawnTouchbox(edict_t *eArea)
 		vTrigMax[1] = vTrigMin[1] + 1;
 	}
 
-	// [24/9/2013] Simplified ~hogsy
+	Entity_SetModel(eArea,eArea->v.model);
 	Entity_SetSizeVector(eTrigger,vTrigMin,vTrigMax);
 }
 

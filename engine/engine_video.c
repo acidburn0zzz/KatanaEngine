@@ -559,7 +559,7 @@ void Video_DrawFill(VideoObject_t *voFill)
 void Video_DrawObject(
 	VideoObject_t		    *voObject,
 	VideoPrimitive_t        vpPrimitiveType,
-	unsigned            int	uiTriangles,
+	unsigned            int	uiVerts,
 	bool				    bMultiTexture)
 {
     GLenum	gPrimitive;
@@ -569,8 +569,8 @@ void Video_DrawObject(
 
 	if(!voObject)
         Sys_Error("Invalid video object!\n");
-    else if(!uiTriangles)
-        Sys_Error("Invalid number of triangles for video object! (%i)\n",uiTriangles);
+    else if(!uiVerts)
+        Sys_Error("Invalid number of vertices for video object! (%i)\n",uiVerts);
 
     // [8/5/2014] Ignore any additional changes ~hogsy
     bVideoIgnoreCapabilities = true;
@@ -601,47 +601,25 @@ void Video_DrawObject(
         return;
     }
 
-#if 0
-    glBegin(gPrimitive);
-
-    for(int i = 0; i < uiTriangles; i++)
-	{
-		if(!r_showtris.value)
-		{
-			if(bMultiTexture)
-			{
-				glMultiTexCoord2fv(GL_TEXTURE0,voObject[i].vTextureCoord[0]);
-				glMultiTexCoord2fv(GL_TEXTURE1,voObject[i].vTextureCoord[1]);
-			}
-			else
-				glTexCoord2fv(voObject[i].vTextureCoord[0]);
-
-			glColor4fv(voObject[i].vColour);
-		}
-
-		glVertex3fv(voObject[i].vVertex);
-	}
-
-	glEnd();
-#else
 #define	MAX_TRIANGLE_COUNT	4096
 
 	{
 		int		i;
-		vec2_t	vTextureArray[MAX_TRIANGLE_COUNT];
+		vec2_t	vTextureArray[2][MAX_TRIANGLE_COUNT];
 		vec4_t	vColourArray[MAX_TRIANGLE_COUNT];
 		
 		// Triangles count is too high for this object, bump up array size to manage it.
-		if(uiTriangles > uiVideoArraySize)
-			realloc(vVideoVertexArray,(uiVideoArraySize*2)*sizeof(vVideoVertexArray));
+		if(uiVerts > uiVideoArraySize)
+			realloc(vVideoVertexArray,(uiVerts*2)*sizeof(vVideoVertexArray));
 
-		for(i = 0; i < uiTriangles; i++)
+		for(i = 0; i < uiVerts; i++)
 		{
 			if(!r_showtris.value)
 			{
 				Math_Vector4Copy(voObject[i].vColour,vColourArray[i]);
-				Math_VectorCopy(voObject[i].vTextureCoord[0],vTextureArray[i]);
-			}
+				Math_VectorCopy(voObject[i].vTextureCoord[0],vTextureArray[0][i]);
+				Math_VectorCopy(voObject[i].vTextureCoord[1],vTextureArray[1][i]);
+			}			
 			else
 				Math_Vector4Set(1.0f,vColourArray[i]);
 
@@ -657,15 +635,21 @@ void Video_DrawObject(
 		if(!r_showtris.bValue)
 		{
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glTexCoordPointer(2,GL_FLOAT,0,vTextureArray[0]);
 
-			glTexCoordPointer(2,GL_FLOAT,0,vTextureArray);
+			if(bMultiTexture)
+			{
+				glClientActiveTexture(GL_TEXTURE1);
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+				glTexCoordPointer(2,GL_FLOAT,0,vTextureArray[1]);
+				glClientActiveTexture(GL_TEXTURE0);
+			}
 		}
 	}
 
-	glDrawArrays(gPrimitive,0,uiTriangles);
+	glDrawArrays(gPrimitive,0,uiVerts);
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-#endif
 
 	if(r_showtris.bValue)
 	{
