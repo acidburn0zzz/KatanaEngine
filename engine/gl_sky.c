@@ -35,12 +35,12 @@ gltexture_t	*gSkyBoxTexture[6],
 			*gCloudTexture;
 
 extern cvar_t gl_farclip;
-cvar_t	r_fastsky		= {	"r_fastsky",		"0"		};
-cvar_t	r_sky_quality	= {	"r_sky_quality",	"12"	};
-cvar_t	r_skyalpha		= {	"r_skyalpha",		"1"		};
-cvar_t	r_skyfog		= {	"r_skyfog",			"0.5"	};
-cvar_t	cvDrawClouds	    = { "sky_drawclouds",	"1"		};
-cvar_t  cvSkyScrollSpeed    = { "sky_scrollspeed",  "2.0",  true,   false,  "Changes the speed at which the clouds scroll." };
+cvar_t	r_fastsky			= {	"r_fastsky",		"0"		},
+		r_sky_quality		= {	"r_sky_quality",	"12"	},
+		r_skyalpha			= {	"r_skyalpha",		"1"		},
+		r_skyfog			= {	"r_skyfog",			"0.5"	},
+		cvDrawClouds	    = { "sky_drawclouds",	"1"		},
+		cvSkyScrollSpeed    = { "sky_scrollspeed",  "2.0",	false,   false,  "Changes the speed at which the clouds scroll." };
 
 int		skytexorder[6] = {0,2,1,3,4,5}; //for skybox
 
@@ -220,8 +220,9 @@ void Sky_NewMap (void)
 
 		if(!strcmp("cloud",key))
 			Sky_LoadCloudTexture(value);
-		else if(cSkyBoxName[0])
-			Sky_LoadCloudTexture(cSkyBoxName);
+
+		if(!strcmp("scrollspeed",key))
+			Cvar_SetValue(cvSkyScrollSpeed.name,(float)(atoi(value)/10));
 	}
 }
 
