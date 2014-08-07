@@ -76,6 +76,7 @@ EntityField_t	EntityFields[] =
 	{	"sky",			0,	EV_NONE		},
 	{	"cloud",		0,	EV_NONE		},
 	{	"scrollspeed",	0,	EV_NONE		},
+	{	"mapversion",	0,	EV_NONE		},
 
 	{	0	}
 };
