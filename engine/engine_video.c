@@ -607,9 +607,9 @@ void Video_DrawObject(
 #define	MAX_TRIANGLE_COUNT	4096
 
 	{
-		int		i;
-		vec2_t	vTextureArray[2][MAX_TRIANGLE_COUNT];
-		vec4_t	vColourArray[MAX_TRIANGLE_COUNT];
+		unsigned	int		i;
+		vec2_t				vTextureArray[2][MAX_TRIANGLE_COUNT];
+		vec4_t				vColourArray[MAX_TRIANGLE_COUNT];
 		
 		// Triangles count is too high for this object, bump up array size to manage it.
 		if(uiVerts > uiVideoArraySize)

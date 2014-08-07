@@ -21,6 +21,8 @@ EntityField_t	GlobalFields[] =
 	{	"wad",			0,	EV_STRING		},
 	{	"ambient",		0,	EV_NONE			},
 	{	"sky",			0,	EV_STRING		},
+	{	"cloud",		0,	EV_STRING		},
+	{	"scrollspeed",	0,	EV_INTEGER		},
 
 	{	0	}
 };
@@ -72,6 +74,8 @@ EntityField_t	EntityFields[] =
     {	"wad",			0,	EV_NONE		},
 	{	"ambient",		0,	EV_NONE		},
 	{	"sky",			0,	EV_NONE		},
+	{	"cloud",		0,	EV_NONE		},
+	{	"scrollspeed",	0,	EV_NONE		},
 
 	{	0	}
 };
