@@ -5,15 +5,15 @@ function prepend(s, t)
 end
 
 function cf_global()
-    includedirs { "Libs", "external" }
+    includedirs { "platform/include", "shared", "external" }
 end
 
 function cf_global_Libs()
-    includedirs { ".", "../Libs", "../external" }
+    includedirs { ".", "../platform/lib", "../external" }
 end
 
 -- where teh solution files are output to
-BUILD_PATH = "build/" .. (_ACTION or "")
+BUILD_PATH = "." .. (_ACTION or "")
 
 -- The GUT!
 solution "Katana"
@@ -82,7 +82,6 @@ solution "Katana"
 ################################################
 --]]
 
-
 project "Menu"
     kind "SharedLib"
     language "C"
@@ -96,25 +95,19 @@ project "Platform"
     cf_global_Libs()
     files { "platform/*.c" }
 
-
-
 --[[
 ###############################################
 			Build the Game
 ###############################################
 --]]	
 
-
-
 project "OpenKatana"
     kind "SharedLib"
     language "C"
     cf_global_Libs()
 	includedirs { "game" }
-	defines { "OPENKATANA", "GAME_MODULE" }
-    files { "game/client/*.c", "game/server/OK/*.c", "game/server/*.c", "game/shared/*.c", }
-
-
+	defines { "OPENKATANA", "GAME_OPENKATANA" }
+    files { "game/client/*.c", "game/server/openkatana/*.c", "game/server/*.c", "game/shared/*.c", }
 
 --[[
 ###############################################

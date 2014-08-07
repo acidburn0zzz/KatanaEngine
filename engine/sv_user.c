@@ -87,10 +87,10 @@ void SV_SetIdealPitch (void)
 	for (j=1 ; j<i ; j++)
 	{
 		step = z[j] - z[j-1];
-		if (step > -ON_EPSILON && step < ON_EPSILON)
+		if (step > -pMath_ONEPSILON && step < pMath_ONEPSILON)
 			continue;
 
-		if (dir && ( step-dir > ON_EPSILON || step-dir < -ON_EPSILON ) )
+		if (dir && ( step-dir > pMath_ONEPSILON || step-dir < -pMath_ONEPSILON ) )
 			return;		// mixed changes
 
 		steps++;

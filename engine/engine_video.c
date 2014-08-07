@@ -288,8 +288,11 @@ bool Video_CreateWindow(void)
 	GLeeInit();
 
     // [31/3/2014] Initialize AntTweakBar ~hogsy
-	TwInit(TW_OPENGL,NULL);
-	TwWindowSize(Video.iWidth,Video.iHeight);
+	if(COM_CheckParm("-tweak"))
+	{
+		TwInit(TW_OPENGL,NULL);
+		TwWindowSize(Video.iWidth,Video.iHeight);
+	}
 
 	// [13/8/2012] Do we want to check for extensions? ~hogsy
 	if(!COM_CheckParm("-noextensions"))

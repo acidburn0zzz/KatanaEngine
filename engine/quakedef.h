@@ -33,8 +33,6 @@
 
 #define MAX_NUM_ARGVS	50
 
-#define	ON_EPSILON		0.1			// point on plane side epsilon
-
 #define	MAX_MSGLEN		32000	// max length of a reliable message
 #define	MAX_DATAGRAM	32000	// max length of unreliable message
 
@@ -71,7 +69,6 @@
 #include "shared_formats.h"
 
 #include "engine_main.h"
-//#include "bspfile.h"
 #include "draw.h"
 #include "cvar.h"
 #include "screen.h"

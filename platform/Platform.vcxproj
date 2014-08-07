@@ -30,6 +30,7 @@
     <ClInclude Include="include\platform.h" />
     <ClInclude Include="include\platform_filesystem.h" />
     <ClInclude Include="include\platform_inttypes.h" />
+    <ClInclude Include="include\platform_math.h" />
     <ClInclude Include="include\platform_module.h" />
     <ClInclude Include="include\platform_stdint.h" />
     <ClInclude Include="include\platform_window.h" />

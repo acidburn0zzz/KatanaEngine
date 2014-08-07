@@ -124,7 +124,7 @@ void Editor_Launch(void)
         if(!tbMainMenu)
             Sys_Error("Failed to create editor window!\n");
 
-		TwAddButton(tbMainMenu,"Input Settings",(TwButtonCallback*)Input_OpenTweakMenu,NULL,"");
+		TwAddButton(tbMainMenu,"Input Settings",(TwButtonCallback)Input_OpenTweakMenu,NULL,"");
 	}
 
 #if 0

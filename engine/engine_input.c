@@ -311,7 +311,11 @@ void Input_Process(void)
                 break;
             case SDL_KEYDOWN:
             case SDL_KEYUP:
-                Key_Event(Input_ConvertKey(sEvent.key.keysym.sym),(sEvent.key.state == SDL_PRESSED));
+				// Let ATB handle some key input when it wants to.
+				if((sEvent.key.state == SDL_PRESSED) && TwKeyPressed(sEvent.key.keysym.sym,0))
+					break;
+
+				Key_Event(Input_ConvertKey(sEvent.key.keysym.sym),(sEvent.key.state == SDL_PRESSED));
                 break;
             case SDL_MOUSEMOTION:
                 if(bIsDedicated)
@@ -324,7 +328,7 @@ void Input_Process(void)
                 }
 
                 // [30/7/2013] Originally handled this differently for fullscreen but this works fine apparently ~hogsy
-                if((sEvent.motion.x != (Video.iWidth/2)) || (sEvent.motion.y != (Video.iHeight/2)))
+                if(((unsigned)sEvent.motion.x != (Video.iWidth/2)) || ((unsigned)sEvent.motion.y != (Video.iHeight/2)))
                 {
                     iMousePosition[X]	= sEvent.motion.xrel*5;
                     iMousePosition[Y]	= sEvent.motion.yrel*5;

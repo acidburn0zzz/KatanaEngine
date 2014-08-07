@@ -12,8 +12,14 @@ extern "C" {
 
 #ifndef PLATFORM_MATH_DOUBLE
 typedef	float	vec_t;
+
+#define pMath_PI		3.14159265358979323846f
+#define	pMath_ONEPSILON	0.1f					// Point on plane side epsilon.
 #else
 typedef	double	vec_t;
+
+#define pMath_PI		3.14159265358979323846
+#define	pMath_ONEPSILON	0.1						// Point on plane side epsilon.
 #endif
 
 typedef vec_t	vec2_t[2],vec3_t[3],vec4_t[4];
@@ -24,8 +30,6 @@ typedef struct
 			vY,
 			vZ;
 } MathVector_t;
-
-#define pMath_PI 3.14159265358979323846
 
 #define Math_Min(a,b)					(	((a)<(b))?(a):(b)	                    )
 #define Math_Max(a,b)                   (	((a)>(b))?(a):(b)	                    )

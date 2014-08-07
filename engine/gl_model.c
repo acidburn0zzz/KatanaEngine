@@ -1548,7 +1548,7 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 	MD2_t					*pinmodel,*mMD2Model;
 	MD2Triangle_t			*pintriangles,*pouttriangles;
 	MD2Frame_t				*pinframe,*poutframe;
-	MD2TextureCoordinate_t	*pST,*pOutST;
+	MD2TextureCoordinate_t	*pST;
 
 	iStartHunk = Hunk_LowMark();
 
