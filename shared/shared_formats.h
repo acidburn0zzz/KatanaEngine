@@ -211,6 +211,8 @@ typedef struct
 #define	BSP_HEADER		(('L'<<24)+('V'<<16)+('E'<<8)+'L')	// For easy identification.
 #define	BSP_HEADER_SIZE	8									// "BSP" followed by version number.
 
+#define	BSP_MIP_LEVELS	4
+
 #define	BSP_MAX_HULLS			4
 #define	BSP_MAX_LEAFS			32768			//0x400000
 #define	BSP_MAX_ENTITIES		32768
@@ -373,5 +375,29 @@ typedef struct
 
 	byte				bAmbientLevel[BSP_AMBIENT_END];
 } BSPLeaf_t;
+
+// Obsolete
+
+typedef struct
+{
+	int			nummiptex;
+	int			dataofs[4];		// [nummiptex]
+} dmiptexlump_t;
+
+typedef struct miptex_s
+{
+	char		name[16];
+	unsigned	width,height;
+} miptex_t;
+
+// 0-2 are axial planes
+#define	PLANE_X			0
+#define	PLANE_Y			1
+#define	PLANE_Z			2
+
+// 3-5 are non-axial planes snapped to the nearest
+#define	PLANE_ANYX		3
+#define	PLANE_ANYY		4
+#define	PLANE_ANYZ		5
 
 #endif

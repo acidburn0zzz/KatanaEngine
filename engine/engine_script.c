@@ -270,7 +270,7 @@ typedef struct
 void _FileSystem_SetBasePath(char *cArg);		// common.c
 void _FileSystem_AddGameDirectory(char *cArg);	// common.c
 
-void _Material_AddSkin(void);
+void _Material_AddSkin(char *cArg);
 
 /*	Allows for console variables to be set from scripts.
 */

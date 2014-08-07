@@ -78,7 +78,6 @@ Global
 		{9E7DC621-0D2D-803C-AAD4-6DDFA9C191E1}.Release (OpenKatana)|Win32.ActiveCfg = Release|Win32
 		{9E7DC621-0D2D-803C-AAD4-6DDFA9C191E1}.Release (OpenKatana)|Win32.Build.0 = Release|Win32
 		{9E7DC621-0D2D-803C-AAD4-6DDFA9C191E1}.Release (OpenKatana)|x64.ActiveCfg = Release|x64
-		{9E7DC621-0D2D-803C-AAD4-6DDFA9C191E1}.Release (OpenKatana)|x64.Build.0 = Release|x64
 		{9E7DC621-0D2D-803C-AAD4-6DDFA9C191E1}.Release With Debug Info|Win32.ActiveCfg = Release|Win32
 		{9E7DC621-0D2D-803C-AAD4-6DDFA9C191E1}.Release With Debug Info|Win32.Build.0 = Release|Win32
 		{9E7DC621-0D2D-803C-AAD4-6DDFA9C191E1}.Release With Debug Info|x64.ActiveCfg = Release|x64
@@ -133,7 +132,6 @@ Global
 		{5588B942-90A0-63A2-3369-523F456D79C5}.Release (OpenKatana)|Win32.ActiveCfg = Release|Win32
 		{5588B942-90A0-63A2-3369-523F456D79C5}.Release (OpenKatana)|Win32.Build.0 = Release|Win32
 		{5588B942-90A0-63A2-3369-523F456D79C5}.Release (OpenKatana)|x64.ActiveCfg = Release|x64
-		{5588B942-90A0-63A2-3369-523F456D79C5}.Release (OpenKatana)|x64.Build.0 = Release|x64
 		{5588B942-90A0-63A2-3369-523F456D79C5}.Release With Debug Info|Win32.ActiveCfg = Release With Debug Info|Win32
 		{5588B942-90A0-63A2-3369-523F456D79C5}.Release With Debug Info|Win32.Build.0 = Release With Debug Info|Win32
 		{5588B942-90A0-63A2-3369-523F456D79C5}.Release With Debug Info|x64.ActiveCfg = Release With Debug Info|x64
@@ -153,7 +151,8 @@ Global
 		{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}.Release (Engine)|x64.ActiveCfg = Release|Win32
 		{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}.Release (OpenKatana)|Win32.ActiveCfg = Release|Win32
 		{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}.Release (OpenKatana)|Win32.Build.0 = Release|Win32
-		{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}.Release (OpenKatana)|x64.ActiveCfg = Release|Win32
+		{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}.Release (OpenKatana)|x64.ActiveCfg = Release|x64
+		{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}.Release (OpenKatana)|x64.Build.0 = Release|x64
 		{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}.Release With Debug Info|Win32.ActiveCfg = Release|Win32
 		{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}.Release With Debug Info|Win32.Build.0 = Release|Win32
 		{DDDBE2D3-7AFE-4CBF-8DE5-636374F63DF2}.Release With Debug Info|x64.ActiveCfg = Release|Win32
