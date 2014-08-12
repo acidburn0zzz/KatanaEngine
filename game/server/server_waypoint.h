@@ -5,7 +5,7 @@
 
 #include "server_main.h"
 
-//#define	DEBUG_WAYPOINT
+#define	DEBUG_WAYPOINT
 
 typedef enum
 {

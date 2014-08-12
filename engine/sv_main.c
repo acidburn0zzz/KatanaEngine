@@ -1114,7 +1114,7 @@ void SV_SpawnServer(char *server)
 	sv.time		= 1.0;
 
 	Q_strcpy(sv.name,server);
-	sprintf(sv.modelname,PATH_MAPS"/%s.bsp",server);
+	sprintf(sv.modelname,PATH_MAPS"/%s"BSP_EXTENSION,server);
 	sv.worldmodel = Mod_ForName(sv.modelname);
 	if(!sv.worldmodel)
 	{

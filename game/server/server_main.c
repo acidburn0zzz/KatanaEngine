@@ -76,38 +76,33 @@ SpawnList_t SpawnList[] =
 
 #ifdef GAME_OPENKATANA
 	{	"point_decoration",	Point_DecorationSpawn	},
-	{	"item_flag",		CTF_FlagSpawn			},
 #elif GAME_ADAMAS
 #endif
 
 	{	NULL,	NULL	}
 };
 
-cvar_t	cvServerPlayerModel		= { "server_playermodel",	"models/player.md2",	false,	true,   "Sets the main server-side player model."	            };
-cvar_t	cvServerRespawnDelay	= { "server_respawndelay",	"40",					false,	true,	"Sets the amount of time until a player respawns."      };
-cvar_t	cvServerSkill			= { "server_skill",			"1",					false,	true,   "The level of difficulty."	                            };
-cvar_t	cvServerSelfDamage		= { "server_selfdamage",	"0",					false,	true,	"If enabled, your weapons can damage you."              };
+cvar_t	cvServerPlayerModel		= { "server_playermodel",	"models/player.md2",	false,	true,   "Sets the main server-side player model."	            },
+		cvServerRespawnDelay	= { "server_respawndelay",	"40",					false,	true,	"Sets the amount of time until a player respawns."      },
+		cvServerSkill			= { "server_skill",			"1",					false,	true,   "The level of difficulty."	                            },
+		cvServerSelfDamage		= { "server_selfdamage",	"0",					false,	true,	"If enabled, your weapons can damage you."              };
 // [7/12/2012] Changed default maxhealth to 200 ~hogsy
 cvar_t	cvServerMaxHealth		= { "server_maxhealth",		"200",					false,	true,   "Sets the max amount of health."	                    };
 cvar_t	cvServerDefaultHealth	= {	"server_defaulthealth",	"100",					false,	true,   "Changes the default amount of health."	                };
 cvar_t	cvServerMonsters		= { "server_monsters",		"1",					false,	true,   "If enabled, monsters can spawn."	                    };
-cvar_t	cvServerMaxScore		= { "server_maxscore",		"20",					false,	true	};
+cvar_t	cvServerMaxScore		= { "server_maxscore",		"20",					false,	true,	"Max score before the round ends."						};
 cvar_t	cvServerGameMode		= { "server_gamemode",		"0",					false,	true,   "Sets the active mode of play."	                        };
-cvar_t	cvServerGameTime		= {	"server_gametime",		"120",					false,	true	};
+cvar_t	cvServerGameTime		= {	"server_gametime",		"120",					false,	true,	"Time before the round ends."							};
 cvar_t	cvServerGameClients		= { "server_gameclients",	"2",					false,	true	};
 cvar_t	cvServerWaypointDelay	= { "server_waypointdelay",	"5.0",					false,	true,   "Delay before attempting to spawn another waypoint."	};
-#ifdef GAME_ADAMAS
-cvar_t	cvServerWaypointSpawn	= { "server_waypointspawn",	"0",					false,	true	};
-#else
-cvar_t	cvServerWaypointSpawn	= { "server_waypointspawn",	"1",					false,	true	};
-#endif
-cvar_t	cvServerWaypointParse	= { "server_waypointparse",	"",						false,	true    };
+cvar_t	cvServerWaypointSpawn	= { "server_waypointspawn",	"0",					false,	true,	"if enabled, waypoints autospawn."						};
+cvar_t	cvServerWaypointParse	= { "server_waypointparse",	"",						false,	true,	"Overrides the default path to load waypoints from."	};
 // [19/3/2013] Replacement for the engine-side variable ~hogsy
-cvar_t	cvServerGravityTweak	= {	"server_gravityamount",	"1.0",					false,	true	};
-cvar_t	cvServerGravity			= {	"server_gravity",		"600.0",				false,	true	};
+cvar_t	cvServerGravityTweak	= {	"server_gravityamount",	"1.0",					false,	true,	"Gravity modifier."										};
+cvar_t	cvServerGravity			= {	"server_gravity",		"600.0",				false,	true,	"Overall gravity."										};
 #ifdef GAME_OPENKATANA
 // [20/1/2013] By default bots spawn in OpenKatana for both SP and MP ~hogsy
-cvar_t	cvServerBots			= {	"server_bots",			"1",					false,	true	};
+cvar_t	cvServerBots			= {	"server_bots",			"1",					false,	true,	"Can enable and disable bots."							};
 #else
 cvar_t	cvServerBots			= {	"server_bots",			"0",					false,	true	};
 #endif
@@ -218,21 +213,18 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet8.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet9.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet10.wav");
-
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion1.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion2.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion3.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion4.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion5.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion6.wav");
-
-	// [15/7/2012] Precache gib models ~hogsy
-	// [13/9/2012] Updated paths ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/gib0.md2");
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/gib1.md2");
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/gib2.md2");
-
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB0);
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB0);
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB0);
+	
 	// Player
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,cvServerPlayerModel.string);
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep1.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep2.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep3.wav");
@@ -242,6 +234,7 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain3.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain4.wav");
 
+	// Particles
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD0);
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD1);
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD2);
@@ -283,8 +276,6 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"ice");
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"zspark");
 #endif
-
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,cvServerPlayerModel.string);
 
 	// [10/4/2013] Waypoint debugging models ~hogsy
 #ifdef DEBUG_WAYPOINT

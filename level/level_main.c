@@ -182,13 +182,13 @@ int main(int argc,char **argv)
 
 	// create all the filenames pertaining to this map
 	strcpy(filename_map, argv[argc-1]);
-	ReplaceExtension(filename_map, ".bsp", ".map", ".map");
+	ReplaceExtension(filename_map,BSP_EXTENSION, ".map", ".map");
 	strcpy(filename_bsp, filename_map);
-	ReplaceExtension(filename_bsp, ".map", ".bsp", ".bsp");
+	ReplaceExtension(filename_bsp, ".map",BSP_EXTENSION,BSP_EXTENSION);
 	strcpy(filename_prt, filename_bsp);
-	ReplaceExtension(filename_prt, ".bsp", ".prt", ".prt");
+	ReplaceExtension(filename_prt,BSP_EXTENSION, ".prt", ".prt");
 	strcpy(filename_pts, filename_bsp);
-	ReplaceExtension(filename_pts, ".bsp", ".pts", ".pts");
+	ReplaceExtension(filename_pts,BSP_EXTENSION, ".pts", ".pts");
 
 	if(!strcmp(filename_map, filename_bsp))
 		Error("filename_map \"%s\" == filename_bsp \"%s\"\n", filename_map, filename_bsp);
@@ -235,7 +235,7 @@ int main(int argc,char **argv)
 	transwater		= true;
 	forcevis		= true;
 	waterlightmap	= true;
-	subdivide_size	= 1024;
+	subdivide_size	= 4080;
 
 	for (; i < argc; i++)
 	{
@@ -270,7 +270,7 @@ int main(int argc,char **argv)
 STARTERROR:
 		Error(	"%s",
 				"usage: hmap2 [options] sourcefile\n"
-				"Compiles .map to .bsp, does not compile vis or lighting data\n"
+				"Compiles .map to "BSP_EXTENSION", does not compile vis or lighting data\n"
 				"\n"
 				"other utilities available:\n"
 				"-bsp2prt    bsp2prt utility, run -bsp2prt as the first parameter for more\n"
@@ -282,7 +282,7 @@ STARTERROR:
 				"-nowater    disable watervis; r_wateralpha in glquake will not work right\n"
 				"-notjunc    disable tjunction fixing; glquake will have holes between polygons\n"
 				"-nofill     disable sealing of map and vis, used for ammoboxes\n"
-				"-onlyents   patchs entities in existing .bsp, for relighting\n"
+				"-onlyents   patchs entities in existing "BSP_EXTENSION", for relighting\n"
 				"-verbose    show more messages\n"
 				"-darkplaces allow really big polygons\n"
 				"-noforcevis don't make a .prt if the map leaks\n"

@@ -594,9 +594,9 @@ void Weapon_SecondaryAttack(edict_t *eEntity)
 
 void Weapon_CheatCommand(edict_t *eEntity)
 {
+#ifdef GAME_OPENKATANA
 	Weapon_t *wWeapon;
 
-#ifdef GAME_OPENKATANA
 	eEntity->local.shotcycler_ammo	=
 	eEntity->local.ionblaster_ammo	=
 	eEntity->local.sidewinder_ammo	=
@@ -617,7 +617,6 @@ void Weapon_CheatCommand(edict_t *eEntity)
 	wWeapon = Weapon_GetWeapon(WEAPON_DAIKATANA);
 	if(wWeapon)
 		Weapon_SetActive(wWeapon,eEntity);
-#elif GAME_ADAMAS
 #endif
 
 	eEntity->v.impulse = 0;

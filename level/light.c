@@ -44,7 +44,6 @@ vec3_t	vTextureReflectivity[BSP_MAX_TEXINFO];
 // [22/7/2012] Taken from Quake 2's BSP tools ~hogsy
 void Light_CalculateTextureReflectivity(void)
 {
-#if 0
 	vec3_t		vColor;
 	int			i,j,k,texels,texel;
 	char		path[1024];
@@ -52,19 +51,18 @@ void Light_CalculateTextureReflectivity(void)
 	miptex_t	*mt;
 
 	// Always set index 0 even if no textures
-	vTextureReflectivity[0][0] = 0.5f;
-	vTextureReflectivity[0][1] = 0.5f;
-	vTextureReflectivity[0][2] = 0.5f;
+	VectorSet(vTextureReflectivity[0],0.5,0.5,0.5);
 
 	for(i = 0; i < numtexinfo; i++)
 	{
+#if 0
 		for(j = 0; j < i; j++)
 			if(!strcmp(miptex[i],miptex[j]))
 			{
 				VectorCopy(vTextureReflectivity[j],vTextureReflectivity[i]);
 				break;
 			}
-
+			
 		if(j != i)
 			continue;
 
@@ -77,6 +75,7 @@ void Light_CalculateTextureReflectivity(void)
 		// [1/8/2012] TODO: How to do for 32bpp images :/ ~hogsy
 		for(j = 0; j < texels; j++)
 		{
+			mt->
 			texel = ((byte*)mt)[LittleLong(mt->offsets[o])+j];
 			for(k = 0; k < 3; k++)
 				vColor[k] += palette
@@ -95,8 +94,8 @@ void Light_CalculateTextureReflectivity(void)
 			scale *= 2.0f;
 			VectorScale(vTextureReflectivity[i],scale,vTextureReflectivity[i]);
 		}
-	}
 #endif
+	}
 }
 
 int LightStyleForTargetname( char *targetname )

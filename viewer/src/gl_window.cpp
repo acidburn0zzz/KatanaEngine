@@ -596,6 +596,8 @@ md2_model_t *GlWindow::loadModel (const char *filename, int pos)
 	return d_models[pos];
 }
 
+#include "shared_png.h"
+
 int GlWindow::loadTexture (const char *filename, int name)
 {
 	if (!filename || !strlen (filename))
@@ -623,6 +625,7 @@ int GlWindow::loadTexture (const char *filename, int name)
 	else if(strstr(filename,".png"))
 	{
 		// [24/2/2014] TODO: Png support... ~hogsy
+		//lodepng_decode32_file((unsigned char**)image->data,(UINT32*)&image->width,(UINT32*)&image->height,filename);
 	}
 	else if(strstr (_strlwr ((char *) filename), ".pcx"))
 	{

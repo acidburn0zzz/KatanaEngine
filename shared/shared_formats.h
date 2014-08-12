@@ -6,6 +6,7 @@
 typedef enum
 {
 	MODEL_TYPE_MD2,
+	MODEL_TYPE_KMDL,
 	MODEL_TYPE_OBJ,
 	MODEL_SPRITE,
 	MODEL_BRUSH,
@@ -14,10 +15,25 @@ typedef enum
 } ModelType_t;
 
 /*
+	KMDL Format
+	Extension of the already existing MD2 format.
+*/
+
+#define	KMDL_HEADER		(('L'<<24)+('D'<<16)+('M'<<8)+'K')
+#define	KMDL_EXTENSION	".kmdl"
+
+typedef struct
+{
+	vec3_t	index_xyz[3],
+			index_st[3];
+} KMDLTriangle_t;
+
+/*
 	MD2 Format
 */
 
-#define MD2_HEADER	(('2'<<24)+('P'<<16)+('D'<<8)+'I')
+#define MD2_HEADER		(('2'<<24)+('P'<<16)+('D'<<8)+'I')
+#define	MD2_EXTENSION	".md2"
 
 #define	MD2_VERSION	8
 
@@ -83,6 +99,8 @@ typedef struct
 	OBJ Format
 */
 
+#define	OBJ_EXTENSION	".obj"
+
 typedef struct
 {
 	vec3_t	vVertex;
@@ -99,7 +117,8 @@ typedef struct
 	IQM Format
 */
 
-#define IQM_HEADER	"INTERQUAKEMODEL"
+#define IQM_HEADER		"INTERQUAKEMODEL"
+#define	IQM_EXTENSION	".iqm"
 
 #define	IQM_VERSION	2
 
@@ -208,8 +227,9 @@ typedef struct
 #define	BSP_VERSION	4
 #define	BSP_VERSION_4	// Enable support for version 4 feature set.
 
-#define	BSP_HEADER		(('L'<<24)+('V'<<16)+('E'<<8)+'L')	// For easy identification.
+#define	BSP_HEADER		(('4'<<24)+('L'<<16)+('V'<<8)+'L')	// For easy identification.
 #define	BSP_HEADER_SIZE	8									// "BSP" followed by version number.
+#define	BSP_EXTENSION	".bsp"
 
 #define	BSP_MIP_LEVELS	4
 

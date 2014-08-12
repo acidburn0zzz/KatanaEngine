@@ -19,7 +19,7 @@
 */
 #include "quakedef.h"
 
-#include "platform/include/platform_filesystem.h"
+#include "platform_filesystem.h"
 
 #include "shared_png.h"
 
@@ -34,7 +34,16 @@ byte *Image_LoadImage(char *name, unsigned int *width, unsigned int *height)
 	sprintf(loadfilename,"%s.tga",name);
 	COM_FOpenFile(loadfilename,&f);
 	if(f)
-		return Image_LoadTGA(f,width,height);
+	{
+		byte	*bImage;
+
+		bImage = Image_LoadTGA(f,width,height);
+		if(bImage)
+			return bImage;
+
+		// If we failed to load, warn us, then carry on and try PNG instead.
+		Con_Warning("Failed to load TGA! (%s)\n",loadfilename);
+	}
 
 	// [26/1/2014] PNG support ~hogsy
 	sprintf(loadfilename,"%s.png",name);
@@ -45,11 +54,10 @@ byte *Image_LoadImage(char *name, unsigned int *width, unsigned int *height)
 		byte			*bImage;
 
 		uiDecode = lodepng_decode32_file(&bImage,(uint32_t*)width,(uint32_t*)height,va("%s/%s",com_gamedir,loadfilename));
-		if(uiDecode)
-			Con_Warning("Failed to load PNG! (%s) (%s)\n",loadfilename,lodepng_error_text(uiDecode));
-		// [26/1/2014] Else because if we have another method we can try after this, let's go for it ~hogsy
-		else
+		if(!uiDecode)
 			return bImage;
+
+		Con_Warning("Failed to load PNG! (%s) (%s)\n",loadfilename,lodepng_error_text(uiDecode));
 	}
 
 	// [26/1/2014] TODO: JPEG support! ~hogsy

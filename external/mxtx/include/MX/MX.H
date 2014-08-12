@@ -14,13 +14,9 @@
 #ifndef INCLUDED_MX
 #define INCLUDED_MX
 
-
-
 #ifdef WIN32
 #include <windows.h>
 #endif
-
-
 
 #ifndef INCLUDED_MXBUTTON
 #include <mx/mxAccelerator.h>

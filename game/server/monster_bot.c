@@ -547,10 +547,8 @@ void Bot_Die(edict_t *eBot,edict_t *eOther)
 	{
 		Sound(eBot,CHAN_VOICE,"misc/gib1.wav",255,ATTN_NORM);
 
-		ThrowGib(eBot->v.origin,eBot->v.velocity,"models/gibs/gib0.md2",(float)(eBot->v.iHealth*-1),true);
-		ThrowGib(eBot->v.origin,eBot->v.velocity,"models/gibs/gib1.md2",(float)(eBot->v.iHealth*-1),true);
-		ThrowGib(eBot->v.origin,eBot->v.velocity,"models/gibs/gib2.md2",(float)(eBot->v.iHealth*-1),true);
-
-		Engine.Particle(eBot->v.origin,eBot->v.velocity,1.0f,"blood",5);
+		ThrowGib(eBot->v.origin,eBot->v.velocity,PHYSICS_MODEL_GIB0,(float)(eBot->v.iHealth*-1),true);
+		ThrowGib(eBot->v.origin,eBot->v.velocity,PHYSICS_MODEL_GIB1,(float)(eBot->v.iHealth*-1),true);
+		ThrowGib(eBot->v.origin,eBot->v.velocity,PHYSICS_MODEL_GIB2,(float)(eBot->v.iHealth*-1),true);
 	}
 }

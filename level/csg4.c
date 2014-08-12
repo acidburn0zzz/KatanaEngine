@@ -35,16 +35,21 @@ static void ClipInside( int splitplane, int frontside, bool precedence )
 	plane_t *split = &mapplanes[splitplane];
 
 	insidelist = NULL;
-	for( f = inside; f; f = next ) {
+	for( f = inside; f; f = next ) 
+	{
 		next = f->next;
 
-		if( f->planenum == splitplane ) {
+		if( f->planenum == splitplane ) 
+		{
 			// exactly on, handle special
-			if( frontside != f->planeside || precedence ) {
+			if( frontside != f->planeside || precedence ) 
+			{
 				// allways clip off opposite faceing
 				frags[frontside] = NULL;
 				frags[!frontside] = f;
-			} else {
+			} 
+			else 
+			{
 				// leave it on the outside
 				frags[frontside] = f;
 				frags[!frontside] = NULL;
@@ -68,24 +73,21 @@ static void ClipInside( int splitplane, int frontside, bool precedence )
 }
 
 
-/*
-==================
-SaveOutside
-
-Saves all of the faces in the outside list to the bsp plane list
-==================
+/*	Saves all of the faces in the outside list to the bsp plane list
 */
 static void SaveOutside( tree_t *tree, bool mirror )
 {
 	int		planenum;
 	face_t	*f, *next, *newf;
 
-	for( f = outside; f; f = next ) {
+	for( f = outside; f; f = next ) 
+	{
 		next = f->next;
 		numcsgfaces++;
 		planenum = f->planenum;
 
-		if( mirror ) {
+		if( mirror ) 
+		{
 			newf = NewFaceFromFace( f );
 			newf->planeside = f->planeside ^ 1;	// reverse side
 			newf->contents[0] = f->contents[1];
@@ -105,10 +107,12 @@ static void FreeInside( int contents )
 {
 	face_t	*f, *next;
 
-	for( f = inside; f; f = next ) {
+	for( f = inside; f; f = next ) 
+	{
 		next = f->next;
 
-		if( contents == BSP_CONTENTS_SOLID ) {
+		if( contents == BSP_CONTENTS_SOLID ) 
+		{
 			FreeFace (f);
 			continue;
 		}
@@ -180,16 +184,16 @@ static void CopyFacesToOutside( const brush_t *b )
 			continue;
 
 		numcsgbrushfaces++;
-		newf = AllocFace ();
-		newf->texturenum = f->texturenum;
-		newf->planenum = f->planenum;
-		newf->planeside = f->planeside;
-		newf->original = f->original;
-		newf->winding = CopyWinding( f->winding );
-		newf->next = outside;
-		newf->contents[0] = BSP_CONTENTS_EMPTY;
-		newf->contents[1] = b->contents;
-		outside = newf;
+		newf				= AllocFace ();
+		newf->texturenum	= f->texturenum;
+		newf->planenum		= f->planenum;
+		newf->planeside		= f->planeside;
+		newf->original		= f->original;
+		newf->winding		= CopyWinding( f->winding );
+		newf->next			= outside;
+		newf->contents[0]	= BSP_CONTENTS_EMPTY;
+		newf->contents[1]	= b->contents;
+		outside				= newf;
 	}
 }
 

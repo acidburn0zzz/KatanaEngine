@@ -24,7 +24,7 @@ void Client_Draw(void)
 */
 void Client_ParseTemporaryEntity(void)
 {
-	int	iEffectTexture,iType;
+	int	iType;
 
 	// Set iType, so if the type is missing we can mention it below.
 	iType = Engine.ReadByte();
@@ -77,10 +77,9 @@ void Client_ParseTemporaryEntity(void)
 	case CTE_BLOODSPRAY:
 		{
 			int			i,j;
+			char		cBlood[12];
 			vec3_t		vPosition;
 			Particle_t	*pBloodSpray;
-
-			iEffectTexture = Engine.Client_GetEffect("blood");
 
 			for(i = 0; i < 3; i++)
 				vPosition[i] = Engine.ReadCoord();
@@ -91,14 +90,17 @@ void Client_ParseTemporaryEntity(void)
 				if(!pBloodSpray)
 					return;
 
+				// Keep the textures random.
+				PARTICLE_BLOOD(cBlood);
+
 				Math_VectorSet(1.0f,pBloodSpray->color);
 				Math_VectorCopy(vPosition,pBloodSpray->org);
 
 				pBloodSpray->die		= (float)(Client.time+5.0);
 				pBloodSpray->pBehaviour	= PARTICLE_BEHAVIOUR_SLOWGRAVITY;
 				pBloodSpray->ramp		= (float)(rand()&3);
-				pBloodSpray->scale		= 5.0f;
-				pBloodSpray->texture	= iEffectTexture;
+				pBloodSpray->scale		= (float)(rand()%8+1);
+				pBloodSpray->texture	= Engine.Client_GetEffect(cBlood);
 				
 				for(j = 0; j < 3; j++)
 					pBloodSpray->vel[j] = (float)((rand()%512)-256);
@@ -159,7 +161,8 @@ void Client_RelinkEntities(entity_t *eClient,int i,double dTime)
 	// [23/11/2013] Simple bloody particle effect, which is now done client-side! Yay! ~hogsy
 	if(eClient->effects & EF_PARTICLE_BLOOD)
 	{
-		int k,j;
+		char	cBlood[12];
+		int		k,j;
 
 		for(k = 0; k < 2; k++)
 		{
@@ -167,13 +170,15 @@ void Client_RelinkEntities(entity_t *eClient,int i,double dTime)
 			if(!pParticle)
 				return;
 
-			pParticle->texture		= Engine.Client_GetEffect("blood");
-			pParticle->ramp			= (float)(rand()&3);
-			pParticle->scale		= 5.5f;
+			// Keep the textures random.
+			PARTICLE_BLOOD(cBlood);
+
+			pParticle->texture		= Engine.Client_GetEffect(cBlood);
+			pParticle->ramp			= (float)(rand()&4);
+			pParticle->scale		= (float)(rand()%2+2);
 			pParticle->die			= (float)(Client.time+0.3*(rand()%5));
 			pParticle->pBehaviour	= PARTICLE_BEHAVIOUR_GRAVITY;
 			
-			// [26/2/2014] Ramped down a little so we have less of a chance of creating too many :P ~hogsy
 			for(j = 0; j < 3; j++)
 				pParticle->org[j] = eClient->origin[j]+((rand()&15)-5.0f);
 

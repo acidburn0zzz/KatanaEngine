@@ -245,6 +245,11 @@ model_t *Model_Load(model_t *mModel)
 	case MD2_HEADER:
 		Model_LoadMD2(mModel,buf);
 		break;
+#if 0
+	case KMDL_HEADER:
+		Model_LoadKMDL(mModel,buf);
+		break;
+#endif
 	case BSP_HEADER:
 		Model_LoadBSP(mModel,buf);
 		break;

@@ -103,6 +103,8 @@ GameClient_t Client;
 #define	ITEM_LIFE		2
 #endif
 #define ITEM_FLAG			1000
+#define	ITEM_REDFLAG		1001
+#define	ITEM_BLUEFLAG		1002
 
 int		iRedScore,iBlueScore;
 

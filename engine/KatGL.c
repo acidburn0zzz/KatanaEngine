@@ -255,7 +255,6 @@ void R_DrawString(int x,int y,char *msg)
 */
 void Draw_Shadow(entity_t *ent)
 {
-	MathVector_t	mvLightVector;
 	lerpdata_t		lerpdata;
 	float			fShadowMatrix[16] =
 	{	1,		0,		0,		0,

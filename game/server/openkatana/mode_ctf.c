@@ -16,6 +16,7 @@
 */
 
 #include "server_monster.h"
+#include "server_item.h"
 
 #define	RESPAWN_DELAY		1000
 
@@ -110,7 +111,7 @@ void CTF_FlagThink(edict_t *ent)
 	}
 }
 
-void CTF_FlagTouch(edict_t *ent,edict_t *other)
+void CTF_FlagTouch(Item_t* iItem,edict_t *ent,edict_t *other)
 {
 	// [20/2/2012] Revised ~hogsy
 	// [23/2/2012] Revised ~hogsy
@@ -181,7 +182,7 @@ void CTF_FlagTouch(edict_t *ent,edict_t *other)
 */
 void CTF_FlagSpawn(edict_t *eFlag)
 {
-	if(!(int)cvServerGameMode.value == MODE_CAPTURETHEFLAG)
+	if(!cvServerGameMode.iValue == MODE_CAPTURETHEFLAG)
 		return;
 
 	eFlag->v.movetype	= MOVETYPE_NONE;

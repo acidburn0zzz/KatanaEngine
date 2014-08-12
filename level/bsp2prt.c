@@ -96,7 +96,7 @@ int Bsp2Prt_Main( int argc, char **argv )
 	if( i != argc - 1 )
 		Error( "%s",
 "usage: hmap2 -bsp2prt [options] sourcefile\n"
-"Makes a .prt file from a .bsp, to allow it to be vised\n"
+"Makes a .prt file from a "BSP_EXTENSION", to allow it to be vised\n"
 "\n"
 "What the options do:\n"
 "-nowater    disable watervis; r_wateralpha in glquake will not work right\n"

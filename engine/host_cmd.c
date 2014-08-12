@@ -268,7 +268,7 @@ void ExtraMaps_Init(void)
                 WIN32_FIND_DATA	FindFileData;
                 HANDLE			Find;
 
-                sprintf(filestring,"%s/maps/*.bsp",search->filename);
+                sprintf(filestring,"%s/maps/*"BSP_EXTENSION,search->filename);
 
                 Find = FindFirstFile(filestring,&FindFileData);
                 if(Find == INVALID_HANDLE_VALUE)
@@ -293,7 +293,7 @@ void ExtraMaps_Init(void)
                 {
                     while((dEntry = readdir(dDirectory)))
                     {
-                        if(strstr(dEntry->d_name,".bsp"))
+                        if(strstr(dEntry->d_name,BSP_EXTENSION))
                         {
                             COM_StripExtension(dEntry->d_name,cMapName);
 
@@ -310,7 +310,7 @@ void ExtraMaps_Init(void)
 		{
 			if(!strstr(search->pack->filename,ignorepakdir)) // Don't list standard id maps
 				for(i = 0,pak = search->pack; i < pak->numfiles; i++)
-					if(strstr(pak->files[i].name,".bsp"))
+					if(strstr(pak->files[i].name,BSP_EXTENSION))
 						if(pak->files[i].filelen > 32*1024) // Don't list files under 32k (ammo boxes etc)
 						{
 							COM_StripExtension(pak->files[i].name+5,cMapName);
@@ -821,7 +821,7 @@ void Host_Changelevel_f (void)
 	}
 
 	//johnfitz -- check for client having map before anything else
-	sprintf (level,PATH_MAPS"/%s.bsp", Cmd_Argv(1));
+	sprintf (level,PATH_MAPS"/%s"BSP_EXTENSION, Cmd_Argv(1));
 	if (COM_OpenFile (level, &i) == -1)
 		Host_Error ("cannot find map %s", level);
 	//johnfitz

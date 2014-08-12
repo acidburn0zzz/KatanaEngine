@@ -1,5 +1,5 @@
-#ifndef INCLUDED_MD2VIEWER
-#define INCLUDED_MD2VIEWER
+#ifndef __EDITORMAIN__
+#define __EDITORMAIN__
 
 #ifndef INCLUDED_MXWINDOW
 #include "mxWindow.h"
@@ -9,7 +9,8 @@
 #include "gl_model.h"
 #endif
 
-#define kAppTitle					"Katana Viewer"
+#define EDITOR_WINDOW_TITLE	"Katana Editor"
+
 #define IDC_MODEL_LOADMODEL			1001
 #define IDC_MODEL_LOADOVERLAY		1002
 #define IDC_MODEL_UNLOADMODEL		1003

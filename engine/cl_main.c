@@ -418,7 +418,7 @@ void CL_RelinkEntities (void)
 				f = 1.0f;
 			//johnfitz
 
-		// interpolate the origin and angles
+			// interpolate the origin and angles
 			for (j=0 ; j<3 ; j++)
 			{
 				ent->origin[j] = ent->msg_origins[1][j] + f*delta[j];

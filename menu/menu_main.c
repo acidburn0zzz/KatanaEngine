@@ -133,27 +133,29 @@ void Menu_Initialize(void)
 //	Script_Initialize();
 
 #ifdef GAME_OPENKATANA
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"topbar");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"topclose");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"loading");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"paused");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"ammo");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"health");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"messenger");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"inventory");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"cross");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"armor");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"crosshair0");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"topbar");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"topclose");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"loading");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"paused");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"ammo");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"health");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"messenger");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"inventory");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"cross");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"armor");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair0");
 #elif GAME_ADAMAS
-    Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"health");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"ammo");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"armor");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"crosshair");
+    Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"health");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"ammo");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"armor");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair");
+#elif GAME_ICTUS
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"int040a");
 #endif
 
 	// [2/8/2012] Precache all the HUD digits ~hogsy
 	for(i = 0; i < 10; i++)
-		Engine.Client_PrecacheResource(RESOURCE_TEXTURE,va(HUD_BASEPATH"num%i",i));
+		Engine.Client_PrecacheResource(RESOURCE_TEXTURE,va(MENU_HUD_PATH"num%i",i));
 
 	Menu_GetScreenSize();
 
@@ -246,8 +248,8 @@ void Menu_DrawSlider(Menu_t menu,float range)
 	else if(range > 1.0f)
 		range = 1.0f;
 
-	Engine.DrawPic(MENU_BASEPATH"i_indicator3",1.0f,menu.iPosition[WIDTH],menu.iPosition[HEIGHT],160,32);
-	Engine.DrawPic(MENU_BASEPATH"i_sliderbar2",1.0f,(menu.iPosition[WIDTH]+27)+90*(int)range,menu.iPosition[HEIGHT]+2,16,30);
+	Engine.DrawPic(MENU_BASE_PATH"i_indicator3",1.0f,menu.iPosition[WIDTH],menu.iPosition[HEIGHT],160,32);
+	Engine.DrawPic(MENU_BASE_PATH"i_sliderbar2",1.0f,(menu.iPosition[WIDTH]+27)+90*(int)range,menu.iPosition[HEIGHT]+2,16,30);
 }
 
 void Menu_DrawCheckBox(int x,int y,bool bOn)
@@ -295,12 +297,12 @@ void Menu_Draw(void)
 	if(iMenuState & MENU_STATE_LOADING)
 	{
 		// [21/5/2013] TODO: Switch to element ~hogsy
-		Engine.DrawPic(MENU_BASEPATH"loading",1.0f,(iMenuWidth-256)/2,(iMenuHeight-32)/2,256,32);
+		Engine.DrawPic(MENU_BASE_PATH"loading",1.0f,(iMenuWidth-256)/2,(iMenuHeight-32)/2,256,32);
 		return;
 	}
 	else if(iMenuState & MENU_STATE_PAUSED)
 	{
-		Engine.DrawPic(MENU_BASEPATH"paused",1.0f,0,0,32,64);
+		Engine.DrawPic(MENU_BASE_PATH"paused",1.0f,0,0,32,64);
 		return;
 	}
 

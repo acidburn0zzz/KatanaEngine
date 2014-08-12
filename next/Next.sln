@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PythonClient", "python_client\PythonClient.vcxproj", "{5A2253BD-BDF0-4F0C-A53F-382D3EB5C4BE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OALClient", "openal_client\OALClient.vcxproj", "{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Adamas|Win32 = Adamas|Win32
@@ -33,6 +35,22 @@ Global
 		{5A2253BD-BDF0-4F0C-A53F-382D3EB5C4BE}.OpenKatana|Win32.Build.0 = OpenKatana|Win32
 		{5A2253BD-BDF0-4F0C-A53F-382D3EB5C4BE}.OpenKatana|x64.ActiveCfg = OpenKatana|x64
 		{5A2253BD-BDF0-4F0C-A53F-382D3EB5C4BE}.OpenKatana|x64.Build.0 = OpenKatana|x64
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Adamas|Win32.ActiveCfg = Adamas|Win32
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Adamas|Win32.Build.0 = Adamas|Win32
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Adamas|x64.ActiveCfg = Adamas|x64
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Adamas|x64.Build.0 = Adamas|x64
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Debug|Win32.Build.0 = Debug|Win32
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Debug|x64.ActiveCfg = Debug|x64
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Debug|x64.Build.0 = Debug|x64
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Editor|Win32.ActiveCfg = Editor|Win32
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Editor|Win32.Build.0 = Editor|Win32
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Editor|x64.ActiveCfg = Editor|x64
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.Editor|x64.Build.0 = Editor|x64
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.OpenKatana|Win32.ActiveCfg = OpenKatana|Win32
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.OpenKatana|Win32.Build.0 = OpenKatana|Win32
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.OpenKatana|x64.ActiveCfg = OpenKatana|x64
+		{7EB6FCBB-ABCD-4D55-B431-FD6FFA773ED1}.OpenKatana|x64.Build.0 = OpenKatana|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

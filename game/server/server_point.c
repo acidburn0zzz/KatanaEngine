@@ -107,6 +107,7 @@ void Point_Start(edict_t *ent)
 			ENTITY_REMOVE(ent);
         }
 
+#ifdef OPENKATANA
         if(ent->local.style == INFO_PLAYER_SUPERFLY)
         {
             ent->local.style = BOT_SUPERFLY;
@@ -120,7 +121,6 @@ void Point_Start(edict_t *ent)
             Bot_Spawn(ent);
         }
 		break;
-#ifdef OPENKATANA
 	case MODE_CAPTURETHEFLAG:
 		if((ent->local.style != INFO_PLAYER_CTF) || !ent->local.pTeam)
         {
@@ -155,6 +155,8 @@ void Point_Start(edict_t *ent)
         }
 
 		ent->v.cClassname = "point_start_deathmatch";
+		break;
+#else
 		break;
 #endif
 	default:

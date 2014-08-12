@@ -8,42 +8,47 @@
 
 #include "server_item.h"
 
+void CTF_FlagTouch(edict_t *eFlag,edict_t *eOther);
+
 Item_t Items[] =
 {
 #ifdef GAME_OPENKATANA
 	// Ammo
-	{	AMMO_IONBALLS,		"Ion Cells",			"models/ammo/ammo_ionblaster.md2",	"items/weaponpickup.wav"	},
-	{	AMMO_C4BOMBS,		"C4 Bombs",				"models/ammo/ammo_c4viz.md2",		"items/weaponpickup.wav"	},
-	{	AMMO_SLUGS,			"Shotcycler Round",		"models/ammo/ammo_shotcycler.md2",	"items/weaponpickup.wav"	},
-	{	AMMO_WINDROCKET,	"Sidewinder Rockets",	"models/ammo/ammo_sidewinder.md2",	"items/weaponpickup.wav"	},
-	{	AMMO_SHOCKWAVE,		"Shockwave Cells",		"models/ammo/ammo_shockwave.md2",	"items/weaponpickup.wav"	},
+	{	AMMO_IONBALLS,		"Ion Cells",			"models/ammo/ammo_ionblaster.md2",	"items/weaponpickup.wav",	true	},
+	{	AMMO_C4BOMBS,		"C4 Bombs",				"models/ammo/ammo_c4viz.md2",		"items/weaponpickup.wav",	true	},
+	{	AMMO_SLUGS,			"Shotcycler Round",		"models/ammo/ammo_shotcycler.md2",	"items/weaponpickup.wav",	true	},
+	{	AMMO_WINDROCKET,	"Sidewinder Rockets",	"models/ammo/ammo_sidewinder.md2",	"items/weaponpickup.wav",	true	},
+	{	AMMO_SHOCKWAVE,		"Shockwave Cells",		"models/ammo/ammo_shockwave.md2",	"items/weaponpickup.wav",	true	},
 
 	// Weapons
-	{	WEAPON_DAIKATANA,	"Daikatana",	"models/weapons/w_daikatana.md2",	"items/weaponpickup.wav"	},
-	{	WEAPON_IONBLASTER,	"Ion Blaster",	"models/weapons/w_ionblaster.md2",	"items/weaponpickup.wav"	},
-	{	WEAPON_C4VIZATERGO,	"C4 Vizatergo",	"models/weapons/w_c4.md2",			"items/weaponpickup.wav"	},
-	{	WEAPON_SHOTCYCLER,	"Shotcycler-6",	"models/weapons/w_shotcycler.md2",	"items/weaponpickup.wav"	},
-	{	WEAPON_SIDEWINDER,	"Sidewinder",	"models/weapons/w_sidewinder.md2",	"items/weaponpickup.wav"	},
-	{	WEAPON_SHOCKWAVE,	"Shockwave",	"models/weapons/w_shockwave.md2",	"items/weaponpickup.wav"	},
-	{	WEAPON_IONRIFLE,	"Ion Rifle",	"models/weapons/w_ionrifle.md2",	"items/weaponpickup.wav"	},
+	{	WEAPON_DAIKATANA,	"Daikatana",	"models/weapons/w_daikatana.md2",	"items/weaponpickup.wav",	true	},
+	{	WEAPON_IONBLASTER,	"Ion Blaster",	"models/weapons/w_ionblaster.md2",	"items/weaponpickup.wav",	true	},
+	{	WEAPON_C4VIZATERGO,	"C4 Vizatergo",	"models/weapons/w_c4.md2",			"items/weaponpickup.wav",	true	},
+	{	WEAPON_SHOTCYCLER,	"Shotcycler-6",	"models/weapons/w_shotcycler.md2",	"items/weaponpickup.wav",	true	},
+	{	WEAPON_SIDEWINDER,	"Sidewinder",	"models/weapons/w_sidewinder.md2",	"items/weaponpickup.wav",	true	},
+	{	WEAPON_SHOCKWAVE,	"Shockwave",	"models/weapons/w_shockwave.md2",	"items/weaponpickup.wav",	true	},
+	{	WEAPON_IONRIFLE,	"Ion Rifle",	"models/weapons/w_ionrifle.md2",	"items/weaponpickup.wav",	true	},
 
 	// Unused weapons
-	{	WEAPON_GLOCK,		"Glock",		"models/weapons/w_glock.md2",		"items/weaponpickup.wav"	},
-	{   WEAPON_LASERS,      "Lasers",       "",                                 ""                          },
+	{	WEAPON_GLOCK,		"Glock",		"models/weapons/w_glock.md2",		"items/weaponpickup.wav",	true	},
+	{   WEAPON_LASERS,      "Lasers",       "",                                 "",							false	},
 
 	// Items
-	{	ITEM_PLASTEELARMOR,	"PLASTEEL ARMOR",	"models/plasteel.md2",		"items/armorpickup1.wav"					},
-	{	ITEM_HEALTHKIT,		"LARGE HEALTH KIT",	"models/canister.md2",		"items/healthpickup.wav"					},
-	{	ITEM_ATTACKBOOST,	"ATTACK BOOST",		"models/attack.md2",		"items/boostpickup1.wav"					},
-	{	ITEM_POWERBOOST,	"POWER BOOST",		"models/power.md2",			"items/boostpickup1.wav"					},
-	{	ITEM_VITABOOST,		"VITA BOOST",		"models/vita.md2",			"items/boostpickup1.wav"					},
-	{	ITEM_SPEEDBOOST,	"SPEED BOOST",		"models/speed.md2",			"items/boostpickup1.wav"					},
-	{	ITEM_ACROBOOST,		"ACRO BOOST",		"models/acroboost.md2",		"items/boostpickup1.wav"					},
-	{	ITEM_OXYLUNG,		"OXYLUNG",			"models/oxylung.md2",		"artifacts/oxylung/oxylungpickup.wav"		},
-	{	ITEM_ENVIROSUIT,	"ENVIROSUIT",		"models/envirosuit.md2",	"artifacts/envirosuit/envirosuitpickup.wav"	},
+	{	ITEM_PLASTEELARMOR,	"PLASTEEL ARMOR",	"models/plasteel.md2",			"items/armorpickup1.wav",						true	},
+	{	ITEM_HEALTHKIT,		"LARGE HEALTH KIT",	"models/canister.md2",			"items/healthpickup.wav",						true	},
+	{	ITEM_ATTACKBOOST,	"ATTACK BOOST",		"models/attack.md2",			"items/boostpickup1.wav",						true	},
+	{	ITEM_POWERBOOST,	"POWER BOOST",		"models/power.md2",				"items/boostpickup1.wav",						true	},
+	{	ITEM_VITABOOST,		"VITA BOOST",		"models/vita.md2",				"items/boostpickup1.wav",						true	},
+	{	ITEM_SPEEDBOOST,	"SPEED BOOST",		"models/speed.md2",				"items/boostpickup1.wav",						true	},
+	{	ITEM_ACROBOOST,		"ACRO BOOST",		"models/acroboost.md2",			"items/boostpickup1.wav",						true	},
+	{	ITEM_OXYLUNG,		"OXYLUNG",			"models/oxylung.md2",			"artifacts/oxylung/oxylungpickup.wav",			true	},
+	{	ITEM_ENVIROSUIT,	"ENVIROSUIT",		"models/envirosuit.md2",		"artifacts/envirosuit/envirosuitpickup.wav",	true	},
+	{	ITEM_FLAG,			"Flag",				"models/ctf/flag_neutral.md2",	"items/flagpickup.wav",							false	},
+	{	ITEM_REDFLAG,		"Red Flag",			"models/ctf/flag_red.md2",		"items/redflagpickup.wav",						false	},
+	{	ITEM_BLUEFLAG,		"Blue Flag",		"models/ctf/flag_blue.md2",		"items/blueflagpickup.wav",						false	},
 #elif GAME_ADAMAS
-	{	WEAPON_BLAZER,		"Blazer",			"models/weapon.bsp",		"items/weaponpickup.wav"	},
-	{	ITEM_LIFE,			"Extra Life",		"models/life.bsp",			"items/weaponpickup.wav"	},
+	{	WEAPON_BLAZER,		"Blazer",			"models/weapon.bsp",		"items/weaponpickup.wav",	false	},
+	{	ITEM_LIFE,			"Extra Life",		"models/life.bsp",			"items/weaponpickup.wav",	false	},
 #endif
 
 	{	0	}
@@ -147,10 +152,11 @@ void Item_Touch(edict_t *eItem,edict_t *eOther)
 {
 	Item_t *iItem;
 
-	// [8/6/2012] Removed classname check for clients ~hogsy
-	if(eOther->monster.iType != MONSTER_PLAYER && eOther->v.iHealth <= 0)
+	// Don't let monsters pick up items, and don't let dead players pick them up either.
+	if(!Entity_IsPlayer(eOther) || eOther->v.iHealth <= 0)
 		return;
 
+	// Get the item reference.
 	iItem = Item_GetItem(eItem->local.style);
 	if(!iItem)
 	{
@@ -168,8 +174,8 @@ void Item_Touch(edict_t *eItem,edict_t *eOther)
 	Engine.Server_SinglePrint(eOther,va("\x02 %s",iItem->cName));
 	Engine.Server_SinglePrint(eOther,"!\n");
 
-	// [14/7/2012] Readded ~hogsy
-	if((int)cvServerGameMode.value == MODE_DEATHMATCH)
+	// Check if we're in a multiplayer game, if so we'll respawn items.
+	if(bIsMultiplayer)
 	{
 		eItem->local.cOldModel = eItem->v.model;
 
@@ -188,69 +194,34 @@ void Item_Touch(edict_t *eItem,edict_t *eOther)
 	{
 #ifdef OPENKATANA
 	case ITEM_POWERBOOST:
-		{
-			Item_t *iPowerBoost = Item_GetItem(ITEM_POWERBOOST);
+		eOther->local.power_time		= 1.0f;
+		eOther->local.power_finished	= Server.dTime+30.0;
 
-			if(iPowerBoost)
-			{
-				eOther->local.power_time		= 1.0f;
-				eOther->local.power_finished	= Server.dTime+30.0;
-
-				Item_AddInventory(iPowerBoost,eOther);
-			}
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case ITEM_ATTACKBOOST:
-		{
-			Item_t *iAttackBoost = Item_GetItem(ITEM_ATTACKBOOST);
+		eOther->local.attackb_time		= 1.0;
+		eOther->local.attackb_finished	= Server.dTime+30.0;
 
-			if(iAttackBoost)
-			{
-				eOther->local.attackb_time		= 1.0;
-				eOther->local.attackb_finished	= Server.dTime+30.0;
-
-				Item_AddInventory(iAttackBoost,eOther);
-			}
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case ITEM_ACROBOOST:
-		{
-			Item_t *iAcroBoost = Item_GetItem(ITEM_ACROBOOST);
+		eOther->local.acro_time		= 1.0;
+		eOther->local.acro_finished	= Server.dTime+30.0;
 
-			if(iAcroBoost)
-			{
-				eOther->local.acro_time		= 1.0;
-				eOther->local.acro_finished	= Server.dTime+30.0;
-
-				Item_AddInventory(iAcroBoost,eOther);
-			}
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case ITEM_VITABOOST:
-		{
-			Item_t *iVitaBoost = Item_GetItem(ITEM_VITABOOST);
+		eOther->local.vita_time		= 1.0;
+		eOther->local.vita_finished	= Server.dTime+30.0;
 
-			if(iVitaBoost)
-			{
-				eOther->local.vita_time		= 1.0;
-				eOther->local.vita_finished	= Server.dTime+30.0;
-
-				Item_AddInventory(iVitaBoost,eOther);
-			}
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case ITEM_SPEEDBOOST:
-		{
-			Item_t *iSpeedBoost	= Item_GetItem(ITEM_SPEEDBOOST);
+		eOther->local.speed_time		= 1.0;
+		eOther->local.speed_finished	= Server.dTime+30.0;
 
-			if(iSpeedBoost)
-			{
-				eOther->local.speed_time		= 1.0;
-				eOther->local.speed_finished	= Server.dTime+30.0;
-
-				Item_AddInventory(iSpeedBoost,eOther);
-			}
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case ITEM_HEALTHKIT:
 		eOther->v.iHealth += 20;
@@ -259,72 +230,33 @@ void Item_Touch(edict_t *eItem,edict_t *eOther)
 		break;
 	/* Episode 1 */
 	case WEAPON_IONBLASTER:
-		{
-			Item_t *iIonBlaster = Item_GetItem(WEAPON_IONBLASTER);
+		eOther->local.ionblaster_ammo += 25;
 
-			if(iIonBlaster)
-			{
-				eOther->local.ionblaster_ammo += 25;
-
-				Item_AddInventory(iIonBlaster,eOther);
-			}
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case WEAPON_C4VIZATERGO:
-		{
-			Item_t	*iVizatergo = Item_GetItem(WEAPON_C4VIZATERGO);
+		eOther->local.iC4Ammo += 15;
 
-			if(iVizatergo)
-			{
-				eOther->local.iC4Ammo += 15;
-
-				Item_AddInventory(iVizatergo,eOther);
-			}
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case WEAPON_SHOTCYCLER:
-		{
-			Item_t *iShotCycler = Item_GetItem(WEAPON_SHOTCYCLER);
+		// Take into consideration that this must be a multiple of 6.
+		eOther->local.shotcycler_ammo += 60;
 
-			if(iShotCycler)
-			{
-				eOther->local.shotcycler_ammo += 18;
-
-				Item_AddInventory(iShotCycler,eOther);
-			}
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case WEAPON_SIDEWINDER:
-		{
-			Item_t *iSideWinder = Item_GetItem(WEAPON_SIDEWINDER);
+		eOther->local.sidewinder_ammo += 16;
 
-			if(iSideWinder)
-			{
-				eOther->local.sidewinder_ammo += 16;
-
-				Item_AddInventory(iSideWinder,eOther);
-			}
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case WEAPON_SHOCKWAVE:
-		{
-			Item_t *iShockwave = Item_GetItem(WEAPON_SHOCKWAVE);
+		eOther->local.shockwave_ammo += 10;
 
-			if(iShockwave)
-			{
-				eOther->local.shockwave_ammo += 10;
-
-				Item_AddInventory(iShockwave,eOther);
-			}
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case WEAPON_DAIKATANA:
-		{
-			Item_t *iDaikatana = Item_GetItem(WEAPON_DAIKATANA);
-
-			if(iDaikatana)
-				Item_AddInventory(iDaikatana,eOther);
-		}
+		Item_AddInventory(iItem,eOther);
 		break;
 	case AMMO_IONBALLS:
 		eOther->local.ionblaster_ammo += 15;
