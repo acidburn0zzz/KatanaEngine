@@ -26,6 +26,7 @@ EntityFrame_t ShotcyclerAnimation_Deploy [] =
 
 EntityFrame_t ShotcyclerAnimation_Fire [] =
 {
+    {   NULL, 8, 0.03f	},
     {   NULL, 9, 0.08f	},
     {   NULL, 10, 0.08f			},
     {   NULL, 11, 0.08f			},

@@ -18,50 +18,50 @@ LIBDIR =
 LIB = 
 LDFLAGS = 
 
-INC_X86 = $(INC) -I../ -I../shared -I../game/shared -I../external
-CFLAGS_X86 = $(CFLAGS) -fPIC -DGAME_OPENKATANA
-RESINC_X86 = $(RESINC)
-RCFLAGS_X86 = $(RCFLAGS)
-LIBDIR_X86 = $(LIBDIR)
-LIB_X86 = $(LIB)../platform/lib/libplatformx86.a
-LDFLAGS_X86 = $(LDFLAGS)
-OBJDIR_X86 = obj/Release
-DEP_X86 = 
-OUT_X86 = ../../openkatana/menu.x86.so
+INC_X64 = $(INC) -I../ -I../shared -I../game/shared -I../external
+CFLAGS_X64 = $(CFLAGS) -fPIC -DGAME_OPENKATANA
+RESINC_X64 = $(RESINC)
+RCFLAGS_X64 = $(RCFLAGS)
+LIBDIR_X64 = $(LIBDIR)
+LIB_X64 = $(LIB)../platform/lib/libplatformx64.a
+LDFLAGS_X64 = $(LDFLAGS)
+OBJDIR_X64 = obj/Release
+DEP_X64 = 
+OUT_X64 = ../../openkatana/menu.x64.so
 
-OBJ_X86 = $(OBJDIR_X86)/menu_button.o $(OBJDIR_X86)/menu_hud.o $(OBJDIR_X86)/menu_input.o $(OBJDIR_X86)/menu_main.o
+OBJ_X64 = $(OBJDIR_X64)/menu_button.o $(OBJDIR_X64)/menu_hud.o $(OBJDIR_X64)/menu_input.o $(OBJDIR_X64)/menu_main.o
 
-all: x86
+all: x64
 
-clean: clean_x86
+clean: clean_x64
 
-before_x86: 
+before_x64: 
 	test -d ../bin/openkatana || mkdir -p ../bin/openkatana
-	test -d $(OBJDIR_X86) || mkdir -p $(OBJDIR_X86)
+	test -d $(OBJDIR_X64) || mkdir -p $(OBJDIR_X64)
 
-after_x86: 
+after_x64: 
 
-x86: before_x86 out_x86 after_x86
+x64: before_x64 out_x64 after_x64
 
-out_x86: before_x86 $(OBJ_X86) $(DEP_X86)
-	$(LD) -shared $(LIBDIR_X86) $(OBJ_X86)  -o $(OUT_X86) $(LDFLAGS_X86) $(LIB_X86)
+out_x64: before_x64 $(OBJ_X64) $(DEP_X64)
+	$(LD) -shared $(LIBDIR_X64) $(OBJ_X64)  -o $(OUT_X64) $(LDFLAGS_X64) $(LIB_X64)
 
-$(OBJDIR_X86)/menu_button.o: menu_button.c
-	$(CC) $(CFLAGS_X86) $(INC_X86) -c menu_button.c -o $(OBJDIR_X86)/menu_button.o
+$(OBJDIR_X64)/menu_button.o: menu_button.c
+	$(CC) $(CFLAGS_X64) $(INC_X64) -c menu_button.c -o $(OBJDIR_X64)/menu_button.o
 
-$(OBJDIR_X86)/menu_hud.o: menu_hud.c
-	$(CC) $(CFLAGS_X86) $(INC_X86) -c menu_hud.c -o $(OBJDIR_X86)/menu_hud.o
+$(OBJDIR_X64)/menu_hud.o: menu_hud.c
+	$(CC) $(CFLAGS_X64) $(INC_X64) -c menu_hud.c -o $(OBJDIR_X64)/menu_hud.o
 
-$(OBJDIR_X86)/menu_input.o: menu_input.c
-	$(CC) $(CFLAGS_X86) $(INC_X86) -c menu_input.c -o $(OBJDIR_X86)/menu_input.o
+$(OBJDIR_X64)/menu_input.o: menu_input.c
+	$(CC) $(CFLAGS_X64) $(INC_X64) -c menu_input.c -o $(OBJDIR_X64)/menu_input.o
 
-$(OBJDIR_X86)/menu_main.o: menu_main.c
-	$(CC) $(CFLAGS_X86) $(INC_X86) -c menu_main.c -o $(OBJDIR_X86)/menu_main.o
+$(OBJDIR_X64)/menu_main.o: menu_main.c
+	$(CC) $(CFLAGS_X64) $(INC_X64) -c menu_main.c -o $(OBJDIR_X64)/menu_main.o
 
-clean_x86: 
-	rm -f $(OBJ_X86) $(OUT_X86)
+clean_x64: 
+	rm -f $(OBJ_X64) $(OUT_X64)
 	rm -rf ../bin/openkatana
-	rm -rf $(OBJDIR_X86)
+	rm -rf $(OBJDIR_X64)
 
-.PHONY: before_x86 after_x86 clean_x86
+.PHONY: before_x64 after_x64 clean_x64
 

@@ -24,7 +24,7 @@ cvar_t	cl_bobup			= { "cl_bobup",			"0.45",		false	};
 cvar_t	cSideBobUp			= {	"view_sideup",		"0.5",		false	};
 cvar_t	cSideBobCycle		= { "view_sidecycle",	"0.86",		false	};
 cvar_t	cSideBob			= {	"view_sidebob",		"0.007",	false	};
-cvar_t	cViewModelLag		= {	"view_modellag",	"1.0"				};
+cvar_t	cViewModelLag		= {	"view_modellag",	"0.2"				};
 cvar_t	v_kicktime			= { "v_kicktime",		"0.5",		false	};
 cvar_t	v_kickroll			= { "v_kickroll",		"0.6",		false	};
 cvar_t	v_kickpitch			= { "v_kickpitch",		"0.6",		false	};
@@ -437,7 +437,6 @@ void View_ModelAngle(void)
 	vec3_t			vAngles;
 	static	float	fOldYaw		= 0,
 					fOldPitch	= 0;
-
 	// [26/3/2013] Don't bother if we don't have a view model to show! ~hogsy
 	if(!cl.viewent.model)
 		return;
@@ -483,9 +482,13 @@ void View_ModelAngle(void)
 	fOldYaw		= vAngles[YAW];
 	fOldPitch	= vAngles[PITCH];
 
-	cl.viewent.angles[YAW]		= r_refdef.viewangles[YAW]+vAngles[YAW];
+	/*cl.viewent.angles[YAW]		= r_refdef.viewangles[YAW]+vAngles[YAW];
 	cl.viewent.angles[PITCH]	= -(r_refdef.viewangles[PITCH]+vAngles[PITCH]-(sin(cl.time*1.5f)*0.2f));
-	cl.viewent.angles[ROLL]		= sin(cl.time*v_iroll_cycle.value)*0.5f;
+	cl.viewent.angles[ROLL]		= -(r_refdef.viewangles[ROLL]+vAngles[ROLL]-(sin(cl.time*1.5f)*0.2f));*/
+
+	cl.viewent.angles[YAW]		= r_refdef.viewangles[YAW];
+	cl.viewent.angles[PITCH]	= -r_refdef.viewangles[PITCH];
+	cl.viewent.angles[ROLL]		-= fMove * 20;
 }
 
 void V_BoundOffsets (void)
@@ -586,37 +589,25 @@ void View_ModelDrift(vec3_t vOrigin,vec3_t vAngles,vec3_t vOldAngles)
 	{
 		Math_VectorSubtract(vForward,svLastFacing,vDifference);
 
-		fSpeed = 5.0f;
+		fSpeed = 3.0f;
 
 		fDifference = Math_VectorLength(vDifference);
 		if((fDifference > cViewModelLag.value) && (cViewModelLag.value > 0.0f ))
-			fSpeed *= fScale = fDifference/cViewModelLag.value;;
-
+			fSpeed *= fScale = fDifference/cViewModelLag.value;
 		for(i = 0; i < 3; i++)
+		{
 			svLastFacing[i] += vDifference[i]*(fSpeed*host_frametime);
+		}
 
 		Math_VectorNormalize(svLastFacing);
 
 		for(i = 0; i < 3; i++)
+		{
 			vOrigin[i] += (vDifference[i]*-1.0f)*5.0f;
+		//	r_refdef.viewangles[ROLL] += vDifference[YAW];	
+			vAngles[ROLL] += vDifference[YAW];		
+		}
 	}
-
-	Math_AngleVectors(vOldAngles,vForward,vRight,vUp);
-
-	fPitch = vOldAngles[PITCH];
-	if(fPitch > 180.0f)
-		fPitch -= 360.0f;
-	else if(fPitch < -180.0f)
-		fPitch += 360.0f;
-
-	for(i = 0; i < 3; i++)
-		vOrigin[i] += vForward[i]*(-fPitch*0.035f);
-
-	for(i = 0; i < 3; i++)
-		vOrigin[i] += vRight[i]*(-fPitch*0.03f);
-
-	for(i = 0; i < 3; i++)
-		vOrigin[i] += vUp[i]*(-fPitch*0.02f );
 }
 
 void V_CalcRefdef (void)
@@ -629,7 +620,6 @@ void V_CalcRefdef (void)
 	vec3_t			forward,right,up,
 					angles,vOldAngles;
 	static	vec3_t	punch = {0,0,0}; //johnfitz -- v_gunkick
-
 	V_DriftPitch();
 
 	// ent is the player model (visible when out of body)
@@ -641,6 +631,7 @@ void V_CalcRefdef (void)
 	// model origin for the view
 	ent->angles[YAW]	= cl.viewangles[YAW];	// the model should face the view dir
 	ent->angles[PITCH]	= -cl.viewangles[PITCH];	// the model should face the view dir
+	ent->angles[ROLL]	= -cl.viewangles[ROLL];
 
 	// [10/5/2013] Forward cycle ~hogsy
 	fCycle[0] = (cl.time-(int)(cl.time/cl_bobcycle.value)*cl_bobcycle.value)/cl_bobcycle.value;
@@ -869,5 +860,3 @@ void V_Init (void)
 	Cvar_RegisterVariable(&cSideBobUp,NULL);
 	Cvar_RegisterVariable(&cViewModelLag,NULL);
 }
-
-
