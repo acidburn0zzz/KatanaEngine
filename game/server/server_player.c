@@ -501,6 +501,17 @@ void Player_PreThink(edict_t *ePlayer)
 		// [30/7/2012] Simplified ~hogsy
 		ePlayer->v.flags |= FL_JUMPRELEASED;
 
+	if(ePlayer->v.button[1])
+	{
+		Entity_SetSize(ePlayer,-16.0f,-16.0f,-24.0f,16.0f,16.0f,35.0f);
+		ePlayer->v.view_ofs[2]	= 10.0f;
+	}
+	else
+	{
+		Entity_SetSize(ePlayer,-16.0f,-16.0f,-24.0f,16.0f,16.0f,40.0f);
+		ePlayer->v.view_ofs[2]	= 30.0f;
+	}
+
 	if(cvServerWaypointSpawn.value && (Server.dTime >= Server.dWaypointSpawnDelay))
 	{
 		if(ePlayer->v.movetype != MOVETYPE_WALK)
@@ -864,7 +875,7 @@ void Player_Jump(edict_t *ePlayer)
 		Entity_Animate(ePlayer,PlayerAnimation_RunJump);
 }
 
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 void Player_CheckPowerups(edict_t *ePlayer)
 {
 	Item_t	*iPowerBoost,
@@ -889,7 +900,7 @@ void Player_CheckPowerups(edict_t *ePlayer)
 			if(ePlayer->local.power_finished < Server.dTime+3.0)
 			{
 				// [30/7/2012] Updated to use centerprint instead ~hogsy
-				Engine.CenterPrint(ePlayer,"You are becoming a girly man.\n");
+				Engine.CenterPrint(ePlayer,"Your power boost is running out.\n");
 
 				ePlayer->local.power_time = Server.dTime+1.0;
 			}

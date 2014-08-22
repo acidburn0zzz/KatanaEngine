@@ -26,7 +26,7 @@ edict_t	*sv_player;
 
 cvar_t	sv_edgefriction = {"edgefriction", "2"};
 
-extern	cvar_t	sv_stopspeed;
+extern	cvar_t	cvPhysicsStopSpeed;
 
 static	vec3_t		forward, right, up;
 
@@ -341,6 +341,7 @@ void SV_ReadClientMove (usercmd_t *move)
 	bits = MSG_ReadByte ();
 	host_client->edict->v.button[0] = bits & 1;
 	host_client->edict->v.button[2] = (bits & 2)>>1;
+	host_client->edict->v.button[1]	= bits & 4;
 
 	i = MSG_ReadByte ();
 	if (i)

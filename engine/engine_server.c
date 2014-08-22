@@ -241,6 +241,10 @@ void Server_PrecacheResource(int iType,const char *ccResource)
 	}
 }
 
+/*
+	Console Messages
+*/
+
 void Server_SinglePrint(edict_t *eEntity,char *cMessage)
 {
 	client_t	*cClient;
@@ -248,7 +252,7 @@ void Server_SinglePrint(edict_t *eEntity,char *cMessage)
 
 	if(iEntity > svs.maxclients)
 	{
-		Con_Warning("Attempted to send a message to a non-client!\n");
+		Con_Warning("Attempted to send message to a non-client! (%s)\n",cMessage);
 		return;
 	}
 
@@ -256,4 +260,23 @@ void Server_SinglePrint(edict_t *eEntity,char *cMessage)
 
 	MSG_WriteChar(&cClient->message,SVC_PRINT);
 	MSG_WriteString(&cClient->message,cMessage);
+}
+
+// [25/2/2012] Added CenterPrint ~hogsy
+// [18/7/2012] Renamed to Server_CenterPrint ~hogsy
+void Server_CenterPrint(edict_t *ent,char *msg)
+{
+	client_t	*client;
+	int			entnum = NUM_FOR_EDICT(ent);
+
+	if(entnum < 1 || entnum > svs.maxclients)
+	{
+		Con_Warning("Attempted to send message to a non-client! (%s)\n",msg);
+		return;
+	}
+
+	client = &svs.clients[entnum-1];
+
+	MSG_WriteChar(&client->message,svc_centerprint);
+	MSG_WriteString(&client->message,msg);
 }

@@ -32,6 +32,7 @@ SDL_GLContext	sMainContext;
 #define VIDEO_MIN_HEIGHT	480
 #define VIDEO_MAX_SAMPLES	16
 #define VIDEO_MIN_SAMPLES	0
+#define	VIDEO_MAX_UNITS		4
 
 cvar_t	cvShowModels			= {	"video_showmodels",			"1",			false,  false,  "Toggles models."                                   },
 		cvMultisampleSamples	= {	"video_multisamplesamples",	"0",			true,   false,  "Changes the number of samples."	                },
@@ -45,8 +46,8 @@ cvar_t	cvShowModels			= {	"video_showmodels",			"1",			false,  false,  "Toggles 
 
 gltexture_t	*gDepthTexture;
 
-bool	bVideoIgnoreCapabilities = false;
-bool	bVideoDebug	= false;
+bool	bVideoIgnoreCapabilities	= false,
+		bVideoDebug					= false;
 
 vec3_t	*vVideoVertexArray;
 
@@ -100,6 +101,26 @@ void Video_Initialize(void)
 	// [31/10/2013] Get hardware capabilities ~hogsy
 	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,&Video.fMaxAnisotropy);
 }
+
+/*
+	OpenGL Initialization
+*/
+
+#if 0
+#include "platform_module.h"
+
+pINSTANCE	iVideoGLModule;
+
+/*	Load module, bind functions, blah blah blah
+	TODO: Implement me...
+*/
+void Video_InitializeOpenGL(void)
+{
+	iVideoGLModule = pModule_Load("OpenGL32");
+	if(!iVideoGLModule)
+		Sys_Error("Failed to load OpenGL module!\n%s",pError_Get());
+}
+#endif
 
 /*
 	Video Commands
@@ -178,7 +199,8 @@ bool Video_CreateWindow(void)
 		SDL_WINDOW_RESIZABLE	|
 		SDL_WINDOW_SHOWN		|
 		SDL_WINDOW_OPENGL		|
-		SDL_WINDOW_FULLSCREEN;
+		SDL_WINDOW_FULLSCREEN,
+				iSupportedUnits;
 	SDL_Surface	*sIcon;
 
 	// [2/12/2012] Normal window can't be resized ~hogsy
@@ -276,6 +298,10 @@ bool Video_CreateWindow(void)
 	if(!sMainContext)
 		Sys_Error("Failed to create context!\n%s\n",SDL_GetError());
 
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS,&iSupportedUnits);
+	if(iSupportedUnits < VIDEO_MAX_UNITS)
+		Sys_Error("Your system doesn't support the required number of TMUs! (%i)",iSupportedUnits);
+
 	SDL_GL_SetSwapInterval(0);
 
 	// [13/8/2012] Get any information that will be presented later ~hogsy
@@ -299,13 +325,9 @@ bool Video_CreateWindow(void)
 	{
 		Con_DPrintf(" Checking for extensions...\n");
 
-		if(!COM_CheckParm("-nomtex"))
-			if(GLEE_ARB_multitexture)
-			{
-				Con_DPrintf("  ARB_multitexture\n");
-
-				Video.bMultitexture = true;
-			}
+		// Multitexturing MUST be supported.
+		if(!GLEE_ARB_multitexture)
+			Sys_Error("Video hardware incapable of multi-texturing!\n");
 
 		if(!COM_CheckParm("-nocombine"))
 			if(GLEE_ARB_texture_env_combine || GLEE_EXT_texture_env_combine)
@@ -325,7 +347,7 @@ bool Video_CreateWindow(void)
 
 #ifdef KATANA_VIDEO_NEXT
 		if(!GLEE_ARB_vertex_program || !GLEE_ARB_fragment_program)
-			Con_Error("Unsupported video hardware!\n");
+			Sys_Error("Unsupported video hardware!\n");
 
 		// [5/9/2013] For future volumetric fog implementation? ~hogsy
 		if(!COM_CheckParm("-nofogcoord"))
@@ -503,6 +525,9 @@ void Video_SelectTexture(unsigned int uiTarget)
 	if(uiTarget == Video.uiActiveUnit)
         return;
 
+	if(uiTarget > VIDEO_MAX_UNITS)
+		Sys_Error("Invalid texture unit! (%i)\n",uiTarget);
+
     switch(uiTarget)
     {
     case 0:
@@ -511,6 +536,20 @@ void Video_SelectTexture(unsigned int uiTarget)
     case 1:
         uiUnit = GL_TEXTURE1;
         break;
+	case 2:
+		uiUnit = GL_TEXTURE2;
+		break;
+	case 3:
+		uiUnit = GL_TEXTURE3;
+		break;
+	case 4:
+		uiUnit = GL_TEXTURE4;
+		break;
+#ifdef KATANA_VIDEO_NEXT
+	case 5:
+		uiUnit = GL_TEXTURE5;
+		break;
+#endif
     default:
         Sys_Error("Unknown texture unit! (%i)\n",uiTarget);
 		// Return to resolve VS warning.
@@ -525,12 +564,18 @@ void Video_SelectTexture(unsigned int uiTarget)
 		Console_WriteToLog(cvVideoDebugLog.string,"Video: Texture Unit %i\n",Video.uiActiveUnit);
 }
 
+/*	Disable multi-texturing.
+	Obsolete!
+*/
 void Video_DisableMultitexture(void)
 {
 //  Video_DisableCapabilities(VIDEO_TEXTURE_2D);
     Video_SelectTexture(0);
 }
 
+/*	Enable multi-texturing.
+	Obsolete!
+*/
 void Video_EnableMultitexture(void)
 {
     Video_SelectTexture(1);
@@ -691,7 +736,7 @@ VideoCapabilities_t	vcCapabilityList[]=
 	{   0   }
 };
 
-static unsigned int	iSavedCapabilites[4][2];
+static unsigned int	iSavedCapabilites[VIDEO_MAX_UNITS][2];
 
 /*	Set rendering capabilities for current draw.
 	Cleared using Video_DisableCapabilities.
@@ -768,15 +813,15 @@ void Video_ResetCapabilities(bool bClearActive)
 
         // [7/5/2014] Disable/Enable old states by unit... Ugh ~hogsy
         {
-            Video_SelectTexture(1);
+			int i;
 
-            Video_DisableCapabilities(iSavedCapabilites[1][0]);
-            Video_EnableCapabilities(iSavedCapabilites[1][1]);
-
-            Video_SelectTexture(0);
-
-            Video_DisableCapabilities(iSavedCapabilites[0][0]);
-            Video_EnableCapabilities(iSavedCapabilites[0][1]);
+			// Go through each TMU that we support.
+			for(i = VIDEO_MAX_UNITS; i > -1; i--)
+			{
+				Video_SelectTexture(i);
+				Video_DisableCapabilities(iSavedCapabilites[i][0]);
+				Video_EnableCapabilities(iSavedCapabilites[i][1]);
+			}
         }
 
         if(sbVideoIgnoreDepth)

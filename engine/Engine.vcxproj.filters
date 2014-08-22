@@ -90,9 +90,6 @@
     <ClCompile Include="common.c">
       <Filter>Old</Filter>
     </ClCompile>
-    <ClCompile Include="KatGL.c">
-      <Filter>Old</Filter>
-    </ClCompile>
     <ClCompile Include="menu.c">
       <Filter>Old</Filter>
     </ClCompile>
@@ -240,6 +237,9 @@
     <ClCompile Include="engine_world.c">
       <Filter>Server</Filter>
     </ClCompile>
+    <ClCompile Include="KatGL.c">
+      <Filter>Client\Video</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\shared_client.h">
@@ -347,9 +347,6 @@
     <ClInclude Include="engine_loader.h">
       <Filter>Old</Filter>
     </ClInclude>
-    <ClInclude Include="KatGL.h">
-      <Filter>Old</Filter>
-    </ClInclude>
     <ClInclude Include="KatAlias.h">
       <Filter>Old</Filter>
     </ClInclude>
@@ -430,6 +427,9 @@
       <Filter>Console</Filter>
     </ClInclude>
     <ClInclude Include="engine_video.h">
+      <Filter>Client\Video</Filter>
+    </ClInclude>
+    <ClInclude Include="KatGL.h">
       <Filter>Client\Video</Filter>
     </ClInclude>
   </ItemGroup>

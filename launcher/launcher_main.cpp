@@ -35,7 +35,7 @@ pINSTANCE hEngineInstance;
 
 int main(int argc,char *argv[])
 {
-	Engine = (EngineExport_t*)pModule_Load(
+	Engine = (EngineExport_t*)pModule_LoadInterface(
 		hEngineInstance,
 		"./"PATH_ENGINE"/"MODULE_ENGINE,
 		"Engine_Main",

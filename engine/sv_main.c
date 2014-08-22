@@ -33,10 +33,9 @@ char	localmodels[MAX_MODELS][5];			// inline model names for precache
 void SV_Init (void)
 {
 	int				i;
-	extern	cvar_t	sv_maxvelocity;
-	extern	cvar_t	sv_nostep;
+	extern	cvar_t	cvPhysicsNoStep;
 	extern	cvar_t	sv_edgefriction;
-	extern	cvar_t	sv_stopspeed;
+	extern	cvar_t	cvPhysicsStopSpeed;
 	extern	cvar_t	sv_maxspeed;
 	extern	cvar_t	sv_accelerate;
 	extern	cvar_t	sv_idealpitchscale;
@@ -44,14 +43,13 @@ void SV_Init (void)
 	extern	cvar_t	sv_altnoclip; //johnfitz
 	extern	cvar_t	cvPhysicsStepSize;
 
-	Cvar_RegisterVariable(&sv_maxvelocity, NULL);
 	Cvar_RegisterVariable(&sv_edgefriction, NULL);
-	Cvar_RegisterVariable(&sv_stopspeed, NULL);
+	Cvar_RegisterVariable(&cvPhysicsStopSpeed, NULL);
 	Cvar_RegisterVariable(&sv_maxspeed, NULL);
 	Cvar_RegisterVariable(&sv_accelerate, NULL);
 	Cvar_RegisterVariable(&sv_idealpitchscale, NULL);
 	Cvar_RegisterVariable(&sv_aim,NULL);
-	Cvar_RegisterVariable(&sv_nostep, NULL);
+	Cvar_RegisterVariable(&cvPhysicsNoStep, NULL);
 	Cvar_RegisterVariable(&sv_altnoclip,NULL); //johnfitz
 	Cvar_RegisterVariable(&cvPhysicsStepSize,NULL);
 

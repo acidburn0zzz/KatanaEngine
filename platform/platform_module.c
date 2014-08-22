@@ -45,21 +45,49 @@ void pModule_Unload(pINSTANCE hModule)
 	}
 }
 
-void *pModule_Load(pINSTANCE hModule,const char *cPath,const char *cEntryFunction,void *vPoint)
+/*	Function to allow direct loading of an external module.
+*/
+pINSTANCE pModule_Load(const char *ccPath)
+{
+	pINSTANCE	iModule;
+	char		cUpdatedPath[PLATFORM_MAX_PATH];
+
+	pERROR_UPDATE;
+
+	sprintf(cUpdatedPath,"%s"pMODULE_EXTENSION,ccPath);
+
+	iModule	=
+#ifdef _WIN32
+		LoadLibrary(cUpdatedPath);
+#else
+		dlopen(cUpdatedPath,RTLD_NOW);
+#endif
+	if(!iModule)
+	{
+		pError_Set("Failed to load library! (%s)\n%s",cUpdatedPath,
+#ifdef _WIN32
+			GetLastError());
+#else
+			dlerror());
+#endif
+		return NULL;
+	}
+
+	return iModule;
+}
+
+/*	Generic interface to allow loading of an external module.
+*/
+void *pModule_LoadInterface(pINSTANCE hModule,const char *cPath,const char *cEntryFunction,void *vPoint)
 {
 	char	cUpdatedPath[PLATFORM_MAX_PATH];
 	void	*(*vMain)(void*);
 
 	pERROR_UPDATE;
 
-	sprintf(cUpdatedPath,"%s."PLATFORM_CPU""pMODULE_EXTENSION,cPath);
+	sprintf(cUpdatedPath,"%s."PLATFORM_CPU,cPath);
 
-	// [19/5/2013] TODO: Automatically handle extensions here ~hogsy
-#ifdef _WIN32
-	hModule = LoadLibrary(cUpdatedPath);
-#else   // Linux
-	hModule = dlopen(cUpdatedPath,RTLD_NOW);
-#endif
+	hModule = pModule_Load(cUpdatedPath);
 	if(!hModule)
 	{
 		pError_Set("Failed to load library! (%s)\n",

@@ -99,9 +99,7 @@ GlWindow::handleEvent (mxEvent *event)
 		oldtz = d_transZ;
 		oldx = event->x;
 		oldy = event->y;
-
 		break;
-
 	case mxEvent::MouseDrag:
 		if (event->buttons & mxEvent::MouseLeftButton)
 		{
@@ -117,12 +115,10 @@ GlWindow::handleEvent (mxEvent *event)
 			}
 		}
 		else if (event->buttons & mxEvent::MouseRightButton)
-		{
 			d_transZ = oldtz + (float) (event->y - oldy);
-		}
+
 		redraw ();
 		break;
-
 	case mxEvent::Idle:
 	{
 		static int timer = 0, lastTimer = 0;

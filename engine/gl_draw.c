@@ -32,49 +32,8 @@ cvar_t		cvConsoleBackground	= { "screen_consoleback",	"",							true,	false,  "S
 cvar_t		cvConsoleChars		= { "screen_consolechars",	"textures/engine/conchars",	true,   false,  "Sets the path for the console font."	            };
 
 qpic_t	*draw_backtile;
-qpic_t	*pic_ovr, *pic_ins; //johnfitz -- new cursor handling
-qpic_t	*pic_nul; //johnfitz -- for missing gfx, don't crash
 
 gltexture_t *gCharTexture; //johnfitz
-
-//johnfitz -- new pics
-byte pic_ovr_data[8][8] =
-{
-	{255,255,255,255,255,255,255,255},
-	{255, 15, 15, 15, 15, 15, 15,255},
-	{255, 15, 15, 15, 15, 15, 15,  2},
-	{255, 15, 15, 15, 15, 15, 15,  2},
-	{255, 15, 15, 15, 15, 15, 15,  2},
-	{255, 15, 15, 15, 15, 15, 15,  2},
-	{255, 15, 15, 15, 15, 15, 15,  2},
-	{255,255,  2,  2,  2,  2,  2,  2},
-};
-
-byte pic_ins_data[9][8] =
-{
-	{ 15, 15,255,255,255,255,255,255},
-	{ 15, 15,  2,255,255,255,255,255},
-	{ 15, 15,  2,255,255,255,255,255},
-	{ 15, 15,  2,255,255,255,255,255},
-	{ 15, 15,  2,255,255,255,255,255},
-	{ 15, 15,  2,255,255,255,255,255},
-	{ 15, 15,  2,255,255,255,255,255},
-	{ 15, 15,  2,255,255,255,255,255},
-	{255,  2,  2,255,255,255,255,255},
-};
-
-byte pic_nul_data[8][8] =
-{
-	{252,252,252,252,  0,  0,  0,  0},
-	{252,252,252,252,  0,  0,  0,  0},
-	{252,252,252,252,  0,  0,  0,  0},
-	{252,252,252,252,  0,  0,  0,  0},
-	{  0,  0,  0,  0,252,252,252,252},
-	{  0,  0,  0,  0,252,252,252,252},
-	{  0,  0,  0,  0,252,252,252,252},
-	{  0,  0,  0,  0,252,252,252,252},
-};
-//johnfitz
 
 typedef struct
 {
@@ -100,8 +59,6 @@ typedef struct cachepic_s
 #define	MAX_CACHED_PICS		128
 cachepic_t	menu_cachepics[MAX_CACHED_PICS];
 int			menu_numcachepics;
-
-byte		menuplyr_pixels[4096];
 
 //  scrap allocation
 //  Allocate all the little status bar obejcts into a single texture
@@ -195,12 +152,12 @@ void Draw_ExternPic(char *path,float alpha,int x,int y,int w,int h)
 		}
 
 	{
-		VideoObject_t voPicture	[]=
+		VideoObject_t voPicture[]=
 		{
-			{	{	x,	y,	0	},	{	{	0,	0	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
-			{	{	x+w,	y,	0	},	{	{	1.0f,	0	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
+			{	{	x,		y,		0	},	{	{	0,		0		}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
+			{	{	x+w,	y,		0	},	{	{	1.0f,	0		}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
 			{	{	x+w,	y+h,	0	},	{	{	1.0f,	1.0f	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
-			{	{	x,	y+h,	0	},	{	{	0,	1.0f	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	}
+			{	{	x,		y+h,	0	},	{	{	0,		1.0f	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	}
 		};
 
 		Video_DrawFill(voPicture);
@@ -212,7 +169,7 @@ void Draw_ExternPic(char *path,float alpha,int x,int y,int w,int h)
 
 void SwapPic (qpic_t *pic)
 {
-	pic->width = LittleLong(pic->width);
+	pic->width	= LittleLong(pic->width);
 	pic->height = LittleLong(pic->height);
 }
 
@@ -242,12 +199,6 @@ qpic_t	*Draw_CachePic(char *path)
 	}
 
 	SwapPic(dat);
-
-	// HACK HACK HACK --- we need to keep the bytes for
-	// the translatable player picture just for the menu
-	// configuration dialog
-	if (!strcmp (path, "gfx/menuplyr.lmp"))
-		memcpy (menuplyr_pixels, dat->data, dat->width*dat->height);
 
 	pic->pic.width = dat->width;
 	pic->pic.height = dat->height;
@@ -299,8 +250,6 @@ void Draw_LoadPics (void)
 		Sys_Error("Failed to load %s!",cvConsoleChars.string);
 
 	gCharTexture = TexMgr_LoadImage(NULL,cvConsoleChars.string,w,h,SRC_RGBA,data,cvConsoleChars.string,0,TEXPREF_NEAREST|TEXPREF_ALPHA);
-
-//	draw_backtile = Draw_PicFromWad ("backtile",WADFILENAME);
 }
 
 extern gltexture_t *playertextures[MAX_SCOREBOARD];
@@ -313,7 +262,6 @@ void Draw_NewGame (void)
 	// Empty scrap and reallocate gltextures
 	memset(&scrap_allocated,0,sizeof(scrap_allocated));
 	memset(&scrap_texels,255,sizeof(scrap_texels));
-	// [8/8/2013] Throw out effect texture sets on each map load ~hogsy
 	memset(&gEffectTexture,0,sizeof(gEffectTexture));
 
 	Scrap_Upload (); //creates 2 empty gltextures
@@ -345,11 +293,6 @@ void Draw_Init (void)
 	memset(&scrap_allocated, 0, sizeof(scrap_allocated));
 	memset(&scrap_texels, 255, sizeof(scrap_texels));
 	Scrap_Upload (); //creates 2 empty textures
-
-	// create internal pics
-	pic_ins = Draw_MakePic ("ins", 8, 9, &pic_ins_data[0][0]);
-	pic_ovr = Draw_MakePic ("ovr", 8, 8, &pic_ovr_data[0][0]);
-	pic_nul = Draw_MakePic ("nul", 8, 8, &pic_nul_data[0][0]);
 
 	// load game pics
 	Draw_LoadPics();

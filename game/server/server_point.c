@@ -451,7 +451,7 @@ enum
 void Point_MessageLocal(edict_t *eEntity)
 {
 	// [4/8/2013] Simplified ~hogsy
-	if(!eEntity->local.activator || ((eEntity->monster.iType != MONSTER_PLAYER) && eEntity->local.activator->v.iHealth <= 0))
+	if(!eEntity->local.activator || (!Entity_IsPlayer(eEntity) && eEntity->local.activator->v.iHealth <= 0))
 		return;
 
 	Engine.Server_SinglePrint(eEntity->local.activator,eEntity->v.message);
@@ -460,7 +460,7 @@ void Point_MessageLocal(edict_t *eEntity)
 void Point_MessageCenter(edict_t *eEntity)
 {
 	// [4/8/2013] Simplified ~hogsy
-	if(!eEntity->local.activator || ((eEntity->monster.iType != MONSTER_PLAYER) && eEntity->local.activator->v.iHealth <= 0))
+	if(!eEntity->local.activator || (!Entity_IsPlayer(eEntity) && eEntity->local.activator->v.iHealth <= 0))
 		return;
 
 	Engine.CenterPrint(eEntity->local.activator,eEntity->v.message);

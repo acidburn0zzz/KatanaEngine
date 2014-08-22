@@ -242,14 +242,10 @@ model_t *Model_Load(model_t *mModel)
 
 	switch(LittleLong(*(unsigned*)buf))
 	{
+	case KMDL_HEADER:
 	case MD2_HEADER:
 		Model_LoadMD2(mModel,buf);
 		break;
-#if 0
-	case KMDL_HEADER:
-		Model_LoadKMDL(mModel,buf);
-		break;
-#endif
 	case BSP_HEADER:
 		Model_LoadBSP(mModel,buf);
 		break;
@@ -266,9 +262,9 @@ model_t *Model_Load(model_t *mModel)
 
 /*	Loads in a model for the given name
 */
-model_t *Mod_ForName(char *name)
+model_t *Mod_ForName(char *cName)
 {
-	return Model_Load(Model_FindName(name));
+	return Model_Load(Model_FindName(cName));
 }
 
 /*
@@ -1523,7 +1519,6 @@ void Mod_CalcAliasBounds(aliashdr_t *a)
 }
 #endif
 
-#ifdef KATANA_MODEL_NEXT
 // [21/8/2012] TODO: Finish ~hogsy
 void Model_LoadIQM(model_t *mModel,void *Buffer)
 {
@@ -1543,7 +1538,6 @@ void Model_LoadIQM(model_t *mModel,void *Buffer)
 		Sys_Error("%s has invalid number of animations (%i)",mModel->name,hHeader.uiNumAnims);
 	// [14/9/2012] TODO: IQM models use multiple textures, check those! ~hogsy
 }
-#endif
 
 void Model_LoadMD2(model_t *mModel,void *Buffer)
 {

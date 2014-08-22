@@ -269,7 +269,7 @@ typedef struct model_s
 
 void	Model_Initialize(void);
 void	Model_ClearAll(void);
-model_t *Mod_ForName (char *name);
+model_t *Mod_ForName(char *cName);
 void	*Mod_Extradata (model_t *mod);	// handles caching
 void	Model_Touch(char *cName);
 

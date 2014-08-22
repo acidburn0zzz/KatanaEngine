@@ -22,12 +22,10 @@ solid_edge items only clip against bsp models.
 
 */
 
-cvar_t	sv_friction			= {	"sv_friction",		"4",	false,	true	};
-cvar_t	sv_stopspeed		= {	"sv_stopspeed",		"100"					};
-cvar_t	sv_maxvelocity		= {	"sv_maxvelocity",	"2000"					};
-cvar_t	sv_nostep			= {	"sv_nostep",		"0"						};
+cvar_t	cvPhysicsStopSpeed	= {	"physics_stopspeed",	"100"		},
+		cvPhysicsNoStep		= {	"physics_nostep",		"0"			},
 // [18/3/2013] Added per request ~hogsy
-cvar_t	cvPhysicsStepSize	= {	"physics_stepsize",	"18"					};
+		cvPhysicsStepSize	= {	"physics_stepsize",		"18"		};
 
 void Physics_Toss(edict_t *ent);
 
@@ -876,7 +874,7 @@ void SV_WalkMove(edict_t *ent)
 		return;		// don't stair up while jumping
 	else if(ent->v.movetype != MOVETYPE_WALK)
 		return;		// gibbed by a trigger
-	else if(sv_nostep.value || (sv_player->v.flags & FL_WATERJUMP))
+	else if(cvPhysicsNoStep.value || (sv_player->v.flags & FL_WATERJUMP))
 		return;
 
 	Math_VectorCopy (ent->v.origin, nosteporg);
@@ -1117,16 +1115,14 @@ void Physics_AddFriction(edict_t *eEntity,vec3_t vVelocity,vec3_t vOrigin)
 		friction = eEntity->Physics.fFriction;
 
 	// Apply friction
-	control = speed < sv_stopspeed.value ? sv_stopspeed.value : speed;
+	control = speed < cvPhysicsStopSpeed.value ? cvPhysicsStopSpeed.value : speed;
 	newspeed = speed - host_frametime*control*friction;
 
 	if(newspeed < 0)
 		newspeed = 0;
 	newspeed /= speed;
 
-	vel[0] = vel[0]*newspeed;
-	vel[1] = vel[1]*newspeed;
-	vel[2] = vel[2]*newspeed;
+	Math_VectorScale(vel,newspeed,vel);
 }
 
 //============================================================================

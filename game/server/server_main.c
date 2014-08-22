@@ -220,8 +220,9 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion5.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion6.wav");
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB0);
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB0);
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB0);
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB1);
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB2);
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB3);
 	
 	// Player
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,cvServerPlayerModel.string);
@@ -267,8 +268,6 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/h2ojump.wav");
 
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/blip.md2");
-	// [4/2/2013] Moved here since he's used in singleplayer too :) ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/sprfly.md2");
 
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"poison");
 	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark");
@@ -298,7 +297,7 @@ void Server_Spawn(edict_t *ent)
 		Engine.Server_PrecacheResource(RESOURCE_SOUND,"items/respawn.wav");
 
 		// [20/12/2012] If we're in Vektar mode, then spawn the Vektar! ~hogsy
-		if((int)cvServerGameMode.value == MODE_VEKTAR)
+		if(cvServerGameMode.iValue == MODE_VEKTAR)
 			Vektar_Spawn();
 #endif
 

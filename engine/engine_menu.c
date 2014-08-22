@@ -44,7 +44,7 @@ void Menu_Initialize(void)
 	mImport.Client_PrecacheResource	= Client_PrecacheResource;
 	mImport.Client_SetMenuCanvas	= GL_SetCanvas;
 
-	Menu = (MenuExport_t*)pModule_Load(hMenuInstance,va("%s/%s",com_gamedir,MODULE_MENU),"Menu_Main",&mImport);
+	Menu = (MenuExport_t*)pModule_LoadInterface(hMenuInstance,va("%s/%s",com_gamedir,MODULE_MENU),"Menu_Main",&mImport);
 	if(!Menu)
 		Con_Warning(pError_Get(),com_gamedir,MODULE_MENU);
 	else if(Menu->iVersion != MODULE_VERSION)

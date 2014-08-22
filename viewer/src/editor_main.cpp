@@ -832,7 +832,7 @@ KatanaViewer::initAnimation (md2_model_t *model, int animation)
 int main(int argc,char *argv[])
 {
 	// Load up the engine module...
-	Engine = (EngineExport_t*)pModule_Load(
+	Engine = (EngineExport_t*)pModule_LoadInterface(
 		iEditorEngineInstance,
 		"./"PATH_ENGINE"/"MODULE_ENGINE,
 		"Engine_Main",

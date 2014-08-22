@@ -36,7 +36,6 @@ typedef struct
 
 	// OpenGL Extensions
 	bool	bFogCoord,					// EXT_fog_coord
-			bMultitexture,				// ARB_multitexture
 			bTextureEnvAdd,				// ARB_texture_env_add
 			bTextureEnvCombine;			// ARB_texture_env_combine
 } Video_t;

@@ -139,7 +139,7 @@ void Editor_Launch(void)
 		Import.Con_Warning				= Con_Warning;
 		Import.Cvar_RegisterVariable	= Cvar_RegisterVariable;
 
-		mToolModule = (ModuleEditor_t*)pModule_Load(hToolInstance,MODULE_EDITOR,"Toolkit_Main",&Import);
+		mToolModule = (ModuleEditor_t*)pModule_LoadInterface(hToolInstance,MODULE_EDITOR,"Toolkit_Main",&Import);
 		if(!mToolModule)
 		{
 			Console_ErrorMessage(false,MODULE_EDITOR,"Failed to find "MODULE_EDITOR".");

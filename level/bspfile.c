@@ -223,8 +223,8 @@ void LoadBSPFile(char *filename)
 	VectorClear (hullinfo.hullsizes[0][0]);
 	VectorClear (hullinfo.hullsizes[0][1]);
 
-	hullinfo.numhulls = 3;
-	hullinfo.filehulls = 4;
+	hullinfo.numhulls	= 3;
+	hullinfo.filehulls	= BSP_MAX_HULLS;
 	VectorSet (hullinfo.hullsizes[1][0], -16, -16, -24);
 	VectorSet (hullinfo.hullsizes[1][1], 16, 16, 32);
 	VectorSet (hullinfo.hullsizes[2][0], -32, -32, -24);

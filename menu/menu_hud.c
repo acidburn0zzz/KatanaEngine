@@ -215,11 +215,4 @@ void HUD_Draw(void)
 		}
 	}
 #endif
-
-#if 0
-	if(bInventoryOpen)
-	{
-		// [2/8/2012] TODO: Draw inventory ~hogsy
-	}
-#endif
 }

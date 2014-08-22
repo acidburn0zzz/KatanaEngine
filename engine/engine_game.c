@@ -497,25 +497,6 @@ void Game_MakeVectors(vec3_t angles)
 	Math_AngleVectors(angles,pr_global_struct.v_forward,pr_global_struct.v_right,pr_global_struct.v_up);
 }
 
-// [25/2/2012] Added CenterPrint ~hogsy
-// [18/7/2012] Renamed to Server_CenterPrint ~hogsy
-void Server_CenterPrint(edict_t *ent,char *msg)
-{
-	client_t	*client;
-	int			entnum = NUM_FOR_EDICT(ent);
-
-	if(entnum < 1 || entnum > svs.maxclients)
-	{
-		Con_Warning("Attempted to send message to a non-client.\n");
-		return;
-	}
-
-	client = &svs.clients[entnum-1];
-
-	MSG_WriteChar(&client->message,svc_centerprint);
-	MSG_WriteString(&client->message,msg);
-}
-
 edict_t	*eMessageEntity;
 
 sizebuf_t *Game_WriteDest(int dest)
@@ -576,6 +557,7 @@ void Game_SetMessageEntity(edict_t *eEntity)
 }
 
 void Host_Restart_f(void);
+void Server_CenterPrint(edict_t *ent,char *msg);	// See engine_server.
 
 void Game_Initialize(void)
 {
@@ -641,7 +623,7 @@ void Game_Initialize(void)
 	Import.Server_AmbientSound		= Game_AmbientSound;
 	Import.Server_GetLevelName		= Server_GetLevelName;
 
-	Game = (ModuleExport_t*)pModule_Load(hGameInstance,va("%s/"MODULE_GAME,com_gamedir),"Game_Main",&Import);
+	Game = (ModuleExport_t*)pModule_LoadInterface(hGameInstance,va("%s/"MODULE_GAME,com_gamedir),"Game_Main",&Import);
 	if(!Game)
 		Con_Warning("Failed to find %s/"MODULE_GAME"!\n",com_gamedir,MODULE_GAME);
 	else if(Game->Version != MODULE_VERSION2)

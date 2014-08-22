@@ -50,7 +50,7 @@ state bit 2 is edge triggered on the down to up transition
 kbutton_t	in_klook;
 kbutton_t	in_left, in_right, in_forward, in_back;
 kbutton_t	in_lookup, in_lookdown, in_moveleft, in_moveright;
-kbutton_t	in_strafe, in_speed, in_use, in_jump, in_attack;
+kbutton_t	in_strafe, in_speed, in_use, in_jump, in_attack, kInputCrouch;
 kbutton_t	in_up, in_down;
 
 int			in_impulse;
@@ -114,10 +114,12 @@ void KeyUp (kbutton_t *b)
 	b->state |= 4; 		// impulse up
 }
 
-void IN_KLookDown(void) {KeyDown(&in_klook);}
-void IN_KLookUp(void) {KeyUp(&in_klook);}
-void IN_UpDown(void) {KeyDown(&in_up);}
-void IN_UpUp(void) {KeyUp(&in_up);}
+void IN_CrouchDown(void)		{	KeyDown(&kInputCrouch);	}
+void IN_CrouchUp(void)			{	KeyUp(&kInputCrouch);	}
+void IN_KLookDown(void)			{	KeyDown(&in_klook);		}
+void IN_KLookUp(void)			{	KeyUp(&in_klook);		}
+void IN_UpDown(void)			{	KeyDown(&in_up);		}
+void IN_UpUp(void)				{	KeyUp(&in_up);			}
 void IN_DownDown(void) {KeyDown(&in_down);}
 void IN_DownUp(void) {KeyUp(&in_down);}
 void IN_LeftDown(void) {KeyDown(&in_left);}
@@ -213,7 +215,7 @@ void CL_AdjustAngles (void)
 	float	speed,up,down;
 
 	if (in_speed.state & 1)
-		speed = host_frametime * cl_anglespeedkey.value;
+		speed = host_frametime*cl_anglespeedkey.value;
 	else
 		speed = host_frametime;
 
@@ -231,8 +233,8 @@ void CL_AdjustAngles (void)
 		cl.viewangles[PITCH] += speed*cl_pitchspeed.value * CL_KeyState (&in_back);
 	}
 
-	up = CL_KeyState (&in_lookup);
-	down = CL_KeyState(&in_lookdown);
+	up		= CL_KeyState (&in_lookup);
+	down	= CL_KeyState(&in_lookdown);
 
 	cl.viewangles[PITCH] -= speed*cl_pitchspeed.value * up;
 	cl.viewangles[PITCH] += speed*cl_pitchspeed.value * down;
@@ -334,6 +336,10 @@ void CL_SendMove (usercmd_t *cmd)
 		bits |= 2;
 	in_jump.state &= ~2;
 
+	if(kInputCrouch.state & 3)
+		bits |= 4;
+	kInputCrouch.state &= ~2;
+
     MSG_WriteByte (&buf, bits);
 
     MSG_WriteByte (&buf, in_impulse);
@@ -361,6 +367,8 @@ void CL_SendMove (usercmd_t *cmd)
 
 void CL_InitInput (void)
 {
+	Cmd_AddCommand("+crouch",IN_CrouchDown);
+	Cmd_AddCommand("-crouch",IN_CrouchUp);
 	Cmd_AddCommand ("+moveup",IN_UpDown);
 	Cmd_AddCommand ("-moveup",IN_UpUp);
 	Cmd_AddCommand ("+movedown",IN_DownDown);

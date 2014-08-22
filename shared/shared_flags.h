@@ -11,7 +11,6 @@
 	Most of the stuff plopped
 	within these will be removed
 	from the final OpenKatana branch.	*/
-//#define	KATANA_MODEL_NEXT		// Skeletal animation support.
 //#define   PARANOID				// Speed sapping error checking.
 //#define	KATANA_VIDEO_NEXT		// New renderer.
 #define KATANA_AUDIO_OPENAL			// OpenAL implementation.
@@ -27,7 +26,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	737	// 13/8/2014
+#define ENGINE_VERSION_BUILD	744	// 22/8/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"

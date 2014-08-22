@@ -280,6 +280,8 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Export.Name							= "OpenKatana";
 #elif GAME_ADAMAS
 	Export.Name							= "Adamas";
+#elif GAME_ICTUS
+	Export.Name							= "Ictus";
 #else
 	Export.Name							= "Katana";
 #endif

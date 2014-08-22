@@ -566,13 +566,13 @@ void Weapon_PrimaryAttack(edict_t *eEntity)
 	{
 		Engine.MakeVectors(eEntity->v.v_angle);
 
-#ifdef GAME_OPENKATANA
 		// [15/8/2013] Why write this out again and again for every weapon? Just do it here! ~hogsy
 		if(Entity_IsPlayer(eEntity) && ((eEntity->v.velocity[0] == 0) && (eEntity->v.velocity[1] == 0)))
+#ifdef GAME_OPENKATANA
 			// [15/8/2013] But let's not forget that the Daikatana is a special case :) ~hogsy
 			if(wCurrentWeapon->iItem != WEAPON_DAIKATANA)
-				Entity_Animate(eEntity,PlayerAnimation_Fire);
 #endif
+				Entity_Animate(eEntity,PlayerAnimation_Fire);
 
 		wCurrentWeapon->Primary(eEntity);
 	}

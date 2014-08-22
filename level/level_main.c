@@ -123,7 +123,7 @@ void CreateHulls (void)
 	printf("building hulls sequentially...\n");
 
 	hullinfo.numhulls	= 3;
-	hullinfo.filehulls	= 4;
+	hullinfo.filehulls	= BSP_MAX_HULLS;
 
 	VectorSet(hullinfo.hullsizes[1][0],-16,-16,-24);
 	VectorSet(hullinfo.hullsizes[1][1],16,16,32);
@@ -235,7 +235,7 @@ int main(int argc,char **argv)
 	transwater		= true;
 	forcevis		= true;
 	waterlightmap	= true;
-	subdivide_size	= 4080;
+	subdivide_size	= 240;
 
 	for (; i < argc; i++)
 	{

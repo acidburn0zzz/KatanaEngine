@@ -37,7 +37,7 @@ typedef struct glRect_s {
 } glRect_t;
 
 glpoly_t	*lightmap_polys[MAX_LIGHTMAPS];
-bool	bLightmapModified[MAX_LIGHTMAPS];
+bool		bLightmapModified[MAX_LIGHTMAPS];
 glRect_t	lightmap_rectchange[MAX_LIGHTMAPS];
 
 int			allocated[MAX_LIGHTMAPS][BLOCK_WIDTH];
@@ -188,14 +188,12 @@ void R_DrawSequentialPoly(msurface_t *s)
             Video_SetBlend(VIDEO_BLEND_IGNORE,VIDEO_DEPTH_FALSE);
             Video_EnableCapabilities(VIDEO_BLEND);
 
-			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		}
 		else
             Video_EnableCapabilities(VIDEO_ALPHA_TEST);
 
         Video_SetTexture(tAnimation->gltexture);
-
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
         Video_SelectTexture(1);
         Video_EnableCapabilities(VIDEO_TEXTURE_2D);
@@ -234,7 +232,7 @@ void R_DrawSequentialPoly(msurface_t *s)
         Video_SelectTexture(0);
 
         if(fAlpha < 1.0f)
-            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_REPLACE);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_REPLACE);
 
         rs_brushpasses++;
 	}
