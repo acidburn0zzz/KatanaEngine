@@ -154,6 +154,8 @@ void Bot_Spawn(edict_t *eBot)
 	case BOT_MIKIKO:
 		iSpawnType = INFO_PLAYER_MIKIKO;
 
+		Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/mikiko.md2");
+
 		eBot->v.model	= "models/mikiko.md2";
 		eBot->v.netname	= "Mikiko Ebihara";
 
@@ -162,6 +164,7 @@ void Bot_Spawn(edict_t *eBot)
 	case BOT_SUPERFLY:
 		iSpawnType = INFO_PLAYER_SUPERFLY;
 
+		Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/sprfly.md2");
 		Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/superfly/superflydeath1.wav");
 		Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/superfly/superflydeath2.wav");
 		Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/superfly/superflydeath3.wav");

@@ -166,9 +166,11 @@ void Video_DrawDepthBuffer(void)
 	if(!gDepthTexture)
 		gDepthTexture = TexMgr_NewTexture();
 
+	GL_SetCanvas(CANVAS_TOPRIGHT);
+
 	Video_SetTexture(gDepthTexture);
 
-	glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT24,Video.iWidth,Video.iHeight,0,GL_DEPTH_COMPONENT24,GL_UNSIGNED_BYTE,0);
+	glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT32,Video.iWidth,Video.iHeight,0,GL_DEPTH_COMPONENT32,GL_UNSIGNED_BYTE,0);
 
 	Draw_Fill(0,0,512,512,1.0f,1.0f,1.0f,1.0f);
 }
