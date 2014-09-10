@@ -156,6 +156,7 @@ GlWindow::handleEvent (mxEvent *event)
 
 void GlWindow::draw ()
 {
+#if 0
 	glClearColor (d_bgColor[0], d_bgColor[1], d_bgColor[2], 0.0f);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport (0, 0, w2 (), h2 ());
@@ -526,6 +527,7 @@ void GlWindow::draw ()
 	}
 
 	glPopMatrix ();
+#endif
 }
 
 void GlWindow::DumpModelInfo(md2_model_t *model, const char *filename)

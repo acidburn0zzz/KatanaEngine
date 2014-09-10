@@ -399,13 +399,20 @@ void View_PolyBlend(void)
 	glLoadIdentity();
 
 	{
-		VideoObject_t	voScreenPoly[]=
-		{
-			{	{	0,		0		},	{{0}},	{	vViewBlend[0],	vViewBlend[1],	vViewBlend[2],	vViewBlend[3]	}	},
-			{	{	1.0f,	0		},	{{0}},	{	vViewBlend[0],	vViewBlend[1],	vViewBlend[2],	vViewBlend[3]	}	},
-			{	{	1.0f,	1.0f	},	{{0}},	{	vViewBlend[0],	vViewBlend[1],	vViewBlend[2],	vViewBlend[3]	}	},
-			{	{	0,		1.0f	},	{{0}},	{	vViewBlend[0],	vViewBlend[1],	vViewBlend[2],	vViewBlend[3]	}	}
-		};
+		int				i;
+		VideoObject_t	voScreenPoly[4];
+
+		for(i = 0; i < 4; i++)
+			Math_Vector4Copy(vViewBlend,voScreenPoly[i].vColour);
+
+		voScreenPoly[0].vVertex[0]	=
+		voScreenPoly[0].vVertex[1]	=
+		voScreenPoly[1].vVertex[1]	=
+		voScreenPoly[3].vVertex[0]	= 0;
+		voScreenPoly[1].vVertex[0]	=
+		voScreenPoly[2].vVertex[0]	=
+		voScreenPoly[2].vVertex[1]	=
+		voScreenPoly[3].vVertex[1]	= 1.0f;
 
 		Video_DrawFill(voScreenPoly);
 	}
@@ -430,65 +437,16 @@ float angledelta (float a)
 	return a;
 }
 
-// [26/3/2013] Cleaned up and revised ~hogsy
 void View_ModelAngle(void)
 {
-	float			fMove;
-	vec3_t			vAngles;
-	static	float	fOldYaw		= 0,
-					fOldPitch	= 0;
-	// [26/3/2013] Don't bother if we don't have a view model to show! ~hogsy
+	// Don't bother if we don't have a view model to show!
 	if(!cl.viewent.model)
 		return;
 
-	vAngles[YAW]	= r_refdef.viewangles[YAW];
-	vAngles[PITCH]	= -r_refdef.viewangles[PITCH];
-
-	vAngles[YAW] = angledelta(vAngles[YAW]-r_refdef.viewangles[YAW])*0.4f;
-	if(vAngles[YAW] > 10.0f)
-		vAngles[YAW] = 10.0f;
-	else if(vAngles[YAW] < -10.0f)
-		vAngles[YAW] = -10.0f;
-
-	vAngles[PITCH] = angledelta(-vAngles[PITCH]-r_refdef.viewangles[PITCH])*0.4f;
-	if(vAngles[PITCH] > 10.0f)
-		vAngles[PITCH] = 10.0f;
-	else if(vAngles[PITCH] < -10.0f)
-		vAngles[PITCH] = -10.0f;
-
-	fMove =	host_frametime*20.0f;
-	if(vAngles[YAW] > fOldYaw)
-	{
-		if(fOldYaw+fMove < vAngles[YAW])
-			vAngles[YAW] = fOldYaw+fMove;
-	}
-	else
-	{
-		if(fOldYaw-fMove > vAngles[YAW])
-			vAngles[YAW] = fOldYaw-fMove;
-	}
-
-	if(vAngles[PITCH] > fOldPitch)
-	{
-		if(fOldPitch+fMove < vAngles[PITCH])
-			vAngles[PITCH] = fOldPitch+fMove;
-	}
-	else
-	{
-		if(fOldPitch-fMove > vAngles[PITCH])
-			vAngles[PITCH] = fOldPitch-fMove;
-	}
-
-	fOldYaw		= vAngles[YAW];
-	fOldPitch	= vAngles[PITCH];
-
-	/*cl.viewent.angles[YAW]		= r_refdef.viewangles[YAW]+vAngles[YAW];
-	cl.viewent.angles[PITCH]	= -(r_refdef.viewangles[PITCH]+vAngles[PITCH]-(sin(cl.time*1.5f)*0.2f));
-	cl.viewent.angles[ROLL]		= -(r_refdef.viewangles[ROLL]+vAngles[ROLL]-(sin(cl.time*1.5f)*0.2f));*/
-
+	// Stripped this all down to this, it's all we need. ~hogsy
 	cl.viewent.angles[YAW]		= r_refdef.viewangles[YAW];
-	cl.viewent.angles[PITCH]	= -r_refdef.viewangles[PITCH];
-	cl.viewent.angles[ROLL]		-= fMove * 20;
+	cl.viewent.angles[PITCH]	= -(r_refdef.viewangles[PITCH]-(sin(cl.time*1.5f)*0.2f));
+	cl.viewent.angles[ROLL]		= -(r_refdef.viewangles[ROLL]-(sin(cl.time*1.5f)*0.2f));
 }
 
 void V_BoundOffsets (void)
@@ -577,8 +535,7 @@ void V_CalcIntermissionRefdef (void)
 void View_ModelDrift(vec3_t vOrigin,vec3_t vAngles,vec3_t vOldAngles)
 {
 	int				i;
-	float			fScale,fSpeed,fDifference,
-					fPitch;
+	float			fScale,fSpeed,fDifference;
 	static	vec3_t	svLastFacing;
 	vec3_t			vForward,vRight,vUp,
 					vDifference;
@@ -594,10 +551,9 @@ void View_ModelDrift(vec3_t vOrigin,vec3_t vAngles,vec3_t vOldAngles)
 		fDifference = Math_VectorLength(vDifference);
 		if((fDifference > cViewModelLag.value) && (cViewModelLag.value > 0.0f ))
 			fSpeed *= fScale = fDifference/cViewModelLag.value;
+
 		for(i = 0; i < 3; i++)
-		{
 			svLastFacing[i] += vDifference[i]*(fSpeed*host_frametime);
-		}
 
 		Math_VectorNormalize(svLastFacing);
 
@@ -605,7 +561,7 @@ void View_ModelDrift(vec3_t vOrigin,vec3_t vAngles,vec3_t vOldAngles)
 		{
 			vOrigin[i] += (vDifference[i]*-1.0f)*5.0f;
 		//	r_refdef.viewangles[ROLL] += vDifference[YAW];	
-			vAngles[ROLL] += vDifference[YAW];		
+			vAngles[ROLL] += vDifference[YAW];
 		}
 	}
 }
@@ -620,6 +576,7 @@ void V_CalcRefdef (void)
 	vec3_t			forward,right,up,
 					angles,vOldAngles;
 	static	vec3_t	punch = {0,0,0}; //johnfitz -- v_gunkick
+
 	V_DriftPitch();
 
 	// ent is the player model (visible when out of body)

@@ -1,4 +1,4 @@
-/*  Copyright (C) 2011-2013 OldTimes Software
+/*  Copyright (C) 2011-2014 OldTimes Software
 */
 #include "menu_button.h"
 
@@ -6,15 +6,25 @@
 	Button Elements
 */
 
-MenuButton_t *Button_Allocate(void)
+void Button_Draw(Menu_t *mParent,MenuButton_t *mbButton)
 {
-    return NULL;
 }
 
-void Button_Click(MenuButton_t *bButton)
+void Button_Click(Menu_t *mParent,MenuButton_t *mbButton)
 {
-	if(!bButton->bMouseInside || !bButton->bActive)
+	if(!mbButton->bMouseInside || !mbButton->bActive)
 		return;
 
     //Menu_MakeActive(bButton->mParent);
+}
+
+MenuButton_t *Button_Create(void)
+{
+	MenuButton_t	*mbOut;
+
+	// Default handlers...
+	mbOut->Click	= Button_Click;
+	mbOut->Draw		= Button_Draw;
+
+    return mbOut;
 }

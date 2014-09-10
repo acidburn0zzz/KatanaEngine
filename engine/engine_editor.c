@@ -40,7 +40,8 @@ ModuleEditor_t	*mToolModule;
 typedef enum
 {
 	EDITOR_MODE_CAMERA,	// Default 3D camera view.
-	EDITOR_MODE_TOP		// Secondary top view mode.
+	EDITOR_MODE_TOP,	// 2D top view mode.
+	EDITOR_MODE_SIDE	// 2D side view mode.
 } EditorMode_t;
 
 // Draw Modes
@@ -69,6 +70,8 @@ void Editor_Initialize(void)
 	Editor.bEnabled = false;
 
 	Cmd_AddCommand("editor",Editor_Launch);
+	// TODO: Add a seperate command to handle this, rather than directly ~hogsy
+	//Cmd_AddCommand("editor_loadlevel",Editor_LoadLevel);
 
 	Cvar_RegisterVariable(&cvEditorLightPreview,NULL);
 
@@ -183,22 +186,13 @@ void Editor_Draw(void)
 	if(!Editor.bEnabled)
 		return;
 
-#if 0
 	switch(Editor.iDrawMode)
 	{
 	case EDITOR_DRAW_WIREFRAME:
+		break;
 	case EDITOR_DRAW_TEXTURED:
-		glEnable(GL_FRONT);
-		glEnable(GL_CULL_FACE);
-		glShadeModel(GL_FLAT);
-		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-		glEnable(GL_TEXTURE_2D);
-		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-		glDisable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
+		break;
 	}
-#endif
 
     GL_SetCanvas(CANVAS_DEFAULT);
 

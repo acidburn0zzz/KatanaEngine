@@ -137,51 +137,8 @@ void R_RocketTrail(vec3_t start, vec3_t end, int type)
 
 void R_DrawFlares(void)
 {
-	flare_t *f;
-	vec3_t	up,right,f_up,f_right,f_upright;
-
 	if(!active_flares || !cvDrawFlares.value)
 		return;
-
-	Math_VectorScale(vup,1.5,up);
-	Math_VectorScale(vright,1.5,right);
-
-	glDisable(GL_DEPTH_TEST);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-//	glDepthMask(GL_FALSE);
-	for(f=active_flares;f;f=f->next)
-	{
-		f->scale =
-			f->scale*(f->org[0]-r_origin[0])*vpn[0]+(f->org[1]-r_origin[1])*vpn[1]+(f->org[2]-r_origin[2])*vpn[2];
-
-		if(!f->texture)
-			Video_SetTexture(notexture);
-		else
-			Video_SetTexture(gEffectTexture[f->texture]);
-
-		glBegin(GL_QUADS);
-		glColor4f(f->r,f->g,f->b,f->alpha);
-		glTexCoord2f(0,0);
-		glVertex3fv(f->org);
-		glTexCoord2f(1,0);
-		Math_VectorMA(f->org,f->scale,up,f_up);
-		glVertex3fv(f_up);
-		glTexCoord2f(1,1);
-		Math_VectorMA(f_up,f->scale,right,f_upright);
-		glVertex3fv(f_upright);
-		glTexCoord2f(0,1);
-		Math_VectorMA(f->org,f->scale,right,f_right);
-		glVertex3fv(f_right);
-		glEnd();
-	}
-//	glDepthMask(GL_TRUE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_BLEND);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	glColor3f(1,1,1);
-	glEnable(GL_DEPTH_TEST);
 }
 
 void Draw_Particles(void)

@@ -297,7 +297,7 @@ bool Script_Load(/*const */char *ccPath)
 
 	if(LoadFile(ccPath,(void**)&cData) == -1)
 	{
-		cData = COM_LoadTempFile(ccPath);
+		cData = (char*)COM_LoadTempFile(ccPath);
 		if(!cData)
 		{
 			Con_Warning("Failed to load script! (%s)\n",ccPath);

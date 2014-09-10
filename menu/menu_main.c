@@ -326,6 +326,9 @@ void Menu_Draw(void)
 
 		Engine.Client_SetMenuCanvas(CANVAS_MENU);
 
+		Engine.DrawString(110,80,">");
+		Engine.DrawString(190,80,"<");
+
 		switch(iMenuState)
 		{
 		case MENU_MAIN:
@@ -335,9 +338,12 @@ void Menu_Draw(void)
 			Engine.DrawString(120,110,"Quit");
 			break;
 		case MENU_NEW:
+			break;
 		case MENU_LOAD:
 		case MENU_OPTIONS:
+			break;
 		case MENU_QUIT:
+			// Do we even need to draw anything for this? ~hogsy
 			break;
 		}
 	}

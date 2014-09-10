@@ -3,7 +3,7 @@
 #include "quakedef.h"
 
 /*
-	KatRenderer is our future renderer code, I imagine most of this
+	This is our future renderer code, I imagine most of this
 	will be fairly incomplete before OpenKatana's release but the
 	base should at least be finished by then just so it's stable...
 	If not then do give me some serious scolding.
@@ -32,7 +32,6 @@ SDL_GLContext	sMainContext;
 #define VIDEO_MIN_HEIGHT	480
 #define VIDEO_MAX_SAMPLES	16
 #define VIDEO_MIN_SAMPLES	0
-#define	VIDEO_MAX_UNITS		4
 
 cvar_t	cvShowModels			= {	"video_showmodels",			"1",			false,  false,  "Toggles models."                                   },
 		cvMultisampleSamples	= {	"video_multisamplesamples",	"0",			true,   false,  "Changes the number of samples."	                },
@@ -42,6 +41,7 @@ cvar_t	cvShowModels			= {	"video_showmodels",			"1",			false,  false,  "Toggles 
 		cvHeight				= {	"video_height",				"480",			true,   false,  "Sets the height of the window."	                },
 		cvVerticalSync			= {	"video_verticalsync",		"0",			true	                                                            },
 		cvVideoDraw				= {	"video_draw",				"1",			false,	false,	"If disabled, nothing is drawn."					},
+		cvVideoDrawDepth		= {	"video_drawdepth",			"0",			false,	false,	"If enabled, previews the debth buffer."			},
 		cvVideoDebugLog			= {	"video_debuglog",			"log_video",	true,	false,	"The name of the output log for video debugging."	};
 
 gltexture_t	*gDepthTexture;
@@ -82,6 +82,7 @@ void Video_Initialize(void)
 	Cvar_RegisterVariable(&cvVerticalSync,NULL);
 	Cvar_RegisterVariable(&cvVideoDebugLog,NULL);
 	Cvar_RegisterVariable(&cvVideoDraw,NULL);
+	Cvar_RegisterVariable(&cvVideoDrawDepth,NULL);
 
 	Cmd_AddCommand("video_restart",Video_UpdateWindow);
 	Cmd_AddCommand("video_debug",Video_DebugCommand);
@@ -159,14 +160,17 @@ void Video_ClearBuffer(void)
 */
 void Video_DrawDepthBuffer(void)
 {
+	if(!cvVideoDrawDepth.bValue)
+		return;
+
 	if(!gDepthTexture)
 		gDepthTexture = TexMgr_NewTexture();
 
 	Video_SetTexture(gDepthTexture);
 
-	glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT24,512,512,0,GL_DEPTH_COMPONENT24,GL_UNSIGNED_BYTE,0);
+	glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT24,Video.iWidth,Video.iHeight,0,GL_DEPTH_COMPONENT24,GL_UNSIGNED_BYTE,0);
 
-	//Video_DrawFill()
+	Draw_Fill(0,0,512,512,1.0f,1.0f,1.0f,1.0f);
 }
 
 /*
@@ -250,12 +254,10 @@ bool Video_CreateWindow(void)
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,8);
-#if 0
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,8);
-#endif
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
@@ -280,7 +282,7 @@ bool Video_CreateWindow(void)
 		iFlags);
 	if(!sMainWindow)
 		Sys_Error("Failed to create window!\n%s\n",SDL_GetError());
-
+	
 	// [6/2/2014] Set the icon for the window ~hogsy
 	// [25/3/2014] Grab the icon from our game directory ~hogsy
 	sIcon = SDL_LoadBMP(va("%s/icon.bmp",com_gamedir));
@@ -371,6 +373,7 @@ bool Video_CreateWindow(void)
 	}
 
 	Video_EnableCapabilities(VIDEO_TEXTURE_2D|VIDEO_ALPHA_TEST|VIDEO_NORMALIZE);
+	Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_IGNORE);
 
 	glClearColor(0,0,0,0);
 	glCullFace(GL_BACK);
@@ -379,7 +382,6 @@ bool Video_CreateWindow(void)
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	glShadeModel(GL_SMOOTH);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -491,9 +493,6 @@ void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
     {
         switch(voBlendMode)
         {
-        case VIDEO_BLEND_ZERO:
-            glBlendFunc(GL_ZERO,GL_ZERO);
-            break;
         case VIDEO_BLEND_ONE:
             glBlendFunc(GL_ONE,GL_ONE);
             break;
@@ -502,6 +501,9 @@ void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
             break;
         case VIDEO_BLEND_THREE:
             glBlendFunc(GL_DST_COLOR,GL_SRC_COLOR);
+            break;
+        case VIDEO_BLEND_FOUR:
+            glBlendFunc(GL_ZERO,GL_ZERO);
             break;
         default:
             Sys_Error("Unknown blend mode! (%i)\n",voBlendMode);
@@ -545,11 +547,6 @@ void Video_SelectTexture(unsigned int uiTarget)
 	case 4:
 		uiUnit = GL_TEXTURE4;
 		break;
-#ifdef KATANA_VIDEO_NEXT
-	case 5:
-		uiUnit = GL_TEXTURE5;
-		break;
-#endif
     default:
         Sys_Error("Unknown texture unit! (%i)\n",uiTarget);
 		// Return to resolve VS warning.
@@ -614,6 +611,9 @@ void Video_DrawObject(
 
 	if(!cvVideoDraw.bValue)
 		return;
+
+	if(bVideoDebug)
+		Console_WriteToLog(cvVideoDebugLog.string,"Video: Drawing object (%i) (%i)\n",uiVerts,bMultiTexture);
 
 	if(!voObject)
         Sys_Error("Invalid video object!\n");
@@ -697,6 +697,9 @@ void Video_DrawObject(
 
 	glDrawArrays(gPrimitive,0,uiVerts);
 
+	glClientActiveTexture(GL_TEXTURE1);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glClientActiveTexture(GL_TEXTURE0);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	if(r_showtris.bValue)
@@ -736,7 +739,10 @@ VideoCapabilities_t	vcCapabilityList[]=
 	{   0   }
 };
 
-static unsigned int	iSavedCapabilites[VIDEO_MAX_UNITS][2];
+static unsigned int	iSavedCapabilites[VIDEO_MAX_UNITS+1][2];
+
+#define VIDEO_STATE_ENABLE   0
+#define VIDEO_STATE_DISABLE  1
 
 /*	Set rendering capabilities for current draw.
 	Cleared using Video_DisableCapabilities.
@@ -801,6 +807,8 @@ void Video_DisableCapabilities(unsigned int iCapabilities)
 */
 void Video_ResetCapabilities(bool bClearActive)
 {
+	int i;
+
     if(bVideoDebug)
         Console_WriteToLog(cvVideoDebugLog.string,"Video: Resetting capabilities...\n");
 
@@ -812,17 +820,13 @@ void Video_ResetCapabilities(bool bClearActive)
         sbVideoCleanup = true;
 
         // [7/5/2014] Disable/Enable old states by unit... Ugh ~hogsy
-        {
-			int i;
-
-			// Go through each TMU that we support.
-			for(i = VIDEO_MAX_UNITS; i > -1; i--)
-			{
-				Video_SelectTexture(i);
-				Video_DisableCapabilities(iSavedCapabilites[i][0]);
-				Video_EnableCapabilities(iSavedCapabilites[i][1]);
-			}
-        }
+		// Go through each TMU that we support.
+		for(i = VIDEO_MAX_UNITS; i > -1; i--)
+		{
+			Video_SelectTexture(i);
+			Video_DisableCapabilities(iSavedCapabilites[i][VIDEO_STATE_ENABLE]);
+			Video_EnableCapabilities(iSavedCapabilites[i][VIDEO_STATE_DISABLE]);
+		}
 
         if(sbVideoIgnoreDepth)
             Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_IGNORE);
@@ -830,7 +834,7 @@ void Video_ResetCapabilities(bool bClearActive)
             // [12/3/2014] Reset our blend mode too. ~hogsy
             Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_TRUE);
 
-        // [28/3/2014] Set defau;ts ~hogsy
+        // [28/3/2014] Set defaults ~hogsy
         sbVideoIgnoreDepth  = true;
 		sbVideoCleanup      = false;
 
@@ -838,11 +842,10 @@ void Video_ResetCapabilities(bool bClearActive)
             Console_WriteToLog(cvVideoDebugLog.string,"Video: Finished clearing capabilities.\n");
 	}
 
-    // [7/5/2014] Clear out capability list ~hogsy
-    iSavedCapabilites[1][0] =
-    iSavedCapabilites[1][1] =
-    iSavedCapabilites[0][0] =
-    iSavedCapabilites[0][1] = 0;
+	// [7/5/2014] Clear out capability list ~hogsy
+	for(i = 0; i < VIDEO_MAX_UNITS; i++)
+		iSavedCapabilites[i][0] =
+		iSavedCapabilites[i][1] = 0;
 }
 
 /*
@@ -893,6 +896,8 @@ void Video_Process(void)
         Console_WriteToLog(cvVideoDebugLog.string,"Video: Start of frame\n");
 
 	SCR_UpdateScreen();
+
+	Video_DrawDepthBuffer();
 
     // [31/3/2014] Draw any ATB windows ~hogsy
 	TwDraw();

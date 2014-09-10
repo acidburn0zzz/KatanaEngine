@@ -5,6 +5,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(disable:4100)	// unreferenced formal parameter
+#pragma	warning(disable:4127)	// conditional expression is constant
 #endif
 
 /*	Define for our future crap.
@@ -26,7 +27,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	744	// 22/8/2014
+#define ENGINE_VERSION_BUILD	748	// 9/9/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"

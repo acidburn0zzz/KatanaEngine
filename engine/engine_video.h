@@ -11,6 +11,8 @@ extern cvar_t	cvShowModels,	// Should we draw models?
 				cvFullscreen,	// Should we be fullscreen?
 				cvLitParticles;	// Should particles be lit or not?
 
+#define	VIDEO_MAX_UNITS	4
+
 typedef struct
 {
 	float			fMaxAnisotropy,		        // Max anisotropy amount allowed by the hardware.
@@ -43,11 +45,11 @@ typedef struct
 typedef struct
 {
 	vec3_t	vVertex;
-	vec2_t	vTextureCoord[4];	// Texture coordinates by texture unit.
+	vec2_t	vTextureCoord[VIDEO_MAX_UNITS];	// Texture coordinates by texture unit.
 
-	vec4_t	vColour;			// RGBA
+	vec4_t	vColour;						// RGBA
 
-	vec3_t	vNormal;			// Vertex normals.
+	vec3_t	vNormal;						// Vertex normals.
 } VideoObject_t;
 
 Video_t	Video;
@@ -55,21 +57,18 @@ Video_t	Video;
 extern SDL_Window	*sMainWindow;
 
 // Video Capabilities
-#define	VIDEO_ALPHA_TEST	1
-#define	VIDEO_BLEND			2
-#define	VIDEO_TEXTURE_2D	4
-#define	VIDEO_DEPTH_TEST	8	// Depth-testing.
+#define	VIDEO_ALPHA_TEST	1	// Alpha-testing
+#define	VIDEO_BLEND			2	// Blending
+#define	VIDEO_TEXTURE_2D	4	// Enables/disables textures.
+#define	VIDEO_DEPTH_TEST	8	// Depth-testing
 #define	VIDEO_TEXTURE_GEN_T	16
 #define	VIDEO_TEXTURE_GEN_S	32
 #define	VIDEO_CULL_FACE		64
-#define	VIDEO_STENCIL_TEST	128
-#define	VIDEO_NORMALIZE		256	// Normalization for scaled models that are lit
+#define	VIDEO_STENCIL_TEST	128	// Stencil-testing
+#define	VIDEO_NORMALIZE		256	// Normalization for scaled models that are lit.
 
-#define VIDEO_TEXTURE0 0x84C0
-#define VIDEO_TEXTURE1 0x84C1
-
-#define VIDEO_STATE_ENABLE   0
-#define VIDEO_STATE_DISABLE  1
+#define VIDEO_TEXTURE0 0x84C0	// TMU0
+#define VIDEO_TEXTURE1 0x84C1	// TMU1
 
 // Primitive Types
 typedef enum
@@ -86,7 +85,7 @@ typedef enum
     VIDEO_BLEND_ONE,    // ONE			ONE
     VIDEO_BLEND_TWO,    // SRC_ALPHA	ONE_MINUS_SRC_ALPHA
     VIDEO_BLEND_THREE,  // DST_COLOR	SRC_COLOR
-    VIDEO_BLEND_ZERO    // ZERO			ZERO
+    VIDEO_BLEND_FOUR    // ZERO			ZERO
 } VideoBlend_t;
 
 #define VIDEO_DEPTH_TRUE    true

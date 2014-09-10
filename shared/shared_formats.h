@@ -41,7 +41,7 @@ typedef struct
 #define	MD2_MAX_FRAMES		1024
 #define MD2_MAX_SKINS		32
 #define MD2_MAX_TRIANGLES	4096
-#define	MD2_MAX_VERTICES	2048
+#define	MD2_MAX_VERTICES	12288
 
 typedef struct
 {
