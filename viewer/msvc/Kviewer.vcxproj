@@ -87,7 +87,7 @@
       <PrecompiledHeaderOutputFile>.\Release\MD2 Viewer.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\Release\</ObjectFileName>
       <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>.\;.\..\..\external\mxtx\include;.\..\..\shared;.\..\..\platform\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\..\..\shared;.\..\..\platform\include;C:\Qt\5.3\msvc2013_opengl\include\QtGui;C:\Qt\5.3\msvc2013_opengl\include\QtWidgets;C:\Qt\5.3\msvc2013_opengl\include\QtCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -109,12 +109,12 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <OutputFile>..\..\bin\Editor2.x86.exe</OutputFile>
+      <OutputFile>..\..\bin\Editor.x86.exe</OutputFile>
       <SetChecksum>true</SetChecksum>
-      <AdditionalDependencies>mxtk.lib;opengl32.lib;glu32.lib;comctl32.lib;winmm.lib;platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;opengl32.lib;glu32.lib;comctl32.lib;winmm.lib;platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Version>1.4</Version>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
-      <AdditionalLibraryDirectories>..\..\external\mxtx\lib;..\..\platform\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Qt\5.3\msvc2013_opengl\lib;..\..\platform\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -207,16 +207,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\shared\shared_png.h" />
-    <ClInclude Include="..\src\anorms.h" />
-    <ClInclude Include="..\src\gl_window.h" />
-    <ClInclude Include="..\src\gl_model.h" />
-    <ClInclude Include="..\src\okv_main.h" />
+    <ClInclude Include="..\src\editor_main.h" />
     <ClInclude Include="..\src\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\shared\shared_png.c" />
-    <ClCompile Include="..\src\gl_window.cpp" />
-    <ClCompile Include="..\src\gl_model.c" />
     <ClCompile Include="..\src\editor_main.cpp" />
   </ItemGroup>
   <ItemGroup>

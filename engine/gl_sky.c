@@ -484,7 +484,7 @@ void Sky_ProcessEntities(void)
 	{
 		e = cl_visedicts[i];
 
-		if(e->model->mType != MODEL_BRUSH)
+		if(e->model->mType != MODEL_TYPE_BSP)
 			continue;
 
 		if(R_CullModelForEntity(e))

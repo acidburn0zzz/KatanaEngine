@@ -732,10 +732,10 @@ edict_t *Monster_GetTarget(edict_t *eMonster)
 	do
 	{
 		// [6/6/2013] Only return if it's a new target and a monster type! ~hogsy
-		if(	(eMonster != eTargets)																&&
-			(eTargets != eMonster->monster.eTarget && eTargets != eMonster->monster.eOldTarget) &&
-			(eTargets->monster.iType != MONSTER_NONE)											&&
-			(eTargets->monster.iType != eMonster->monster.iType))
+		if(	(eMonster != eTargets)																&&	// Can't target ourself.
+			(eTargets != eMonster->local.eOwner)												&&	// Can't target owner.
+			(eTargets != eMonster->monster.eTarget && eTargets != eMonster->monster.eOldTarget) &&	// Can't target an old target.
+			(eTargets->monster.iType != MONSTER_NONE))												// Has to be a monster.
 			// [11/6/2013] Quick crap thrown in to check if the target is visible or not... ~hogsy
 			if(Monster_IsVisible(eMonster,eTargets))
 				return eTargets;

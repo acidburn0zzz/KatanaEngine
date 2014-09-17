@@ -25,7 +25,7 @@
 #define STATE_FLAG_IDLE		3
 #define STATE_FLAG_CAPTURED	4
 
-void CTF_FlagTouch(Item_t* iItem,edict_t *ent,edict_t *other);
+void CTF_FlagTouch(edict_t *ent,edict_t *other);
 
 void CTF_FlagReset(edict_t *ent)
 {
@@ -111,7 +111,7 @@ void CTF_FlagThink(edict_t *ent)
 	}
 }
 
-void CTF_FlagTouch(Item_t* iItem,edict_t *ent,edict_t *other)
+void CTF_FlagTouch(edict_t *ent,edict_t *other)
 {
 	// [20/2/2012] Revised ~hogsy
 	// [23/2/2012] Revised ~hogsy

@@ -242,7 +242,6 @@ model_t *Model_Load(model_t *mModel)
 
 	switch(LittleLong(*(unsigned*)buf))
 	{
-	case KMDL_HEADER:
 	case MD2_HEADER:
 		Model_LoadMD2(mModel,buf);
 		break;
@@ -1281,7 +1280,7 @@ void Model_LoadBSP(model_t *mod,void *buffer)
 		Console_ErrorMessage(false,mod->name,va("Wrong version (%i should be %i)",version,BSP_VERSION));
 
 	loadmodel->version	= version;
-	loadmodel->mType	= MODEL_BRUSH;
+	loadmodel->mType	= MODEL_TYPE_BSP;
 
 	// swap all the lumps
 	mod_base = (byte*)bhHeader;
@@ -1729,37 +1728,48 @@ bool Model_LoadOBJ(model_t *mModel,void *Buffer)
 	char	cExtension[4];
 	OBJ_t	*oObject;
 
-	mModel->mType	= MODEL_TYPE_OBJ;
-
 	// Check if the file is a valid OBJ or not...
 	ExtractFileExtension(mModel->name,cExtension);
 	if(Q_strcmp(cExtension,".obj"))
 		return false;
 
+	mModel->mType = MODEL_TYPE_OBJ;
+
 	// Parse OBJ file...
 	for(;;)
 	{
-		char	cLine[128];
+		char cLine[128];
 
 		if(fscanf(Buffer,"%s",cLine) == EOF)
 			break;
 
-		if(!Q_strcmp(cLine,"v"))
+		if(cLine[0] == 'v')
 		{
-			fscanf(Buffer,"%f %f %f\n",
-				&oObject->ovVertex->vVertex[0],
-				&oObject->ovVertex->vVertex[1],
-				&oObject->ovVertex->vVertex[2]);
+			switch(cLine[1])
+			{
+			case 't':
+				// Ignore for now... ~hogsy
+			case 'n':
+				// Ignore for now... ~hogsy
+				break;
+			default:
+				fscanf(Buffer,"%f %f %f\n",
+					&oObject->ovVertex->vVertex[0],
+					&oObject->ovVertex->vVertex[1],
+					&oObject->ovVertex->vVertex[2]);
+			}
 		}
-		else if(!Q_strcmp(cLine,"vt"))
-		{}
-		else if(!Q_strcmp(cLine,"vn"))
-		{}
-		else if(!Q_strcmp(cLine,"f"))
-		{}
+		else if(cLine[0] == 'f')
+		{
+			// Ignore for now... ~hogsy
+		}
 	}
 
 	return false;
+}
+
+void Model_DrawOBJ(entity_t *eEntity)
+{
 }
 
 /**/

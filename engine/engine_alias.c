@@ -256,10 +256,9 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 {
-#if 1 // new
 	int					i,j,k,iVert;
 	float               fAlpha;
-	VideoObject_t		voModel[MD2_MAX_TRIANGLES];
+	VideoObject_t		voModel[MD2_MAX_VERTICES];
 	MD2TriangleVertex_t	*mtvVertices,
 						*mtvLerpVerts;
 	MD2Triangle_t		*mtTriangles;
@@ -313,88 +312,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 			iVert++;
         }
 
-	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,iVert,true);
-#else // old
-	float			fLerp;
-	int				i,*order,count;
-	MD2TriangleVertex_t	*verts1,*verts2;
-	MD2Frame_t		*frame1,*frame2;
-	vec3_t			scale1,translate1,scale2,translate2;
-	vec4_t			vVertexArray,vColour;
-
-	// [20/8/2012] Quick fix ~hogsy
-	// [24/8/2012] Moved ~hogsy
-	if(currententity->scale < 0.1f)
-		currententity->scale = 1.0f;
-
-	fLerp = 1.0f-lLerpData.blend;
-
-	//new version by muff - fixes bug, easier to read, faster (well slightly)
-	frame1 = (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_lastpose));
-	frame2 = (MD2Frame_t*)((uint8_t*)mModel+mModel->ofs_frames+(mModel->framesize*currententity->draw_pose));
-
-	Math_VectorCopy(frame1->scale,scale1);
-	Math_VectorCopy(frame1->translate,translate1);
-	Math_VectorCopy(frame2->scale,scale2);
-	Math_VectorCopy(frame2->translate,translate2);
-
-	// [24/8/2012] Probably not the best way, but it's better than my other method ~hogsy
-	Math_VectorScale(scale1,currententity->scale,scale1);
-	Math_VectorScale(scale2,currententity->scale,scale2);
-
-	verts1 = &frame1->verts[0];
-	verts2 = &frame2->verts[0];
-
-	order = (int*)((uint8_t*)mModel+mModel->ofs_glcmds);
-
-	for(;;)
-	{
-		count = *order++;
-		if(!count)
-			break;
-
-		glBegin(GL_TRIANGLE_FAN);
-
-		// [27/6/2013] Revised the following ~hogsy
-		do
-		{
-			if(r_drawflat_cheatsafe)
-			{
-				srand(count*(unsigned int)order);
-
-				for(i = 0; i < 3; i++)
-					vColour[i] = rand()%256/255.0f;
-
-				vColour[3] = 1.0f;
-
-				glColor4fv(vColour);
-			}
-
-			if(mModel->gFullbrightTexture[currententity->skinnum])
-			{
-				glMultiTexCoord2fv(VIDEO_TEXTURE0,(float*)order);
-				glMultiTexCoord2fv(VIDEO_TEXTURE1,(float*)order);
-			}
-			else
-				glTexCoord2fv((float*)order);
-
-			for(i = 0; i < 3; i++)
-			{
-				vVertexArray[i] = (verts1[order[2]].v[i]*scale1[i]+translate1[i])*fLerp+(verts2[order[2]].v[i]*scale2[i]+translate2[i])*lLerpData.blend;
-				if(bShading)
-					vColour[i] = (shadedots[verts1->lightnormalindex])/2.0f;
-			}
-
-			glVertex3fv(vVertexArray);
-			if(bShading)
-				glColor3fv(vColour);
-
-			order += 3;
-		} while(--count);
-
-		glEnd();
-	}
-#endif
+	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,iVert);
 }
 
 void Alias_SetupFrame(MD2_t *mModel,lerpdata_t *ldLerp)
@@ -509,7 +427,7 @@ void Alias_Draw(entity_t *eEntity)
 	MD2_t		*mModel;
 
 	// [17/10/2013] Oops! Added this back in :) ~hogsy
-	if(!cvShowModels.value || R_CullModelForEntity(eEntity))
+	if(!cvVideoDrawModels.value || R_CullModelForEntity(eEntity))
 		return;
 
 	// [27/6/2013] Set defaults ~hogsy

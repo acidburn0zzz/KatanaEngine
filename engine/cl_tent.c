@@ -50,7 +50,7 @@ void CL_ParseTEnt (void)
 		for(i = 0; i < 3; i++)
 			pos[i] = MSG_ReadCoord();
 
-		iParticleTexture = Client_GetEffect(DIR_PARTICLES"smoke");
+		iParticleTexture = Client_GetEffect(DIR_PARTICLES"smoke0");
 
 		for(i = 0; i < 1024; i++)
 		{
@@ -93,7 +93,7 @@ void CL_ParseTEnt (void)
 		pos[2] = MSG_ReadCoord ();
 
 		// [6/9/2012] TODO: Find a more appropriate texture, or scrap completely? ~hogsy
-		iParticleTexture = Client_GetEffect(DIR_PARTICLES"smoke");
+		iParticleTexture = Client_GetEffect(DIR_PARTICLES"smoke0");
 
 		for(i = -16; i < 16; i++)
 			for(j = -16; j < 16; j++)
@@ -127,7 +127,7 @@ void CL_ParseTEnt (void)
 		pos[2] = MSG_ReadCoord ();
 
 		// [6/9/2012] TODO: Find a more appropriate texture, or scrap completely? ~hogsy
-		iParticleTexture = 0;//R_GetEffectTexture(DIR_PARTICLES"smoke");
+		iParticleTexture = Client_GetEffect(DIR_PARTICLES"smoke0");
 
 		for(i = -16; i < 16; i += 4)
 			for(j = -16; j < 16; j += 4)

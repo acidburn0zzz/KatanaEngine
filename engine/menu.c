@@ -1,8 +1,6 @@
 #include "quakedef.h"
 
 #include "engine_video.h"
-
-#include "KatEditor.h"
 #include "engine_game.h"
 #include "engine_menu.h"
 

@@ -35,7 +35,8 @@ cvar_t	v_ipitch_cycle		= { "v_ipitch_cycle",	"1",		false	};
 cvar_t	v_iyaw_level		= { "v_iyaw_level",		"0.3",		false	};
 cvar_t	v_iroll_level		= { "v_iroll_level",	"0.1",		false	};
 cvar_t	v_ipitch_level		= { "v_ipitch_level",	"0.3",		false	};
-cvar_t	v_idlescale			= { "v_idlescale",		"0",		false	};
+cvar_t	v_idlescale			= { "v_idlescale",			"0",	false	},
+		cViewModelPosition	= {	"view_modelposition",	"1",	true,	false,	"0 = Center, 1 = Left and 2 = Right."	};
 cvar_t	gl_cshiftpercent	= {	"gl_cshiftpercent",	"100",		false	};
 
 float	v_dmg_time, v_dmg_roll, v_dmg_pitch;
@@ -439,6 +440,9 @@ float angledelta (float a)
 
 void View_ModelAngle(void)
 {
+	int		i;
+	float	fOffsetAmount;
+
 	// Don't bother if we don't have a view model to show!
 	if(!cl.viewent.model)
 		return;
@@ -447,6 +451,17 @@ void View_ModelAngle(void)
 	cl.viewent.angles[YAW]		= r_refdef.viewangles[YAW];
 	cl.viewent.angles[PITCH]	= -(r_refdef.viewangles[PITCH]-(sin(cl.time*1.5f)*0.2f));
 	cl.viewent.angles[ROLL]		= -(r_refdef.viewangles[ROLL]-(sin(cl.time*1.5f)*0.2f));
+
+	if(cViewModelPosition.iValue == 0)
+		return;	// We're already centered, so don't bother.
+	else if(cViewModelPosition.iValue == 1)
+		fOffsetAmount = -5.0f;
+	else
+		fOffsetAmount = 5.0f;
+
+	// TODO: Could this be done better? ~hogsy
+	for(i = 0; i < 3; i++)
+		cl.viewent.origin[i] += forward[i]+fOffsetAmount*right[i]+up[i];
 }
 
 void V_BoundOffsets (void)
@@ -650,10 +665,6 @@ void V_CalcRefdef (void)
 
 	Math_AngleVectors(angles,forward,right,up);
 
-	// [10/11/2013] TODO: Do this a better way, derp ~hogsy
-	for(i = 0; i < 3; i++)
-		r_refdef.vieworg[i] += forward[i]+-5.0f*right[i]+up[i];
-
 	if(cl.maxclients <= 1) //johnfitz -- moved cheat-protection here from V_RenderView
 		for(i=0; i<3; i++)
 			r_refdef.vieworg[i] += scr_ofsx.value*forward[i]+scr_ofsy.value*right[i]+scr_ofsz.value*up[i];
@@ -816,4 +827,5 @@ void V_Init (void)
 	Cvar_RegisterVariable(&cSideBobCycle,NULL);
 	Cvar_RegisterVariable(&cSideBobUp,NULL);
 	Cvar_RegisterVariable(&cViewModelLag,NULL);
+	Cvar_RegisterVariable(&cViewModelPosition,NULL);
 }

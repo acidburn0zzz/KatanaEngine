@@ -182,25 +182,6 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 
 		Entity_Remove(ent);
 		break;
-	case SERVER_STARTFRAME:
-#ifdef GAME_OPENKATANA
-		Deathmatch_Frame();
-#elif GAME_ADAMAS
-		// This is stupid... ~hogsy
-		if(!Server.iMonsters && Server.bRoundStarted)
-		{
-			if(strstr(Engine.Server_GetLevelName(),"0"))
-				Engine.Server_ChangeLevel("room1");
-			else if(strstr(Engine.Server_GetLevelName(),"1"))
-				Engine.Server_ChangeLevel("room2");
-			else
-			{
-				Engine.Server_BroadcastPrint("You Win!!\n");
-				Engine.Server_ChangeLevel("room0");
-			}
-		}
-#endif
-		break;
 	case SERVER_SETCHANGEPARMS:
 		if(ent->v.iHealth <= 0)
 			break;
@@ -224,6 +205,8 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 #include "server_physics.h"
 
 //ModuleImport_t	*Engine; (replacement for Game)
+
+void	Server_StartFrame(void);	// server_main
 
 pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 {
@@ -302,6 +285,7 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Export.Client_ParseTemporaryEntity	= Client_ParseTemporaryEntity;
 
 	Export.Server_Initialize			= Server_Initialize;
+	Export.Server_StartFrame			= Server_StartFrame;
 
 	return &Export;
 }

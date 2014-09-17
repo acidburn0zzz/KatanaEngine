@@ -318,11 +318,11 @@ void Client_ParseServerInfo(void)
 			if(!str[0])
 				break;
 
-			Client_PrecacheResource(RESOURCE_PARTICLE,str);
+			Client_PrecacheResource(RESOURCE_SPRITE,str);
 		}
 	}
 
-	// [16/1/2014] Add lights :) ~hogsy
+	// TODO: just check the level out client-side and add the lights ourselves, rather than passing from server!!! ~hogsy
 	{
 		int	i;
 

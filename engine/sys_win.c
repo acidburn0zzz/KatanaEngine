@@ -36,7 +36,7 @@
 #include "errno.h"
 #include "resource.h"
 
-#include "KatEditor.h"      // [7/10/2013] TODO: Rename to engine_editor ~hogsy
+#include "engine_editor.h"
 #include "engine_console.h"
 #include "engine_video.h"
 
@@ -221,6 +221,7 @@ void Sys_Error(char *error, ...)
 
 	Console_WriteToLog("log.txt","Error: %s",text);
 
+#if 0
 	if(bIsDedicated)
 	{
 		//sprintf(text2,"ERROR: %s\n",text);
@@ -233,6 +234,7 @@ void Sys_Error(char *error, ...)
 		}
 	}
 	else
+#endif
 	{
 		// switch to windowed so the message box is visible, unless we already
 		// tried that and failed
@@ -336,7 +338,7 @@ char *Sys_ConsoleInput (void)
 
 	for(;;)
 	{
-		if (!GetNumberOfConsoleInputEvents(hinput,(LPDWORD)&numevents))
+		if(!GetNumberOfConsoleInputEvents(hinput,(LPDWORD)&numevents))
 			Sys_Error ("Error getting # of console events");
 
 		if (numevents <= 0)

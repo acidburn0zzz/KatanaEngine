@@ -411,7 +411,7 @@ void Client_PrecacheResource(int iType,char *cResource)
 		Console_ErrorMessage(false,cResource,"Overflow!");
 		break;
 	// [26/1/2013] Precache for effect types ~hogsy
-	case RESOURCE_PARTICLE:
+	case RESOURCE_SPRITE:
 		sprintf(cPath,"textures/particles/%s",cResource);
 
 		for(i = 0; i < MAX_EFFECTS; i++)

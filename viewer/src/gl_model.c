@@ -3,7 +3,6 @@
 #include <string.h>
 #include <math.h>
 
-#include <mx/GL.H>
 #include "gl_model.h"
 
 #define NUMVERTEXNORMALS 162

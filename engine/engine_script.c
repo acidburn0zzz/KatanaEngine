@@ -6,6 +6,8 @@
 	Python scripting system that's used for both
 	game-logic additions and for the creation
 	of menu elements.
+	TODO:
+		Move the following out into its own shared module.
 */
 
 #include "engine_game.h"
@@ -280,11 +282,11 @@ void _Script_SetConsoleVariable(char *cArguments)
 
 ScriptKey_t	skScriptKeys[]=
 {
-	{	"SetBasePath",			_FileSystem_SetBasePath			},
-	{	"AddGameDirectory",		_FileSystem_AddGameDirectory	},
+	{	"basepath",		_FileSystem_SetBasePath			},
+	{	"gamedir",		_FileSystem_AddGameDirectory	},
 
 	// Materials
-	{	"$skin",	_Material_AddSkin	},
+	{	"skin",	_Material_AddSkin	},
 
 	{	0	}
 };
@@ -333,15 +335,24 @@ bool Script_Load(/*const */char *ccPath)
 		{
 			ScriptKey_t	*sKey;
 
-			for(sKey = skScriptKeys; sKey->cKey; sKey++)
-				// Remain case sensitive.
-				if(!Q_strcasecmp(sKey->cKey,cToken))
-				{
-					Script_GetToken(false);
+			// '$' declares that the following is a function.
+			if(cToken[0] == '$')
+			{
+				for(sKey = skScriptKeys; sKey->cKey; sKey++)
+					// Remain case sensitive.
+					if(!Q_strcasecmp(sKey->cKey,cToken+1))
+					{
+						Script_GetToken(false);
 
-					sKey->Function(cToken);
-					break;
-				}
+						sKey->Function(cToken);
+						break;
+					}
+			}
+			else
+			{
+				Con_Warning("Invalid function call!\n");
+				break;
+			}
 
 			Con_Warning("Invalid field! (%s) (%i)\n",ccPath,iScriptLine);
 		}

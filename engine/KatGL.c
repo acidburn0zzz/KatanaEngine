@@ -9,7 +9,7 @@
 */
 
 #include "KatAlias.h"
-#include "KatEditor.h"
+#include "engine_editor.h"
 #include "engine_console.h"
 #include "engine_client.h"
 #include "engine_video.h"	// [7/8/2013] TODO: Remove ~hogsy

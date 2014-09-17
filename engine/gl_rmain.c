@@ -19,7 +19,7 @@
 */
 #include "quakedef.h"
 
-#include "KatEditor.h"
+#include "engine_editor.h"
 #include "engine_console.h"
 #include "KatGL.h"
 #include "engine_video.h"
@@ -401,15 +401,13 @@ void R_DrawEntitiesOnList(bool bAlphaPass) //johnfitz -- added parameter
 			case MODEL_TYPE_MD2:
 				Alias_Draw(currententity);
 				break;
-#if 0
 			case MODEL_TYPE_OBJ:
 				Model_DrawOBJ(currententity);
 				break;
-#endif
-			case MODEL_BRUSH:
+			case MODEL_TYPE_BSP:
 				Brush_Draw(currententity);
 				break;
-			case MODEL_SPRITE:
+			case MODEL_TYPE_SPRITE:
                 Sprite_Draw(currententity);
                 break;
 			default:
@@ -420,7 +418,7 @@ void R_DrawEntitiesOnList(bool bAlphaPass) //johnfitz -- added parameter
 
 void R_DrawViewModel(void)
 {
-	if(!cvShowModels.value || !r_drawviewmodel.value || !r_drawentities.value || chase_active.value || bEnvironmentMap)
+	if(!cvVideoDrawModels.value || !r_drawviewmodel.value || !r_drawentities.value || chase_active.value || bEnvironmentMap)
 		return;
 	else if(cl.items & IT_INVISIBILITY || cl.stats[STAT_HEALTH] <= 0)
 		return;
@@ -551,14 +549,6 @@ void R_ShowBoundingBoxes(void)
 	Video_EnableCapabilities(VIDEO_TEXTURE_2D|VIDEO_DEPTH_TEST);
 }
 
-void R_DrawTextureChains_ShowTris(void);            // [25/11/2013] See r_world.c ~hogsy
-void R_DrawBrushModel_ShowTris(entity_t *eBrush);   // [25/11/2013] See r_brush.c ~hogsy
-void R_DrawAliasModel_ShowTris(entity_t *eModel);   // [25/11/2013] See gl_alias.c ~hogsy
-
-void R_ShowTris(void)
-{
-}
-
 void R_DrawShadows (void)
 {
 	int i;
@@ -646,7 +636,6 @@ void R_RenderScene(void)
 	Fog_DisableGFog();
 
 	R_DrawViewModel();
-	R_ShowTris();
 	R_ShowBoundingBoxes();
 	R_Mirror();
 }

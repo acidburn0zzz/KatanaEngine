@@ -143,15 +143,13 @@ hull_t *SV_HullForEntity (edict_t *ent, vec3_t mins, vec3_t maxs, vec3_t offset)
 		if(ent->v.movetype != MOVETYPE_PUSH)
 		{
 			Con_Warning("SOLID_BSP without MOVETYPE_PUSH!\n");
-
 			return NULL;
 		}
 
 		model = sv.models[(int)ent->v.modelindex];
-		if(!model || model->mType != MODEL_BRUSH)
+		if(!model || model->mType != MODEL_TYPE_BSP)
 		{
 			Con_Warning("MOVETYPE_PUSH with a non bsp model!\n");
-
 			return NULL;
 		}
 

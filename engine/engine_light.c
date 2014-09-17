@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2013 OldTimes Software
+	Copyright (C) 2011-2014 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -131,7 +131,7 @@ void Light_Draw(void)
 				voLight[c].vColour[3] = 0.5f;
 			}
 
-			Video_DrawObject(voLight,VIDEO_PRIMITIVE_TRIANGLE_FAN,17,false);
+			Video_DrawObject(voLight,VIDEO_PRIMITIVE_TRIANGLE_FAN,17);
 		}
 	}
 

@@ -14,7 +14,7 @@
 	from the final OpenKatana branch.	*/
 //#define   PARANOID				// Speed sapping error checking.
 //#define	KATANA_VIDEO_NEXT		// New renderer.
-#define KATANA_AUDIO_OPENAL			// OpenAL implementation.
+//#define KATANA_AUDIO_OPENAL			// OpenAL implementation.
 #ifndef _WIN32	// [21/1/2013] Only Linux release is currently using this... ~hogsy
 #define	KATANA_NETWORK_NEXT			// New network system.
 #endif
@@ -27,7 +27,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	750	// 11/9/2014
+#define ENGINE_VERSION_BUILD	755	// 18/9/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"
@@ -42,7 +42,6 @@
 
 #define DIR_PARTICLES	"textures/particles/"
 #define DIR_FLARES		"textures/flares/"
-#define DIR_EFFECTS		"textures/effects/"
 
 typedef unsigned char byte;
 
@@ -54,7 +53,6 @@ enum
 	SERVER_CLIENTCONNECT,
 	SERVER_CLIENTDISCONNECT,
 	SERVER_CLIENTKILL,
-	SERVER_STARTFRAME,
 	SERVER_SETCHANGEPARMS,
 	SERVER_SETNEWPARMS
 };
@@ -81,8 +79,7 @@ enum
 enum
 {
 	RESOURCE_MODEL,		// States that the precache should be used for a model.
-	RESOURCE_PARTICLE,	// States that the precache should be used for a particle.
-	RESOURCE_FLARE,		// States that the precache should be used for a flare.
+	RESOURCE_SPRITE,	// States that the precache should be used for a sprite.
 	RESOURCE_SOUND,		// States that the precache should be used for a sound.
 	RESOURCE_FONT,		// States that the precache should be used for a font.
     RESOURCE_TEXTURE	// States that the precache should be used for a texture.
@@ -151,6 +148,7 @@ enum
 #define	FL_PARTIALGROUND	1024	// Entity is partially on the ground.
 #define	FL_WATERJUMP		2048
 #define	FL_JUMPRELEASED		4096	// Entity has released jump.
+#define	FL_GLOBAL			8192	// Used for 
 
 #define	EF_BRIGHTFIELD		1
 #define	EF_MUZZLEFLASH		2

@@ -217,7 +217,7 @@ void Server_SetModel(edict_t *ent,char *m)
 
 	mod = sv.models[(int)ent->v.modelindex];
 	// [13/4/2013] Oops, made this more secure! ~hogsy
-	if(mod && mod->mType == MODEL_BRUSH)
+	if(mod && mod->mType == MODEL_TYPE_BSP)
 		Game->Server_SetSizeVector(ent,mod->clipmins,mod->clipmaxs);
 	else
 		Game->Server_SetSizeVector(ent,vec3_origin,vec3_origin);

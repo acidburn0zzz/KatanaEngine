@@ -614,18 +614,18 @@ void World_Draw(void)
 						glEnd();
 #else
 						{
-							VideoObject_t	voWorld[64];
+							VideoObject_t	voWorld[32];
 
 							v = s->polys->verts[0];
 							for(j = 0; j < s->polys->numverts; j++,v += VERTEXSIZE)
 							{
+								Math_Vector2Copy((v+3),voWorld[i].vTextureCoord[0]);
+								Math_Vector2Copy((v+5),voWorld[i].vTextureCoord[1]);
 								Math_VectorCopy(v,voWorld[i].vVertex);
-								//Math_Vector2Copy((v+3),voWorld[i].vTextureCoord[0]);
-								//Math_Vector2Copy((v+5),voWorld[i].vTextureCoord[1]);
 								Math_Vector4Set(1.0f,voWorld[i].vColour);
 							}
 
-							Video_DrawObject(voWorld,VIDEO_PRIMITIVE_TRIANGLE_FAN,s->polys->numverts,true);
+							Video_DrawObject(voWorld,VIDEO_PRIMITIVE_TRIANGLE_FAN,s->polys->numverts);
 						}
 #endif
 

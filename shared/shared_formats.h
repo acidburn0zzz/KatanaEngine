@@ -8,8 +8,8 @@ typedef enum
 	MODEL_TYPE_MD2,
 	MODEL_TYPE_KMDL,
 	MODEL_TYPE_OBJ,
-	MODEL_SPRITE,
-	MODEL_BRUSH,
+	MODEL_TYPE_SPRITE,
+	MODEL_TYPE_BSP,
 
 	MODEL_NONE
 } ModelType_t;
@@ -19,8 +19,7 @@ typedef enum
 	Extension of the already existing MD2 format.
 */
 
-#define	KMDL_HEADER		(('L'<<24)+('D'<<16)+('M'<<8)+'K')
-#define	KMDL_EXTENSION	".kmdl"
+#define	KMDL_VERSION	9
 
 typedef struct
 {

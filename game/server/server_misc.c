@@ -2,8 +2,6 @@
 */
 #include "server_misc.h"
 
-#define MISC_LIGHT_OFF	1
-
 void UseTargets(edict_t *ent, edict_t *other);
 
 #if 0
@@ -165,40 +163,4 @@ bool DropToFloor(edict_t *ent)
 	ent->v.groundentity = trace.ent;
 
 	return true;
-}
-
-void LightUse(edict_t *eLight)
-{
-	if(eLight->v.spawnflags & MISC_LIGHT_OFF)
-	{
-		if(!eLight->v.message)
-			Engine.LightStyle(eLight->local.style,"m");
-		else
-			Engine.LightStyle(eLight->local.style,eLight->v.message);
-
-		eLight->v.spawnflags -= MISC_LIGHT_OFF;
-	}
-	else
-	{
-		Engine.LightStyle(eLight->local.style,"a");
-
-		eLight->v.spawnflags += MISC_LIGHT_OFF;
-	}
-
-	if(eLight->v.noise)
-		Sound(eLight,CHAN_VOICE,eLight->v.noise,255,ATTN_NORM);
-}
-
-void light(edict_t *eLight)
-{
-	if(eLight->v.noise)
-		Engine.Server_PrecacheResource(RESOURCE_SOUND,eLight->v.noise);
-
-	if(eLight->v.message)
-		Engine.LightStyle(eLight->local.style,eLight->v.message);
-
-	eLight->v.use = LightUse;
-
-	if(eLight->v.spawnflags & MISC_LIGHT_OFF)
-		Engine.LightStyle(eLight->local.style,"a");
 }

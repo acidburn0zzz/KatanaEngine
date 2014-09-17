@@ -238,7 +238,7 @@ void Warp_DrawWaterPoly(glpoly_t *p)
 		Math_VectorCopy(vWave,voWaterPoly[i].vVertex);
 	}
 
-	Video_DrawObject(voWaterPoly,VIDEO_PRIMITIVE_TRIANGLE_FAN,p->numverts,true);
+	Video_DrawObject(voWaterPoly,VIDEO_PRIMITIVE_TRIANGLE_FAN,p->numverts);
 
 	free(voWaterPoly);
 }

@@ -275,8 +275,10 @@ void Con_Print (char *txt)
 		mask = 0;
 
 
-	while ( (c = *txt) )
+	while ( *txt )
 	{
+		c = *txt;
+
 		// Count word length
 		for (l=0 ; l< con_linewidth ; l++)
 			if ( txt[l] <= ' ')

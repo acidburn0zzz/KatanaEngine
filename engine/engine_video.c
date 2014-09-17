@@ -33,14 +33,19 @@ SDL_GLContext	sMainContext;
 #define VIDEO_MAX_SAMPLES	16
 #define VIDEO_MIN_SAMPLES	0
 
-cvar_t	cvShowModels			= {	"video_showmodels",			"1",			false,  false,  "Toggles models."                                   },
-		cvMultisampleSamples	= {	"video_multisamplesamples",	"0",			true,   false,  "Changes the number of samples."	                },
+static unsigned int	iSavedCapabilites[VIDEO_MAX_UNITS+1][2];
+
+#define VIDEO_STATE_ENABLE   0
+#define VIDEO_STATE_DISABLE  1
+
+cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",			true,   false,  "Changes the number of samples."	                },
 		cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",			true,   false,  "Changes the number of buffers."                    },
 		cvFullscreen			= {	"video_fullscreen",			"0",			true,   false,  "1: Fullscreen, 0: Windowed"	                    },
 		cvWidth					= {	"video_width",				"640",			true,   false,  "Sets the width of the window."	                    },
 		cvHeight				= {	"video_height",				"480",			true,   false,  "Sets the height of the window."	                },
 		cvVerticalSync			= {	"video_verticalsync",		"0",			true	                                                            },
 		cvVideoDraw				= {	"video_draw",				"1",			false,	false,	"If disabled, nothing is drawn."					},
+		cvVideoDrawModels		= {	"video_drawmodels",			"1",			false,  false,  "Toggles models."                                   },
 		cvVideoDrawDepth		= {	"video_drawdepth",			"0",			false,	false,	"If enabled, previews the debth buffer."			},
 		cvVideoDebugLog			= {	"video_debuglog",			"log_video",	true,	false,	"The name of the output log for video debugging."	};
 
@@ -49,11 +54,14 @@ gltexture_t	*gDepthTexture;
 bool	bVideoIgnoreCapabilities	= false,
 		bVideoDebug					= false;
 
+vec2_t	**vVideoTextureArray;
 vec3_t	*vVideoVertexArray;
+vec4_t	*vVideoColourArray;
 
-unsigned	int	uiVideoArraySize = 4096;
+unsigned int	uiVideoArraySize = 32768;
 
 void Video_DebugCommand(void);
+void Video_AllocateArrays(int iSize);
 
 /*	Initialize the renderer
 */
@@ -71,11 +79,11 @@ void Video_Initialize(void)
 	Video.bActive				=			// Window is intially assumed active.
 	Video.bUnlocked				= true;		// Video mode is initially locked.
 
-	vVideoVertexArray = (vec3_t*)calloc(uiVideoArraySize,sizeof(vec3_t));	//Hunk_AllocName(uiVideoArraySize*sizeof(vec3_t),"vertexarray");;
-
+	Video_AllocateArrays(uiVideoArraySize);
+	
 	Cvar_RegisterVariable(&cvMultisampleSamples,NULL);
 	Cvar_RegisterVariable(&cvMultisampleBuffers,NULL);
-	Cvar_RegisterVariable(&cvShowModels,NULL);
+	Cvar_RegisterVariable(&cvVideoDrawModels,NULL);
 	Cvar_RegisterVariable(&cvFullscreen,NULL);
 	Cvar_RegisterVariable(&cvWidth,NULL);
 	Cvar_RegisterVariable(&cvHeight,NULL);
@@ -166,7 +174,7 @@ void Video_DrawDepthBuffer(void)
 	if(!gDepthTexture)
 		gDepthTexture = TexMgr_NewTexture();
 
-	GL_SetCanvas(CANVAS_TOPRIGHT);
+	GL_SetCanvas(CANVAS_BOTTOMLEFT);
 
 	Video_SetTexture(gDepthTexture);
 
@@ -585,6 +593,23 @@ void Video_EnableMultitexture(void)
     Drawing
 */
 
+/*	Reallocates video arrays.
+*/
+void Video_AllocateArrays(int iSize)
+{
+	int i;
+
+	vVideoTextureArray	= (vec2_t**)malloc(iSize*sizeof(vec2_t));
+	for(i = 0; i < iSize; i++)
+		vVideoTextureArray[i] = (vec2_t*)malloc((VIDEO_MAX_UNITS+1)*sizeof(vec2_t));
+
+	vVideoVertexArray	= (vec3_t*)malloc(iSize*sizeof(vec3_t));	//Hunk_AllocName(uiVideoArraySize*sizeof(vec3_t),"vertexarray");
+	vVideoColourArray	= (vec4_t*)malloc(iSize*sizeof(vec4_t));	//Hunk_AllocName(uiVideoArraySize*sizeof(vec4_t),"colourarray");
+
+	// Keep this up to date.
+	uiVideoArraySize = iSize;
+}
+
 /*	Draw terrain.
 	Unfinished
 */
@@ -598,24 +623,23 @@ void Video_DrawTerrain(VideoObject_t *voTerrain)
 */
 void Video_DrawFill(VideoObject_t *voFill)
 {
-	Video_DrawObject(voFill,VIDEO_PRIMITIVE_TRIANGLE_FAN,4,false);
+	Video_DrawObject(voFill,VIDEO_PRIMITIVE_TRIANGLE_FAN,4);
 }
+
+#define	MAX_VERTICES_COUNT	4096
 
 /*	Draw 3D object.
 */
-void Video_DrawObject(
-	VideoObject_t		    *voObject,
-	VideoPrimitive_t        vpPrimitiveType,
-	unsigned            int	uiVerts,
-	bool				    bMultiTexture)
+void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,unsigned int	uiVerts)
 {
-    GLenum	gPrimitive;
+	unsigned int	i,j;
+    GLenum			gPrimitive;
 
 	if(!cvVideoDraw.bValue)
 		return;
 
 	if(bVideoDebug)
-		Console_WriteToLog(cvVideoDebugLog.string,"Video: Drawing object (%i) (%i)\n",uiVerts,bMultiTexture);
+		Console_WriteToLog(cvVideoDebugLog.string,"Video: Drawing object (%i) (%i)\n",uiVerts,vpPrimitiveType);
 
 	if(!voObject)
         Sys_Error("Invalid video object!\n");
@@ -651,64 +675,80 @@ void Video_DrawObject(
         return;
     }
 
-#define	MAX_TRIANGLE_COUNT	4096
-
+	// Vertices count is too high for this object, bump up array sizes to manage it.
+	if(uiVerts > uiVideoArraySize)
 	{
-		unsigned	int		i;
-		vec2_t				vTextureArray[2][MAX_TRIANGLE_COUNT];
-		vec4_t				vColourArray[MAX_TRIANGLE_COUNT];
-		
-		// Triangles count is too high for this object, bump up array size to manage it.
-		if(uiVerts > uiVideoArraySize)
-			realloc(vVideoVertexArray,(uiVerts*2)*sizeof(vVideoVertexArray));
+		free(vVideoVertexArray);
+		free(vVideoColourArray);
+		free(vVideoTextureArray);
 
-		for(i = 0; i < uiVerts; i++)
+		// Double the array size to cope.
+		Video_AllocateArrays(uiVerts*2);
+	}
+
+	for(i = 0; i < uiVerts; i++)
+	{
+		if(!r_showtris.value)
 		{
-			if(!r_showtris.value)
-			{
-				Math_Vector4Copy(voObject[i].vColour,vColourArray[i]);
-				Math_VectorCopy(voObject[i].vTextureCoord[0],vTextureArray[0][i]);
-				Math_VectorCopy(voObject[i].vTextureCoord[1],vTextureArray[1][i]);
-			}			
-			else
-				Math_Vector4Set(1.0f,vColourArray[i]);
+			Math_Vector4Copy(voObject[i].vColour,vVideoColourArray[i]);
 
-			Math_VectorCopy(voObject[i].vVertex,vVideoVertexArray[i]);
-		}
+			// Copy over coords for each TMU.
+			for(j = 0; j < VIDEO_MAX_UNITS; j++)
+				//if(iSavedCapabilites[j][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
+					Math_VectorCopy(voObject[i].vTextureCoord[j],vVideoTextureArray[j][i]);
+		}		
+		else
+			Math_Vector4Set(1.0f,vVideoColourArray[i]);
 
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_COLOR_ARRAY);
+		Math_VectorCopy(voObject[i].vVertex,vVideoVertexArray[i]);
+	}
 
-		glVertexPointer(3,GL_FLOAT,0,vVideoVertexArray);
-		glColorPointer(4,GL_FLOAT,0,vColourArray);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3,GL_FLOAT,0,vVideoVertexArray);
 
-		if(!r_showtris.bValue)
+	glEnableClientState(GL_COLOR_ARRAY);
+	glColorPointer(4,GL_FLOAT,0,vVideoColourArray);
+
+	if(!r_showtris.bValue)
+	{
+		//for(i = 0; i > VIDEO_MAX_UNITS; i++)
 		{
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glTexCoordPointer(2,GL_FLOAT,0,vTextureArray[0]);
-
-			if(bMultiTexture)
+			//if(iSavedCapabilites[i][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
 			{
-				glClientActiveTexture(GL_TEXTURE1);
+				glClientActiveTexture(VIDEO_TEXTURE0);
 				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-				glTexCoordPointer(2,GL_FLOAT,0,vTextureArray[1]);
-				glClientActiveTexture(GL_TEXTURE0);
+				glTexCoordPointer(2,GL_FLOAT,0,vVideoTextureArray[0]);
+
+				glClientActiveTexture(VIDEO_TEXTURE1);
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+				glTexCoordPointer(2,GL_FLOAT,0,vVideoTextureArray[1]);
 			}
 		}
 	}
 
 	glDrawArrays(gPrimitive,0,uiVerts);
 
-	glClientActiveTexture(GL_TEXTURE1);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glClientActiveTexture(GL_TEXTURE0);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
 
 	if(r_showtris.bValue)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
 		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
+	}
+	else
+	{
+		for(i = 0; i > VIDEO_MAX_UNITS; i++)
+		{
+			//if(iSavedCapabilites[i][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
+			{
+				glClientActiveTexture(VIDEO_TEXTURE0+i);
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			}
+		}
+
+		glClientActiveTexture(VIDEO_TEXTURE0);
 	}
 
 	bVideoIgnoreCapabilities = false;
@@ -740,11 +780,6 @@ VideoCapabilities_t	vcCapabilityList[]=
 
 	{   0   }
 };
-
-static unsigned int	iSavedCapabilites[VIDEO_MAX_UNITS+1][2];
-
-#define VIDEO_STATE_ENABLE   0
-#define VIDEO_STATE_DISABLE  1
 
 /*	Set rendering capabilities for current draw.
 	Cleared using Video_DisableCapabilities.

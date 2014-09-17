@@ -106,7 +106,7 @@ void DrawGLPoly(glpoly_t *p)
 		Math_VectorCopy(v,voObject[i].vVertex);
 	}
 
-	Video_DrawObject(voObject,VIDEO_PRIMITIVE_TRIANGLE_FAN,p->numverts,false);
+	Video_DrawObject(voObject,VIDEO_PRIMITIVE_TRIANGLE_FAN,p->numverts);
 }
 
 /*
@@ -213,16 +213,15 @@ void R_DrawSequentialPoly(msurface_t *s)
 			fVert = s->polys->verts[0];
 			for(i = 0; i < s->polys->numverts; i++,fVert += VERTEXSIZE)
 			{
-				Math_VectorSet(1.0f,voBrush[i].vColour);
-
 				Math_VectorCopy(fVert,voBrush[i].vVertex);
 				Math_Vector2Copy((fVert+3),voBrush[i].vTextureCoord[0]);
 				Math_Vector2Copy((fVert+5),voBrush[i].vTextureCoord[1]);
 
+				Math_VectorSet(1.0f,voBrush[i].vColour);
 				voBrush[i].vColour[3] = fAlpha;
 			}
 
-			Video_DrawObject(voBrush,VIDEO_PRIMITIVE_TRIANGLE_FAN,s->polys->numverts,true);
+			Video_DrawObject(voBrush,VIDEO_PRIMITIVE_TRIANGLE_FAN,s->polys->numverts);
 		}
 
         glTexEnvf(GL_TEXTURE_ENV,GL_RGB_SCALE,1.0f);

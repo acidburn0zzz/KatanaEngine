@@ -5,11 +5,11 @@
 
 #include <SDL.h>
 
-extern cvar_t	cvShowModels,	// Should we draw models?
-				cvWidth,		// The width of our window (not reliable).
-				cvHeight,		// The height of our window (not reliable).
-				cvFullscreen,	// Should we be fullscreen?
-				cvLitParticles;	// Should particles be lit or not?
+extern cvar_t	cvVideoDrawModels,	// Should we draw models?
+				cvWidth,			// The width of our window (not reliable).
+				cvHeight,			// The height of our window (not reliable).
+				cvFullscreen,		// Should we be fullscreen?
+				cvLitParticles;		// Should particles be lit or not?
 
 #define	VIDEO_MAX_UNITS	4
 
@@ -19,11 +19,11 @@ typedef struct
 					fBitsPerPixel;
 
     // Texture Management
-	unsigned	int	iCurrentTexture,            // Current/last binded texture.
+	unsigned	int	iCurrentTexture,					// Current/last binded texture.
                     uiActiveUnit,
-                    uiSecondaryUnit;            // Current/last secondary texture.
+                    uiSecondaryUnit;					// Current/last secondary texture.
 
-	int				iSamples,			        // Current number of samples set for AA.
+	int				iSamples,	// Current number of samples set for AA.
 					iBuffers;
 
 	unsigned	int	iWidth,
@@ -45,11 +45,11 @@ typedef struct
 typedef struct
 {
 	vec3_t	vVertex;
-	vec2_t	vTextureCoord[VIDEO_MAX_UNITS];	// Texture coordinates by texture unit.
+	vec2_t	vTextureCoord[VIDEO_MAX_UNITS+1];	// Texture coordinates by texture unit.
 
-	vec4_t	vColour;						// RGBA
+	vec4_t	vColour;							// RGBA
 
-	vec3_t	vNormal;						// Vertex normals.
+	vec3_t	vNormal;							// Vertex normals.
 } VideoObject_t;
 
 Video_t	Video;
@@ -67,8 +67,10 @@ extern SDL_Window	*sMainWindow;
 #define	VIDEO_STENCIL_TEST	128	// Stencil-testing
 #define	VIDEO_NORMALIZE		256	// Normalization for scaled models that are lit.
 
-#define VIDEO_TEXTURE0 0x84C0	// TMU0
-#define VIDEO_TEXTURE1 0x84C1	// TMU1
+#define VIDEO_TEXTURE0	0x84C0	// TMU0
+#define VIDEO_TEXTURE1	0x84C1	// TMU1
+#define	VIDEO_TEXTURE2	0x84C2	// TMU2
+#define	VIDEO_TEXTURE3	0x84C3	// TMU3
 
 // Primitive Types
 typedef enum
@@ -121,7 +123,7 @@ void Video_DisableCapabilities(unsigned int iCapabilities);
 void Video_ResetCapabilities(bool bClearActive);
 void Video_Process(void);
 void Video_DrawFill(VideoObject_t *voFill);
-void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,unsigned int uiVerts,bool bMultiTexture);
+void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,unsigned int uiVerts);
 void Video_Shutdown(void);
 
 bool Video_CreateWindow(void);

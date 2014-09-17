@@ -21,7 +21,7 @@
 
 #include "engine_video.h"
 #include "engine_menu.h"
-#include "KatEditor.h"
+#include "engine_editor.h"
 
 /*
 

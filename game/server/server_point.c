@@ -198,7 +198,7 @@ void Point_ParticleSpawn(edict_t *ent)
 		ent->Model.fScale = 7.0f;
 
 	// [21/3/2012] Updated ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,ent->v.model);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,ent->v.model);
 
 	Entity_SetOrigin(ent,ent->v.origin);
 
@@ -229,11 +229,53 @@ void Point_ParticleSpawn(edict_t *ent)
 
 void Point_FlareSpawn(edict_t *eFlare)
 {
-	Engine.Server_PrecacheResource(RESOURCE_FLARE,eFlare->v.model);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,eFlare->v.model);
 
 	Entity_SetOrigin(eFlare,eFlare->v.origin);
 
 //	Flare(ent->v.origin,ent->local.red,ent->local.green,ent->local.blue,ent->alpha,ent->local.scale,ent->v.model);
+}
+
+/*
+	Light
+*/
+
+#define LIGHT_OFF	1
+
+void Point_LightUse(edict_t *eLight)
+{
+	if(eLight->v.spawnflags & LIGHT_OFF)
+	{
+		if(!eLight->v.message)
+			Engine.LightStyle(eLight->local.style,"m");
+		else
+			Engine.LightStyle(eLight->local.style,eLight->v.message);
+
+		eLight->v.spawnflags -= LIGHT_OFF;
+	}
+	else
+	{
+		Engine.LightStyle(eLight->local.style,"a");
+
+		eLight->v.spawnflags += LIGHT_OFF;
+	}
+
+	if(eLight->v.noise)
+		Sound(eLight,CHAN_VOICE,eLight->v.noise,255,ATTN_NORM);
+}
+
+void Point_LightSpawn(edict_t *eLight)
+{
+	if(eLight->v.noise)
+		Engine.Server_PrecacheResource(RESOURCE_SOUND,eLight->v.noise);
+
+	if(eLight->v.message)
+		Engine.LightStyle(eLight->local.style,eLight->v.message);
+
+	eLight->v.use = Point_LightUse;
+
+	if(eLight->v.spawnflags & LIGHT_OFF)
+		Engine.LightStyle(eLight->local.style,"a");
 }
 
 /*

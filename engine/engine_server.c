@@ -71,6 +71,7 @@ EntityField_t	EntityFields[] =
 	// hacks
 	{	"angle",	FIELD(v.angles),	EV_VECTOR,	FL_ANGLEHACK	},
 
+	// Global fields to ignore... Ugh ~hogsy
     {	"wad",			0,	EV_NONE		},
 	{	"ambient",		0,	EV_NONE		},
 	{	"sky",			0,	EV_NONE		},
@@ -105,7 +106,7 @@ void Server_ParseEntityField(char *cKey,char *cValue,edict_t *eEntity)
 					{
 					case FL_ANGLEHACK:
 						((float*)((byte*)eEntity+eField->iOffset))[0] = 0;
-						((float*)((byte*)eEntity+eField->iOffset))[1] = (float)atof(cValue);
+						((float*)((byte*)eEntity+eField->iOffset))[1] = strtof(cValue,NULL);
 						((float*)((byte*)eEntity+eField->iOffset))[2] = 0;
 						break;
 					default:
@@ -123,7 +124,7 @@ void Server_ParseEntityField(char *cKey,char *cValue,edict_t *eEntity)
 					((float*)((byte*)eEntity+eField->iOffset))[3] = vVector[3];
 					break;
 				case EV_FLOAT:
-					*(float*)((byte*)eEntity+eField->iOffset) = (float)atof(cValue);
+					*(float*)((byte*)eEntity+eField->iOffset) = strtof(cValue,NULL);
 					break;
 				case EV_DOUBLE:
 					*(double*)((byte*)eEntity+eField->iOffset) = strtod(cValue,NULL);
@@ -144,6 +145,72 @@ void Server_ParseEntityField(char *cKey,char *cValue,edict_t *eEntity)
 					Con_Warning("Unknown entity field type! (%i)\n",(int)eField->eDataType);
 			}
 			return;
+		}
+	}
+
+	Con_Warning("Invalid field! (%s)\n",cKey);
+}
+
+void Server_ParseGlobalField(char *cKey,char *cValue)
+{
+	EntityField_t	*eField;
+	vec4_t			vVector;
+
+	for(eField = GlobalFields; eField->cFieldName; eField++)
+	{
+		if(!Q_strcasecmp((char*)eField->cFieldName,cKey))
+		{
+#if 0	// todo
+			switch(eField->eDataType)
+			{
+				case EV_STRING:
+					*(char**)((byte*)eEntity+eField->iOffset) = ED_NewString(cValue);
+					break;
+				case EV_VECTOR:
+					switch(eField->iFlags)
+					{
+					case FL_ANGLEHACK:
+						((float*)((byte*)eEntity+eField->iOffset))[0] = 0;
+						((float*)((byte*)eEntity+eField->iOffset))[1] = strtof(cValue,NULL);
+						((float*)((byte*)eEntity+eField->iOffset))[2] = 0;
+						break;
+					default:
+						sscanf(cValue,"%f %f %f",&vVector[0],&vVector[1],&vVector[2]);
+						((float*)((byte*)eEntity+eField->iOffset))[0] = vVector[0];
+						((float*)((byte*)eEntity+eField->iOffset))[1] = vVector[1];
+						((float*)((byte*)eEntity+eField->iOffset))[2] = vVector[2];
+					}
+					break;
+				case EV_VECTOR4:
+					sscanf(cValue,"%f %f %f %f",&vVector[0],&vVector[1],&vVector[2],&vVector[3]);
+					((float*)((byte*)eEntity+eField->iOffset))[0] = vVector[0];
+					((float*)((byte*)eEntity+eField->iOffset))[1] = vVector[1];
+					((float*)((byte*)eEntity+eField->iOffset))[2] = vVector[2];
+					((float*)((byte*)eEntity+eField->iOffset))[3] = vVector[3];
+					break;
+				case EV_FLOAT:
+					*(float*)((byte*)eEntity+eField->iOffset) = strtof(cValue,NULL);
+					break;
+				case EV_DOUBLE:
+					*(double*)((byte*)eEntity+eField->iOffset) = strtod(cValue,NULL);
+					break;
+				case EV_BOOLEAN:
+					if(!Q_strcasecmp(cValue,"true"))
+						cValue = "1";
+					else if(!Q_strcasecmp(cValue,"false"))
+						cValue = "0";
+					// [2/1/2013] Booleans are handled in the same way as integers, so don't break here! ~hogsy
+				case EV_INTEGER:
+					*(int*)((byte*)eEntity+eField->iOffset) = atoi(cValue);
+					break;
+				// [22/11/2012] Just ignore anything that has skip set! ~hogsy
+				case EV_NONE:
+					break;
+				default:
+					Con_Warning("Unknown entity field type! (%i)\n",(int)eField->eDataType);
+			}
+			return;
+#endif
 		}
 	}
 
@@ -210,8 +277,7 @@ void Server_PrecacheResource(int iType,const char *ccResource)
 
 		Console_ErrorMessage(false,ccResource,"Overflow!");
 		break;
-	case RESOURCE_PARTICLE:
-	case RESOURCE_FLARE:
+	case RESOURCE_SPRITE:
 		sprintf(name,"%s%s",DIR_PARTICLES,ccResource);
 		for(i = 0; i < MAX_PARTICLES; i++)
 			if(!sv.cParticlePrecache[i])

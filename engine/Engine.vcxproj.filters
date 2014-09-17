@@ -350,9 +350,6 @@
     <ClInclude Include="KatAlias.h">
       <Filter>Old</Filter>
     </ClInclude>
-    <ClInclude Include="KatEditor.h">
-      <Filter>Old</Filter>
-    </ClInclude>
     <ClInclude Include="client.h">
       <Filter>Client</Filter>
     </ClInclude>

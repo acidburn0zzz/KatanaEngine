@@ -721,7 +721,6 @@
     <ClInclude Include="gl_texmgr.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="KatAlias.h" />
-    <ClInclude Include="KatEditor.h" />
     <ClInclude Include="KatGL.h" />
     <ClInclude Include="keys.h" />
     <ClInclude Include="menu.h" />

@@ -1136,7 +1136,8 @@ void Physics_ServerFrame(void)
 	pr_global_struct.self	= EDICT_TO_PROG(sv.edicts);
 	pr_global_struct.eOther	= sv.edicts;
 
-	Game->Game_Init(SERVER_STARTFRAME,sv.edicts,sv.time);
+	// TODO: should we pass the time to this? ~hogsy
+	Game->Server_StartFrame();
 
 	// Treat each object in turn
 	eEntity = sv.edicts;

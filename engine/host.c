@@ -22,7 +22,7 @@
 #include "engine_console.h"
 #include "engine_game.h"
 #include "engine_menu.h"
-#include "KatEditor.h"
+#include "engine_editor.h"
 #include "engine_input.h"
 #include "engine_video.h"
 #include "engine_physics.h"

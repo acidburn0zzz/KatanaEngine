@@ -19,7 +19,7 @@ void Audio_Initialize(void)
 	if(bAudioInitialized)
 		return;
 
-	Cmd_AddCommand("play",Audio_PlayCommand);
+	Cmd_AddCommand("audio_play",Audio_PlayCommand);
 
 	if(SDL_AudioInit(NULL) < 0)
 		Sys_Error("Failed to initialize audio!\n%s\n",SDL_GetError());
@@ -57,7 +57,7 @@ AudioSound_t *Audio_LoadSound(sfx_t *sSoundEffect)
 	AudioSound_t	*asNewSound;
 	byte			*bData,
 					bStackBuffer[1*1024];
-	sfxcache_t		*sSoundCache;
+//	sfxcache_t		*sSoundCache;
 	char			cNameBuffer[256];
 	
 //	sSoundCache = (sfxcache_t*)Cache_Check(&sSoundEffect->cache);

@@ -1,6 +1,6 @@
 /*	Copyright (C) 2011-2014 OldTimes Software
 */
-#include "KatEditor.h"
+#include "engine_editor.h"
 
 /*
 	The Katana Editor is perhaps the biggest addition to
@@ -16,10 +16,6 @@
 	to edit the map	from a single window with a realtime preview
 	of the map in view...
 */
-#include "quakedef.h"
-
-// Main header
-#include "engine_editor.h"
 
 #include "engine_video.h"
 #include "engine_input.h"
