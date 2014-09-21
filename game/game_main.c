@@ -12,7 +12,7 @@
 
 #include "client_main.h"
 
-ModuleExport_t	Export;	// Game exports.
+ModuleExport_t	Export;				// Game exports.
 ModuleImport_t	Engine;	// Engine imports.
 
 int	iOldGameMode;
@@ -28,17 +28,6 @@ char *va(char *format,...)
 	va_end (argptr);
 
 	return string;
-}
-
-edict_t *Spawn(void)
-{
-	edict_t *eSpawn = Engine.Spawn();
-
-	// [30/5/2013] Set physics properties to their defaults! ~hogsy
-	eSpawn->Physics.fMass		= 1.0f;
-	eSpawn->Physics.fGravity	= 600.0f;
-
-	return eSpawn;
 }
 
 void SetAngle(edict_t *ent,vec3_t vAngle)
@@ -142,12 +131,12 @@ void Sound(edict_t *ent,int channel,char *sound,int volume,float attenuation)
 
 void Flare(vec3_t org,float r,float g,float b,float a,float scale,char *texture)
 {
-	Engine.Flare(org,r,g,b,a,scale,texture);
+	// OBSOLETE
 }
 
 void DrawPic(char *texture,float alpha,int x,int y,int w,int h)
 {
-	Engine.DrawPic(texture,alpha,x,y,w,h);
+	// OBSOLETE
 }
 
 void WriteByte(int mode,int c)
@@ -202,10 +191,6 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 	return true;
 }
 
-#include "server_physics.h"
-
-//ModuleImport_t	*Engine; (replacement for Game)
-
 void	Server_StartFrame(void);	// server_main
 
 pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
@@ -219,7 +204,6 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Engine.Sound					= Import->Sound;
 	Engine.LinkEntity				= Import->LinkEntity;
 	Engine.FreeEntity				= Import->FreeEntity;
-	Engine.DrawPic					= Import->DrawPic;
 	Engine.Spawn					= Import->Spawn;
 	Engine.Cvar_RegisterVariable	= Import->Cvar_RegisterVariable;
 	Engine.Cvar_SetValue			= Import->Cvar_SetValue;
@@ -245,6 +229,8 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Engine.Client_AllocateDlight	= Import->Client_AllocateDlight;
 	Engine.Client_AllocateParticle	= Import->Client_AllocateParticle;
 	Engine.Client_PrecacheResource	= Import->Client_PrecacheResource;
+	Engine.Client_GetPlayerEntity	= Import->Client_GetPlayerEntity;
+	Engine.Client_GetViewEntity		= Import->Client_GetViewEntity;
 
 	Engine.Server_PointContents		= Import->Server_PointContents;
 	Engine.Server_MakeStatic		= Import->Server_MakeStatic;
@@ -283,6 +269,7 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Export.Client_RelinkEntities		= Client_RelinkEntities;
 	Export.Client_Initialize			= Client_Initialize;
 	Export.Client_ParseTemporaryEntity	= Client_ParseTemporaryEntity;
+	Export.Client_ViewFrame				= Client_ViewFrame;
 
 	Export.Server_Initialize			= Server_Initialize;
 	Export.Server_StartFrame			= Server_StartFrame;

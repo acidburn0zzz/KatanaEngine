@@ -58,7 +58,7 @@ void projectile_iceball(edict_t *ent, vec3_t orig)
 {
 	// [26/2/2012] Revised and fixed ~hogsy
 	float   *dir;
-	edict_t *ionball = Spawn();
+	edict_t *ionball = Entity_Spawn();
 
 	ionball->v.cClassname	= "iceball";
 	ionball->v.movetype		= MOVETYPE_FLYBOUNCE;

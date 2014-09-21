@@ -10,6 +10,12 @@
 */
 edict_t *Entity_Spawn(void)
 {
+#if 0
+	// [30/5/2013] Set physics properties to their defaults! ~hogsy
+	eSpawn->Physics.fMass		= 1.0f;
+	eSpawn->Physics.fGravity	= 600.0f;
+#endif
+
 	return Engine.Spawn();
 }
 

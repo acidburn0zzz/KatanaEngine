@@ -7,7 +7,7 @@ void UseTargets(edict_t *ent, edict_t *other);
 #if 0
 edict_t *SpawnField(edict_t *ent,vec3_t fmins,vec3_t fmaxs)
 {
-	edict_t	*trigger = Spawn();
+	edict_t	*trigger = Entity_Spawn();
 
 	trigger->v.movetype		= MOVETYPE_NONE;
 	trigger->Physics.iSolid	= SOLID_TRIGGER;
@@ -38,7 +38,7 @@ void UseTargets(edict_t *ent, edict_t *other)
 
 	if(ent->local.delay)
 	{
-		t = Spawn();
+		t = Entity_Spawn();
 		if(t)
 		{
 			t->v.cClassname	= "DelayedUse";
@@ -97,7 +97,7 @@ void Misc_GibThink(edict_t *ent)
 
 void ThrowGib(vec3_t origin,vec3_t velocity,char *model,float damage,bool bleed)
 {
-	edict_t *gib = Spawn();
+	edict_t *gib = Entity_Spawn();
 
 	gib->v.cClassname	= "gib";
 

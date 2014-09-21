@@ -171,7 +171,7 @@ void IonBlaster_PrimaryAttack(edict_t *ent)
 	ent->local.ionblaster_ammo--;
 	ent->v.iPrimaryAmmo = ent->local.ionblaster_ammo;
 
-	eIonBall = Spawn();
+	eIonBall = Entity_Spawn();
 	if(eIonBall)
 	{
 		eIonBall->v.cClassname	= "ionball";

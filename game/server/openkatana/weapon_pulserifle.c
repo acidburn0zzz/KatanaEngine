@@ -97,11 +97,12 @@ void CorditeTouch(edict_t *ent, edict_t *other)
 void throw_cordite(edict_t *ent)
 {
 	float	*dir;
-	edict_t *greekfire = Spawn();
+	edict_t *greekfire = Entity_Spawn();
 
 	greekfire->v.cClassname	= "cordite";
 	greekfire->v.movetype	= MOVETYPE_BOUNCE;
-	greekfire->Physics.iSolid		= SOLID_BBOX;
+
+	greekfire->Physics.iSolid	= SOLID_BBOX;
 
 	greekfire->local.eOwner = ent;
 

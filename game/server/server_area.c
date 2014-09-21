@@ -119,8 +119,9 @@ void Area_BreakableBounce(edict_t *eGib,edict_t *eOther)
 void Area_CreateGib(edict_t *eArea,const char *cModel)
 {
 	int		j;
-	edict_t	*eGib = Spawn();
-
+	edict_t	*eGib; 
+	
+	eGib = Entity_Spawn();
 	if(eGib)
 	{
 		eGib->v.cClassname		= "area_gib";
@@ -148,25 +149,25 @@ void Area_CreateGib(edict_t *eArea,const char *cModel)
 void Area_BreakableDie(edict_t *eArea,edict_t *eOther)
 {
 	int		i;
-	char	cSound[24],cModel[64];
+	char	cSound[24],cModel[PLATFORM_MAX_PATH];
 
 	switch(eArea->local.style)
 	{
 	case BREAKABLE_GLASS:
 		PHYSICS_SOUND_GLASS(cSound);
-		sprintf(cModel,"models/gibs/glass_gibs%i.md2",rand()%3+1);
+		PHYSICS_MODEL_GLASS(cModel);
 		break;
 	case BREAKABLE_WOOD:
 		PHYSICS_SOUND_WOOD(cSound);
-		sprintf(cModel,"models/gibs/wood_gibs%i.md2",rand()%3+1);
+		PHYSICS_MODEL_WOOD(cModel);
 		break;
 	case BREAKABLE_ROCK:
 		PHYSICS_SOUND_ROCK(cSound);
-		sprintf(cModel,"models/gibs/rock_gibs%i.md2",rand()%3+1);
+		PHYSICS_MODEL_ROCK(cModel);
 		break;
 	case BREAKABLE_METAL:
 		PHYSICS_SOUND_METAL(cSound);
-		sprintf(cModel,"models/gibs/metal_gibs%i.md2",rand()%3+1);
+		PHYSICS_MODEL_METAL(cModel);
 		break;
 	}
 
@@ -780,7 +781,7 @@ void Area_PlatformSpawnTouchbox(edict_t *eArea)
 	edict_t *eTrigger;
 	vec3_t vTrigMin, vTrigMax;
 
-	eTrigger = Spawn();
+	eTrigger = Entity_Spawn();
 	eTrigger->v.TouchFunction = Area_PlatformSpawnTouchboxTouch;
 	eTrigger->v.movetype = MOVETYPE_NONE;
 	eTrigger->v.enemy = eArea;

@@ -43,7 +43,7 @@ void CloudTouch(edict_t *cloud, edict_t *other)
 // [4/7/2012] Renamed to Midas_PrimaryAttack ~hogsy
 void Midas_PrimaryAttack(edict_t *ent)
 {
-	edict_t *cloud = Spawn();
+	edict_t *cloud = Entity_Spawn();
 	float	*dir;
 
 	cloud->v.cClassname	= "cloud";

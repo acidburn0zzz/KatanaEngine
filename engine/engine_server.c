@@ -154,7 +154,6 @@ void Server_ParseEntityField(char *cKey,char *cValue,edict_t *eEntity)
 void Server_ParseGlobalField(char *cKey,char *cValue)
 {
 	EntityField_t	*eField;
-	vec4_t			vVector;
 
 	for(eField = GlobalFields; eField->cFieldName; eField++)
 	{

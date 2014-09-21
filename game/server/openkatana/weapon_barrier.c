@@ -12,7 +12,7 @@ void BarrierFire(edict_t *ent)
 {
 	vec3_t	forward,temp,sndvec,vel;
 	trace_t	trace;
-	edict_t *bshield = Spawn();
+	edict_t *bshield = Entity_Spawn();
 
 	if(ent->local.b_ent)
 		Entity_Remove(ent->local.b_ent);

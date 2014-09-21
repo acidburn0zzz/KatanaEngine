@@ -261,7 +261,7 @@ void Weapon_BulletProjectile(edict_t *eEntity,float fSpread,int iDamage,vec_t *v
 			MONSTER_Damage(tTrace.ent,eEntity,iDamage,DAMAGE_TYPE_NONE);
 		else
 		{
-			edict_t *eSmoke = Spawn();
+			edict_t *eSmoke = Entity_Spawn();
 			if(eSmoke)
 			{
 				char cSound[32];

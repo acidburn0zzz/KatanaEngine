@@ -11,4 +11,7 @@ void Client_Initialize(void);
 void Client_Draw(void);
 void Client_ParseTemporaryEntity(void);
 
+// View
+void Client_ViewFrame(void);
+
 #endif

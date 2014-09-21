@@ -51,7 +51,7 @@ void Ballista_SpawnLogProjectile(edict_t *ent)
 {
 	// [11/2/2012] Revised and fixed ~hogsy
 	float	*dir;
-	edict_t *log = Spawn();
+	edict_t *log = Entity_Spawn();
 
 	log->local.eOwner = ent;
 

@@ -206,7 +206,6 @@ void Sys_Error(char *error, ...)
 {
 	va_list		argptr;
 	char		text[1024];
-	double		starttime;
 	static int	in_sys_error0 = 0,
 				in_sys_error1 = 0,
 				in_sys_error2 = 0,

@@ -288,7 +288,6 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 	mtvLerpVerts	= &mfSecond->verts[0];
 
 	mtTriangles	= (MD2Triangle_t*)((uint8_t*)mModel+mModel->ofs_tris);
-
 	for(iVert = 0,i = 0; i < mModel->numtris; i++,mtTriangles++)
         for(k = 0; k < 3; k++)
         {
@@ -296,8 +295,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
             {
                 voModel[iVert].vVertex[j]	=	(mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+mfFirst->translate[j])*(1.0f-lLerpData.blend)+
 												(mtvLerpVerts[mtTriangles->index_xyz[k]].v[j]*scale2[j]+mfSecond->translate[j])*lLerpData.blend;
-                voModel[iVert].vNormal[j]	= r_avertexnormals[mtTriangles->index_xyz[k]][j];
-
+  
                 if(bShading)
 					voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;
             }

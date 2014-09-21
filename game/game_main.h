@@ -18,7 +18,7 @@
 
 #include "game_resources.h"
 
-extern ModuleImport_t	Engine;
+extern ModuleImport_t	Engine;	// TODO: Should eventually replace all Engine calls... ~hogsy
 
 typedef struct
 {

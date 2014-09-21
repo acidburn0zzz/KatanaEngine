@@ -16,10 +16,9 @@ typedef struct link_s
 enum
 {
 	DAMAGE_TYPE_NORMAL,
-	DAMAGE_TYPE_EXPLOSIVE,
+	DAMAGE_TYPE_EXPLODE,
 	DAMAGE_TYPE_BURN,
 	DAMAGE_TYPE_FREEZE,
-	DAMAGE_TYPE_EXPLODE,
 	DAMAGE_TYPE_GRAVITY,
 	DAMAGE_TYPE_CRUSH,
 	DAMAGE_TYPE_FALL,
@@ -498,6 +497,8 @@ typedef struct
 	void			(*Client_SetMenuCanvas)(int iCanvas);					// Set the canvas type that the menu will use.
 	void			(*Client_AddMenuState)(int iState);						// Adds a new state to the clients menu.
 	void			(*Client_RemoveMenuState)(int iState);					// Removes a state from the clients menu.
+	entity_t		*(*Client_GetViewEntity)(void);							// Returns the entity representing the players view model.
+	entity_t		*(*Client_GetPlayerEntity)(void);						// Returns the entity representing the player.
 	DynamicLight_t	*(*Client_AllocateDlight)(int key);						// Allocate a new dynamic light.
 	Particle_t		*(*Client_AllocateParticle)(void);						// Allocate a new particle effect.
 
@@ -557,6 +558,7 @@ typedef struct
 	void	(*Client_Initialize)(void);
 	void	(*Client_RelinkEntities)(entity_t *ent,int i,double dTime);
 	void	(*Client_ParseTemporaryEntity)(void);
+	void	(*Client_ViewFrame)(void);																	// Called per-frame to handle players view.
 
 	void	(*Server_Initialize)(void);																	// Initializes the server.
 	void	(*Server_CheckWaterTransition)(edict_t *ent);

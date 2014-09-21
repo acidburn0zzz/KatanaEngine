@@ -62,7 +62,7 @@ void LaserGat_Explode(edict_t *eLaserGat)
 {
 	Sound(eLaserGat,CHAN_AUTO,va("fx/explosion%i.wav",rand()%6+1),255,ATTN_NORM);
 
-	Entity_RadiusDamage(eLaserGat,300.0f,25,DAMAGE_TYPE_EXPLOSIVE);
+	Entity_RadiusDamage(eLaserGat,300.0f,25,DAMAGE_TYPE_EXPLODE);
 	Entity_Remove(eLaserGat);
 }
 
@@ -225,7 +225,7 @@ void LaserGat_Spawn(edict_t *eLaserGat)
 
 	{
 		// [19/2/2013] Now set up the base... ~hogsy
-		edict_t	*eBase = Spawn();
+		edict_t	*eBase = Entity_Spawn();
 		if(eBase)
 		{
 			eBase->v.cClassname		= "lasergat_base";

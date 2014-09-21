@@ -14,6 +14,20 @@
 #include "shared_menu.h"
 
 /*
+	Utilities
+*/
+
+entity_t *Client_GetPlayerEntity(void)
+{
+	return &cl_entities[cl.viewentity];
+}
+
+entity_t *Client_GetViewEntity(void)
+{
+	return &cl.viewent;
+}
+
+/*
 	Particles
 	TODO:
 		Move into its own document "engine_particles" :)

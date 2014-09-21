@@ -35,7 +35,6 @@ void Audio_PlayCommand(void)
 
 void Audio_PlaySound(AudioSound_t *asSample)
 {
-#ifdef KATANA_AUDIO_OPENAL
 	sfxcache_t	*sSoundCache;
 
 	if(!asSample)
@@ -49,11 +48,11 @@ void Audio_PlaySound(AudioSound_t *asSample)
 	}
 
 	Audio.iAudioSource++;
-#endif
 }
 
 AudioSound_t *Audio_LoadSound(sfx_t *sSoundEffect)
 {
+#if 0
 	AudioSound_t	*asNewSound;
 	byte			*bData,
 					bStackBuffer[1*1024];
@@ -77,6 +76,7 @@ AudioSound_t *Audio_LoadSound(sfx_t *sSoundEffect)
 	//------
 
 	return asNewSound;
+#endif
 }
 
 /*	Called per-frame to update listener position and more!

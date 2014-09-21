@@ -30,7 +30,7 @@ void GreekfireTouch(edict_t *ent, edict_t *other)
 void GreekFire_Throw(edict_t *ent)
 {
 	float	*dir;
-	edict_t *greekfire = Spawn();
+	edict_t *greekfire = Entity_Spawn();
 
 	greekfire->v.cClassname	= "greekfire";
 	greekfire->v.movetype	= MOVETYPE_BOUNCE;

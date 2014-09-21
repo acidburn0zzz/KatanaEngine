@@ -132,7 +132,7 @@ void Vektar_Move(edict_t *eVektar)
 
 void Vektar_Spawn(void)
 {
-	edict_t	*eVektar = Spawn();
+	edict_t	*eVektar = Entity_Spawn();
 
 	// [20/12/2012] Also precache our resources ~hogsy
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,DAIKATANA_MODEL_WORLD);

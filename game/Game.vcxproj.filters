@@ -185,5 +185,8 @@
     <ClCompile Include="server\openkatana\weapon_barrier.c">
       <Filter>Server\OpenKatana\Weapons</Filter>
     </ClCompile>
+    <ClCompile Include="client\client_view.c">
+      <Filter>Client</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

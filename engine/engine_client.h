@@ -23,4 +23,11 @@ void Client_ProcessParticles(void);
 
 void Client_PrecacheResource(int iType,char *cResource);
 
+/*
+	Utilities
+*/
+
+entity_t *Client_GetPlayerEntity(void);
+entity_t *Client_GetViewEntity(void);
+
 #endif

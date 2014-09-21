@@ -89,7 +89,7 @@ void Shockwave_SpawnProjectile(edict_t *ent)
 	// [27/1/2013] Moved punch here so that it happens when we actually throw out the projectile ~hogsy
 	ent->v.punchangle[0] -= 10.0f;
 	
-	eLaser = Spawn();
+	eLaser = Entity_Spawn();
 	if(eLaser)
 	{
 		Engine.MakeVectors(ent->v.v_angle);

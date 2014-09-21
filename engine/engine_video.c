@@ -370,16 +370,6 @@ bool Video_CreateWindow(void)
 				Video.bFogCoord = true;
 			}
 #endif
-
-#if 0
-		if(!COM_CheckParm("-noswap"))
-		{
-			if(GLEE_WGL_EXT_swap_control)
-				Con_DPrintf("  WGL_EXT_swap_control\n");
-			else
-				bSwapControl = false;
-		}
-#endif
 	}
 
 	Video_EnableCapabilities(VIDEO_TEXTURE_2D|VIDEO_ALPHA_TEST|VIDEO_NORMALIZE);
@@ -599,12 +589,12 @@ void Video_AllocateArrays(int iSize)
 {
 	int i;
 
-	vVideoTextureArray	= (vec2_t**)malloc(iSize*sizeof(vec2_t));
+	vVideoTextureArray	= (vec2_t**)Hunk_AllocName(iSize*sizeof(vec3_t),"video_texturearray");
 	for(i = 0; i < iSize; i++)
 		vVideoTextureArray[i] = (vec2_t*)malloc((VIDEO_MAX_UNITS+1)*sizeof(vec2_t));
 
-	vVideoVertexArray	= (vec3_t*)malloc(iSize*sizeof(vec3_t));	//Hunk_AllocName(uiVideoArraySize*sizeof(vec3_t),"vertexarray");
-	vVideoColourArray	= (vec4_t*)malloc(iSize*sizeof(vec4_t));	//Hunk_AllocName(uiVideoArraySize*sizeof(vec4_t),"colourarray");
+	vVideoVertexArray	= (vec3_t*)Hunk_AllocName(iSize*sizeof(vec3_t),"video_vertexarray");
+	vVideoColourArray	= (vec4_t*)Hunk_AllocName(iSize*sizeof(vec4_t),"video_colourarray");
 
 	// Keep this up to date.
 	uiVideoArraySize = iSize;
@@ -1002,8 +992,6 @@ void Video_Shutdown(void)
 {
 	if(!Video.bInitialized)
 		return;
-
-	free(vVideoVertexArray);
 
     TwTerminate();
 

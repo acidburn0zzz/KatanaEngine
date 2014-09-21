@@ -9,6 +9,7 @@
 */
 
 #include "engine_video.h"
+#include "engine_game.h"
 
 #include "shared_math.h"
 
@@ -765,7 +766,10 @@ void V_RenderView (void)
 	if (cl.intermission)
 		V_CalcIntermissionRefdef();
 	else if (!cl.bIsPaused /* && (cl.maxclients > 1 || key_dest == key_game) */)
+	{
+		Game->Client_ViewFrame();
 		V_CalcRefdef();
+	}
 
 	// [16/6/2013] Draw first since we'll draw the gun on top of this for effect :) ~hogsy
 	View_DrawMuzzleFlash();

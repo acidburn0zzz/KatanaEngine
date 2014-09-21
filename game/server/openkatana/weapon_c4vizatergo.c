@@ -66,7 +66,7 @@ void C4Vizatergo_Explode(edict_t *eVizatergo)
 
 	eVizatergo->local.eOwner->local.bomb = 0;
 
-	Entity_RadiusDamage(eVizatergo,MONSTER_RANGE_MEDIUM,45,1);
+	Entity_RadiusDamage(eVizatergo,MONSTER_RANGE_NEAR,40,DAMAGE_TYPE_EXPLODE);
 	Entity_Remove(eVizatergo);
 }
 
@@ -142,7 +142,7 @@ void C4Vizatergo_PrimaryAttack(edict_t *eOwner)
 {
 	// [26/2/2012] Revised and fixed ~hogsy
 	vec3_t	vOrigin;
-	edict_t *c4ball = Spawn();
+	edict_t *c4ball = Entity_Spawn();
 
 	Sound(eOwner,CHAN_AUTO,"weapons/c4/c4fire.wav",255,ATTN_NORM);
 	Sound(eOwner,CHAN_AUTO,"weapons/c4/c4cock.wav",255,ATTN_NORM);
@@ -154,20 +154,23 @@ void C4Vizatergo_PrimaryAttack(edict_t *eOwner)
 
 	c4ball->v.cClassname	= "c4ball";
 	c4ball->v.movetype		= MOVETYPE_BOUNCE;
-	c4ball->Physics.iSolid	= SOLID_BBOX;
 
 	c4ball->local.style		= AMMO_C4BOMBS;		// Cleaner way to tell if this can explode or not :V ~hogsy
 	c4ball->local.iC4Ammo	= 1;				// [11/8/2013] Since style is used for other shit too LAWL ~hogsy
 	c4ball->local.eOwner	= eOwner;
 
 	// [30/5/2013] Set the gravity properties ~hogsy
-	c4ball->Physics.fMass	= 1.5f;
-	c4ball->Physics.eIgnore	= eOwner;
+	c4ball->Physics.iSolid		= SOLID_BBOX;
+	c4ball->Physics.fMass		= 0.9f;
+	c4ball->Physics.eIgnore		= eOwner;
+	c4ball->Physics.fGravity	= SERVER_GRAVITY;
 
 	eOwner->local.bomb = c4ball;
 
 	// [26/8/2012] Simplified ~hogsy
 	Math_VectorScale(Engine.Aim(eOwner),C4VIZATERGO_MAX_RANGE,c4ball->v.velocity);
+
+	c4ball->v.velocity[Y] += 20.0f;
 
 	Engine.MakeVectors(c4ball->v.v_angle);
 
@@ -175,7 +178,7 @@ void C4Vizatergo_PrimaryAttack(edict_t *eOwner)
 	Math_VectorCopy(eOwner->v.origin,vOrigin);
 
 	Entity_SetModel(c4ball,"models/c4ammo.md2");
-	Entity_SetSize(c4ball,-2.5f,-2.5f,-3.5f,2.5f,2.5f,3.5f);
+	Entity_SetSizeVector(c4ball,vec3_origin,vec3_origin);
 	Entity_SetOrigin(c4ball,vOrigin);
 
 	c4ball->v.TouchFunction	= C4Vizatergo_C4BallTouch;

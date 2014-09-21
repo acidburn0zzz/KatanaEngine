@@ -95,7 +95,7 @@ void Discus_ProjectileTouch(edict_t *ent,edict_t *other)
 // [4/7/2012] Renamed to Discus_SpawnProjectile ~hogsy
 void Discus_SpawnProjectile(edict_t *ent,vec3_t org)
 {
-	edict_t *discus	= Spawn();
+	edict_t *discus	= Entity_Spawn();
 	float	*dir;
 
 	discus->v.cClassname	= "discus";

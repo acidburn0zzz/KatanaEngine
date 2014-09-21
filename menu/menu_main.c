@@ -11,14 +11,14 @@
 #include "platform_module.h"
 
 /*	TODO:
-		Get menu elements to be handled like objects.
-		Let us handle models (for 3D menu interface).
-		Get basic window environment done, move windows
-		if being clicked and mousepos changing, allow
-		windows to be resized, let us show a "virtual"
-		window within another window, "Katana Menu Scripts",
-		allow us to manipulate windows within a 3D space
-		etc
+		#	Get menu elements to be handled like objects.
+		#	Let us handle models (for 3D menu interface).
+		#	Get basic window environment done, move windows
+			if being clicked and mousepos changing, allow
+			windows to be resized, let us show a "virtual"
+			window within another window, "Katana Menu Scripts",
+			allow us to manipulate windows within a 3D space
+		#	Allow for texture maps!
 		etc
 		etc
 */
@@ -78,6 +78,7 @@ ModuleImport_t	Engine;
 Menu_t	*mMenuElements;
 
 int	iMenuElements,
+	iMenuAllocated	= 512,
 	iMenuState		= MENU_MAIN,
 	iMenuSelection	= MENU_NEW;
 
@@ -156,6 +157,9 @@ void Menu_Initialize(void)
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"int040a");
 #endif
 
+	// Allocate global elements.
+	mMenuElements = (Menu_t*)malloc(iMenuAllocated*sizeof(Menu_t));
+
 	// [2/8/2012] Precache all the HUD digits ~hogsy
 	for(i = 0; i < 10; i++)
 		Engine.Client_PrecacheResource(RESOURCE_TEXTURE,va(MENU_HUD_PATH"num%i",i));
@@ -169,7 +173,7 @@ void Menu_Initialize(void)
 
 		mTestWindow.bActive			= true;
 		mTestWindow.cContent		= 0;
-		mTestWindow.cName			= "Test Window";
+		mTestWindow.cName			= "testwindow";
 		mTestWindow.cResource		= 0;
 		mTestWindow.fAlpha			= 1.0f;
 		mTestWindow.iPosition[X]	= 320;
@@ -181,7 +185,7 @@ void Menu_Initialize(void)
 
 		mHealth.bActive			= false;
 		mHealth.cContent		= "";
-		mHealth.cName			= "Health";
+		mHealth.cName			= "health";
 		mHealth.cResource		= "models/hud/hud_health.md2";
 		mHealth.fAlpha			= 1.0f;
 		mHealth.iPosition[0]	= 0;
@@ -192,8 +196,8 @@ void Menu_Initialize(void)
 		mHealth.mParent			= NULL;
 
 		// [3/8/2012] Add it to the array ~hogsy
-		Menu_AddElement(mTestWindow);
-		Menu_AddElement(mHealth);
+		Menu_Add(mTestWindow);
+		Menu_Add(mHealth);
 	}
 #endif
 
@@ -221,9 +225,23 @@ void Menu_GetScreenSize(void)
 	iMenuHeight	= Engine.GetScreenHeight();
 }
 
+/*
+	GUI System
+*/
+
+// Elements
+#include "menu_button.h"
+
 // [2/8/2012] Dynamic allocation, which is based on this: http://fydo.net/gamedev/dynamic-arrays ~hogsy
-void Menu_AddElement(Menu_t mWindow)
+void Menu_Add(Menu_t mWindow)
 {
+	/*	Stages...
+		
+		#1	Check that we've been given a name.
+		#2	Parse a script to check that it's been initialized there. (if not then discontinue)
+		#3	
+	*/
+#if 0
 	// [17/4/2013] Add to this first so we allocate the correct amount! ~hogsy
 	iMenuElements++;
 
@@ -242,7 +260,19 @@ void Menu_AddElement(Menu_t mWindow)
 	}
 
 	mMenuElements[iMenuElements] = mWindow;
+#endif
 }
+
+void Menu_AddButton(Menu_t *mParent,MenuButton_t mButton)
+{
+	if(!mParent)
+	{
+		Engine.Con_Warning("Button parent hasn't been allocated!\n");
+		return;
+	}
+}
+
+/**/
 
 void Menu_DrawSlider(Menu_t menu,float range)
 {

@@ -604,6 +604,8 @@ void Game_Initialize(void)
 	Import.Client_PrecacheResource	= Client_PrecacheResource;
 	Import.Client_GetStat			= Client_GetStat;
 	Import.Client_GetEffect			= Client_GetEffect;
+	Import.Client_GetPlayerEntity	= Client_GetPlayerEntity;
+	Import.Client_GetViewEntity		= Client_GetViewEntity;
 
 	if(Menu)
 	{
