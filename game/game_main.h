@@ -24,27 +24,26 @@ typedef struct
 {
 	bool			bActive;                // Is the server active?
 
-	// [10/4/2013] Changed from a float to a double ~hogsy
-	double			dTime,					// Server time.
-					dWaypointSpawnDelay;	// Delay before spawning another waypoint.
+	double	dTime,					// Server time.
+			dHostFrameTime,			// Host time.
+			dWaypointSpawnDelay;	// Delay before spawning another waypoint.
 
-	edict_t			*eEntity,				// Current player.
-					*eWorld;
+	edict_t	*eEntity,	// Current player.
+			*eWorld;	// Pointer to entity representing the current level.
 
-	char			*cMapAuthor,            // Map author.
-					*cMapTitle;             // Map title.
+	char	*cMapAuthor,	// Map author.
+			*cMapTitle;		// Map title.
 
-	int				iLastGameMode,          // The last active gamemode.
-					iClients,               // Number of connected clients.
-					iMonsters;				// Number of monsters within the level.
+	int	iLastGameMode,	// The last active gamemode.
+		iClients,		// Number of connected clients.
+#ifdef GAME_ADAMAS
+		iLives,			// Players current number of lives (shared).
+#endif
+		iMonsters;		// Number of monsters within the level.
 
 	// Gamemode
-	bool			bRoundStarted,			// Has the round started yet?
-					bPlayersSpawned;		// Have the players been spawned for the current mode?
-
-#ifdef GAME_ADAMAS
-	int				iLives;					// Players current number of lives (shared).
-#endif
+	bool	bRoundStarted,			// Has the round started yet?
+			bPlayersSpawned;		// Have the players been spawned for the current mode?
 } GameServer_t;
 
 typedef struct
@@ -73,14 +72,15 @@ GameClient_t Client;
 
 // [5/8/2013] Made these standard defines since maps rely on these now ~hogsy
 #ifdef OPENKATANA
-#define WEAPON_LASERS		1	// NPC weapon
-#define WEAPON_KATANA		2	// Simple Katana / Melee
-#define	WEAPON_DAIKATANA	3	// The Daikatana / Melee+
-#define	WEAPON_IONBLASTER	4	// Basic projectile-based weapon
-#define	WEAPON_C4VIZATERGO	5	// Explosive projectile weapon
-#define	WEAPON_SHOTCYCLER	6
-#define	WEAPON_SIDEWINDER	7	// Explosive projectile weapon (+)
-#define	WEAPON_SHOCKWAVE	8	// Powerful Shockwave Rifle
+// Episode One
+#define WEAPON_LASERS		1		// NPC weapon
+#define WEAPON_KATANA		2		// Simple Katana / Melee
+#define	WEAPON_DAIKATANA	3		// The Daikatana / Melee+
+#define	WEAPON_IONBLASTER	4		// Basic projectile-based weapon
+#define	WEAPON_C4VIZATERGO	5		// Explosive projectile weapon
+#define	WEAPON_SHOTCYCLER	6		// Futuristic shotgun
+#define	WEAPON_SIDEWINDER	7		// Explosive projectile weapon (+)
+#define	WEAPON_SHOCKWAVE	8		// Powerful Shockwave Rifle
 #define	AMMO_IONBALLS		9
 #define	AMMO_C4BOMBS		10
 #define	AMMO_SLUGS			11
@@ -91,20 +91,21 @@ GameClient_t Client;
 #define	ITEM_VITABOOST		16
 #define	ITEM_SPEEDBOOST		17
 #define	ITEM_ACROBOOST		18
-#define	ITEM_HEALTHKIT		19
-#define	ITEM_PLASTEELARMOR	20
-#define	ITEM_ENVIROSUIT		21
-#define	ITEM_OXYLUNG		22
+#define	ITEM_HEALTHKIT		19		// Provides health
+#define	ITEM_PLASTEELARMOR	20		// Provides armor
+#define	ITEM_ENVIROSUIT		21		// Provides protection
+#define	ITEM_OXYLUNG		22		// Provides oxygen
 // Episode Four
-#define	WEAPON_GLOCK		50
-#define	WEAPON_IONRIFLE		70	// Talon Brave's weapon
+#define	WEAPON_GLOCK		50		// Standard pistol
+// Universal
+#define	WEAPON_IONRIFLE		70		// Talon Brave's weapon
 #elif GAME_ADAMAS
-#define WEAPON_BLAZER	1
-#define	ITEM_LIFE		2
+#define WEAPON_BLAZER		1		// Basic tracer-based weapon
+#define	ITEM_LIFE			2		// Allows the player to respawn
 #endif
-#define ITEM_FLAG			1000
-#define	ITEM_REDFLAG		1001
-#define	ITEM_BLUEFLAG		1002
+#define ITEM_FLAG			1000	// Neutral flag for CTF
+#define	ITEM_REDFLAG		1001	// Red flag for CTF
+#define	ITEM_BLUEFLAG		1002	// Blue flag for CTF
 
 int		iRedScore,iBlueScore;
 
@@ -124,7 +125,5 @@ void ChangeYaw(edict_t *ent);
 trace_t Traceline(edict_t *ent,vec3_t vStart,vec3_t vEnd,int type);
 
 void UseTargets(edict_t *ent, edict_t *other);
-
-edict_t *Spawn(void);
 
 #endif

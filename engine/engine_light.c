@@ -80,7 +80,7 @@ void Light_Draw(void)
 	{
 		if(cvEditorLightPreview.bValue && dlLight->bLightmap)
 			continue;
-		// [5/5/2012] Ugh some lights are inverted... ~hogsy
+		// [5/5/2012] Ugh rarely some lights are inverted... ~hogsy
 		else if(((dlLight->die < cl.time) && dlLight->die) || !dlLight->radius)
 			continue;
 
@@ -93,7 +93,8 @@ void Light_Draw(void)
 			Math_VectorSubtract(dlLight->origin,r_origin,v);
 
 			rad = dlLight->radius*0.35f;
-			if(Math_Length(v) < rad)
+
+			if(!cvEditorLightPreview.bValue && (Math_Length(v) < rad))
 			{
 				// view is inside the dlight
 				a2 = dlLight->radius*0.0003f;

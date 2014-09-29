@@ -116,8 +116,8 @@ float	r_avertexnormals[NUMVERTEXNORMALS][3] =
 	{	0.500000,	-0.809017,	-0.309017	},
 	{	0.425325,	-0.688191,	-0.587785	},
 	{	0.716567,	-0.681718,	-0.147621	},
-	{	0.688191, -0.587785, -0.425325},
-	{0.587785, -0.425325, -0.688191},
+	{	0.688191,	-0.587785,	-0.425325	},
+	{	0.587785,	-0.425325,	-0.688191	},
 	{0.000000, -0.955423, -0.295242},
 	{0.000000, -1.000000, 0.000000},
 	{0.262866, -0.951056, -0.162460},
@@ -171,7 +171,7 @@ float	r_avertexnormals[NUMVERTEXNORMALS][3] =
 	{-0.681718, 0.147621, -0.716567},
 	{-0.681718, -0.147621, -0.716567},
 	{-0.850651, 0.000000, -0.525731},
-	{-0.688191, 0.587785, -0.425325},
+	{	-0.688191,	0.587785,	-0.425325	},
 	{   -0.587785,  0.425325,   -0.688191   },
 	{	-0.425325,	0.688191,	-0.587785	},
 	{	-0.425325,	-0.688191,	-0.587785	},
@@ -211,6 +211,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 {
 	vec3_t			vLightColour,vLightOrigin;
 	DynamicLight_t	*dlLightSource;
+	int				i;
 	float			fDistance;
 
 	if(!bShading)
@@ -243,15 +244,8 @@ void R_SetupModelLighting(vec3_t vOrigin)
 	Math_VectorScale(vLightColour,1.0f/200.0f,vLightColour);
 
     shadedots = r_avertexnormal_dots[((int)((host_frametime*200.0)*(SHADEDOT_QUANT/360))) & (SHADEDOT_QUANT-1)];
-
-	{
-		int i;
-
-		for(i = 0; i < sizeof(shadedots); i++)
-		{
-			shadedots[i] += (vLightColour[0]*vLightColour[1]*vLightColour[2])/2.0f;
-		}
-	}
+	for(i = 0; i < sizeof(shadedots); i++)
+		shadedots[i] += (vLightColour[0]*vLightColour[1]*vLightColour[2]);
 }
 
 void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
@@ -298,6 +292,9 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
   
                 if(bShading)
 					voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;
+				else
+					// Otherwise give us a default colour of white.
+					voModel[iVert].vColour[j] = 1.0f;
             }
 
 			voModel[iVert].vTextureCoord[1][0]	=

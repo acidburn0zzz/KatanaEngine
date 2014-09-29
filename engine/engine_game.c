@@ -351,7 +351,7 @@ void Server_Flare(vec3_t org,float r,float g,float b,float a,float scale,char *t
 	else if(sv.datagram.cursize > MAX_DATAGRAM-16)
 		return;
 
-	sprintf(name,"%s%s",DIR_FLARES,texture);
+	sprintf(name,PATH_SPRITES"%s",texture);
 
 	if(!org || !scale)
 	{
@@ -624,6 +624,7 @@ void Game_Initialize(void)
 	Import.Server_ChangeLevel		= Server_ChangeLevel;
 	Import.Server_AmbientSound		= Game_AmbientSound;
 	Import.Server_GetLevelName		= Server_GetLevelName;
+	Import.Server_GetFrameTime		= Server_GetFrameTime;
 
 	Game = (ModuleExport_t*)pModule_LoadInterface(hGameInstance,va("%s/"MODULE_GAME,com_gamedir),"Game_Main",&Import);
 	if(!Game)

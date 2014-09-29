@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7a4bca86-e432-4ae0-848d-35fa7aa94a8d}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90</Extensions>
+    </Filter>
+    <Filter Include="Source Files\New">
+      <UniqueIdentifier>{1fc539d2-a57d-4521-a8c0-639f43982e6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{93005709-fa6f-4924-9bb8-522240d0ff3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shared">
+      <UniqueIdentifier>{b1dfb72e-2e39-4131-a851-d321b62a5fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shared\Common">
+      <UniqueIdentifier>{45d7e948-aba4-4c5e-a05d-a412fe06af86}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="editor_console.c">
+      <Filter>Source Files\New</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\shared_math.c">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\cmdlib.C">
+      <Filter>Source Files\Shared\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="z.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win_z.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win_xy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win_qe3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win_ent.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win_dlg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win_cam.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vertsel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="textures.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="eclass.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="brush.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="csg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drag.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entity.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mru.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="parse.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="points.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="select.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="editor_main.c">
+      <Filter>Source Files\New</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Shared\shared_flags.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="editor_console.h">
+      <Filter>Source Files\New</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\shared_math.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="editor_camera.h">
+      <Filter>Source Files\New</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\cmdlib.H">
+      <Filter>Source Files\Shared\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="z.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xy.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="win_qe3.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="textures.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="select.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qe3.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="brush.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eclass.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parse.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qfiles.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\shared_formats.h">
+      <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon1.ico" />
+    <None Include="toolbar1.bmp" />
+    <None Include="q.bmp" />
+    <None Include="splash.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="win_qe3.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

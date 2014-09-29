@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Editor" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../../../Katana Editor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="../Shared" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Linker>
+			<Add library="GL" />
+			<Add library="X11" />
+		</Linker>
+		<Unit filename="brush.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="brush.h" />
+		<Unit filename="bspfile.h" />
+		<Unit filename="camera.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="camera.h" />
+		<Unit filename="csg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="drag.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="eclass.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="editor_camera.h" />
+		<Unit filename="editor_console.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="editor_console.h" />
+		<Unit filename="editor_main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="entity.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="entity.h" />
+		<Unit filename="entityw.h" />
+		<Unit filename="glingr.h" />
+		<Unit filename="lbmlib.h" />
+		<Unit filename="map.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="map.h" />
+		<Unit filename="mru.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="mru.h" />
+		<Unit filename="parse.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="parse.h" />
+		<Unit filename="points.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="qe3.h" />
+		<Unit filename="qedefs.h" />
+		<Unit filename="qfiles.h" />
+		<Unit filename="resource.h" />
+		<Unit filename="select.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="select.h" />
+		<Unit filename="textures.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="textures.h" />
+		<Unit filename="vertsel.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="view.h" />
+		<Unit filename="win_cam.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="win_dlg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="win_ent.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="win_main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="win_qe3.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="win_xy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="win_z.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="xy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="xy.h" />
+		<Unit filename="z.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="z.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

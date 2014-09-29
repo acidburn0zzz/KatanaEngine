@@ -220,6 +220,12 @@ typedef struct
 } IQMBounds_t;
 
 /*
+	LVL	Format
+*/
+
+#define	LVL_EXTENSION	".lvl"
+
+/*
 	BSP Format
 */
 

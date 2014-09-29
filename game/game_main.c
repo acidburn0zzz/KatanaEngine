@@ -12,7 +12,7 @@
 
 #include "client_main.h"
 
-ModuleExport_t	Export;				// Game exports.
+ModuleExport_t	Export;	// Game exports.
 ModuleImport_t	Engine;	// Engine imports.
 
 int	iOldGameMode;
@@ -104,7 +104,7 @@ void Sound(edict_t *ent,int channel,char *sound,int volume,float attenuation)
 	edict_t *sound;
 
 	if(type)
-		sound = Spawn();
+		sound = Entity_Spawn();
 	else
 		return;
 
@@ -243,6 +243,7 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Engine.Server_ChangeLevel		= Import->Server_ChangeLevel;
 	Engine.Server_AmbientSound		= Import->Server_AmbientSound;
 	Engine.Server_GetLevelName		= Import->Server_GetLevelName;
+	Engine.Server_GetFrameTime		= Import->Server_GetFrameTime;
 
 	Export.Version						= MODULE_VERSION2;
 #ifdef GAME_OPENKATANA
@@ -255,8 +256,6 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Export.Name							= "Katana";
 #endif
 	Export.Server_SpawnEntity			= Server_SpawnEntity;
-	Export.Server_CheckWaterTransition	= Physics_CheckWaterTransition;
-	Export.Server_CheckVelocity			= Physics_CheckVelocity;
 	Export.Server_EntityFrame			= Server_EntityFrame;
 	Export.Server_KillClient			= Server_KillClient;
 	Export.Server_SetSizeVector			= Entity_SetSizeVector;
@@ -273,6 +272,10 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 
 	Export.Server_Initialize			= Server_Initialize;
 	Export.Server_StartFrame			= Server_StartFrame;
+
+	Export.Physics_SetGravity			= Physics_SetGravity;
+	Export.Physics_CheckWaterTransition	= Physics_CheckWaterTransition;
+	Export.Physics_CheckVelocity		= Physics_CheckVelocity;
 
 	return &Export;
 }

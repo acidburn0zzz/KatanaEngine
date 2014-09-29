@@ -56,7 +56,7 @@ void SetQdirFromPath (char *path)
 
 	if (!(path[0] == '/' || path[0] == '\\' || path[1] == ':'))
 	{	// path is partial
-		gFileSystem_GetWorkingDirectory(temp);
+		pFileSystem_GetWorkingDirectory(temp);
 		strcat (temp, path);
 		path = temp;
 	}
@@ -448,7 +448,7 @@ void ExtractFilePath (char *path, char *dest)
 //
 // back up until a \ or the start
 //
-	while (src != path && *(src-1) != '/'')
+	while (src != path && *(src-1) != '/')
 		src--;
 
 	memcpy (dest, path, src-path);

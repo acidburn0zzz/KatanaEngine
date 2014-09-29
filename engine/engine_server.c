@@ -277,7 +277,7 @@ void Server_PrecacheResource(int iType,const char *ccResource)
 		Console_ErrorMessage(false,ccResource,"Overflow!");
 		break;
 	case RESOURCE_SPRITE:
-		sprintf(name,"%s%s",DIR_PARTICLES,ccResource);
+		sprintf(name,PATH_SPRITES"%s",ccResource);
 		for(i = 0; i < MAX_PARTICLES; i++)
 			if(!sv.cParticlePrecache[i])
 			{
@@ -344,4 +344,13 @@ void Server_CenterPrint(edict_t *ent,char *msg)
 
 	MSG_WriteChar(&client->message,svc_centerprint);
 	MSG_WriteString(&client->message,msg);
+}
+
+/*
+	Utilities
+*/
+
+double Server_GetFrameTime(void)
+{
+	return host_frametime;
 }

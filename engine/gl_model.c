@@ -1521,6 +1521,7 @@ void Mod_CalcAliasBounds(aliashdr_t *a)
 // [21/8/2012] TODO: Finish ~hogsy
 void Model_LoadIQM(model_t *mModel,void *Buffer)
 {
+#if 0
 	IQMHeader_t	hHeader;
 
 	// [14/9/2012] Checks ~hogsy
@@ -1536,6 +1537,7 @@ void Model_LoadIQM(model_t *mModel,void *Buffer)
 	else if(hHeader.uiNumAnims < 1 || hHeader.uiNumAnims > MD2_MAX_FRAMES)
 		Sys_Error("%s has invalid number of animations (%i)",mModel->name,hHeader.uiNumAnims);
 	// [14/9/2012] TODO: IQM models use multiple textures, check those! ~hogsy
+#endif
 }
 
 void Model_LoadMD2(model_t *mModel,void *Buffer)

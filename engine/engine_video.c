@@ -591,7 +591,7 @@ void Video_AllocateArrays(int iSize)
 
 	vVideoTextureArray	= (vec2_t**)Hunk_AllocName(iSize*sizeof(vec3_t),"video_texturearray");
 	for(i = 0; i < iSize; i++)
-		vVideoTextureArray[i] = (vec2_t*)malloc((VIDEO_MAX_UNITS+1)*sizeof(vec2_t));
+		vVideoTextureArray[i] = (vec2_t*)Hunk_Alloc((VIDEO_MAX_UNITS+1)*sizeof(vec2_t));
 
 	vVideoVertexArray	= (vec3_t*)Hunk_AllocName(iSize*sizeof(vec3_t),"video_vertexarray");
 	vVideoColourArray	= (vec4_t*)Hunk_AllocName(iSize*sizeof(vec4_t),"video_colourarray");
@@ -615,8 +615,6 @@ void Video_DrawFill(VideoObject_t *voFill)
 {
 	Video_DrawObject(voFill,VIDEO_PRIMITIVE_TRIANGLE_FAN,4);
 }
-
-#define	MAX_VERTICES_COUNT	4096
 
 /*	Draw 3D object.
 */

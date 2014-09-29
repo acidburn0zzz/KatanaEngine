@@ -32,3 +32,10 @@ Release/Example Game.lib
 *.dll
 bin/engine/logs/
 /.project
+*.ipch
+*.res
+engine/Release/RCa01360
+editor_legacy/Debug/RCa07736
+*.bsc
+*.map
+*.layout

@@ -78,9 +78,9 @@ ModuleImport_t	Engine;
 Menu_t	*mMenuElements;
 
 int	iMenuElements,
-	iMenuAllocated	= 512,
-	iMenuState		= MENU_MAIN,
-	iMenuSelection	= MENU_NEW;
+	iMenuAllocated			= 512,
+	iMenuState				= 0,
+	iMenuDisplaySelection	= MENU_NEW;
 
 cvar_t	cvShowMenu			= {	"menu_show",			"1",    false,  false,  "Toggle the display of any menu elements."	        },
 		cvShowHealth		= {	"menu_showhealth",		"2",	true,   false,  "Toggle the health HUD."	                        },
@@ -241,6 +241,15 @@ void Menu_Add(Menu_t mWindow)
 		#2	Parse a script to check that it's been initialized there. (if not then discontinue)
 		#3	
 	*/
+	
+	if(!mWindow.cName)
+	{
+		Engine.Con_Warning("Attempted to add menu without given name!\n");
+		return;
+	}
+
+	iMenuElements++;
+
 #if 0
 	// [17/4/2013] Add to this first so we allocate the correct amount! ~hogsy
 	iMenuElements++;
@@ -359,7 +368,7 @@ void Menu_Draw(void)
 		Engine.DrawString(110,80,">");
 		Engine.DrawString(190,80,"<");
 
-		switch(iMenuState)
+		switch(iMenuDisplaySelection)
 		{
 		case MENU_MAIN:
 			Engine.DrawString(120,80,"New Game");
@@ -652,7 +661,7 @@ void Menu_Shutdown(void)
 	Engine.Con_Printf("Shutting down menu...\n");
 
 	// [2/8/2012] Deallocate our array ~hogsy
-	//	free(mMenuElements);
+	free(mMenuElements);
 }
 
 void Input_Key(int iKey);

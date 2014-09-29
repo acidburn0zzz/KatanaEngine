@@ -261,19 +261,6 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 	return blocked;
 }
 
-/*	Sets the amount of gravity for the object.
-*/
-void Physics_SetGravity(edict_t *eEntity)
-{
-	float fNewGravity = Cvar_VariableValue("server_gravityamount");
-
-	eEntity->v.velocity[2] -=
-		// [30/5/2013] Slightly more complex gravity management ~hogsy
-		(eEntity->Physics.fGravity*fNewGravity)*
-		eEntity->Physics.fMass*
-		host_frametime;
-}
-
 /*
 ===============================================================================
 
@@ -942,7 +929,7 @@ void SV_Physics_Client (edict_t	*ent, int num)
 
 	Game->Game_Init(SERVER_PLAYERPRETHINK,ent,sv.time);
 
-	Game->Server_CheckVelocity(ent);
+	Game->Physics_CheckVelocity(ent);
 
 	// decide which move function to call
 	switch(ent->v.movetype)
@@ -956,7 +943,7 @@ void SV_Physics_Client (edict_t	*ent, int num)
 			return;
 
 		if(!Physics_CheckWater(ent) && !(ent->v.flags & FL_WATERJUMP))
-			Physics_SetGravity(ent);
+			Game->Physics_SetGravity(ent);
 
 		SV_CheckStuck (ent);
 		SV_WalkMove (ent);
@@ -1015,13 +1002,13 @@ void Physics_Toss(edict_t *ent)
 	if(!Server_RunThink(ent) || (ent->v.flags & FL_ONGROUND))
 		return;
 
-	Game->Server_CheckVelocity(ent);
+	Game->Physics_CheckVelocity(ent);
 
 	// Add gravity
 	if(ent->v.movetype != MOVETYPE_FLY
 	&& ent->v.movetype != MOVETYPE_FLYMISSILE
 	&& ent->v.movetype != MOVETYPE_FLYBOUNCE)
-		Physics_SetGravity(ent);
+		Game->Physics_SetGravity(ent);
 
 	// Move angles
 	Math_VectorMA(ent->v.angles,host_frametime,ent->v.avelocity,ent->v.angles);
@@ -1052,7 +1039,7 @@ void Physics_Toss(edict_t *ent)
 			Math_VectorCopy(vec3_origin,ent->v.avelocity);
 		}
 
-	Game->Server_CheckWaterTransition(ent);
+	Game->Physics_CheckWaterTransition(ent);
 }
 
 /*	Monsters freefall when they don't have a ground entity, otherwise
@@ -1072,9 +1059,8 @@ void Physics_Step(edict_t *ent)
 			bHitSound = true;
 #endif
 
-		Physics_SetGravity(ent);
-
-		Game->Server_CheckVelocity(ent);
+		Game->Physics_SetGravity(ent);
+		Game->Physics_CheckVelocity(ent);
 
 		SV_FlyMove(ent,host_frametime,NULL);
 		SV_LinkEdict(ent,true);
@@ -1083,7 +1069,7 @@ void Physics_Step(edict_t *ent)
 	// Regular thinking
 	Server_RunThink(ent);
 
-	Game->Server_CheckWaterTransition(ent);
+	Game->Physics_CheckWaterTransition(ent);
 }
 
 extern cvar_t	sv_edgefriction;
@@ -1169,9 +1155,9 @@ void Physics_ServerFrame(void)
 				break;
 			case MOVETYPE_WALK:
 			case MOVETYPE_STEP:
-				Game->Server_CheckVelocity(eEntity);
+				Game->Physics_CheckVelocity(eEntity);
+				Game->Physics_SetGravity(eEntity);
 
-				Physics_SetGravity(eEntity);
 				Physics_AddFriction(eEntity,eEntity->v.velocity,eEntity->v.origin);
 
 				SV_WalkMove(eEntity);

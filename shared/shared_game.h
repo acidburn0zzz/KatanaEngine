@@ -489,6 +489,7 @@ typedef struct
 	edict_t		*(*Server_FindRadius)(vec3_t origin,float radius);												// Finds entities within a specific radius.
 	edict_t		*(*Server_FindEntity)(edict_t *eStartEntity,char *cName,bool bClassname);						// Finds a specified entity either by classname or by entity name.
 	char		*(*Server_GetLevelName)(void);																	// Returns the name of the currently active level.
+	double		(*Server_GetFrameTime)(void);																	// Returns host time.
 
 	// Client
 	int				(*Client_GetEffect)(const char *cPath);					// Get an effect index.
@@ -561,14 +562,16 @@ typedef struct
 	void	(*Client_ViewFrame)(void);																	// Called per-frame to handle players view.
 
 	void	(*Server_Initialize)(void);																	// Initializes the server.
-	void	(*Server_CheckWaterTransition)(edict_t *ent);
-	void	(*Server_CheckVelocity)(edict_t *ent);														// Checks the velocity of physically simulated entities.
 	void	(*Server_EntityFrame)(edict_t *eEntity);
 	void	(*Server_KillClient)(edict_t *eClient);														// Tells the specified client to die.
 	void	(*Server_SetSizeVector)(edict_t *eEntity,vec3_t vMin,vec3_t vMax);							// Set the size of an entity by vector.
 	void	(*Server_SpawnPlayer)(edict_t *ePlayer);													// Spawns the player (SERVER_PUTCLIENTINSERVER).
 	void	(*Server_StartFrame)(void);																	// Called at the start of each physics frame.
-	bool	(*Server_SpawnEntity)(edict_t *ent);														// Puts a specific entity into the server
+	bool	(*Server_SpawnEntity)(edict_t *ent);														// Puts a specific entity into the server.
+
+	void	(*Physics_SetGravity)(edict_t *eEntity);			// Sets the current gravity for the given entity.
+	void	(*Physics_CheckWaterTransition)(edict_t *eEntity);
+	void	(*Physics_CheckVelocity)(edict_t *ent);				// Checks the velocity of physically simulated entities.
 
 	/*	Shared
 	*/
