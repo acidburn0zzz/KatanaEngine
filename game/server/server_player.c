@@ -1058,3 +1058,38 @@ void Player_Use(edict_t *ePlayer)
 
 	ePlayer->local.dAttackFinished = Server.dTime+0.5;
 }
+
+/*
+	Movement
+*/
+
+/*	Called per-frame to handle player movement for each client.
+*/
+void Player_MoveThink(edict_t *ePlayer)
+{
+	vec3_t	vViewAngle;
+	float	fLength,*fPlayerAngles;
+
+	if(ePlayer->v.movetype == MOVETYPE_NONE)
+		return;
+
+	fLength = Math_VectorNormalize(ePlayer->v.punchangle);
+	fLength -= 10*(float)Engine.Server_GetFrameTime();
+	if(fLength < 0)
+		fLength = 0;
+
+	Math_VectorScale(ePlayer->v.punchangle,fLength,ePlayer->v.punchangle);
+	
+	// If dead, behave differently
+	if(!ePlayer->v.iHealth)
+		return;
+
+#ifdef IMPLEMENT_ME
+	cmd = host_client->cmd;
+#endif
+	fPlayerAngles = ePlayer->v.angles;
+
+	Math_VectorAdd(ePlayer->v.v_angle,ePlayer->v.punchangle,vViewAngle);
+
+	fPlayerAngles[ROLL] 	
+}

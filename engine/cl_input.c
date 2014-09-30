@@ -50,7 +50,8 @@ state bit 2 is edge triggered on the down to up transition
 kbutton_t	in_klook;
 kbutton_t	in_left, in_right, in_forward, in_back;
 kbutton_t	in_lookup, in_lookdown, in_moveleft, in_moveright;
-kbutton_t	in_strafe, in_speed, in_use, in_jump, in_attack, kInputCrouch;
+kbutton_t	in_strafe, in_speed, kInputUse, in_jump, in_attack, 
+			kInputCrouch;
 kbutton_t	in_up, in_down;
 
 int			in_impulse;
@@ -120,12 +121,12 @@ void IN_KLookDown(void)			{	KeyDown(&in_klook);		}
 void IN_KLookUp(void)			{	KeyUp(&in_klook);		}
 void IN_UpDown(void)			{	KeyDown(&in_up);		}
 void IN_UpUp(void)				{	KeyUp(&in_up);			}
-void IN_DownDown(void) {KeyDown(&in_down);}
-void IN_DownUp(void) {KeyUp(&in_down);}
-void IN_LeftDown(void) {KeyDown(&in_left);}
-void IN_LeftUp(void) {KeyUp(&in_left);}
-void IN_RightDown(void) {KeyDown(&in_right);}
-void IN_RightUp(void) {KeyUp(&in_right);}
+void IN_DownDown(void)			{	KeyDown(&in_down);		}
+void IN_DownUp(void)			{	KeyUp(&in_down);		}
+void IN_LeftDown(void)			{	KeyDown(&in_left);		}
+void IN_LeftUp(void)			{	KeyUp(&in_left);		}
+void IN_RightDown(void)			{	KeyDown(&in_right);		}
+void IN_RightUp(void)			{	KeyUp(&in_right);		}
 void IN_ForwardDown(void) {KeyDown(&in_forward);}
 void IN_ForwardUp(void) {KeyUp(&in_forward);}
 void IN_BackDown(void) {KeyDown(&in_back);}
@@ -136,7 +137,7 @@ void IN_LookdownDown(void) {KeyDown(&in_lookdown);}
 void IN_LookdownUp(void) {KeyUp(&in_lookdown);}
 void IN_MoveleftDown(void) {KeyDown(&in_moveleft);}
 void IN_MoveleftUp(void) {KeyUp(&in_moveleft);}
-void IN_MoverightDown(void) {KeyDown(&in_moveright);}
+void IN_MoverightDown(void)		{	KeyDown(&in_moveright);	}
 void IN_MoverightUp(void) {KeyUp(&in_moveright);}
 void IN_SpeedDown(void) {KeyDown(&in_speed);}
 void IN_SpeedUp(void) {KeyUp(&in_speed);}
@@ -144,8 +145,8 @@ void IN_StrafeDown(void) {KeyDown(&in_strafe);}
 void IN_StrafeUp(void) {KeyUp(&in_strafe);}
 void IN_AttackDown(void) {KeyDown(&in_attack);}
 void IN_AttackUp(void) {KeyUp(&in_attack);}
-void IN_UseDown (void) {KeyDown(&in_use);}
-void IN_UseUp (void) {KeyUp(&in_use);}
+void IN_UseDown (void) {KeyDown(&kInputUse);}
+void IN_UseUp (void) {KeyUp(&kInputUse);}
 void IN_JumpDown (void) {KeyDown(&in_jump);}
 void IN_JumpUp (void) {KeyUp(&in_jump);}
 void IN_Impulse (void) {in_impulse=Q_atoi(Cmd_Argv(1));}
@@ -339,6 +340,12 @@ void CL_SendMove (usercmd_t *cmd)
 	if(kInputCrouch.state & 3)
 		bits |= 4;
 	kInputCrouch.state &= ~2;
+
+#ifdef IMPLEMENT_ME
+	if(kInputUse.state & 3)
+		bits |=	6;
+	kInputUse.state &= ~2;
+#endif
 
     MSG_WriteByte (&buf, bits);
 
