@@ -437,9 +437,9 @@ void Alias_Draw(entity_t *eEntity)
 	Alias_SetupFrame(mModel,&lLerpData);
 	Alias_SetupEntityTransform(&lLerpData);
 
-    gDiffuseTexture		= mModel->gDiffuseTexture[eEntity->skinnum];
-	gFullbrightTexture	= mModel->gFullbrightTexture[eEntity->skinnum];
-	gSphereTexture		= mModel->gSphereTexture[eEntity->skinnum];
+    gDiffuseTexture		= eEntity->model->gDiffuseTexture[eEntity->skinnum];
+	gFullbrightTexture	= eEntity->model->gFullbrightTexture[eEntity->skinnum];
+	gSphereTexture		= eEntity->model->gSphereTexture[eEntity->skinnum];
 
 	glPushMatrix();
 

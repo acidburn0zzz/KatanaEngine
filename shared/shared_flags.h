@@ -22,7 +22,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	764	// 30/9/2014
+#define ENGINE_VERSION_BUILD	766	// 2/10/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"

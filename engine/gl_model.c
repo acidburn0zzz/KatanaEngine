@@ -1365,76 +1365,7 @@ void Model_LoadBSP(model_t *mod,void *buffer)
 }
 
 /*
-==============================================================================
-
-ALIAS MODELS
-
-==============================================================================
-*/
-
-/*
-	Scripting crap
-*/
-
-typedef struct
-{
-	char	*cKey;
-
-	void	(*Function)(MD2_t *mModel,char *cArg);
-} MaterialKey_t;
-
-int	iMaterialCount;
-
-MD2_t	*mCurrentModel;
-
-void _Material_SetDiffuseTexture(MD2_t *mModel,char *cArg)
-{
-	byte *bDiffuseMap = Image_LoadImage(cArg,&mModel->skinwidth,&mModel->skinheight);
-	if(bDiffuseMap)
-		mModel->gDiffuseTexture[iMaterialCount] = TexMgr_LoadImage(loadmodel,cArg,mModel->skinwidth,mModel->skinheight,SRC_RGBA,bDiffuseMap,cArg,0,TEXPREF_ALPHA);
-	else
-		Con_Warning("Failed to load texture %s!\n",cArg);
-}
-
-void _Material_SetFullbrightTexture(MD2_t *mModel,char *cArg)
-{
-	byte *bFullbrightMap = Image_LoadImage(cArg,&mModel->skinwidth,&mModel->skinheight);
-	if(bFullbrightMap)
-		mModel->gFullbrightTexture[iMaterialCount] = TexMgr_LoadImage(loadmodel,cArg,mModel->skinwidth,mModel->skinheight,SRC_RGBA,bFullbrightMap,cArg,0,TEXPREF_ALPHA);
-	else
-		Con_Warning("Failed to load texture %s!\n",cArg);
-}
-
-void _Material_SetSphereTexture(MD2_t *mModel,char *cArg)
-{
-	byte *bSphereMap = Image_LoadImage(cArg,&mModel->skinwidth,&mModel->skinheight);
-	if(bSphereMap)
-		mModel->gSphereTexture[iMaterialCount] = TexMgr_LoadImage(loadmodel,cArg,mModel->skinwidth,mModel->skinheight,SRC_RGBA,bSphereMap,cArg,0,TEXPREF_ALPHA);
-	else
-		Con_Warning("Failed to load texture %s!\n",cArg);
-}
-
-MaterialKey_t	mkMaterialKey[]=
-{
-	{	"$diffuse",			_Material_SetDiffuseTexture		},	// Sets the diffuse texture.
-	{	"$sphere",			_Material_SetSphereTexture		},	// Sets the spheremap texture.
-	{	"$fullbright",		_Material_SetFullbrightTexture	},	// Sets the fullbright texture.
-
-	{	0	}
-};
-
-void _Material_AddSkin(char *cArg)
-{
-	iMaterialCount++;
-
-	// Set defaults...
-	mCurrentModel->gDiffuseTexture[iMaterialCount]		= notexture;
-	mCurrentModel->gSphereTexture[iMaterialCount]		= NULL;
-	mCurrentModel->gFullbrightTexture[iMaterialCount]	= NULL;
-}
-
-/*
-	Everything else
+	ALIAS MODELS
 */
 
 void Model_LoadTextures(MD2_t *mModel)
@@ -1538,6 +1469,9 @@ void Model_LoadIQM(model_t *mModel,void *Buffer)
 		Sys_Error("%s has invalid number of animations (%i)",mModel->name,hHeader.uiNumAnims);
 	// [14/9/2012] TODO: IQM models use multiple textures, check those! ~hogsy
 #endif
+
+	mModel->mType	= MODEL_TYPE_IQM;
+	mModel->flags	= 0;
 }
 
 void Model_LoadMD2(model_t *mModel,void *Buffer)
@@ -1592,10 +1526,6 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 		Sys_Error("%s has invalid number of frames (%i)",mModel->name,mMD2Model->num_frames);
 	else if(mMD2Model->num_skins < 0 || mMD2Model->num_skins > MD2_MAX_SKINS)
 		Sys_Error("%s has invalid number of skins (%i)",mModel->name,mMD2Model->num_skins);
-
-#if 0
-	Con_DPrintf("NUMST: %i\n",mMD2Model->num_st);
-#endif
 
 	for(i = 0; i < 7; i++)
 		((int*)&mMD2Model->ofs_skins)[i] += sizeof(mMD2Model);

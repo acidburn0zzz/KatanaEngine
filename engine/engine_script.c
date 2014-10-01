@@ -272,8 +272,6 @@ typedef struct
 void _FileSystem_SetBasePath(char *cArg);		// common.c
 void _FileSystem_AddGameDirectory(char *cArg);	// common.c
 
-void _Material_AddSkin(char *cArg);
-
 /*	Allows for console variables to be set from scripts.
 */
 void _Script_SetConsoleVariable(char *cArguments)
@@ -284,9 +282,6 @@ ScriptKey_t	skScriptKeys[]=
 {
 	{	"basepath",		_FileSystem_SetBasePath			},
 	{	"gamedir",		_FileSystem_AddGameDirectory	},
-
-	// Materials
-	{	"skin",	_Material_AddSkin	},
 
 	{	0	}
 };

@@ -5,11 +5,12 @@
 
 typedef enum
 {
-	MODEL_TYPE_MD2,
-	MODEL_TYPE_KMDL,
-	MODEL_TYPE_OBJ,
-	MODEL_TYPE_SPRITE,
-	MODEL_TYPE_BSP,
+	MODEL_TYPE_MD2,		// MD2 support.
+	MODEL_TYPE_IQM,		// IQM support.
+	MODEL_TYPE_KMDL,	// Extended MD2 support.
+	MODEL_TYPE_OBJ,		// OBJ support.
+	MODEL_TYPE_SPRITE,	// Just a flat-plane with a texture.
+	MODEL_TYPE_BSP,		// BSP support.
 
 	MODEL_NONE
 } ModelType_t;
@@ -86,10 +87,6 @@ typedef struct
 	int			    ofs_frames;							// Offset for first frame.
 	int			    ofs_glcmds;
 	int			    ofs_end;							// End of file.
-
-	struct gltexture_s	*gDiffuseTexture[MD2_MAX_SKINS],	// Diffuse texture.
-						*gFullbrightTexture[MD2_MAX_SKINS],	// Texture used for fullbright layer.
-						*gSphereTexture[MD2_MAX_SKINS];		// Texture used for sphere mapping.
 
 	MD2TextureCoordinate_t	*mtcTextureCoord;
 } MD2_t;

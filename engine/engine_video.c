@@ -991,6 +991,9 @@ void Video_Shutdown(void)
 	if(!Video.bInitialized)
 		return;
 
+	// Let us know that we're shutting down the video sub-system...
+	Con_Printf("Shutting down video...\n");
+
     TwTerminate();
 
 	// [6/12/2012] Delete our context ~hogsy

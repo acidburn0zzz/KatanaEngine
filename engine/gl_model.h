@@ -194,6 +194,8 @@ typedef struct
 // Whole model
 //
 
+#define	MODEL_MAX_TEXTURES	32
+
 typedef struct model_s
 {
 	char		name[MAX_QPATH];
@@ -260,6 +262,13 @@ typedef struct model_s
 
 	byte			*visdata,*lightdata;
 	char			*entities;
+
+	struct gltexture_s	*gDiffuseTexture[MODEL_MAX_TEXTURES],		// Diffuse texture.
+						*gFullbrightTexture[MODEL_MAX_TEXTURES],	// Texture used for fullbright layer.
+						*gSphereTexture[MODEL_MAX_TEXTURES];		// Texture used for sphere mapping.
+
+	int	iTextureWidth[MODEL_MAX_TEXTURES],
+		iTextureHeight[MODEL_MAX_TEXTURES];
 
 	// additional model data
 	cache_user_t	cache;		// only access through Mod_Extradat
