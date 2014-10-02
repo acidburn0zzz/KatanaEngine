@@ -9,7 +9,7 @@
 
 #include "engine_video.h"
 
-#include "SDL_ttf.h"
+#include <SDL/SDL_ttf.h>
 
 typedef struct
 {
@@ -76,11 +76,11 @@ void Font_Draw(Font_t *fFont,const char *ccMessage,vec3_t vPos,vec3_t vColour)
 
 	sFontSurface = TTF_RenderText_Blended(fFont->tfFont,ccMessage,sColour);
 
-	/*	todo: 
+	/*	todo:
 			need to reserve bind slot.
 			need to have a method of grabbing fonts without involving SDL_ttf library...
 				Font_t struct contains ttf stuff, Ugh
-	*/			
+	*/
 
 	voFont[0].vTextureCoord[0][0]	=
 	voFont[0].vTextureCoord[0][1]	=	0;

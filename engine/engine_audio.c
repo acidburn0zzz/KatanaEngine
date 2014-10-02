@@ -58,7 +58,7 @@ AudioSound_t *Audio_LoadSound(sfx_t *sSoundEffect)
 					bStackBuffer[1*1024];
 //	sfxcache_t		*sSoundCache;
 	char			cNameBuffer[256];
-	
+
 //	sSoundCache = (sfxcache_t*)Cache_Check(&sSoundEffect->cache);
 //	if(sSoundCache)
 //		return sSoundCache;

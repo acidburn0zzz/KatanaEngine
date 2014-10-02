@@ -3,8 +3,6 @@
 
 #include "menu_main.h"
 
-typedef struct MenuButton_t;
-
 typedef struct
 {
 	bool	bActive,                                // Is the button active?

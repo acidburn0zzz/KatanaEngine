@@ -44,6 +44,7 @@ vec3_t	vTextureReflectivity[BSP_MAX_TEXINFO];
 // [22/7/2012] Taken from Quake 2's BSP tools ~hogsy
 void Light_CalculateTextureReflectivity(void)
 {
+#if 0
 	vec3_t		vColor;
 	int			i,j,k,texels,texel;
 	char		path[1024];
@@ -55,14 +56,13 @@ void Light_CalculateTextureReflectivity(void)
 
 	for(i = 0; i < numtexinfo; i++)
 	{
-#if 0
 		for(j = 0; j < i; j++)
 			if(!strcmp(miptex[i],miptex[j]))
 			{
 				VectorCopy(vTextureReflectivity[j],vTextureReflectivity[i]);
 				break;
 			}
-			
+
 		if(j != i)
 			continue;
 
@@ -94,8 +94,8 @@ void Light_CalculateTextureReflectivity(void)
 			scale *= 2.0f;
 			VectorScale(vTextureReflectivity[i],scale,vTextureReflectivity[i]);
 		}
-#endif
 	}
+#endif
 }
 
 int LightStyleForTargetname( char *targetname )

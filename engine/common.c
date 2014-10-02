@@ -1377,11 +1377,10 @@ pack_t *FileSystem_LoadPackage(char *packfile)
 
 void FileSystem_AddGameDirectory(char *dir)
 {
-	int			i;
-	static	int	iPaths = 0;
-	searchpath_t *search;
-	pack_t *pak;
-	char pakfile[MAX_OSPATH];
+	int			    i;
+	searchpath_t    *search;
+	pack_t          *pak;
+	char            pakfile[MAX_OSPATH];
 
 	strcpy (com_gamedir, dir);
 

@@ -243,7 +243,7 @@ void R_SetupModelLighting(vec3_t vOrigin)
 
 	Math_VectorScale(vLightColour,1.0f/200.0f,vLightColour);
 
-    shadedots = r_avertexnormal_dots[((int)((host_frametime*200.0)*(SHADEDOT_QUANT/360))) & (SHADEDOT_QUANT-1)];
+    shadedots = r_avertexnormal_dots[((int)((SHADEDOT_QUANT/360))) & (SHADEDOT_QUANT-1)];
 	for(i = 0; i < sizeof(shadedots); i++)
 		shadedots[i] += (vLightColour[0]*vLightColour[1]*vLightColour[2]);
 }
@@ -289,7 +289,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
             {
                 voModel[iVert].vVertex[j]	=	(mtvVertices[mtTriangles->index_xyz[k]].v[j]*scale1[j]+mfFirst->translate[j])*(1.0f-lLerpData.blend)+
 												(mtvLerpVerts[mtTriangles->index_xyz[k]].v[j]*scale2[j]+mfSecond->translate[j])*lLerpData.blend;
-  
+
                 if(bShading)
 					voModel[iVert].vColour[j] = (shadedots[mtvVertices[mtTriangles->index_xyz[k]].lightnormalindex])/2.0f;
 				else

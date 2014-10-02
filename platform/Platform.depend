@@ -1,1 +1,71 @@
 # depslib dependency file v1.0
+1412245845 source:/media/hogsy/Projects/KatanaEngine/platform/platform.c
+	"platform.h"
+
+1412245845 /media/hogsy/Projects/KatanaEngine/platform/include/platform.h
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stdlib.h>
+	"platform_inttypes.h"
+	<stdint.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	<setjmp.h>
+	<errno.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<Windows.h>
+	<WindowsX.h>
+	<CommCtrl.h>
+	<direct.h>
+	<dirent.h>
+	<unistd.h>
+	<dlfcn.h>
+
+1412245845 /media/hogsy/Projects/KatanaEngine/platform/include/platform_inttypes.h
+	"platform_stdint.h"
+
+1412245845 /media/hogsy/Projects/KatanaEngine/platform/include/platform_stdint.h
+	<limits.h>
+	<wchar.h>
+
+1412245845 source:/media/hogsy/Projects/KatanaEngine/platform/platform_filesystem.c
+	"platform_filesystem.h"
+	"platform_system.h"
+
+1412245845 /media/hogsy/Projects/KatanaEngine/platform/include/platform_filesystem.h
+	"platform.h"
+
+1412245845 /media/hogsy/Projects/KatanaEngine/platform/platform_system.h
+
+1412245845 source:/media/hogsy/Projects/KatanaEngine/platform/platform_input.c
+	"platform.h"
+
+1412245845 source:/media/hogsy/Projects/KatanaEngine/platform/platform_math.c
+	"include/platform_math.h"
+	<xmmintrin.h>
+
+1412245845 /media/hogsy/Projects/KatanaEngine/platform/include/platform_math.h
+	"platform.h"
+
+1412245845 source:/media/hogsy/Projects/KatanaEngine/platform/platform_module.c
+	"platform_module.h"
+	"platform_system.h"
+
+1412245845 /media/hogsy/Projects/KatanaEngine/platform/include/platform_module.h
+	"platform.h"
+
+1412245845 source:/media/hogsy/Projects/KatanaEngine/platform/platform_net.c
+	"platform.h"
+	"platform_system.h"
+
+1412245845 source:/media/hogsy/Projects/KatanaEngine/platform/platform_window.c
+	"platform_window.h"
+	"platform_system.h"
+
+1412245845 /media/hogsy/Projects/KatanaEngine/platform/include/platform_window.h
+	"platform.h"
+	<X11/Xlib.h>
+

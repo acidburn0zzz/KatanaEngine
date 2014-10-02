@@ -415,8 +415,8 @@ void Player_PostThink(edict_t *ePlayer)
 	if(!(ePlayer->v.flags & FL_ONGROUND))
 		ePlayer->local.jump_flag = ePlayer->v.velocity[2];
 	// [10/11/2013] Fixed a bug where the player would cycle when just sliding down something... ~hogsy
-	else if((	(ePlayer->v.velocity[0] < -4.0f || ePlayer->v.velocity[0] > 4.0f)	|| 
-				(ePlayer->v.velocity[1] < -4.0f || ePlayer->v.velocity[1] > 4.0f))	&& 
+	else if((	(ePlayer->v.velocity[0] < -4.0f || ePlayer->v.velocity[0] > 4.0f)	||
+				(ePlayer->v.velocity[1] < -4.0f || ePlayer->v.velocity[1] > 4.0f))	&&
 				(!ePlayer->local.dAnimationTime || ePlayer->local.iAnimationEnd == 9))
 		Entity_Animate(ePlayer,PlayerAnimation_Walk);
 	else if((ePlayer->v.velocity[0] == 0 || ePlayer->v.velocity[1] == 0) && (!ePlayer->local.dAnimationTime || ePlayer->local.iAnimationEnd == 46))
@@ -605,7 +605,7 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 #ifdef GAME_OPENKATANA
 	if(ePlayer->v.iActiveWeapon == WEAPON_DAIKATANA)
 		Entity_Animate(ePlayer,PlayerAnimation_KatanaDeath1);
-	else 
+	else
 #endif
 	{
 		if(rand()%2 == 1)
@@ -893,7 +893,7 @@ void Player_CheckPowerups(edict_t *ePlayer)
 	iSpeedBoost		= Item_GetInventory(ITEM_SPEEDBOOST,ePlayer);
 	iAttackBoost	= Item_GetInventory(ITEM_ATTACKBOOST,ePlayer);
 	iAcroBoost		= Item_GetInventory(ITEM_ACROBOOST,ePlayer);
-	
+
 	if(iPowerBoost && ePlayer->local.power_finished)
 	{
 		if(ePlayer->local.power_time == 1)
@@ -1067,6 +1067,7 @@ void Player_Use(edict_t *ePlayer)
 */
 void Player_MoveThink(edict_t *ePlayer)
 {
+#if 0
 	vec3_t	vViewAngle;
 	float	fLength,*fPlayerAngles;
 
@@ -1079,7 +1080,7 @@ void Player_MoveThink(edict_t *ePlayer)
 		fLength = 0;
 
 	Math_VectorScale(ePlayer->v.punchangle,fLength,ePlayer->v.punchangle);
-	
+
 	// If dead, behave differently
 	if(!ePlayer->v.iHealth)
 		return;
@@ -1090,6 +1091,5 @@ void Player_MoveThink(edict_t *ePlayer)
 	fPlayerAngles = ePlayer->v.angles;
 
 	Math_VectorAdd(ePlayer->v.v_angle,ePlayer->v.punchangle,vViewAngle);
-
-	fPlayerAngles[ROLL] 	
+#endif
 }

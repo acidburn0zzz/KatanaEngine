@@ -26,6 +26,7 @@
 
 #include "engine_console.h"
 #include "engine_script.h"
+#include "engine_material.h"
 
 model_t	*loadmodel;
 char	loadname[32];	// for hunk tags
@@ -1376,8 +1377,6 @@ void Model_LoadTextures(MD2_t *mModel)
 	COM_StripExtension(loadmodel->name,cOutName);
 
 	sprintf(cScriptPath,"textures/%s.material",cOutName);	//(char*)model+model->ofs_skins+i*MAX_SKINNAME);
-
-	iMaterialCount = -1;
 
 	mCurrentModel = mModel;
 
