@@ -22,7 +22,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	766	// 2/10/2014
+#define ENGINE_VERSION_BUILD	769	// 5/10/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"
@@ -141,7 +141,7 @@ enum
 #define	FL_PARTIALGROUND	1024	// Entity is partially on the ground.
 #define	FL_WATERJUMP		2048
 #define	FL_JUMPRELEASED		4096	// Entity has released jump.
-#define	FL_GLOBAL			8192	// Used for 
+#define	FL_GLOBAL			8192	// Used for
 
 #define	EF_BRIGHTFIELD		1
 #define	EF_MUZZLEFLASH		2

@@ -74,19 +74,21 @@ typedef struct
 	int			    version;
 	unsigned    int	skinwidth;
 	unsigned    int	skinheight;
-	int			    framesize;							// Byte size of each frame.
+	int			    framesize;		// Byte size of each frame.
 	int			    num_skins;
 	int			    num_xyz;
-	int			    num_st;								// Greater than num_xyz for seams.
+	int			    num_st;			// Greater than num_xyz for seams.
 	int			    numtris;
-	int			    num_glcmds;							// Dwords in strip/fan command list.
+	int			    num_glcmds;		// Dwords in strip/fan command list.
 	int			    num_frames;
-	int			    ofs_skins;							// Each skin is a MAX_SKINNAME string.
-	int			    ofs_st;								// Byte offset from start for stverts.
-	int			    ofs_tris;							// Offset for dtriangles.
-	int			    ofs_frames;							// Offset for first frame.
+	int			    ofs_skins;		// Each skin is a MAX_SKINNAME string.
+	int			    ofs_st;			// Byte offset from start for stverts.
+	int			    ofs_tris;		// Offset for dtriangles.
+	int			    ofs_frames;		// Offset for first frame.
 	int			    ofs_glcmds;
-	int			    ofs_end;							// End of file.
+	int			    ofs_end;		// End of file.
+
+    Material_t  mMaterial[MODEL_MAX_TEXTURES];
 
 	MD2TextureCoordinate_t	*mtcTextureCoord;
 } MD2_t;
@@ -220,7 +222,8 @@ typedef struct
 	LVL	Format
 */
 
-#define	LVL_EXTENSION	".lvl"
+#define LVL_HEADER      (('4'<<24)+('L'<<16)+('V'<<8)+'L')
+#define	LVL_EXTENSION	".level"
 
 /*
 	BSP Format

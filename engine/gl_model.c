@@ -1384,15 +1384,8 @@ void Model_LoadTextures(MD2_t *mModel)
 	// Allow us to load textures without materials.
 	{
 		Con_Warning("Failed to load material! (%s)\n",cScriptPath);
-
-		sprintf(cScriptPath,"textures/%s",cOutName);
-
-		_Material_AddSkin("");
-		_Material_SetDiffuseTexture(mModel,cScriptPath);
+        return;
 	}
-
-	if(iMaterialCount < 0 || iMaterialCount > MD2_MAX_SKINS)
-		Console_ErrorMessage(true,loadmodel->name,va("Invalid number of skins (%i)",iMaterialCount));
 }
 
 /*	Calculate bounds of alias model for nonrotated, yawrotated, and fullrotated cases

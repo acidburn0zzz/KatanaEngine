@@ -16,7 +16,6 @@
 				<Option createStaticLib="1" />
 				<Linker>
 					<Add library="../platform/lib/libplatformx64.a" />
-					<Add library="libSDL2" />
 					<Add library="libdl.a" />
 				</Linker>
 			</Target>
@@ -33,7 +32,6 @@
 				</Compiler>
 				<Linker>
 					<Add library="../platform/lib/libplatformx86.a" />
-					<Add library="libSDL2" />
 					<Add library="libdl.a" />
 				</Linker>
 			</Target>
@@ -60,6 +58,8 @@
 			<Add option="-lGLU" />
 			<Add option="-lopenal" />
 			<Add option="-lX11" />
+			<Add option="-lSDL2" />
+			<Add option="-lSDL2-ttf" />
 			<Add library="../external/AntTweakBar/lib/libAntTweakBar.a" />
 		</Linker>
 		<Unit filename="../common/SCRIPLIB.H" />
@@ -185,6 +185,7 @@
 		<Unit filename="engine_material.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="engine_material.h" />
 		<Unit filename="engine_menu.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -263,13 +263,6 @@ typedef struct model_s
 	byte			*visdata,*lightdata;
 	char			*entities;
 
-	struct gltexture_s	*gDiffuseTexture[MODEL_MAX_TEXTURES],		// Diffuse texture.
-						*gFullbrightTexture[MODEL_MAX_TEXTURES],	// Texture used for fullbright layer.
-						*gSphereTexture[MODEL_MAX_TEXTURES];		// Texture used for sphere mapping.
-
-	int	iTextureWidth[MODEL_MAX_TEXTURES],
-		iTextureHeight[MODEL_MAX_TEXTURES];
-
 	// additional model data
 	cache_user_t	cache;		// only access through Mod_Extradat
 } model_t;
