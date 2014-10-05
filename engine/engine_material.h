@@ -3,6 +3,9 @@
 
 #include "quakedef.h"
 
+#define	MATERIAL_FLAG_SCROLLX
+#define	MATERIAL_FLAG_SCROLLY
+
 typedef enum
 {
     MATERIAL_TYPE_NONE,
@@ -15,14 +18,16 @@ typedef enum
 
 typedef struct
 {
-    MaterialType_t  mType;  // The type of material.
+    MaterialType_t  mType[MODEL_MAX_TEXTURES];  // The type of material.
 
-	struct gltexture_s	*gDiffuseTexture,		// Diffuse texture.
-						*gFullbrightTexture,	// Texture used for fullbright layer.
-						*gSphereTexture;		// Texture used for sphere mapping.
+	struct gltexture_s	*gDiffuseTexture[MODEL_MAX_TEXTURES],		// Diffuse texture.
+						*gFullbrightTexture[MODEL_MAX_TEXTURES],	// Texture used for fullbright layer.
+						*gSphereTexture[MODEL_MAX_TEXTURES];		// Texture used for sphere mapping.
 
-	int iTextureWidth,
-		iTextureHeight;
+	int iTextureWidth[MODEL_MAX_TEXTURES],iTextureHeight[MODEL_MAX_TEXTURES],	// Defines the width and height of each texture.
+		iFlags[MODEL_MAX_TEXTURES];												// Various flags, such as scrolling and such.
 } Material_t;
+
+Material_t	*Material_Load(const char *ccPath);
 
 #endif // __ENGINEMATERIAL__

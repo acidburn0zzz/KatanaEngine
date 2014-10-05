@@ -88,7 +88,7 @@ typedef struct
 	int			    ofs_glcmds;
 	int			    ofs_end;		// End of file.
 
-    Material_t  mMaterial[MODEL_MAX_TEXTURES];
+    Material_t  mMaterial;
 
 	MD2TextureCoordinate_t	*mtcTextureCoord;
 } MD2_t;

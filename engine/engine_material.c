@@ -6,6 +6,8 @@
 
 int	iMaterialCount;
 
+Material_t	*mGlobalMaterials;
+
 void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
 {
 	byte *bDiffuseMap = Image_LoadImage(cArg,&mCurrentMaterial->iTextureWidth[iMaterialCount],&mCurrentMaterial->iTextureHeight[iMaterialCount]);
@@ -60,14 +62,33 @@ void _Material_SetSphereTexture(Material_t *mCurrentMaterial,char *cArg)
 		Con_Warning("Failed to load texture %s!\n",cArg);
 }
 
+Material_t *Material_Allocate(void)
+{
+	Material_t *mAllocatedMaterial;
+
+	iMaterialCount++;
+	if(iMaterialCount > MODEL_MAX_TEXTURES)
+	{
+		Con_Warning("Reached max number of allowed materials!\n");
+		return NULL;
+	}
+
+	// Set defaults...
+	mAllocatedMaterial->gDiffuseTexture[iMaterialCount]		= notexture;
+	mAllocatedMaterial->gFullbrightTexture[iMaterialCount]	= NULL;
+	mAllocatedMaterial->gSphereTexture[iMaterialCount]		= NULL;
+
+	return mAllocatedMaterial;
+}
+
 typedef struct
 {
 	char	*cKey;
 
-	void	(*Function)(model_t *mModel,char *cArg);
+	void	(*Function)(Material_t *mCurrentMaterial,char *cArg);
 } MaterialKey_t;
 
-MaterialKey_t	mkMaterialKey[]=
+MaterialKey_t mkMaterialKey[]=
 {
 	{	"diffuse",		_Material_SetDiffuseTexture		},	// Sets the diffuse texture.
 	{	"sphere",		_Material_SetSphereTexture		},	// Sets the spheremap texture.
@@ -79,7 +100,7 @@ MaterialKey_t	mkMaterialKey[]=
 /*	Loads and parses material.
 	Returns false on fail.
 */
-Material_t *Material_Load(model_t *mModel,const char *ccPath)
+Material_t *Material_Load(const char *ccPath)
 {
     Material_t  *mNewMaterial;
 	char        *cData;
@@ -87,7 +108,7 @@ Material_t *Material_Load(model_t *mModel,const char *ccPath)
 	if(LoadFile(ccPath,(void**)&cData) == -1)
 	{
 		Con_Warning("Failed to load material! (%s)\n",ccPath);
-		return false;
+		return NULL;
 	}
 
     // Reset the global material count.
@@ -99,13 +120,13 @@ Material_t *Material_Load(model_t *mModel,const char *ccPath)
 	{
 		Con_Warning("Failed to get initial token! (%s) (%i)\n",ccPath,iScriptLine);
 		free(cData);
-		return false;
+		return NULL;
 	}
 	else if(cToken[0] != '{')
 	{
 		Con_Warning("Missing '{'! (%s) (%i)\n",ccPath,iScriptLine);
 		free(cData);
-		return false;
+		return NULL;
 	}
 
 	while(true)
@@ -120,20 +141,6 @@ Material_t *Material_Load(model_t *mModel,const char *ccPath)
 			break;
 		else if(cToken[0] == '{')
 		{
-			iMaterialCount++;
-			if(iMaterialCount > MODEL_MAX_TEXTURES)
-			{
-                Con_Warning("Reached max number of allowed materials!\n");
-                return true;
-			}
-
-			// Set defaults...
-			mModel->gDiffuseTexture[iMaterialCount]		= notexture;
-			mModel->gSphereTexture[iMaterialCount]		= NULL;
-			mModel->gFullbrightTexture[iMaterialCount]	= NULL;
-
-			//while(true)
-			//{
             if(!Script_GetToken(true))
             {
                 Con_Warning("End of field without closing brace! (%s) (%i)\n",ccPath,iScriptLine);
@@ -145,13 +152,13 @@ Material_t *Material_Load(model_t *mModel,const char *ccPath)
 			{
                 MaterialKey_t *mKey;
 
-				for(mKey = skScriptKeys; mKey->cKey; mKey++)
+				for(mKey = mkMaterialKey; mKey->cKey; mKey++)
 					// Remain case sensitive.
 					if(!Q_strcasecmp(mKey->cKey,cToken+1))
 					{
 						Script_GetToken(false);
 
-						mKey->Function(cToken);
+						mKey->Function(mNewMaterial,cToken);
 						break;
 					}
 			}
@@ -162,9 +169,11 @@ Material_t *Material_Load(model_t *mModel,const char *ccPath)
 			}
 
 			Con_Warning("Invalid field! (%s) (%i)\n",ccPath,iScriptLine);
-			//}
 		}
 	}
 
-	return NULL;
+	return mNewMaterial;
 }
+
+void Material_Free(void)
+{}

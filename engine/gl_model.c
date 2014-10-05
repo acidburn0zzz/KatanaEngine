@@ -1378,8 +1378,7 @@ void Model_LoadTextures(MD2_t *mModel)
 
 	sprintf(cScriptPath,"textures/%s.material",cOutName);	//(char*)model+model->ofs_skins+i*MAX_SKINNAME);
 
-	mCurrentModel = mModel;
-
+	mModel->mMaterial = Mater
 	//if(!Script_Load(cScriptPath))
 	// Allow us to load textures without materials.
 	{
