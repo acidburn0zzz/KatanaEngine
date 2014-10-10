@@ -26,7 +26,7 @@
 
 #include "engine_console.h"
 #include "engine_script.h"
-#include "engine_material.h"
+//#include "engine_material.h"
 
 model_t	*loadmodel;
 char	loadname[32];	// for hunk tags
@@ -1369,23 +1369,18 @@ void Model_LoadBSP(model_t *mod,void *buffer)
 	ALIAS MODELS
 */
 
-void Model_LoadTextures(MD2_t *mModel)
+void Model_LoadTextures(model_t *mModel)
 {
 	char	cScriptPath[MAX_OSPATH],
 			cOutName[MAX_OSPATH];
 
-	COM_StripExtension(loadmodel->name,cOutName);
+	COM_StripExtension(mModel->name,cOutName);
 
 	sprintf(cScriptPath,"textures/%s.material",cOutName);	//(char*)model+model->ofs_skins+i*MAX_SKINNAME);
 
-	mCurrentModel = mModel;
-
-	//if(!Script_Load(cScriptPath))
-	// Allow us to load textures without materials.
-	{
+	if(!Material_Load(mModel,(char*)cScriptPath))
+	// TODO: Allow us to load textures without materials.
 		Con_Warning("Failed to load material! (%s)\n",cScriptPath);
-        return;
-	}
 }
 
 /*	Calculate bounds of alias model for nonrotated, yawrotated, and fullrotated cases
@@ -1590,7 +1585,7 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 		mMD2Model->num_skins*MAX_QPATH
 	);
 
-	Model_LoadTextures(mMD2Model);
+	Model_LoadTextures(mModel);
 
 #if 1
 	for (i=0; i<3;i++)

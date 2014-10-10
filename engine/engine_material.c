@@ -6,15 +6,24 @@
 
 int	iMaterialCount;
 
+Material_t *Material_Allocate(void)
+{
+	Material_t *mAllocated;
+
+	// TODO: Do stuff...
+
+	return mAllocated;
+}
+
 void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
 {
-	byte *bDiffuseMap = Image_LoadImage(cArg,&mCurrentMaterial->iTextureWidth[iMaterialCount],&mCurrentMaterial->iTextureHeight[iMaterialCount]);
+	byte *bDiffuseMap = Image_LoadImage(cArg,&mCurrentMaterial->iTextureWidth,&mCurrentMaterial->iTextureHeight);
 	if(bDiffuseMap)
-		mCurrentMaterial->gDiffuseTexture[iMaterialCount] = TexMgr_LoadImage(
+		mCurrentMaterial->gDiffuseTexture = TexMgr_LoadImage(
 		NULL,
 		cArg,
-		mCurrentMaterial->iTextureWidth[iMaterialCount],
-		mCurrentMaterial->iTextureHeight[iMaterialCount],
+		mCurrentMaterial->iTextureWidth,
+		mCurrentMaterial->iTextureHeight,
 		SRC_RGBA,
 		bDiffuseMap,
 		cArg,
@@ -26,13 +35,13 @@ void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
 
 void _Material_SetFullbrightTexture(Material_t *mCurrentMaterial,char *cArg)
 {
-	byte *bFullbrightMap = Image_LoadImage(cArg,&mCurrentMaterial->iTextureWidth[iMaterialCount],&mCurrentMaterial->iTextureHeight[iMaterialCount]);
+	byte *bFullbrightMap = Image_LoadImage(cArg,&mCurrentMaterial->iTextureWidth,&mCurrentMaterial->iTextureHeight);
 	if(bFullbrightMap)
-		mCurrentMaterial->gFullbrightTexture[iMaterialCount] = TexMgr_LoadImage(
+		mCurrentMaterial->gFullbrightTexture = TexMgr_LoadImage(
 		NULL,
 		cArg,
-		mCurrentMaterial->iTextureWidth[iMaterialCount],
-		mCurrentMaterial->iTextureHeight[iMaterialCount],
+		mCurrentMaterial->iTextureWidth,
+		mCurrentMaterial->iTextureHeight,
 		SRC_RGBA,
 		bFullbrightMap,
 		cArg,
@@ -44,13 +53,13 @@ void _Material_SetFullbrightTexture(Material_t *mCurrentMaterial,char *cArg)
 
 void _Material_SetSphereTexture(Material_t *mCurrentMaterial,char *cArg)
 {
-	byte *bSphereMap = Image_LoadImage(cArg,&mCurrentMaterial->iTextureWidth[iMaterialCount],&mCurrentMaterial->iTextureHeight[iMaterialCount]);
+	byte *bSphereMap = Image_LoadImage(cArg,&mCurrentMaterial->iTextureWidth,&mCurrentMaterial->iTextureHeight);
 	if(bSphereMap)
-		mCurrentMaterial->gSphereTexture[iMaterialCount] = TexMgr_LoadImage(
+		mCurrentMaterial->gSphereTexture = TexMgr_LoadImage(
 		NULL,
 		cArg,
-		mCurrentMaterial->iTextureWidth[iMaterialCount],
-		mCurrentMaterial->iTextureHeight[iMaterialCount],
+		mCurrentMaterial->iTextureWidth,
+		mCurrentMaterial->iTextureHeight,
 		SRC_RGBA,
 		bSphereMap,
 		cArg,
@@ -64,10 +73,10 @@ typedef struct
 {
 	char	*cKey;
 
-	void	(*Function)(model_t *mModel,char *cArg);
+	void	(*Function)(Material_t *mCurrentMaterial,char *cArg);
 } MaterialKey_t;
 
-MaterialKey_t	mkMaterialKey[]=
+MaterialKey_t	mkMaterialFunctions[]=
 {
 	{	"diffuse",		_Material_SetDiffuseTexture		},	// Sets the diffuse texture.
 	{	"sphere",		_Material_SetSphereTexture		},	// Sets the spheremap texture.
@@ -77,7 +86,7 @@ MaterialKey_t	mkMaterialKey[]=
 };
 
 /*	Loads and parses material.
-	Returns false on fail.
+	Returns false on complete failure.
 */
 Material_t *Material_Load(model_t *mModel,const char *ccPath)
 {
@@ -120,49 +129,76 @@ Material_t *Material_Load(model_t *mModel,const char *ccPath)
 			break;
 		else if(cToken[0] == '{')
 		{
+			Material_t *mNewMaterial;
+
 			iMaterialCount++;
 			if(iMaterialCount > MODEL_MAX_TEXTURES)
 			{
                 Con_Warning("Reached max number of allowed materials!\n");
+				// Return true, since we haven't entirely failed.
                 return true;
 			}
 
+#if 0
+			mNewMaterial = Material_Allocate();
+			if(!mNewMaterial)
+			{
+				Con_Warning("Failed to allocate material! (%s) (%i)\n",ccPath,iMaterialCount);
+
+				// If we've managed to load a material already, then we haven't entirely failed.
+				if(iMaterialCount > 0)
+					return true;
+				
+				// Otherwise if it's our first, then we've failed.
+				return false;
+			}
+#endif
+
 			// Set defaults...
-			mModel->gDiffuseTexture[iMaterialCount]		= notexture;
-			mModel->gSphereTexture[iMaterialCount]		= NULL;
-			mModel->gFullbrightTexture[iMaterialCount]	= NULL;
+			mModel->mMaterials[iMaterialCount].gDiffuseTexture		= notexture;
+			mModel->mMaterials[iMaterialCount].gFullbrightTexture	= NULL;
+			mModel->mMaterials[iMaterialCount].gSphereTexture		= NULL;
 
-			//while(true)
-			//{
-            if(!Script_GetToken(true))
-            {
-                Con_Warning("End of field without closing brace! (%s) (%i)\n",ccPath,iScriptLine);
-                break;
-            }
-
-			// '$' declares that the following is a function.
-			if(cToken[0] == '$')
+			while(true)
 			{
-                MaterialKey_t *mKey;
+				if(!Script_GetToken(true))
+				{
+					Con_Warning("End of field without closing brace! (%s) (%i)\n",ccPath,iScriptLine);
+					break;
+				}
 
-				for(mKey = skScriptKeys; mKey->cKey; mKey++)
-					// Remain case sensitive.
-					if(!Q_strcasecmp(mKey->cKey,cToken+1))
-					{
-						Script_GetToken(false);
+				// '$' declares that the following is a function.
+				if(cToken[0] == '$')
+				{
+					MaterialKey_t *mKey;
 
-						mKey->Function(cToken);
-						break;
-					}
+					for(mKey = mkMaterialFunctions; mKey->cKey; mKey++)
+						// Remain case sensitive.
+						if(!Q_strcasecmp(mKey->cKey,cToken+1))
+						{
+							Script_GetToken(false);
+
+							mKey->Function(&mModel->mMaterials[iMaterialCount],cToken);
+							break;
+						}
+				}
+				// '%' declares that the following is a function.
+				else if(cToken[0] == '%')
+				{
+					/*	TODO:
+							* Collect variable
+							* Check it against internal solutions
+							* Otherwise declare it, figure out where/how it's used
+					*/
+				}
+				else
+				{
+					Con_Warning("Invalid function call!\n");
+					break;
+				}
+
+				Con_Warning("Invalid field! (%s) (%i)\n",ccPath,iScriptLine);
 			}
-			else
-			{
-				Con_Warning("Invalid function call!\n");
-				break;
-			}
-
-			Con_Warning("Invalid field! (%s) (%i)\n",ccPath,iScriptLine);
-			//}
 		}
 	}
 

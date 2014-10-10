@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "shared_formats.h"
 
+#include "engine_material.h"
+
 /*
 d*_t structures are on-disk representations
 m*_t structures are in-memory
@@ -262,6 +264,8 @@ typedef struct model_s
 
 	byte			*visdata,*lightdata;
 	char			*entities;
+
+	Material_t		mMaterials[MODEL_MAX_TEXTURES];
 
 	// additional model data
 	cache_user_t	cache;		// only access through Mod_Extradat

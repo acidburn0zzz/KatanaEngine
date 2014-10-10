@@ -25,4 +25,6 @@ typedef struct
 		iTextureHeight;
 } Material_t;
 
+Material_t *Material_Load(model_t *mModel,const char *ccPath);
+
 #endif // __ENGINEMATERIAL__
