@@ -26,7 +26,7 @@
 
 #include "engine_console.h"
 #include "engine_script.h"
-//#include "engine_material.h"
+#include "engine_material.h"
 
 model_t	*loadmodel;
 char	loadname[32];	// for hunk tags
@@ -1379,8 +1379,10 @@ void Model_LoadTextures(model_t *mModel)
 	sprintf(cScriptPath,"textures/%s.material",cOutName);	//(char*)model+model->ofs_skins+i*MAX_SKINNAME);
 
 	if(!Material_Load(mModel,(char*)cScriptPath))
+	{
 	// TODO: Allow us to load textures without materials.
 		Con_Warning("Failed to load material! (%s)\n",cScriptPath);
+	}
 }
 
 /*	Calculate bounds of alias model for nonrotated, yawrotated, and fullrotated cases

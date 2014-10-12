@@ -52,8 +52,7 @@ void Audio_PlaySound(AudioSound_t *asSample)
 
 AudioSound_t *Audio_LoadSound(sfx_t *sSoundEffect)
 {
-#if 0
-	AudioSound_t	*asNewSound;
+	AudioSound_t	*asNewSound = NULL;
 	byte			*bData,
 					bStackBuffer[1*1024];
 //	sfxcache_t		*sSoundCache;
@@ -76,7 +75,6 @@ AudioSound_t *Audio_LoadSound(sfx_t *sSoundEffect)
 	//------
 
 	return asNewSound;
-#endif
 }
 
 /*	Called per-frame to update listener position and more!

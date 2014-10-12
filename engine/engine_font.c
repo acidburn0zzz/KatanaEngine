@@ -9,7 +9,11 @@
 
 #include "engine_video.h"
 
+#ifdef _WIN32
+#include "SDL_ttf.h"
+#else
 #include <SDL/SDL_ttf.h>
+#endif
 
 typedef struct
 {

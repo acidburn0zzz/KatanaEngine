@@ -15,6 +15,9 @@ typedef enum
 
 typedef struct
 {
+	char	*cPath,	// Path of the material.
+			*cName;	// Name of the material.
+
     MaterialType_t  mType;  // The type of material.
 
 	struct gltexture_s	*gDiffuseTexture,		// Diffuse texture.

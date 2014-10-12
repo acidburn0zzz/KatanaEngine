@@ -1,10 +1,13 @@
 /*	Copyright (C) 2011-2014 OldTimes Software
 */
-#include "engine_material.h"
+#include "quakedef.h"
 
 #include "engine_script.h"
+#include "engine_material.h"
 
 int	iMaterialCount;
+
+Material_t	*mMaterials;	// Global array.
 
 Material_t *Material_Allocate(void)
 {
@@ -13,6 +16,11 @@ Material_t *Material_Allocate(void)
 	// TODO: Do stuff...
 
 	return mAllocated;
+}
+
+void Material_Initialize(void)
+{
+	Con_Printf("Initializing material system...\n");
 }
 
 void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
@@ -139,7 +147,6 @@ Material_t *Material_Load(model_t *mModel,const char *ccPath)
                 return true;
 			}
 
-#if 0
 			mNewMaterial = Material_Allocate();
 			if(!mNewMaterial)
 			{
@@ -152,12 +159,11 @@ Material_t *Material_Load(model_t *mModel,const char *ccPath)
 				// Otherwise if it's our first, then we've failed.
 				return false;
 			}
-#endif
 
 			// Set defaults...
-			mModel->mMaterials[iMaterialCount].gDiffuseTexture		= notexture;
-			mModel->mMaterials[iMaterialCount].gFullbrightTexture	= NULL;
-			mModel->mMaterials[iMaterialCount].gSphereTexture		= NULL;
+			mNewMaterial->gDiffuseTexture		= notexture;
+			mNewMaterial->gFullbrightTexture	= NULL;
+			mNewMaterial->gSphereTexture		= NULL;
 
 			while(true)
 			{
@@ -178,7 +184,7 @@ Material_t *Material_Load(model_t *mModel,const char *ccPath)
 						{
 							Script_GetToken(false);
 
-							mKey->Function(&mModel->mMaterials[iMaterialCount],cToken);
+							mKey->Function(mNewMaterial,cToken);
 							break;
 						}
 				}
@@ -204,3 +210,9 @@ Material_t *Material_Load(model_t *mModel,const char *ccPath)
 
 	return NULL;
 }
+
+/*	Returns true on success.
+	Unfinished
+*/
+bool Material_Find(const char *ccMaterialName)
+{}

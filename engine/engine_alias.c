@@ -8,6 +8,7 @@
 
 #include "KatGL.h"
 #include "engine_video.h"
+#include "engine_material.h"
 
 extern cvar_t r_drawflat, gl_fullbrights, r_lerpmodels, r_lerpmove; //johnfitz
 
@@ -416,9 +417,7 @@ void R_RotateForEntity(vec3_t origin,vec3_t angles);
 void Alias_Draw(entity_t *eEntity)
 {
 	lerpdata_t	lLerpData;
-	gltexture_t	*gDiffuseTexture,
-				*gFullbrightTexture,
-				*gSphereTexture;
+	Material_t	*mMaterial;
 	MD2_t		*mModel;
 
 	// [17/10/2013] Oops! Added this back in :) ~hogsy
@@ -437,9 +436,7 @@ void Alias_Draw(entity_t *eEntity)
 	Alias_SetupFrame(mModel,&lLerpData);
 	Alias_SetupEntityTransform(&lLerpData);
 
-    gDiffuseTexture		= eEntity->model->gDiffuseTexture[eEntity->skinnum];
-	gFullbrightTexture	= eEntity->model->gFullbrightTexture[eEntity->skinnum];
-	gSphereTexture		= eEntity->model->gSphereTexture[eEntity->skinnum];
+	//mMaterial = &eEntity->model->mMaterials[eEntity->skinnum];
 
 	glPushMatrix();
 
@@ -453,7 +450,7 @@ void Alias_Draw(entity_t *eEntity)
 
 	if(!r_drawflat_cheatsafe)
 	{
-		Video_SetTexture(gDiffuseTexture);
+		Video_SetTexture(mMaterial->gDiffuseTexture);
 
 #if 0
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE);
@@ -464,24 +461,24 @@ void Alias_Draw(entity_t *eEntity)
 #endif
 
 		// [20/8/2013] Set us up for sphere mapping! ~hogsy
-		if(gSphereTexture)
+		if(mMaterial->gSphereTexture)
 		{
 			Video_EnableMultitexture();
 
 			glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
 			glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
 
-			Video_SetTexture(gSphereTexture);
+			Video_SetTexture(mMaterial->gSphereTexture);
 			Video_EnableCapabilities(VIDEO_BLEND|VIDEO_TEXTURE_GEN_S|VIDEO_TEXTURE_GEN_T);
 
 			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 		}
 		// [20/8/2013] Or fullbright! ~hogsy
-		else if(gFullbrightTexture)
+		else if(mMaterial->gFullbrightTexture)
 		{
 			Video_EnableMultitexture();
             Video_EnableCapabilities(VIDEO_BLEND);
-			Video_SetTexture(gFullbrightTexture);
+			Video_SetTexture(mMaterial->gFullbrightTexture);
 
 			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
 		}
