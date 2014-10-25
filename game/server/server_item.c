@@ -169,6 +169,14 @@ void Item_Touch(edict_t *eItem,edict_t *eOther)
 	else
 		Engine.Con_Warning("No pickup sound set for %s!",iItem->cName);
 
+	if (Item_CheckInventory(iItem, eOther))
+	{
+		Engine.Server_SinglePrint(eOther, "You already have the");
+		Engine.Server_SinglePrint(eOther, va("\x02 %s", iItem->cName));
+		Engine.Server_SinglePrint(eOther, "!\n");
+		return;
+	}
+
 	// [20/1/2013] Changed from Con_Printf to Server_SinglePrint ~hogsy
 	Engine.Server_SinglePrint(eOther,"You got the");
 	Engine.Server_SinglePrint(eOther,va("\x02 %s",iItem->cName));
