@@ -34,6 +34,9 @@
     <Filter Include="Server">
       <UniqueIdentifier>{c6c573d9-03fe-45e0-9029-90769b73ea14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Client\File System">
+      <UniqueIdentifier>{870ad5a4-4946-47ea-b6b1-eb6cf6507a3a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine_screen.c">

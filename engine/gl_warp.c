@@ -199,6 +199,10 @@ void GL_SubdivideSurface(msurface_t *fa)
 	SubdividePolygon (fa->polys->numverts, verts[0]);
 }
 
+/*	TODO:
+		- Firstly save each iteration of our water, so we can keep track of colour etc.
+		- Recalc colour for different dynamic moving lights.
+*/
 void Warp_DrawWaterPoly(glpoly_t *p)
 {
 	VideoObject_t	*voWaterPoly = calloc(p->numverts,sizeof(VideoObject_t));

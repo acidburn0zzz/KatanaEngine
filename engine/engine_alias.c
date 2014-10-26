@@ -436,7 +436,7 @@ void Alias_Draw(entity_t *eEntity)
 	Alias_SetupFrame(mModel,&lLerpData);
 	Alias_SetupEntityTransform(&lLerpData);
 
-	//mMaterial = &eEntity->model->mMaterials[eEntity->skinnum];
+	mMaterial = Material_Get(eEntity->model->iAssignedMaterial);
 
 	glPushMatrix();
 
@@ -448,9 +448,10 @@ void Alias_Draw(entity_t *eEntity)
 
     Video_ResetCapabilities(false);
 
+#if 0
 	if(!r_drawflat_cheatsafe)
 	{
-		Video_SetTexture(mMaterial->gDiffuseTexture);
+		Video_SetTexture(mMaterial->msSkin[eEntity->skinnum].gDiffuseTexture);
 
 #if 0
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE);
@@ -461,30 +462,35 @@ void Alias_Draw(entity_t *eEntity)
 #endif
 
 		// [20/8/2013] Set us up for sphere mapping! ~hogsy
-		if(mMaterial->gSphereTexture)
+		if(mMaterial->msSkin[eEntity->skinnum].gSphereTexture)
 		{
 			Video_EnableMultitexture();
 
-			glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
-			glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
+			Video_GenerateSphereCoordinates();
 
-			Video_SetTexture(mMaterial->gSphereTexture);
+			Video_SetTexture(mMaterial->msSkin[eEntity->skinnum].gSphereTexture);
 			Video_EnableCapabilities(VIDEO_BLEND|VIDEO_TEXTURE_GEN_S|VIDEO_TEXTURE_GEN_T);
 
 			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 		}
 		// [20/8/2013] Or fullbright! ~hogsy
-		else if(mMaterial->gFullbrightTexture)
+		else if(mMaterial->msSkin[eEntity->skinnum].gFullbrightTexture)
 		{
 			Video_EnableMultitexture();
             Video_EnableCapabilities(VIDEO_BLEND);
-			Video_SetTexture(mMaterial->gFullbrightTexture);
+			Video_SetTexture(mMaterial->msSkin[eEntity->skinnum].gFullbrightTexture);
 
 			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
 		}
 	}
 	else if(r_drawflat_cheatsafe)
 		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+#else
+	if(!r_drawflat_cheatsafe)
+		Material_Draw(mMaterial,eEntity->skinnum);
+	else
+		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+#endif
 
 	Alias_DrawModelFrame(mModel,lLerpData);
 

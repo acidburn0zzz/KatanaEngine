@@ -331,7 +331,7 @@ bool Script_Load(/*const */char *ccPath)
 			ScriptKey_t	*sKey;
 
 			// '$' declares that the following is a function.
-			if(cToken[0] == '$')
+			if(cToken[0] == SCRIPT_SYMBOL_FUNCTION)
 			{
 				for(sKey = skScriptKeys; sKey->cKey; sKey++)
 					// Remain case sensitive.

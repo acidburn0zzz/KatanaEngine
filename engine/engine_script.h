@@ -7,6 +7,9 @@
 
 #include "common/SCRIPLIB.H"
 
+#define	SCRIPT_SYMBOL_FUNCTION	'$'
+#define	SCRIPT_SYMBOL_VARIABLE	'%'
+
 bool Script_Load(/*const */char *ccPath);
 
 #endif

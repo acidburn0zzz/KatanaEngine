@@ -113,6 +113,7 @@ typedef struct
 void Video_Initialize(void);
 void Video_UpdateWindow(void);
 void Video_ClearBuffer(void);
+void Video_GenerateSphereCoordinates(void);
 void Video_SetTexture(gltexture_t *gTexture);
 void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType);
 void Video_EnableMultitexture(void);

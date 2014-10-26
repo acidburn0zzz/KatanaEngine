@@ -263,10 +263,11 @@ typedef struct model_s
 	byte			*visdata,*lightdata;
 	char			*entities;
 
-	char	*cAssignedMaterial;
-
 	// additional model data
 	cache_user_t	cache;		// only access through Mod_Extradat
+
+	// Material System
+	int	iAssignedMaterial;	// ID for assigned material.
 } model_t;
 
 //============================================================================

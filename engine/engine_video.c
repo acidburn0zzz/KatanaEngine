@@ -452,6 +452,17 @@ void Video_UpdateWindow(void)
 	vid.conheight	= vid.conwidth*Video.iHeight/Video.iWidth;
 }
 
+/*
+	Coordinate Generation
+*/
+
+void Video_GenerateSphereCoordinates(void)
+{
+	// OpenGL makes this pretty easy for us (though this should probably be more abstract)...
+	glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
+	glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
+}
+
 /**/
 
 static bool sbVideoCleanup      = false,

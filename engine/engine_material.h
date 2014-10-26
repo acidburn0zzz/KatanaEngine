@@ -3,31 +3,38 @@
 
 #include "quakedef.h"
 
-typedef enum
+typedef struct
 {
-    MATERIAL_TYPE_NONE,
-    MATERIAL_TYPE_METAL,
-    MATERIAL_TYPE_BRICK,
-    MATERIAL_TYPE_PLASTIC,
-    MATERIAL_TYPE_WOOD,
-    MATERIAL_TYPE_CONCRETE
+	int	iType;
+
+	const char *ccName;
 } MaterialType_t;
 
 typedef struct
 {
-	char	*cPath,	// Path of the material.
-			*cName;	// Name of the material.
-
-    MaterialType_t  mType;  // The type of material.
-
 	struct gltexture_s	*gDiffuseTexture,		// Diffuse texture.
 						*gFullbrightTexture,	// Texture used for fullbright layer.
 						*gSphereTexture;		// Texture used for sphere mapping.
 
-	int iTextureWidth,
-		iTextureHeight;
+	int	iTextureWidth,iTextureHeight,	// Size of the skin.
+		iType;							// The type of properties.
+} MaterialSkin_t;
+
+typedef struct
+{
+	int		iIdentification,
+			iSkins;	// Number of skins provided by this material.
+
+	char	*cPath,	// Path of the material.
+			*cName;	// Name of the material.
+
+	MaterialSkin_t	msSkin[MODEL_MAX_TEXTURES];
 } Material_t;
 
-Material_t *Material_Load(model_t *mModel,const char *ccPath);
+Material_t	*mMaterials;	// Global pointer
+
+void	Material_Draw(Material_t *mMaterial,int iSkin);
+
+Material_t *Material_Load(const char *ccPath);
 
 #endif // __ENGINEMATERIAL__
