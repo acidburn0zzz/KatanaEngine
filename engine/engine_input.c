@@ -14,6 +14,7 @@
 
 #include "engine_video.h"
 #include "engine_menu.h"
+#include "engine_editor.h"
 
 #define INPUT_MAX_CONTROLLERS	3
 #define INPUT_MAX_VIBRATION		65535
@@ -332,6 +333,8 @@ void Input_Process(void)
                 {
                     iMousePosition[X]	= sEvent.motion.xrel*5;
                     iMousePosition[Y]	= sEvent.motion.yrel*5;
+
+					if(Editor)
                     // [22/12/2013] TODO: This currently isn't accounting for any frame-loss... Ugh ~hogsy
                     if(	((unsigned)sEvent.motion.x < Video.iWidth)	||
                         ((unsigned)sEvent.motion.x > Video.iWidth)	||

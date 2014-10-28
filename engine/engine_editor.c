@@ -55,8 +55,6 @@ typedef enum
 	EDITOR_SELECT_EDGE
 } EditorSelect_t;
 
-TwBar   *tbMainMenu;
-
 void Editor_Launch(void);
 
 /*  Initialization function.
@@ -117,15 +115,6 @@ void Editor_Launch(void)
 		pFileSystem_ScanDirectory(va("./%s/textures/",com_gamedir),Editor_LoadTexture);
 	}
 
-    // [6/4/2014] Set up the editor interface ~hogsy
-	{
-        tbMainMenu = TwNewBar("Editor Menu");
-        if(!tbMainMenu)
-            Sys_Error("Failed to create editor window!\n");
-
-		TwAddButton(tbMainMenu,"Input Settings",(TwButtonCallback)Input_OpenTweakMenu,NULL,"");
-	}
-
 #if 0
 	{
 		ModuleImport_t	Import;
@@ -169,10 +158,14 @@ void Editor_Input(int iKey)
 {
 	switch(iKey)
 	{
-	case K_UPARROW:
-	case K_DOWNARROW:
-	case K_LEFTARROW:
-	case K_RIGHTARROW:
+	case 'w':			// Forward
+	case 's':			// Backward
+	case 'a':			// Left
+	case 'd':			// Right
+	case K_UPARROW:		// Forward
+	case K_DOWNARROW:	// Backward
+	case K_LEFTARROW:	// Rotate-Left
+	case K_RIGHTARROW:	// Rotate-Right
 		break;
 	}
 }
