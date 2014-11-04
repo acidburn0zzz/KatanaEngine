@@ -10,6 +10,9 @@ typedef struct
 {
 	// Host Information
 	char	cLocalName[128];	// Current system username.	
+
+	char	cMaterialPath[PLATFORM_MAX_PATH],
+			cTexturePath[PLATFORM_MAX_PATH];
 } Global_t;
 
 Global_t	Global;

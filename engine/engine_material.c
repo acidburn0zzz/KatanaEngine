@@ -73,13 +73,13 @@ void Material_Initialize(void)
 		if(!mDummy)
 			Sys_Error("Failed to allocated dummy material!\n");
 
-		mDummy->iSkins = 1;
+		mDummy->iSkins							= 1;
+		mDummy->iType							= MATERIAL_TYPE_NONE;
 		mDummy->msSkin[0].gDiffuseTexture		= notexture;
 		mDummy->msSkin[0].gFullbrightTexture	= NULL;
 		mDummy->msSkin[0].gSphereTexture		= NULL;
-		mDummy->msSkin[0].iTextureHeight		= 
-		mDummy->msSkin[0].iTextureWidth			= 16;
-		mDummy->msSkin[0].iType					= MATERIAL_TYPE_NONE;
+		mDummy->msSkin[0].iTextureHeight		= notexture->height;
+		mDummy->msSkin[0].iTextureWidth			= notexture->width;
 	}
 
 	bInitialized = true;
@@ -90,6 +90,13 @@ void Material_Initialize(void)
 void Material_Draw(Material_t *mMaterial,int iSkin)
 {
 	MaterialSkin_t	*msCurrentSkin;
+
+	// If we're drawing flat, then don't apply textures.
+	if(r_drawflat_cheatsafe)
+	{
+		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+		return;
+	}
 
 	msCurrentSkin = Material_GetSkin(mMaterial,iSkin);
 	if(!msCurrentSkin)
@@ -180,6 +187,15 @@ Material_t *Material_GetByName(const char *ccMaterialName)
 	Scripting
 */
 
+void _Material_SetType(Material_t *mCurrentMaterial,char *cArg)
+{
+	int	iMaterialType = atoi(cArg);
+
+
+
+	mCurrentMaterial->iType == iMaterialType;
+}
+
 void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
 {
 	byte *bDiffuseMap = Image_LoadImage(cArg,
@@ -249,6 +265,7 @@ typedef struct
 
 MaterialKey_t	mkMaterialFunctions[]=
 {
+	{	"type",			_Material_SetType				},	// Sets the type of material.
 	{	"diffuse",		_Material_SetDiffuseTexture		},	// Sets the diffuse texture.
 	{	"sphere",		_Material_SetSphereTexture		},	// Sets the spheremap texture.
 	{	"fullbright",	_Material_SetFullbrightTexture	},	// Sets the fullbright texture.
@@ -263,14 +280,18 @@ Material_t *Material_Load(const char *ccPath)
 {
     Material_t  *mNewMaterial;
 	int			iSkins = 0;
-	char        *cData;
+	char        *cData,
+				cPath[PLATFORM_MAX_PATH];
 
 	if(!bInitialized)
 	{
 		Con_Warning("Attempted to load material, before initialization! (%s)\n",ccPath);
 		return false;
 	}
-	else if(LoadFile(ccPath,(void**)&cData) == -1)
+
+	sprintf(cPath,"%s%s.material",Global.cMaterialPath,ccPath);
+
+	if(LoadFile(ccPath,(void**)&cData) == -1)
 	{
 		Con_Warning("Failed to load material! (%s)\n",ccPath);
 		return false;

@@ -192,6 +192,7 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 }
 
 void	Server_StartFrame(void);	// server_main
+void	Game_Shutdown(void);
 
 pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 {
@@ -250,32 +251,43 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Export.Name							= "OpenKatana";
 #elif GAME_ADAMAS
 	Export.Name							= "Adamas";
+#elif GAME_CLASP
+	Export.Name							= "Clasp";
 #elif GAME_ICTUS
 	Export.Name							= "Ictus";
 #else
 	Export.Name							= "Katana";
 #endif
-	Export.Server_SpawnEntity			= Server_SpawnEntity;
-	Export.Server_EntityFrame			= Server_EntityFrame;
-	Export.Server_KillClient			= Server_KillClient;
-	Export.Server_SetSizeVector			= Entity_SetSizeVector;
-	Export.Server_SpawnPlayer			= Player_Spawn;
 	Export.ChangeYaw					= ChangeYaw;
 	Export.SetSize						= Entity_SetSize;
 	Export.Draw							= Client_Draw;
 	Export.Game_Init					= Game_Init;
+	Export.Shutdown						= Game_Shutdown;
 
+	// Client
 	Export.Client_RelinkEntities		= Client_RelinkEntities;
 	Export.Client_Initialize			= Client_Initialize;
 	Export.Client_ParseTemporaryEntity	= Client_ParseTemporaryEntity;
 	Export.Client_ViewFrame				= Client_ViewFrame;
 
+	// Server
 	Export.Server_Initialize			= Server_Initialize;
 	Export.Server_StartFrame			= Server_StartFrame;
+	Export.Server_SpawnEntity			= Server_SpawnEntity;
+	Export.Server_EntityFrame			= Server_EntityFrame;
+	Export.Server_KillClient			= Server_KillClient;
+	Export.Server_SetSizeVector			= Entity_SetSizeVector;
+	Export.Server_SpawnPlayer			= Player_Spawn;
 
 	Export.Physics_SetGravity			= Physics_SetGravity;
 	Export.Physics_CheckWaterTransition	= Physics_CheckWaterTransition;
 	Export.Physics_CheckVelocity		= Physics_CheckVelocity;
 
 	return &Export;
+}
+
+/* Called upon engine shutdown.
+*/
+void Game_Shutdown(void)
+{
 }

@@ -414,7 +414,7 @@ void TexMgr_RecalcWarpImageSize (void)
 
 /*	Must be called before any texture loading
 */
-void TexMgr_Init (void)
+void TextureManager_Initialize(void)
 {
 	int			i;
 	static byte notexture_data[16] =
@@ -434,9 +434,6 @@ void TexMgr_Init (void)
 		free_gltextures[i].next = &free_gltextures[i+1];
 	free_gltextures[i].next = NULL;
 	numgltextures = 0;
-
-	// palette
-//	TexMgr_LoadPalette ();
 
 	Cvar_RegisterVariable (&gl_max_size, NULL);
 	Cvar_RegisterVariable (&gl_picmip, NULL);

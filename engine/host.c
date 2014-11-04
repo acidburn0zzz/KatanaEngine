@@ -701,7 +701,8 @@ void Host_Initialize(EngineParameters_t *epParameters)
 		Input_Initialize();
 		Audio_Initialize();
 
-		TexMgr_Init(); //johnfitz
+		TextureManager_Initialize(); //johnfitz
+		Material_Initialize();
 		Draw_Init();
 		SCR_Init();
 		Menu->Initialize();
@@ -748,10 +749,8 @@ void Host_Shutdown(void)
 	if(Menu)
 		Menu->Shutdown();
 
-#if 0   // [28/12/2013] TODO: Secure shutdown for Game! ~hogsy
 	if(Game)
 		Game->Shutdown();
-#endif
 
 	Audio_Shutdown();
 	Input_Shutdown();

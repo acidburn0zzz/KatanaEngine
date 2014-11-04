@@ -1372,23 +1372,19 @@ void Model_LoadBSP(model_t *mod,void *buffer)
 void Model_LoadTextures(model_t *mModel)
 {
 	Material_t	*mAssignedMaterial;
-	char		cScriptPath[MAX_OSPATH],
-				cOutName[MAX_OSPATH];
+	char		cOutName[MAX_OSPATH];
 
 	COM_StripExtension(mModel->name,cOutName);
 
-	sprintf(cScriptPath,"textures/%s.material",cOutName);	//(char*)model+model->ofs_skins+i*MAX_SKINNAME);
-
-	mAssignedMaterial = Material_Load((char*)cScriptPath);
+	mAssignedMaterial = Material_Load((char*)cOutName);
 	if(!mAssignedMaterial)
 	{
-	// TODO: Allow us to load textures without materials.
-		Con_Warning("Failed to load material! (%s)\n",cScriptPath);
+		Con_Warning("Failed to load material for model! (%s) (%s)\n",mModel->name,cOutName);
 
 		mModel->iAssignedMaterial = 0;
 	}
 	else
-		mModel->iAssignedMaterial = mAssignedMaterial->iID;
+		mModel->iAssignedMaterial = mAssignedMaterial->iIdentification;
 }
 
 /*	Calculate bounds of alias model for nonrotated, yawrotated, and fullrotated cases

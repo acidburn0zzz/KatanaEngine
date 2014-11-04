@@ -1411,7 +1411,17 @@ void FileSystem_AddGameDirectory(char *dir)
 */
 void _FileSystem_SetBasePath(char *cArg)
 {
-	strcpy(host_parms.cBasePath,cArg);
+	Q_strcpy(host_parms.cBasePath,cArg);
+}
+
+void _FileSystem_SetMaterialPath(char *cArg)
+{
+	Q_strcpy(Global.cMaterialPath,cArg);
+}
+
+void _FileSystem_SetTexturePath(char *cArg)
+{
+	Q_strcpy(Global.cTexturePath,cArg);
 }
 
 /*	Script specific function that adds a new data path.

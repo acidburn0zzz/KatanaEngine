@@ -16,14 +16,14 @@ typedef struct
 						*gFullbrightTexture,	// Texture used for fullbright layer.
 						*gSphereTexture;		// Texture used for sphere mapping.
 
-	int	iTextureWidth,iTextureHeight,	// Size of the skin.
-		iType;							// The type of properties.
+	int	iTextureWidth,iTextureHeight;	// Size of the skin.
 } MaterialSkin_t;
 
 typedef struct
 {
 	int		iIdentification,
-			iSkins;	// Number of skins provided by this material.
+			iType,				// The type of properties.
+			iSkins;				// Number of skins provided by this material.
 
 	char	*cPath,	// Path of the material.
 			*cName;	// Name of the material.
@@ -33,6 +33,7 @@ typedef struct
 
 Material_t	*mMaterials;	// Global pointer
 
+void	Material_Initialize(void);
 void	Material_Draw(Material_t *mMaterial,int iSkin);
 
 Material_t *Material_Load(const char *ccPath);

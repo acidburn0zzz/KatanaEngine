@@ -74,6 +74,7 @@ void Video_Initialize(void)
 
 	// [23/7/2013] Set default values ~hogsy
 	Video.iCurrentTexture		= (unsigned int)-1;	// [29/8/2012] "To avoid unnecessary texture sets" ~hogsy
+	Video.bCSAASupported		=
 	Video.bTextureEnvCombine	=
 	Video.bFogCoord				= false;
 	Video.bActive				=			// Window is intially assumed active.
@@ -357,10 +358,6 @@ bool Video_CreateWindow(void)
 				Video.bTextureEnvAdd = true;
 			}
 
-#ifdef KATANA_VIDEO_NEXT
-		if(!GLEE_ARB_vertex_program || !GLEE_ARB_fragment_program)
-			Sys_Error("Unsupported video hardware!\n");
-
 		// [5/9/2013] For future volumetric fog implementation? ~hogsy
 		if(!COM_CheckParm("-nofogcoord"))
 			if(GLEE_EXT_fog_coord)
@@ -369,6 +366,10 @@ bool Video_CreateWindow(void)
 
 				Video.bFogCoord = true;
 			}
+
+#ifdef KATANA_VIDEO_NEXT
+		if(!GLEE_ARB_vertex_program || !GLEE_ARB_fragment_program)
+			Sys_Error("Unsupported video hardware!\n");
 #endif
 	}
 
@@ -862,6 +863,9 @@ void Video_ResetCapabilities(bool bClearActive)
 			Video_SelectTexture(i);
 			Video_DisableCapabilities(iSavedCapabilites[i][VIDEO_STATE_ENABLE]);
 			Video_EnableCapabilities(iSavedCapabilites[i][VIDEO_STATE_DISABLE]);
+
+			// Set this back too...
+			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 		}
 
         if(sbVideoIgnoreDepth)

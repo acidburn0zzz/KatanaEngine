@@ -486,22 +486,12 @@ void Alias_Draw(entity_t *eEntity)
 	else if(r_drawflat_cheatsafe)
 		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 #else
-	if(!r_drawflat_cheatsafe)
-		Material_Draw(mMaterial,eEntity->skinnum);
-	else
-		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
+	Material_Draw(mMaterial,eEntity->skinnum);
 #endif
 
 	Alias_DrawModelFrame(mModel,lLerpData);
 
-	if(!r_drawflat_cheatsafe)
-	{
-		Video_SelectTexture(1);
-		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
-		Video_SelectTexture(0);
-		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
-	}
-	else
+	if(r_drawflat_cheatsafe)
 	{
 		// Restore randomness
 		srand((int)(cl.time*1000));
