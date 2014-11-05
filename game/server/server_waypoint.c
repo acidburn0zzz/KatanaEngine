@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2013 OldTimes Software
+/*	Copyright (C) 2011-2014 OldTimes Software
 */
 #include "server_waypoint.h"
 
@@ -289,7 +289,7 @@ void Waypoint_Spawn(vec3_t vOrigin,WaypointType_t type)
 		wPoint->last->next = wPoint;
 
 #ifdef DEBUG_WAYPOINT
-	wPoint->eDebug = Spawn();
+	wPoint->eDebug = Entity_Spawn();
 	if(wPoint->eDebug)
 	{
 		wPoint->eDebug->v.effects = EF_MOTION_ROTATE;

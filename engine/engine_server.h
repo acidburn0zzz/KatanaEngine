@@ -12,4 +12,6 @@ edict_t *Server_FindEntity(edict_t *eStartEntity,char *cName,bool bClassname);
 void	Server_SinglePrint(edict_t *eEntity,char *cMessage);
 void	Server_PrecacheResource(int iType,const char *ccResource);
 
+double	Server_GetFrameTime(void);
+
 #endif

@@ -72,7 +72,7 @@ void pFileSystem_GetUserName(char *cOut)
 
 	if(GetUserName(cUser,&dName))
 #else   // Linux
-    char *cUser;
+    char *cUser = "user";
 
     cUser = getenv("LOGNAME");
 	if(strcasecmp(cUser,"user"))

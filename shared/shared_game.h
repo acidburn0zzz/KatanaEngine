@@ -15,8 +15,15 @@ typedef struct link_s
 
 enum
 {
-	DAMAGE_TYPE_NONE,
-	DAMAGE_TYPE_EXPLOSIVE
+	DAMAGE_TYPE_NORMAL,
+	DAMAGE_TYPE_EXPLODE,
+	DAMAGE_TYPE_BURN,
+	DAMAGE_TYPE_FREEZE,
+	DAMAGE_TYPE_GRAVITY,
+	DAMAGE_TYPE_CRUSH,
+	DAMAGE_TYPE_FALL,
+
+	DAMAGE_TYPE_NONE
 };
 
 typedef struct edict_s edict_t;
@@ -107,8 +114,7 @@ typedef struct
 	int			frame;
 	float		skin;
 	int			effects;
-	vec3_t		mins;
-	vec3_t		maxs;
+	vec3_t		mins,maxs;
 	vec3_t		size;
 	void		(*TouchFunction)(edict_t *eEntity,edict_t *eOther);
 	void		(*use)(edict_t *ent);
@@ -483,6 +489,7 @@ typedef struct
 	edict_t		*(*Server_FindRadius)(vec3_t origin,float radius);												// Finds entities within a specific radius.
 	edict_t		*(*Server_FindEntity)(edict_t *eStartEntity,char *cName,bool bClassname);						// Finds a specified entity either by classname or by entity name.
 	char		*(*Server_GetLevelName)(void);																	// Returns the name of the currently active level.
+	double		(*Server_GetFrameTime)(void);																	// Returns host time.
 
 	// Client
 	int				(*Client_GetEffect)(const char *cPath);					// Get an effect index.
@@ -491,6 +498,8 @@ typedef struct
 	void			(*Client_SetMenuCanvas)(int iCanvas);					// Set the canvas type that the menu will use.
 	void			(*Client_AddMenuState)(int iState);						// Adds a new state to the clients menu.
 	void			(*Client_RemoveMenuState)(int iState);					// Removes a state from the clients menu.
+	entity_t		*(*Client_GetViewEntity)(void);							// Returns the entity representing the players view model.
+	entity_t		*(*Client_GetPlayerEntity)(void);						// Returns the entity representing the player.
 	DynamicLight_t	*(*Client_AllocateDlight)(int key);						// Allocate a new dynamic light.
 	Particle_t		*(*Client_AllocateParticle)(void);						// Allocate a new particle effect.
 
@@ -550,15 +559,19 @@ typedef struct
 	void	(*Client_Initialize)(void);
 	void	(*Client_RelinkEntities)(entity_t *ent,int i,double dTime);
 	void	(*Client_ParseTemporaryEntity)(void);
+	void	(*Client_ViewFrame)(void);																	// Called per-frame to handle players view.
 
 	void	(*Server_Initialize)(void);																	// Initializes the server.
-	void	(*Server_CheckWaterTransition)(edict_t *ent);
-	void	(*Server_CheckVelocity)(edict_t *ent);														// Checks the velocity of physically simulated entities.
 	void	(*Server_EntityFrame)(edict_t *eEntity);
 	void	(*Server_KillClient)(edict_t *eClient);														// Tells the specified client to die.
 	void	(*Server_SetSizeVector)(edict_t *eEntity,vec3_t vMin,vec3_t vMax);							// Set the size of an entity by vector.
 	void	(*Server_SpawnPlayer)(edict_t *ePlayer);													// Spawns the player (SERVER_PUTCLIENTINSERVER).
-	bool	(*Server_SpawnEntity)(edict_t *ent);														// Puts a specific entity into the server
+	void	(*Server_StartFrame)(void);																	// Called at the start of each physics frame.
+	bool	(*Server_SpawnEntity)(edict_t *ent);														// Puts a specific entity into the server.
+
+	void	(*Physics_SetGravity)(edict_t *eEntity);			// Sets the current gravity for the given entity.
+	void	(*Physics_CheckWaterTransition)(edict_t *eEntity);
+	void	(*Physics_CheckVelocity)(edict_t *ent);				// Checks the velocity of physically simulated entities.
 
 	/*	Shared
 	*/

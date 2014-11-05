@@ -40,7 +40,7 @@ void HermesCloudTouch(edict_t *ent, edict_t *other)
 void Hermes_PrimaryAttack(edict_t *ent)
 {
 	float	*dir;
-	edict_t *cloud = Spawn();
+	edict_t *cloud = Entity_Spawn();
 
 	cloud->v.cClassname = "cloud";
 	cloud->v.movetype	= MOVETYPE_FLYMISSILE;

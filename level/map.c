@@ -74,9 +74,6 @@ int	FindTexinfo( BSPTextureInfo_t *t )
 	// set the special flag
 	if((miptex[t->iMipTex][0] == '*' && !waterlightmap) || !Q_strncasecmp (miptex[t->iMipTex],"sky",3))
 		t->iFlags |= BSP_TEXTURE_SPECIAL;
-	// Support nodraw surfaces.
-	else if(!Q_strncasecmp(miptex[t->iMipTex],"nodraw",6))
-		t->iFlags |= BSP_TEXTURE_SKIP;
 
 	tex = texinfo;
 	for( i = 0; i < numtexinfo; i++, tex++ )

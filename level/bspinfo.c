@@ -16,7 +16,7 @@ static void BspInfo_PrintInfo(void)
 
 	LoadBSPFile( filename_bsp );
 
-	// print .bsp info
+	// print level info
 	PrintBSPFileSizes ();
 }
 

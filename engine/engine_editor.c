@@ -1,6 +1,6 @@
 /*	Copyright (C) 2011-2014 OldTimes Software
 */
-#include "KatEditor.h"
+#include "engine_editor.h"
 
 /*
 	The Katana Editor is perhaps the biggest addition to
@@ -16,16 +16,12 @@
 	to edit the map	from a single window with a realtime preview
 	of the map in view...
 */
-#include "quakedef.h"
-
-// Main header
-#include "engine_editor.h"
 
 #include "engine_video.h"
-#include "engine_input.h"
-#include "KatGL.h"			// [14/10/2013] TODO: Obsolete! ~hogsy
+#include "engine_clientinput.h"
+#include "engine_videoshadow.h"			// [14/10/2013] TODO: Obsolete! ~hogsy
 #include "engine_console.h"
-#include "engine_menu.h"
+#include "engine_modmenu.h"
 
 // Platform library
 #include "platform_module.h"
@@ -40,7 +36,8 @@ ModuleEditor_t	*mToolModule;
 typedef enum
 {
 	EDITOR_MODE_CAMERA,	// Default 3D camera view.
-	EDITOR_MODE_TOP		// Secondary top view mode.
+	EDITOR_MODE_TOP,	// 2D top view mode.
+	EDITOR_MODE_SIDE	// 2D side view mode.
 } EditorMode_t;
 
 // Draw Modes
@@ -69,6 +66,8 @@ void Editor_Initialize(void)
 	Editor.bEnabled = false;
 
 	Cmd_AddCommand("editor",Editor_Launch);
+	// TODO: Add a seperate command to handle this, rather than directly ~hogsy
+	//Cmd_AddCommand("editor_loadlevel",Editor_LoadLevel);
 
 	Cvar_RegisterVariable(&cvEditorLightPreview,NULL);
 
@@ -98,6 +97,8 @@ void Editor_LoadLevel(const char *ccLevel)
 		Con_Warning("Unknown level format! (%s)\n",ccLevel);
 }
 
+void Input_OpenTweakMenu(void);
+
 /*  Command function to allow us to launch the editor.
 */
 void Editor_Launch(void)
@@ -121,6 +122,8 @@ void Editor_Launch(void)
         tbMainMenu = TwNewBar("Editor Menu");
         if(!tbMainMenu)
             Sys_Error("Failed to create editor window!\n");
+
+		TwAddButton(tbMainMenu,"Input Settings",(TwButtonCallback)Input_OpenTweakMenu,NULL,"");
 	}
 
 #if 0
@@ -135,7 +138,7 @@ void Editor_Launch(void)
 		Import.Con_Warning				= Con_Warning;
 		Import.Cvar_RegisterVariable	= Cvar_RegisterVariable;
 
-		mToolModule = (ModuleEditor_t*)pModule_Load(hToolInstance,MODULE_EDITOR,"Toolkit_Main",&Import);
+		mToolModule = (ModuleEditor_t*)pModule_LoadInterface(hToolInstance,MODULE_EDITOR,"Toolkit_Main",&Import);
 		if(!mToolModule)
 		{
 			Console_ErrorMessage(false,MODULE_EDITOR,"Failed to find "MODULE_EDITOR".");
@@ -179,22 +182,13 @@ void Editor_Draw(void)
 	if(!Editor.bEnabled)
 		return;
 
-#if 0
 	switch(Editor.iDrawMode)
 	{
 	case EDITOR_DRAW_WIREFRAME:
+		break;
 	case EDITOR_DRAW_TEXTURED:
-		glEnable(GL_FRONT);
-		glEnable(GL_CULL_FACE);
-		glShadeModel(GL_FLAT);
-		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-		glEnable(GL_TEXTURE_2D);
-		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-		glDisable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
+		break;
 	}
-#endif
 
     GL_SetCanvas(CANVAS_DEFAULT);
 

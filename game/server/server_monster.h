@@ -21,8 +21,12 @@ typedef struct
 #define	MONSTER_PRISONER	3
 #define	MONSTER_LASERGAT	4
 #define	MONSTER_INMATER		5
+
+#define MONSTER_MIKIKO      50  // Added for sanity sake.
+#define MONSTER_SUPERFLY    51  // Added for sanity sake.
+#define MONSTER_
 #elif GAME_ADAMAS
-#define MONSTER_HURLER	3
+#define MONSTER_HURLER	    3
 #endif
 
 /*	Various states for the AI.
@@ -117,5 +121,18 @@ void Monster_MoveToGoal(edict_t *ent,vec3_t goal,float distance);
 void Monster_Frame(edict_t *eMonster);
 void Monster_SetTargets(edict_t *eMonster);
 void Monster_Killed(edict_t *eTarget,edict_t *eAttacker);
+
+/*
+    Bots
+*/
+
+enum
+{
+	BOT_DEFAULT,
+#ifdef OPENKATANA
+	BOT_MIKIKO,
+	BOT_SUPERFLY
+#endif
+};
 
 #endif

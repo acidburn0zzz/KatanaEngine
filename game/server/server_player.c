@@ -330,6 +330,21 @@ void Player_CheckFootsteps(edict_t *ePlayer)
 	}
 }
 
+void Player_CheckWater(edict_t *ePlayer)
+{
+	// [2/8/2014] Basic Drowning... ~eukos
+	if(ePlayer->v.waterlevel != 3)
+		ePlayer->local.dAirFinished = Server.dTime + 12;
+	else if(ePlayer->local.dAirFinished < Server.dTime)
+	{
+		if(ePlayer->local.dPainFinished < Server.dTime)
+		{
+			MONSTER_Damage(ePlayer,ePlayer,10, 0);
+			ePlayer->local.dPainFinished = Server.dTime + 1;
+		}
+	}
+}
+
 void Player_PostThink(edict_t *ePlayer)
 {
 	// [25/8/2012] Added iFlag to deal with a particular issue ~hogsy
@@ -400,8 +415,8 @@ void Player_PostThink(edict_t *ePlayer)
 	if(!(ePlayer->v.flags & FL_ONGROUND))
 		ePlayer->local.jump_flag = ePlayer->v.velocity[2];
 	// [10/11/2013] Fixed a bug where the player would cycle when just sliding down something... ~hogsy
-	else if((	(ePlayer->v.velocity[0] < -4.0f || ePlayer->v.velocity[0] > 4.0f)	|| 
-				(ePlayer->v.velocity[1] < -4.0f || ePlayer->v.velocity[1] > 4.0f))	&& 
+	else if((	(ePlayer->v.velocity[0] < -4.0f || ePlayer->v.velocity[0] > 4.0f)	||
+				(ePlayer->v.velocity[1] < -4.0f || ePlayer->v.velocity[1] > 4.0f))	&&
 				(!ePlayer->local.dAnimationTime || ePlayer->local.iAnimationEnd == 9))
 		Entity_Animate(ePlayer,PlayerAnimation_Walk);
 	else if((ePlayer->v.velocity[0] == 0 || ePlayer->v.velocity[1] == 0) && (!ePlayer->local.dAnimationTime || ePlayer->local.iAnimationEnd == 46))
@@ -433,6 +448,7 @@ void Player_PreThink(edict_t *ePlayer)
 
 	Weapon_CheckFrames(ePlayer);
 	Entity_CheckFrames(ePlayer);
+	Player_CheckWater(ePlayer);
 
 	if(ePlayer->monster.iState == STATE_DEAD)
 	{
@@ -484,6 +500,17 @@ void Player_PreThink(edict_t *ePlayer)
 	else
 		// [30/7/2012] Simplified ~hogsy
 		ePlayer->v.flags |= FL_JUMPRELEASED;
+
+	if(ePlayer->v.button[1])
+	{
+		Entity_SetSize(ePlayer,-16.0f,-16.0f,-24.0f,16.0f,16.0f,35.0f);
+		ePlayer->v.view_ofs[2]	= 10.0f;
+	}
+	else
+	{
+		Entity_SetSize(ePlayer,-16.0f,-16.0f,-24.0f,16.0f,16.0f,40.0f);
+		ePlayer->v.view_ofs[2]	= 30.0f;
+	}
 
 	if(cvServerWaypointSpawn.value && (Server.dTime >= Server.dWaypointSpawnDelay))
 	{
@@ -578,7 +605,7 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 #ifdef GAME_OPENKATANA
 	if(ePlayer->v.iActiveWeapon == WEAPON_DAIKATANA)
 		Entity_Animate(ePlayer,PlayerAnimation_KatanaDeath1);
-	else 
+	else
 #endif
 	{
 		if(rand()%2 == 1)
@@ -848,7 +875,7 @@ void Player_Jump(edict_t *ePlayer)
 		Entity_Animate(ePlayer,PlayerAnimation_RunJump);
 }
 
-#ifdef OPENKATANA
+#ifdef GAME_OPENKATANA
 void Player_CheckPowerups(edict_t *ePlayer)
 {
 	Item_t	*iPowerBoost,
@@ -866,14 +893,14 @@ void Player_CheckPowerups(edict_t *ePlayer)
 	iSpeedBoost		= Item_GetInventory(ITEM_SPEEDBOOST,ePlayer);
 	iAttackBoost	= Item_GetInventory(ITEM_ATTACKBOOST,ePlayer);
 	iAcroBoost		= Item_GetInventory(ITEM_ACROBOOST,ePlayer);
-	
+
 	if(iPowerBoost && ePlayer->local.power_finished)
 	{
 		if(ePlayer->local.power_time == 1)
 			if(ePlayer->local.power_finished < Server.dTime+3.0)
 			{
 				// [30/7/2012] Updated to use centerprint instead ~hogsy
-				Engine.CenterPrint(ePlayer,"You are becoming a girly man.\n");
+				Engine.CenterPrint(ePlayer,"Your power boost is running out.\n");
 
 				ePlayer->local.power_time = Server.dTime+1.0;
 			}
@@ -1030,4 +1057,39 @@ void Player_Use(edict_t *ePlayer)
 	Sound(ePlayer,CHAN_VOICE,"player/playerpain3.wav",255,ATTN_NORM);
 
 	ePlayer->local.dAttackFinished = Server.dTime+0.5;
+}
+
+/*
+	Movement
+*/
+
+/*	Called per-frame to handle player movement for each client.
+*/
+void Player_MoveThink(edict_t *ePlayer)
+{
+#if 0
+	vec3_t	vViewAngle;
+	float	fLength,*fPlayerAngles;
+
+	if(ePlayer->v.movetype == MOVETYPE_NONE)
+		return;
+
+	fLength = Math_VectorNormalize(ePlayer->v.punchangle);
+	fLength -= 10*(float)Engine.Server_GetFrameTime();
+	if(fLength < 0)
+		fLength = 0;
+
+	Math_VectorScale(ePlayer->v.punchangle,fLength,ePlayer->v.punchangle);
+
+	// If dead, behave differently
+	if(!ePlayer->v.iHealth)
+		return;
+
+#ifdef IMPLEMENT_ME
+	cmd = host_client->cmd;
+#endif
+	fPlayerAngles = ePlayer->v.angles;
+
+	Math_VectorAdd(ePlayer->v.v_angle,ePlayer->v.punchangle,vViewAngle);
+#endif
 }

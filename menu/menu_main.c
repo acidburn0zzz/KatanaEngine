@@ -11,66 +11,65 @@
 #include "platform_module.h"
 
 /*	TODO:
-		Get menu elements to be handled like objects.
-		Let us handle models (for 3D menu interface).
-		Get basic window environment done, move windows
-		if being clicked and mousepos changing, allow
-		windows to be resized, let us show a "virtual"
-		window within another window, "Katana Menu Scripts",
-		allow us to manipulate windows within a 3D space
-		etc
+		#	Get menu elements to be handled like objects.
+		#	Let us handle models (for 3D menu interface).
+		#	Get basic window environment done, move windows
+			if being clicked and mousepos changing, allow
+			windows to be resized, let us show a "virtual"
+			window within another window, "Katana Menu Scripts",
+			allow us to manipulate windows within a 3D space
+		#	Allow for texture maps!
 		etc
 		etc
 */
 
 enum
 {
-	MENU_NONE,
+	MENU_MAIN,										// Main Menu
+		MENU_NEW,									// New Game
+			MENU_NEW_EPISODE1,
+			MENU_NEW_EPISODE2,
+			MENU_NEW_EPISODE3,
+			MENU_NEW_EPISODE4,
+		MENU_NEW_END,
 
-	MENU_MAIN,						// Main Menu
-	MENU_LOAD,						// Load Game
-	MENU_QUIT,						// Quit Game
-	MENU_MAIN_END,
+		MENU_LOAD,
+		MENU_LOAD_END,
 
-	MENU_NEW,						// New Game
-	MENU_NEW_EPISODE1,
-	MENU_NEW_EPISODE2,
-	MENU_NEW_EPISODE3,
-	MENU_NEW_EPISODE4,
-	MENU_NEW_END,
+		MENU_MULTI,									// Multiplayer
+			MENU_MULTI_JOIN,						// Join Game
+				MENU_MULTI_JOIN_NETWORK,			// Network
+				MENU_MULTI_JOIN_INTERNET,			// Internet
+				MENU_MULTI_JOIN_MODEM,				// Modem
+				MENU_MULTI_JOIN_DIRECT,				// Direct Connect
+			MENU_MULTI_NEW,							// New Game
+				MENU_MULTI_NEW_NETWORK,				// Network
+				MENU_MULTI_NEW_MODEM,				// Modem
+				MENU_MULTI_NEW_DIRECT,				// Direct Connect
+			MENU_MULTI_SETUP,						// Player Setup
+				MENU_MULTI_SETUP_GAME,				// Game Name
+				MENU_MULTI_SETUP_NAME,				// Player Name
+				MENU_MULTI_SETUP_PORT,				// Network Port
+		MENU_MULTI_END,
 
-	MENU_MULTI,						// Multiplayer
-	MENU_MULTI_JOIN,				// Join Game
-	MENU_MULTI_JOIN_NETWORK,		// Network
-	MENU_MULTI_JOIN_INTERNET,		// Internet
-	MENU_MULTI_JOIN_MODEM,			// Modem
-	MENU_MULTI_JOIN_DIRECT,			// Direct Connect
-	MENU_MULTI_NEW,					// New Game
-	MENU_MULTI_NEW_NETWORK,			// Network
-	MENU_MULTI_NEW_MODEM,			// Modem
-	MENU_MULTI_NEW_DIRECT,			// Direct Connect
-	MENU_MULTI_SETUP,				// Player Setup
-	MENU_MULTI_SETUP_GAME,			// Game Name
-	MENU_MULTI_SETUP_NAME,			// Player Name
-	MENU_MULTI_SETUP_PORT,			// Network Port
-	MENU_MULTI_END,
+		MENU_OPTIONS,								// Options
+			MENU_OPTIONS_SOUND,						// Options / Sound Volume
+			MENU_OPTIONS_CD,						// Options / CD Volume
+			MENU_OPTIONS_CONTROL,					// Options / Customize Control
+			MENU_OPTIONS_MOUSE,						// Mouse Config
+			MENU_OPTIONS_VIDEO,						// Video Mode
+			MENU_OPTIONS_MISC,						// Misc Settings
+				MENU_OPTIONS_MISC_SCREEN,			// Screen Size
+				MENU_OPTIONS_MISC_CROSSHAIR,		// Options / Misc / Crosshair
+				MENU_OPTIONS_MISC_CROSSHAIR_SCALE,	// Options / Misc / Crosshair Scale
+				MENU_OPTIONS_MISC_BRIGHTNESS,		// Brightness
+				MENU_OPTIONS_MISC_RUN,				// Always Run
+				MENU_OPTIONS_MISC_LOOKSPRING,		// Lookspring
+				MENU_OPTIONS_MISC_LOOKSTRAFE,		// Lookstrafe
+		MENU_OPTIONS_END,
 
-	MENU_OPTIONS,						// Options
-	MENU_OPTIONS_SOUND,					// Options / Sound Volume
-	MENU_OPTIONS_CD,					// Options / CD Volume
-	MENU_OPTIONS_CONTROL,				// Options / Customize Control
-	MENU_OPTIONS_MOUSE,					// Mouse Config
-	MENU_OPTIONS_VIDEO,					// Video Mode
-	MENU_OPTIONS_MISC,					// Misc Settings
-	MENU_OPTIONS_MISC_SCREEN,			// Screen Size
-	MENU_OPTIONS_MISC_CROSSHAIR,		// Options / Misc / Crosshair
-	MENU_OPTIONS_MISC_CROSSHAIR_SCALE,	// Options / Misc / Crosshair Scale
-	MENU_OPTIONS_MISC_BRIGHTNESS,		// Brightness
-	MENU_OPTIONS_MISC_RUN,				// Always Run
-	MENU_OPTIONS_MISC_LOOKSPRING,		// Lookspring
-	MENU_OPTIONS_MISC_LOOKSTRAFE,		// Lookstrafe
-
-	MENU_OPTIONS_END
+		MENU_QUIT,
+	MENU_MAIN_END
 };
 
 MenuExport_t	Export;
@@ -79,7 +78,9 @@ ModuleImport_t	Engine;
 Menu_t	*mMenuElements;
 
 int	iMenuElements,
-	iMenuSection;
+	iMenuAllocated			= 512,
+	iMenuState				= 0,
+	iMenuDisplaySelection	= MENU_NEW;
 
 cvar_t	cvShowMenu			= {	"menu_show",			"1",    false,  false,  "Toggle the display of any menu elements."	        },
 		cvShowHealth		= {	"menu_showhealth",		"2",	true,   false,  "Toggle the health HUD."	                        },
@@ -134,25 +135,34 @@ void Menu_Initialize(void)
 //	Script_Initialize();
 
 #ifdef GAME_OPENKATANA
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"topbar");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"topclose");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"loading");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASEPATH"paused");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"ammo");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"health");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"messenger");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"cross");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"armor");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"topbar");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"topclose");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"loading");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"paused");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"ammo");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"health");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"messenger");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"inventory");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"cross");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"armor");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair0");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair1");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair2");
 #elif GAME_ADAMAS
-    Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"health");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"ammo");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"armor");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,HUD_BASEPATH"crosshair");
+    Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"health");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"ammo");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"armor");
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair");
+#elif GAME_ICTUS
+	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"int040a");
 #endif
+
+	// Allocate global elements.
+	mMenuElements = (Menu_t*)malloc(iMenuAllocated*sizeof(Menu_t));
 
 	// [2/8/2012] Precache all the HUD digits ~hogsy
 	for(i = 0; i < 10; i++)
-		Engine.Client_PrecacheResource(RESOURCE_TEXTURE,va(HUD_BASEPATH"num%i",i));
+		Engine.Client_PrecacheResource(RESOURCE_TEXTURE,va(MENU_HUD_PATH"num%i",i));
 
 	Menu_GetScreenSize();
 
@@ -163,7 +173,7 @@ void Menu_Initialize(void)
 
 		mTestWindow.bActive			= true;
 		mTestWindow.cContent		= 0;
-		mTestWindow.cName			= "Test Window";
+		mTestWindow.cName			= "testwindow";
 		mTestWindow.cResource		= 0;
 		mTestWindow.fAlpha			= 1.0f;
 		mTestWindow.iPosition[X]	= 320;
@@ -175,7 +185,7 @@ void Menu_Initialize(void)
 
 		mHealth.bActive			= false;
 		mHealth.cContent		= "";
-		mHealth.cName			= "Health";
+		mHealth.cName			= "health";
 		mHealth.cResource		= "models/hud/hud_health.md2";
 		mHealth.fAlpha			= 1.0f;
 		mHealth.iPosition[0]	= 0;
@@ -186,8 +196,8 @@ void Menu_Initialize(void)
 		mHealth.mParent			= NULL;
 
 		// [3/8/2012] Add it to the array ~hogsy
-		Menu_AddElement(mTestWindow);
-		Menu_AddElement(mHealth);
+		Menu_Add(mTestWindow);
+		Menu_Add(mHealth);
 	}
 #endif
 
@@ -215,9 +225,32 @@ void Menu_GetScreenSize(void)
 	iMenuHeight	= Engine.GetScreenHeight();
 }
 
+/*
+	GUI System
+*/
+
+// Elements
+#include "menu_button.h"
+
 // [2/8/2012] Dynamic allocation, which is based on this: http://fydo.net/gamedev/dynamic-arrays ~hogsy
-void Menu_AddElement(Menu_t mWindow)
+void Menu_Add(Menu_t mWindow)
 {
+	/*	Stages...
+		
+		#1	Check that we've been given a name.
+		#2	Parse a script to check that it's been initialized there. (if not then discontinue)
+		#3	
+	*/
+	
+	if(!mWindow.cName)
+	{
+		Engine.Con_Warning("Attempted to add menu without given name!\n");
+		return;
+	}
+
+	iMenuElements++;
+
+#if 0
 	// [17/4/2013] Add to this first so we allocate the correct amount! ~hogsy
 	iMenuElements++;
 
@@ -236,7 +269,19 @@ void Menu_AddElement(Menu_t mWindow)
 	}
 
 	mMenuElements[iMenuElements] = mWindow;
+#endif
 }
+
+void Menu_AddButton(Menu_t *mParent,MenuButton_t mButton)
+{
+	if(!mParent)
+	{
+		Engine.Con_Warning("Button parent hasn't been allocated!\n");
+		return;
+	}
+}
+
+/**/
 
 void Menu_DrawSlider(Menu_t menu,float range)
 {
@@ -245,8 +290,8 @@ void Menu_DrawSlider(Menu_t menu,float range)
 	else if(range > 1.0f)
 		range = 1.0f;
 
-	Engine.DrawPic(MENU_BASEPATH"i_indicator3",1.0f,menu.iPosition[WIDTH],menu.iPosition[HEIGHT],160,32);
-	Engine.DrawPic(MENU_BASEPATH"i_sliderbar2",1.0f,(menu.iPosition[WIDTH]+27)+90*(int)range,menu.iPosition[HEIGHT]+2,16,30);
+	Engine.DrawPic(MENU_BASE_PATH"i_indicator3",1.0f,menu.iPosition[WIDTH],menu.iPosition[HEIGHT],160,32);
+	Engine.DrawPic(MENU_BASE_PATH"i_sliderbar2",1.0f,(menu.iPosition[WIDTH]+27)+90*(int)range,menu.iPosition[HEIGHT]+2,16,30);
 }
 
 void Menu_DrawCheckBox(int x,int y,bool bOn)
@@ -292,16 +337,21 @@ void Menu_Draw(void)
 
 #if 1
 	if(iMenuState & MENU_STATE_LOADING)
+	{
 		// [21/5/2013] TODO: Switch to element ~hogsy
-		Engine.DrawPic(MENU_BASEPATH"loading",1.0f,(iMenuWidth-256)/2,(iMenuHeight-32)/2,256,32);
+		Engine.DrawPic(MENU_BASE_PATH"loading",1.0f,(iMenuWidth-256)/2,(iMenuHeight-32)/2,256,32);
+		return;
+	}
+	else if(iMenuState & MENU_STATE_PAUSED)
+	{
+		Engine.DrawPic(MENU_BASE_PATH"paused",1.0f,0,0,32,64);
+		return;
+	}
 
-	if(iMenuState & MENU_STATE_PAUSED)
-		Engine.DrawPic(MENU_BASEPATH"paused",1.0f,0,0,32,64);
-
-	if((iMenuState & MENU_STATE_HUD) && !(iMenuState & MENU_STATE_SCOREBOARD))
+	if((iMenuState & MENU_STATE_HUD) && (!(iMenuState & MENU_STATE_SCOREBOARD) && !(iMenuState & MENU_STATE_MENU)))
 		HUD_Draw();
 
-	if(iMenuState & MENU_STATE_SCOREBOARD)
+	if(iMenuState & MENU_STATE_SCOREBOARD && !(iMenuState & MENU_STATE_MENU))
 	{
 		// [10/11/2013] TEMP: Added for MP test ~hogsy
 		Engine.DrawFill((iMenuWidth/2),(iMenuHeight/2),128,35,0,0,0,0.7f);
@@ -309,6 +359,33 @@ void Menu_Draw(void)
 		Engine.DrawString(270,20,va("%d",Engine.Client_GetStat(STAT_FRAGS)));
 	}
 
+	if(iMenuState & MENU_STATE_MENU)
+	{
+		Engine.DrawFill(0,0,iMenuWidth,iMenuHeight,0,0,0,0.8f);
+
+		Engine.Client_SetMenuCanvas(CANVAS_MENU);
+
+		Engine.DrawString(110,80,">");
+		Engine.DrawString(190,80,"<");
+
+		switch(iMenuDisplaySelection)
+		{
+		case MENU_MAIN:
+			Engine.DrawString(120,80,"New Game");
+			Engine.DrawString(120,90,"Load Game");
+			Engine.DrawString(120,100,"Settings");
+			Engine.DrawString(120,110,"Quit");
+			break;
+		case MENU_NEW:
+			break;
+		case MENU_LOAD:
+		case MENU_OPTIONS:
+			break;
+		case MENU_QUIT:
+			// Do we even need to draw anything for this? ~hogsy
+			break;
+		}
+	}
 #if 0
 	for(i = 0; i < iMenuElements; i++)
 	{
@@ -584,7 +661,7 @@ void Menu_Shutdown(void)
 	Engine.Con_Printf("Shutting down menu...\n");
 
 	// [2/8/2012] Deallocate our array ~hogsy
-	//	free(mMenuElements);
+	free(mMenuElements);
 }
 
 void Input_Key(int iKey);

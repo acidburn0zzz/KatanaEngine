@@ -7,11 +7,25 @@
 */
 
 #include "engine_console.h"
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 #include "engine_video.h"	// [7/8/2013] Included for cvLitParticles ~hogsy
 
 #include "shared_server.h"
 #include "shared_menu.h"
+
+/*
+	Utilities
+*/
+
+entity_t *Client_GetPlayerEntity(void)
+{
+	return &cl_entities[cl.viewentity];
+}
+
+entity_t *Client_GetViewEntity(void)
+{
+	return &cl.viewent;
+}
 
 /*
 	Particles
@@ -51,6 +65,9 @@ void Client_ParseParticleEffect(void)
 Particle_t *Client_AllocateParticle(void)
 {
 	Particle_t *pParticle;
+
+	if(cl.bIsPaused || ((key_dest == key_console) && svs.maxclients == 1))
+		return NULL;
 
 	if(!pFreeParticles)
 	{
@@ -219,7 +236,7 @@ void Client_ProcessParticles(void)
 
 	// [19/3/2013] Moved up here since we were still going through the below... *sighs* ~hogsy
 	// [7/8/2013] Don't process if there aren't any active particles! ~hogsy
-	if(!active_particles || cl.bIsPaused)
+	if(!active_particles || (cl.bIsPaused || ((key_dest == key_console) && svs.maxclients == 1)))
 		return;
 
 	frametime		= cl.time-cl.oldtime;
@@ -386,6 +403,8 @@ void Client_PrecacheResource(int iType,char *cResource)
 
 	switch(iType)
 	{
+	case RESOURCE_FONT:
+		break;
 	case RESOURCE_MODEL:
 		for(i = 0; i < MAX_MODELS; i++)
 			if(!cl.model_precache[i])
@@ -406,8 +425,8 @@ void Client_PrecacheResource(int iType,char *cResource)
 		Console_ErrorMessage(false,cResource,"Overflow!");
 		break;
 	// [26/1/2013] Precache for effect types ~hogsy
-	case RESOURCE_PARTICLE:
-		sprintf(cPath,"textures/particles/%s",cResource);
+	case RESOURCE_SPRITE:
+		sprintf(cPath,PATH_SPRITES"%s",cResource);
 
 		for(i = 0; i < MAX_EFFECTS; i++)
 			if(!gEffectTexture[i])

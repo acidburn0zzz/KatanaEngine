@@ -61,8 +61,7 @@ void CreateBrushFaces (void)
 	ClearBounds(brush_mins,brush_maxs);
 
 	brush_faces = NULL;
-
-	if(!strncmp(ValueForKey(CurrentEntity,"classname"),"_rotate",7))
+	if(!strcmp(ValueForKey(CurrentEntity,"classname"),"area_rotate"))
 	{
 		entity_t	*FoundEntity;
 		char 		*searchstring,
@@ -70,7 +69,7 @@ void CreateBrushFaces (void)
 
 		searchstring = ValueForKey(CurrentEntity,"target");
 		FoundEntity = FindTargetEntity(searchstring);
-		if (FoundEntity)
+		if(FoundEntity)
 			GetVectorForKey(FoundEntity, "origin", offset);
 
 		sprintf(text, "%g %g %g", offset[0], offset[1], offset[2]);
@@ -571,9 +570,6 @@ brush_t *LoadBrush (mbrush_t *mb, int brushnum, int hullnum)
 	numbrushfaces = 0;
 	for(f = mb->faces; f; f = f->next)
 	{
-		if(!Q_strcasecmp(name,"nodraw"))
-			continue;
-
 		faces[numbrushfaces] = *f;
 		if(hullnum)
 			faces[numbrushfaces].texinfo = 0;

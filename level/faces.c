@@ -335,12 +335,12 @@ void GatherTreeFaces( tree_t *tree )
 
 typedef struct hashvert_s
 {
-	vec3_t		point;
-	int			num;
-	int			numplanes;		// for corner determination
-	int			planenums[2];
-	int			numedges;
-	struct hashvert_s *next;
+	vec3_t				point;
+	unsigned int		num;
+	int					numplanes;		// for corner determination
+	int					planenums[2];
+	int					numedges;
+	struct hashvert_s	*next;
 } hashvert_t;
 
 #define	NUM_HASH		8192
@@ -391,10 +391,9 @@ static unsigned HashVec( vec3_t vec )
 
 //============================================================================
 
-static int GetVertex( vec3_t in, int planenum )
+static unsigned int GetVertex( vec3_t in, int planenum )
 {
-	int			i;
-	int			h;
+	int			i,h;
 	hashvert_t	*hv;
 	vec3_t		vert;
 
@@ -448,9 +447,9 @@ static int GetVertex( vec3_t in, int planenum )
 */
 static int EmitFaceEdge( vec3_t p1, vec3_t p2, face_t *f )
 {
-	int			i;
-	int			v1, v2;
-	BSPEdge_t	*edge;
+	int				i;
+	unsigned int	v1, v2;
+	BSPEdge_t		*edge;
 
 	v1 = GetVertex( p1, f->planenum );
 	v2 = GetVertex( p2, f->planenum );
@@ -482,7 +481,7 @@ static void EmitNodeFaces_r( node_t *node )
 		return;
 
 	node->firstface = numfaces;
-	for( face = node->faces; face; face = face->next ) 
+	for( face = node->faces; face; face = face->next )
 	{
 		if( numfaces == BSP_MAX_FACES )
 			Error( "numfaces == BSP_MAX_FACES" );
@@ -515,16 +514,6 @@ static void EmitNodeFaces_r( node_t *node )
 
 void EmitNodeFaces( node_t *headnode )
 {
-	vec_t	radius;
-	vec3_t	maxs, mins;
-
-//	qprintf( "--- EmitNodeFaces ---\n" );
-
-	// origin points won't allways be inside the map, so extend the hash area
-	radius = RadiusFromBounds( headnode->mins, headnode->maxs );
-	VectorSet( maxs, radius, radius, radius );
-	VectorSet( mins, -radius, -radius, -radius );
-
 	InitHash( headnode->mins, headnode->maxs );
 
 	firstmodeledge = numedges;

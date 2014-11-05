@@ -30,17 +30,6 @@ char *va(char *format,...)
 	return string;
 }
 
-edict_t *Spawn(void)
-{
-	edict_t *eSpawn = Engine.Spawn();
-
-	// [30/5/2013] Set physics properties to their defaults! ~hogsy
-	eSpawn->Physics.fMass		= 1.0f;
-	eSpawn->Physics.fGravity	= 600.0f;
-
-	return eSpawn;
-}
-
 void SetAngle(edict_t *ent,vec3_t vAngle)
 {
 	// [21/3/2012] Updated ~hogsy
@@ -115,7 +104,7 @@ void Sound(edict_t *ent,int channel,char *sound,int volume,float attenuation)
 	edict_t *sound;
 
 	if(type)
-		sound = Spawn();
+		sound = Entity_Spawn();
 	else
 		return;
 
@@ -142,12 +131,12 @@ void Sound(edict_t *ent,int channel,char *sound,int volume,float attenuation)
 
 void Flare(vec3_t org,float r,float g,float b,float a,float scale,char *texture)
 {
-	Engine.Flare(org,r,g,b,a,scale,texture);
+	// OBSOLETE
 }
 
 void DrawPic(char *texture,float alpha,int x,int y,int w,int h)
 {
-	Engine.DrawPic(texture,alpha,x,y,w,h);
+	// OBSOLETE
 }
 
 void WriteByte(int mode,int c)
@@ -182,25 +171,6 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 
 		Entity_Remove(ent);
 		break;
-	case SERVER_STARTFRAME:
-#ifdef GAME_OPENKATANA
-		Deathmatch_Frame();
-#elif GAME_ADAMAS
-		// This is stupid... ~hogsy
-		if(!Server.iMonsters && Server.bRoundStarted)
-		{
-			if(strstr(Engine.Server_GetLevelName(),"0"))
-				Engine.Server_ChangeLevel("room1");
-			else if(strstr(Engine.Server_GetLevelName(),"1"))
-				Engine.Server_ChangeLevel("room2");
-			else
-			{
-				Engine.Server_BroadcastPrint("You Win!!\n");
-				Engine.Server_ChangeLevel("room0");
-			}
-		}
-#endif
-		break;
 	case SERVER_SETCHANGEPARMS:
 		if(ent->v.iHealth <= 0)
 			break;
@@ -221,9 +191,8 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 	return true;
 }
 
-#include "server_physics.h"
-
-//ModuleImport_t	*Engine; (replacement for Game)
+void	Server_StartFrame(void);	// server_main
+void	Game_Shutdown(void);
 
 pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 {
@@ -236,7 +205,6 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Engine.Sound					= Import->Sound;
 	Engine.LinkEntity				= Import->LinkEntity;
 	Engine.FreeEntity				= Import->FreeEntity;
-	Engine.DrawPic					= Import->DrawPic;
 	Engine.Spawn					= Import->Spawn;
 	Engine.Cvar_RegisterVariable	= Import->Cvar_RegisterVariable;
 	Engine.Cvar_SetValue			= Import->Cvar_SetValue;
@@ -262,6 +230,8 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Engine.Client_AllocateDlight	= Import->Client_AllocateDlight;
 	Engine.Client_AllocateParticle	= Import->Client_AllocateParticle;
 	Engine.Client_PrecacheResource	= Import->Client_PrecacheResource;
+	Engine.Client_GetPlayerEntity	= Import->Client_GetPlayerEntity;
+	Engine.Client_GetViewEntity		= Import->Client_GetViewEntity;
 
 	Engine.Server_PointContents		= Import->Server_PointContents;
 	Engine.Server_MakeStatic		= Import->Server_MakeStatic;
@@ -274,32 +244,50 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Engine.Server_ChangeLevel		= Import->Server_ChangeLevel;
 	Engine.Server_AmbientSound		= Import->Server_AmbientSound;
 	Engine.Server_GetLevelName		= Import->Server_GetLevelName;
+	Engine.Server_GetFrameTime		= Import->Server_GetFrameTime;
 
 	Export.Version						= MODULE_VERSION2;
 #ifdef GAME_OPENKATANA
 	Export.Name							= "OpenKatana";
 #elif GAME_ADAMAS
 	Export.Name							= "Adamas";
+#elif GAME_CLASP
+	Export.Name							= "Clasp";
+#elif GAME_ICTUS
+	Export.Name							= "Ictus";
 #else
 	Export.Name							= "Katana";
 #endif
-	Export.Server_SpawnEntity			= Server_SpawnEntity;
-	Export.Server_CheckWaterTransition	= Physics_CheckWaterTransition;
-	Export.Server_CheckVelocity			= Physics_CheckVelocity;
-	Export.Server_EntityFrame			= Server_EntityFrame;
-	Export.Server_KillClient			= Server_KillClient;
-	Export.Server_SetSizeVector			= Entity_SetSizeVector;
-	Export.Server_SpawnPlayer			= Player_Spawn;
 	Export.ChangeYaw					= ChangeYaw;
 	Export.SetSize						= Entity_SetSize;
 	Export.Draw							= Client_Draw;
 	Export.Game_Init					= Game_Init;
+	Export.Shutdown						= Game_Shutdown;
 
+	// Client
 	Export.Client_RelinkEntities		= Client_RelinkEntities;
 	Export.Client_Initialize			= Client_Initialize;
 	Export.Client_ParseTemporaryEntity	= Client_ParseTemporaryEntity;
+	Export.Client_ViewFrame				= Client_ViewFrame;
 
+	// Server
 	Export.Server_Initialize			= Server_Initialize;
+	Export.Server_StartFrame			= Server_StartFrame;
+	Export.Server_SpawnEntity			= Server_SpawnEntity;
+	Export.Server_EntityFrame			= Server_EntityFrame;
+	Export.Server_KillClient			= Server_KillClient;
+	Export.Server_SetSizeVector			= Entity_SetSizeVector;
+	Export.Server_SpawnPlayer			= Player_Spawn;
+
+	Export.Physics_SetGravity			= Physics_SetGravity;
+	Export.Physics_CheckWaterTransition	= Physics_CheckWaterTransition;
+	Export.Physics_CheckVelocity		= Physics_CheckVelocity;
 
 	return &Export;
+}
+
+/* Called upon engine shutdown.
+*/
+void Game_Shutdown(void)
+{
 }

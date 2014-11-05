@@ -4,160 +4,140 @@
     <Filter Include="Shared">
       <UniqueIdentifier>{214bfd5b-5bbf-456a-aea5-11a0d707dd8e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Networking">
-      <UniqueIdentifier>{0f885fe7-9a55-4712-8eed-3387acba73a7}</UniqueIdentifier>
+    <Filter Include="Console">
+      <UniqueIdentifier>{dcf4305a-6ad4-4a1d-8c03-7d16abc3355f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{c6c573d9-03fe-45e0-9029-90769b73ea14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Legacy">
+      <UniqueIdentifier>{e00778df-b576-4da4-ada2-0e2b7435e56d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Video">
       <UniqueIdentifier>{77ea4c2d-fc29-4aeb-bb27-3c33e9606552}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Audio">
-      <UniqueIdentifier>{756baf0d-9c64-4827-ba82-fcc905b86cbe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Editor">
-      <UniqueIdentifier>{1178c8d7-e22f-4b83-a122-c5327d9bb2d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules">
-      <UniqueIdentifier>{363525c9-c8a7-44ef-9df7-5fac45c5b6cf}</UniqueIdentifier>
+    <Filter Include="External">
+      <UniqueIdentifier>{43e61e0d-c696-4895-b21b-f30edea514ab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\chase.c" />
-    <ClCompile Include="..\cl_demo.c" />
-    <ClCompile Include="..\cl_input.c" />
-    <ClCompile Include="..\cl_main.c" />
-    <ClCompile Include="..\cl_parse.c" />
-    <ClCompile Include="..\cl_tent.c" />
-    <ClCompile Include="..\cmdlib.c" />
-    <ClCompile Include="..\common.c" />
-    <ClCompile Include="..\conproc.c" />
-    <ClCompile Include="..\console.c" />
-    <ClCompile Include="..\crc.c" />
-    <ClCompile Include="..\host.c" />
-    <ClCompile Include="..\host_cmd.c" />
-    <ClCompile Include="..\image.c" />
-    <ClCompile Include="..\keys.c" />
-    <ClCompile Include="..\menu.c" />
-    <ClCompile Include="..\pr_edict.c" />
-    <ClCompile Include="..\sv_main.c" />
-    <ClCompile Include="..\sv_user.c" />
-    <ClCompile Include="..\sys_win.c" />
-    <ClCompile Include="..\zone.c" />
-    <ClCompile Include="engine_screen.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_view.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_light.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_sprite.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\external\glee\GLee.c">
-      <Filter>Video</Filter>
-    </ClCompile>
     <ClCompile Include="..\shared\shared_math.c">
       <Filter>Shared</Filter>
     </ClCompile>
     <ClCompile Include="..\shared\shared_png.c">
       <Filter>Shared</Filter>
     </ClCompile>
-    <ClCompile Include="..\gl_warp.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gl_vidnt.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gl_texmgr.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gl_sky.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gl_rmisc.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gl_rmain.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gl_refrag.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gl_model.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gl_fog.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\gl_draw.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\KatGL.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\r_brush.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\r_world.c">
-      <Filter>Video</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_network.c">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="..\net_dgrm.c">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="..\net_loop.c">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="..\net_main.c">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="..\net_win.c">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="..\net_wins.c">
-      <Filter>Networking</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_client.c" />
-    <ClCompile Include="engine_console.c" />
-    <ClCompile Include="engine_input.c" />
     <ClCompile Include="engine_loader.c" />
     <ClCompile Include="engine_main.c" />
-    <ClCompile Include="engine_world.c" />
-    <ClCompile Include="engine_server.c" />
+    <ClCompile Include="image.c">
+      <Filter>Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="common.c">
+      <Filter>Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="menu.c">
+      <Filter>Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="host.c">
+      <Filter>Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="sys_win.c">
+      <Filter>Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="host_cmd.c">
+      <Filter>Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="pr_edict.c">
+      <Filter>Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="zone.c">
+      <Filter>Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="keys.c">
+      <Filter>Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="crc.c">
+      <Filter>Legacy</Filter>
+    </ClCompile>
+    <ClCompile Include="console.c">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="cmdlib.c">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_texmgr.c">
+      <Filter>Video</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_model.c">
+      <Filter>Video</Filter>
+    </ClCompile>
     <ClCompile Include="engine_script.c" />
-    <ClCompile Include="engine_physics.c" />
-    <ClCompile Include="engine_cvar.c" />
-    <ClCompile Include="engine_command.c" />
-    <ClCompile Include="engine_audio.c">
-      <Filter>Audio</Filter>
+    <ClCompile Include="engine_physics.c">
+      <Filter>Server</Filter>
     </ClCompile>
-    <ClCompile Include="..\snd_mix.c">
-      <Filter>Audio</Filter>
+    <ClCompile Include="engine_editor.c" />
+    <ClCompile Include="engine_netwinsock.c" />
+    <ClCompile Include="engine_netwin.c" />
+    <ClCompile Include="engine_netmain.c" />
+    <ClCompile Include="engine_netloop.c" />
+    <ClCompile Include="engine_netdgrm.c" />
+    <ClCompile Include="engine_netdummy.c" />
+    <ClCompile Include="engine_netmaster.c" />
+    <ClCompile Include="engine_modmenu.c" />
+    <ClCompile Include="engine_modgame.c" />
+    <ClCompile Include="cl_main.c">
+      <Filter>Legacy</Filter>
     </ClCompile>
-    <ClCompile Include="..\snd_mem.c">
-      <Filter>Audio</Filter>
+    <ClCompile Include="engine_clientchase.c" />
+    <ClCompile Include="engine_clientdemo.c" />
+    <ClCompile Include="engine_clientparse.c" />
+    <ClCompile Include="engine_clienttent.c" />
+    <ClCompile Include="engine_clientview.c" />
+    <ClCompile Include="engine_client.c" />
+    <ClCompile Include="snd_win.c">
+      <Filter>Legacy</Filter>
     </ClCompile>
-    <ClCompile Include="..\snd_dma.c">
-      <Filter>Audio</Filter>
+    <ClCompile Include="engine_audiomix.c" />
+    <ClCompile Include="engine_audiomem.c" />
+    <ClCompile Include="engine_audiodma.c" />
+    <ClCompile Include="engine_audio.c" />
+    <ClCompile Include="engine_clientinput.c" />
+    <ClCompile Include="cl_input.c">
+      <Filter>Legacy</Filter>
     </ClCompile>
-    <ClCompile Include="engine_alias.c">
-      <Filter>Video</Filter>
+    <ClCompile Include="engine_videodraw.c" />
+    <ClCompile Include="engine_video.c" />
+    <ClCompile Include="engine_videosprite.c" />
+    <ClCompile Include="engine_videoscreen.c" />
+    <ClCompile Include="engine_videomaterial.c" />
+    <ClCompile Include="engine_videolight.c" />
+    <ClCompile Include="engine_videofont.c" />
+    <ClCompile Include="engine_videoalias.c" />
+    <ClCompile Include="engine_videoworld.c" />
+    <ClCompile Include="engine_videobrush.c" />
+    <ClCompile Include="engine_videosky.c" />
+    <ClCompile Include="engine_videomisc.c" />
+    <ClCompile Include="engine_videormain.c" />
+    <ClCompile Include="engine_videorefrag.c" />
+    <ClCompile Include="engine_videofog.c" />
+    <ClCompile Include="engine_videowarp.c" />
+    <ClCompile Include="engine_videoshadow.c" />
+    <ClCompile Include="gl_vidnt.c">
+      <Filter>Legacy</Filter>
     </ClCompile>
-    <ClCompile Include="engine_video.c">
-      <Filter>Video</Filter>
+    <ClCompile Include="..\external\glee\GLee.c">
+      <Filter>External</Filter>
     </ClCompile>
-    <ClCompile Include="engine_editor.c">
-      <Filter>Editor</Filter>
+    <ClCompile Include="engine_consolevar.c" />
+    <ClCompile Include="engine_console.c" />
+    <ClCompile Include="engine_consolecommand.c" />
+    <ClCompile Include="conproc.c">
+      <Filter>Legacy</Filter>
     </ClCompile>
-    <ClCompile Include="engine_game.c">
-      <Filter>Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="engine_menu.c">
-      <Filter>Modules</Filter>
-    </ClCompile>
+    <ClCompile Include="engine_server.c" />
+    <ClCompile Include="engine_serverworld.c" />
+    <ClCompile Include="engine_serveruser.c" />
+    <ClCompile Include="engine_servermain.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\shared_client.h">
@@ -196,8 +176,127 @@
     <ClInclude Include="..\shared\shared_server.h">
       <Filter>Shared</Filter>
     </ClInclude>
-    <ClInclude Include="engine_editor.h">
-      <Filter>Editor</Filter>
+    <ClInclude Include="pr_comp.h">
+      <Filter>Legacy</Filter>
     </ClInclude>
+    <ClInclude Include="crc.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="server.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="quakedef.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="winquake.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="zone.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="view.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="vid.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="sys.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="sound.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="screen.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="progs.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="protocol.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="keys.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="image.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="KatAlias.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_main.h" />
+    <ClInclude Include="console.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="cmdlib.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_model.h">
+      <Filter>Video</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_texmgr.h">
+      <Filter>Video</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_physics.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_edict.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="cvar.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_loader.h" />
+    <ClInclude Include="engine_script.h" />
+    <ClInclude Include="engine_server.h" />
+    <ClInclude Include="engine_editor.h" />
+    <ClInclude Include="engine_netwinsock.h" />
+    <ClInclude Include="engine_netserial.h" />
+    <ClInclude Include="engine_netloop.h" />
+    <ClInclude Include="engine_netdgrm.h" />
+    <ClInclude Include="engine_net.h" />
+    <ClInclude Include="engine_modmenu.h" />
+    <ClInclude Include="engine_modgame.h" />
+    <ClInclude Include="client.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_client.h" />
+    <ClInclude Include="engine_audio.h" />
+    <ClInclude Include="engine_clientinput.h" />
+    <ClInclude Include="render.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_video.h" />
+    <ClInclude Include="engine_videoshadow.h" />
+    <ClInclude Include="glquake.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="draw.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="engine_console.h" />
+    <ClInclude Include="conproc.h">
+      <Filter>Legacy</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="engine.rc">
+      <Filter>Legacy</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

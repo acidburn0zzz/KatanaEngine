@@ -6,9 +6,11 @@
 	Python scripting system that's used for both
 	game-logic additions and for the creation
 	of menu elements.
+	TODO:
+		Move the following out into its own shared module.
 */
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 
 #if 0
 #include "Python.h"
@@ -189,6 +191,11 @@ SKIPSPACE:
 
 		cScriptParse++;
 	}
+	else if(*cScriptParse == '(')
+	{
+		cScriptParse++;
+		cScriptParse++;
+	}
 	else while(*cScriptParse > 32)
 	{
 		*cTokenParse++ = *cScriptParse++;
@@ -259,35 +266,59 @@ typedef struct
 {
 	char	*cKey;
 
-	void	(*Function)(void);
+	void	(*Function)(char *cArg);
 } ScriptKey_t;
 
-void _FileSystem_SetBasePath(void);	// common.c
+void _FileSystem_SetBasePath(char *cArg);		// common.c
+void _FileSystem_SetTexturePath(char *cArg);
+void _FileSystem_SetMaterialPath(char *cArg);
+void _FileSystem_AddGameDirectory(char *cArg);	// common.c
+
+/*	Allows for console variables to be set from scripts.
+*/
+void _Script_SetConsoleVariable(char *cArguments)
+{
+}
 
 ScriptKey_t	skScriptKeys[]=
 {
-	{	"$basepath",	_FileSystem_SetBasePath	},
+	{	"basepath",			_FileSystem_SetBasePath			},
+	{	"SetTexturePath",	_FileSystem_SetTexturePath		},
+	{	"SetMaterialPath",	_FileSystem_SetMaterialPath		},
+	{	"AddGameDirectory",	_FileSystem_AddGameDirectory	},
 
 	{	0	}
 };
 
 /*	Loads a script.
 */
-void Script_Load(/*const */char *ccPath)
+bool Script_Load(/*const */char *ccPath)
 {
-	char		*cData;
+	char *cData;
 
 	if(LoadFile(ccPath,(void**)&cData) == -1)
-		Sys_Error("Failed to load script! (%s)\n",ccPath);
+	{
+		cData = (char*)COM_LoadTempFile(ccPath);
+		if(!cData)
+		{
+			Con_Warning("Failed to load script! (%s)\n",ccPath);
+			return false;
+		}
+	}
 
 	Script_StartTokenParsing(cData);
 
 	if(!Script_GetToken(true))
-		goto FREE;
+	{
+		Con_Warning("Failed to get initial token! (%s) (%i)\n",ccPath,iScriptLine);
+		free(cData);
+		return false;
+	}
 	else if(Q_strcmp(cToken,"{"))
 	{
 		Con_Warning("Missing '{'! (%s) (%i)\n",ccPath,iScriptLine);
-		goto FREE;
+		free(cData);
+		return false;
 	}
 
 	do
@@ -303,19 +334,30 @@ void Script_Load(/*const */char *ccPath)
 		{
 			ScriptKey_t	*sKey;
 
-			for(sKey = skScriptKeys; sKey->cKey; sKey++)
-				if(!Q_strcmp(sKey->cKey,cToken))
-				{
-					Script_GetToken(false);
+			// '$' declares that the following is a function.
+			if(cToken[0] == SCRIPT_SYMBOL_FUNCTION)
+			{
+				for(sKey = skScriptKeys; sKey->cKey; sKey++)
+					// Remain case sensitive.
+					if(!Q_strcasecmp(sKey->cKey,cToken+1))
+					{
+						Script_GetToken(false);
 
-					sKey->Function();
-					break;
-				}
+						sKey->Function(cToken);
+						break;
+					}
+			}
+			else
+			{
+				Con_Warning("Invalid function call!\n");
+				break;
+			}
 
 			Con_Warning("Invalid field! (%s) (%i)\n",ccPath,iScriptLine);
 		}
 	} while(true);
 
-FREE:
 	free(cData);
+
+	return true;
 }

@@ -12,9 +12,8 @@
 #include "shared_engine.h"
 #include "shared_game.h"
 
-#define	MENU_BASEPATH	"textures/interface/menu/"
-#define HUD_BASEPATH	"textures/interface/hud/"
-#define EDITOR_BASEPATH	MENU_BASEPATH"editor/"
+#define	MENU_BASE_PATH	"textures/interface/"
+#define MENU_HUD_PATH	"textures/interface/hud/"
 
 extern ModuleImport_t	Engine;
 

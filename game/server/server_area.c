@@ -20,8 +20,6 @@ void Area_SetMoveDirection(vec3_t vAngles,vec3_t vMoveDirection)
 			vDown		= { 0,	-2, 0	},
 			vMoveDown	= { 0,	0,	-1	};
 
-	Engine.Con_Printf("Area_SetMoveDirection\n");
-
 	if(Math_VectorCompare(vAngles,vUp))
 		Math_VectorCopy(vMoveUp,vMoveDirection);
 	else if(Math_VectorCompare(vAngles,vDown))
@@ -34,8 +32,6 @@ void Area_SetMoveDirection(vec3_t vAngles,vec3_t vMoveDirection)
 
 void Area_CalculateMovementDone(edict_t *eArea)
 {
-	Engine.Con_Printf("Area_CalculateMovementDone\n");
-
 	Entity_SetOrigin(eArea,eArea->local.finaldest);
 
 	// [17/7/2012] Simplified ~hogsy
@@ -50,25 +46,12 @@ void Area_CalculateMovement(edict_t *eArea,vec3_t vTDest,float fSpeed,void (*Fun
 	vec3_t	vdestdelta;
 	float	fTravelTime;
 
-	Engine.Con_Printf("Area_CalculateMovement\n");
-
 	Math_VectorCopy(vTDest,eArea->local.finaldest);
-
-	Engine.Con_Printf("TDEST: %i(X) %i(Y) %i(Z)\nORIGIN: %i(X) %i(Y) %i(Z)\n",
-					  vTDest[0],vTDest[1],vTDest[2],
-					  eArea->v.origin[0],eArea->v.origin[1],eArea->v.origin[2]);
 
 	// [14/10/2013] Simplified ~hogsy
 	Math_VectorSubtract(vTDest,eArea->v.origin,vdestdelta);
 
-	Engine.Con_Printf("VDEST: %i(X) %i(Y) %i(Z)\n",
-		(int)vdestdelta[0],
-		(int)vdestdelta[1],
-		(int)vdestdelta[2]);
-
 	fTravelTime = (float)Math_VectorLength(vdestdelta)/fSpeed;
-
-	Engine.Con_Printf("traveltime: %f\n",fTravelTime);
 
 	// [13/12/2013] Simplified ~hogsy
 	Math_VectorScale(vdestdelta,1.0f/fTravelTime,eArea->v.velocity);
@@ -136,8 +119,9 @@ void Area_BreakableBounce(edict_t *eGib,edict_t *eOther)
 void Area_CreateGib(edict_t *eArea,const char *cModel)
 {
 	int		j;
-	edict_t	*eGib = Spawn();
-
+	edict_t	*eGib; 
+	
+	eGib = Entity_Spawn();
 	if(eGib)
 	{
 		eGib->v.cClassname		= "area_gib";
@@ -148,12 +132,10 @@ void Area_CreateGib(edict_t *eArea,const char *cModel)
 
 		eGib->Physics.iSolid = SOLID_TRIGGER;
 
-		// [7/6/2013] Needed to check what we are when bouncing ~hogsy
 		eGib->local.style = eArea->local.style;
 
 		for(j = 0; j < 3; j++)
 		{
-			// [7/6/2013] Corrected these (were set to i rather than j) ~hogsy
 			eGib->v.velocity[j]		=
 			eGib->v.avelocity[j]	= (float)(rand()%5*eArea->v.iHealth*5);
 		}
@@ -167,25 +149,25 @@ void Area_CreateGib(edict_t *eArea,const char *cModel)
 void Area_BreakableDie(edict_t *eArea,edict_t *eOther)
 {
 	int		i;
-	char	cSound[24],cModel[64];
+	char	cSound[24],cModel[PLATFORM_MAX_PATH];
 
 	switch(eArea->local.style)
 	{
 	case BREAKABLE_GLASS:
 		PHYSICS_SOUND_GLASS(cSound);
-		sprintf(cModel,"models/gibs/glass_gibs%i.md2",rand()%3+1);
+		PHYSICS_MODEL_GLASS(cModel);
 		break;
 	case BREAKABLE_WOOD:
 		PHYSICS_SOUND_WOOD(cSound);
-		sprintf(cModel,"models/gibs/wood_gibs%i.md2",rand()%3+1);
+		PHYSICS_MODEL_WOOD(cModel);
 		break;
 	case BREAKABLE_ROCK:
 		PHYSICS_SOUND_ROCK(cSound);
-		sprintf(cModel,"models/gibs/rock_gibs%i.md2",rand()%3+1);
+		PHYSICS_MODEL_ROCK(cModel);
 		break;
 	case BREAKABLE_METAL:
 		PHYSICS_SOUND_METAL(cSound);
-		sprintf(cModel,"models/gibs/metal_gibs%i.md2",rand()%3+1);
+		PHYSICS_MODEL_METAL(cModel);
 		break;
 	}
 
@@ -232,17 +214,17 @@ void Area_BreakableSpawn(edict_t *eArea)
 			Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_ROCK0);
 			Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_ROCK1);
 			Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_ROCK2);
-			Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/rock_gibs1.md2");
-			Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/rock_gibs2.md2");
-			Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/rock_gibs3.md2");
+			Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_ROCK0);
+			Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_ROCK1);
+			Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_ROCK2);
 			break;
 		case BREAKABLE_METAL:
 			Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_METAL0);
 			Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_METAL1);
 			Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_METAL2);
-			Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/metal_gibs1.md2");
-			Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/metal_gibs2.md2");
-			Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/metal_gibs3.md2");
+			Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_METAL0);
+			Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_METAL1);
+			Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_METAL2);
 			break;
 		default:
 			Engine.Con_Warning("area_breakable: Unknown style\n");
@@ -273,16 +255,18 @@ void Area_BreakableSpawn(edict_t *eArea)
 
 void Area_RotateBlocked(edict_t *eArea,edict_t *eOther)
 {
-	if(eOther->v.iHealth <= 0)
-		return;
-
-	MONSTER_Damage(eOther,eArea,eArea->local.iDamage, 0);
+	MONSTER_Damage(eOther,eArea,eArea->local.iDamage,DAMAGE_TYPE_CRUSH);
 }
 
 void Area_RotateTouch(edict_t *eArea,edict_t *eOther)
 {
-	if(eArea->local.dMoveFinished	> Server.dTime)
+	if(eArea->local.dMoveFinished > Server.dTime)
 		return;
+}
+
+void Area_RotateThink(edict_t *eArea)
+{
+	eArea->v.dNextThink	= Server.dTime+1000000000.0;
 }
 
 #define STYLE_ROTATE_DOOR	1
@@ -294,15 +278,10 @@ void Area_RotateTouch(edict_t *eArea,edict_t *eOther)
 
 void Area_RotateSpawn(edict_t *eArea)
 {
-	if(!eArea->local.iDamage)
-		eArea->local.iDamage = 2;
-
 	if(!eArea->local.speed)
 		eArea->local.speed = 100.0f;
 
-	if(!eArea->local.distance)
-		eArea->local.distance = 5;
-
+#if 0
 	// [26/7/2012] Check our spawn flags ~hogsy
 	if(eArea->local.style == STYLE_ROTATE_DOOR)
 	{
@@ -325,6 +304,7 @@ void Area_RotateSpawn(edict_t *eArea)
 		eArea->local.dMoveFinished = 0;
 	}
 	else
+#endif
 	{
 		if(eArea->v.spawnflags & SPAWNFLAG_ROTATE_REVERSE)
 			eArea->local.speed *= -1;
@@ -341,20 +321,10 @@ void Area_RotateSpawn(edict_t *eArea)
 
 	eArea->v.movetype	= MOVETYPE_PUSH;
 	eArea->v.blocked	= Area_RotateBlocked;
+	eArea->v.think		= Area_RotateThink;
+	eArea->v.dNextThink	= Server.dTime+1000000000.0;
 
 	eArea->Physics.iSolid = SOLID_BSP;
-
-#if 0
-	if(eArea->v.targetname)
-	{
-		eOriginEntity = Engine.Server_FindEntity(Server.eWorld,eArea->v.targetname,false);
-		if(eOriginEntity)
-		{
-			Entity_SetOrigin(eArea,eOriginEntity->v.origin);
-			return;
-		}
-	}
-#endif
 
 	Entity_SetModel(eArea,eArea->v.model);
 	Entity_SetSizeVector(eArea,eArea->v.mins,eArea->v.maxs);
@@ -504,7 +474,7 @@ void Area_ChangeLevelTouch(edict_t *eArea,edict_t *eOther)
 {
 	// [2/1/2013] TODO: If coop wait for eOther players? ~hogsy
 
-	if((eOther->monster.iType != MONSTER_PLAYER))
+	if(!Entity_IsPlayer(eOther))
 		return;
 
 #if 0
@@ -811,7 +781,7 @@ void Area_PlatformSpawnTouchbox(edict_t *eArea)
 	edict_t *eTrigger;
 	vec3_t vTrigMin, vTrigMax;
 
-	eTrigger = Spawn();
+	eTrigger = Entity_Spawn();
 	eTrigger->v.TouchFunction = Area_PlatformSpawnTouchboxTouch;
 	eTrigger->v.movetype = MOVETYPE_NONE;
 	eTrigger->v.enemy = eArea;
@@ -839,7 +809,7 @@ void Area_PlatformSpawnTouchbox(edict_t *eArea)
 		vTrigMax[1] = vTrigMin[1] + 1;
 	}
 
-	// [24/9/2013] Simplified ~hogsy
+	Entity_SetModel(eArea,eArea->v.model);
 	Entity_SetSizeVector(eTrigger,vTrigMin,vTrigMax);
 }
 

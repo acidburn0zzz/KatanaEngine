@@ -3,19 +3,16 @@
 #ifndef __SHAREDFLAGS__
 #define __SHAREDFLAGS__
 
-/*	Define for our future crap.
-	Most of the stuff plopped
-	within these will be removed
-	from the final OpenKatana branch.	*/
-//#define	KATANA_MODEL_NEXT		// Skeletal animation support.
-//#define   PARANOID    // Speed sapping error checking.
-//#define	KATANA_VIDEO_NEXT		// New renderer.
-#define	KATANA_PHYSICS_ODE		// ODE physics support.
-#define KATANA_AUDIO_OPENAL		// OpenAL implementation.
-#ifndef _WIN32	// [21/1/2013] Only Linux release is currently using this... ~hogsy
-#define	KATANA_NETWORK_NEXT	// New network system.
+#ifdef _MSC_VER
+#pragma warning(disable:4100)	// unreferenced formal parameter
+#pragma	warning(disable:4127)	// conditional expression is constant
 #endif
-#define	LIGHTHACK	// Rushed in lighting method thrown up using OpenGL's built-in features.
+
+//#define   PARANOID				// Speed sapping error checking.
+#ifndef _WIN32	// [21/1/2013] Only Linux release is currently using this... ~hogsy
+#define	KATANA_AUDIO_OPENAL			// OpenAL implementation.
+#define	KATANA_NETWORK_NEXT			// New network system.
+#endif
 
 /*	Build needs to be updated
 	each day that work is done
@@ -24,22 +21,20 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	705	// 30/6/2014
+#define ENGINE_VERSION_BUILD	781	// 30/10/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"
 #define	MODULE_MENU		"menu"
 #define MODULE_EDITOR	"editor"
 
-#define	PATH_ENGINE			"engine"			// Directory to look in for engine specific modules / assets
-#define	PATH_MAPS			"maps"				// Default directory for opening, loading and exporting maps
-#define	PATH_SOUNDS			"sounds"			// Default directory for opening, loading and exporting sounds
-#define	PATH_LOGS			PATH_ENGINE"/logs"
+#define	PATH_ENGINE			"engine"			// Directory to look in for engine specific modules / assets.
+#define	PATH_MAPS			"maps"				// Default directory for opening, loading and exporting maps.
+#define	PATH_SOUNDS			"sounds"			// Default directory for opening, loading and exporting sounds.
+#define	PATH_LOGS			PATH_ENGINE"/logs"	// Default directory for saving logs.
 #define	PATH_SCREENSHOTS	"%s/screenshots"	// Directory for screenshots. Pass current game directory.
-
-#define DIR_PARTICLES	"textures/particles/"
-#define DIR_FLARES		"textures/flares/"
-#define DIR_EFFECTS		"textures/effects/"
+#define	PATH_SPRITES		"textures/sprites/"	// Directory that contains sprites, used for particles etc.
+#define	PATH_MATERIALS		"materials/"		// Default directory for opening and loading materials.
 
 typedef unsigned char byte;
 
@@ -51,7 +46,6 @@ enum
 	SERVER_CLIENTCONNECT,
 	SERVER_CLIENTDISCONNECT,
 	SERVER_CLIENTKILL,
-	SERVER_STARTFRAME,
 	SERVER_SETCHANGEPARMS,
 	SERVER_SETNEWPARMS
 };
@@ -77,11 +71,11 @@ enum
 */
 enum
 {
-	RESOURCE_MODEL,		// States that the precache should be used for a model
-	RESOURCE_PARTICLE,	// States that the precache should be used for a particle
-	RESOURCE_FLARE,		// States that the precache should be used for a flare
-	RESOURCE_SOUND,		// States that the precache should be used for a sound
-    RESOURCE_TEXTURE	// States that the precache should be used for a texture
+	RESOURCE_MODEL,		// States that the precache should be used for a model.
+	RESOURCE_SPRITE,	// States that the precache should be used for a sprite.
+	RESOURCE_SOUND,		// States that the precache should be used for a sound.
+	RESOURCE_FONT,		// States that the precache should be used for a font.
+    RESOURCE_TEXTURE	// States that the precache should be used for a texture.
 };
 
 #define CONTENT_SLIME				-4		// Horrible slime to slow us up!
@@ -147,6 +141,7 @@ enum
 #define	FL_PARTIALGROUND	1024	// Entity is partially on the ground.
 #define	FL_WATERJUMP		2048
 #define	FL_JUMPRELEASED		4096	// Entity has released jump.
+#define	FL_GLOBAL			8192	// Used for
 
 #define	EF_BRIGHTFIELD		1
 #define	EF_MUZZLEFLASH		2

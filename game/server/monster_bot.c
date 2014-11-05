@@ -28,6 +28,8 @@
 
 #define	BOT_MAX_HEALTH	100
 #define	BOT_MAX_SIGHT	900.0f
+#define	BOT_MAX_SPEED	320.0f	// Must match player speed.
+#define	BOT_MIN_SPEED	200.0f	// Must match player walk speed.
 #define BOT_MIN_HEALTH	-20		// [2/1/2013] Same as in server_player ~hogsy
 
 // [15/7/2012] List of death phrases ~hogsy
@@ -115,15 +117,6 @@ char *BotNames[] =
 	"[BOT] Castor"
 };
 
-enum
-{
-	BOT_DEFAULT,
-#ifdef OPENKATANA
-	BOT_MIKIKO,
-	BOT_SUPERFLY
-#endif
-};
-
 void Bot_Run(edict_t *ent);
 void Bot_Pain(edict_t *ent,edict_t *other);
 void Bot_Die(edict_t *ent,edict_t *other);
@@ -154,17 +147,24 @@ void Bot_Spawn(edict_t *eBot)
 
 		eBot->v.model	= cvServerPlayerModel.string;
 		eBot->v.netname	= BotNames[rand()%sizeof(BotNames)];
+
+		eBot->monster.iType	= MONSTER_PLAYER;
 		break;
 #ifdef OPENKATANA
 	case BOT_MIKIKO:
 		iSpawnType = INFO_PLAYER_MIKIKO;
 
+		Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/mikiko.md2");
+
 		eBot->v.model	= "models/mikiko.md2";
 		eBot->v.netname	= "Mikiko Ebihara";
+
+		eBot->monster.iType	= MONSTER_MIKIKO;
 		break;
 	case BOT_SUPERFLY:
 		iSpawnType = INFO_PLAYER_SUPERFLY;
 
+		Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/sprfly.md2");
 		Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/superfly/superflydeath1.wav");
 		Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/superfly/superflydeath2.wav");
 		Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/superfly/superflydeath3.wav");
@@ -172,6 +172,8 @@ void Bot_Spawn(edict_t *eBot)
 
 		eBot->v.model	= "models/sprfly.md2";
 		eBot->v.netname	= "Superfly Johnson";
+
+		eBot->monster.iType	= MONSTER_SUPERFLY;
 		break;
 #endif
 	default:
@@ -189,28 +191,38 @@ void Bot_Spawn(edict_t *eBot)
 	eBot->v.iHealth		= 100;
 	eBot->v.iMaxHealth	= (int)cvServerMaxHealth.value;
 	eBot->v.movetype	= MOVETYPE_STEP;
+	eBot->v.bTakeDamage	= true;
 
-	eBot->Physics.iSolid = SOLID_SLIDEBOX;
+	eBot->Physics.iSolid	= SOLID_SLIDEBOX;
+	eBot->Physics.fGravity	= SERVER_GRAVITY;
+	eBot->Physics.fMass		= 1.4f;
+	eBot->Physics.fFriction	= 4.0f;
 
 	eBot->local.bBleed	= true;
 
-	// [16/7/2012] Must be set after teams are set up ~hogsy
-	eSpawnPoint = Entity_SpawnPoint(eBot,iSpawnType);
-	if(!eSpawnPoint)
+	eBot->monster.Think = Bot_Think;
+
+    // Mikiko and Superfly are set manually to avoid issues... ~hogsy
+	if(eBot->local.style == BOT_DEFAULT)
 	{
-		Engine.Con_Warning("%s failed to find spawnpoint!\n",eBot->v.netname);
-		ENTITY_REMOVE(eBot);
+        // [16/7/2012] Must be set after teams are set up ~hogsy
+        eSpawnPoint = Entity_SpawnPoint(eBot,iSpawnType);
+        if(!eSpawnPoint)
+        {
+            Engine.Con_Warning("%s failed to find spawnpoint!\n",eBot->v.netname);
+            ENTITY_REMOVE(eBot);
+        }
+
+        Entity_SetOrigin(eBot,eSpawnPoint->v.origin);
+        SetAngle(eBot,eSpawnPoint->v.angles);
 	}
 
 	// [15/7/2012] Set the initial state to awake ~hogsy
 	eBot->monster.think_die		= Bot_Die;
 	eBot->monster.think_pain	= Bot_Pain;
 	eBot->monster.Think			= Bot_Think;
-	eBot->monster.iType			= MONSTER_PLAYER;
 
 	Entity_SetModel(eBot,eBot->v.model);
-	Entity_SetOrigin(eBot,eSpawnPoint->v.origin);
-	SetAngle(eBot,eSpawnPoint->v.angles);
 	Entity_SetSize(eBot,-16.0f,-16.0f,-24.0f,16.0f,16.0f,32.0f);
 
 	Monster_SetState(eBot,STATE_AWAKE);
@@ -222,23 +234,55 @@ void Bot_Spawn(edict_t *eBot)
 
 void Bot_Think(edict_t *eBot)
 {
+	// If the bot isn't dead, then add animations.
+	if(eBot->monster.iState != STATE_DEAD)
+	{
+		if(eBot->v.flags & FL_ONGROUND)
+		{
+			if((	(eBot->v.velocity[0] < -4.0f || eBot->v.velocity[0] > 4.0f)	|| 
+					(eBot->v.velocity[1] < -4.0f || eBot->v.velocity[1] > 4.0f))	&& 
+					(!eBot->local.dAnimationTime || eBot->local.iAnimationEnd == 9))
+				Entity_Animate(eBot,PlayerAnimation_Walk);
+			else if((eBot->v.velocity[0] == 0 || eBot->v.velocity[1] == 0) && (!eBot->local.dAnimationTime || eBot->local.iAnimationEnd > 9))
+			{
+	#ifdef GAME_OPENKATANA
+				if(eBot->v.iActiveWeapon == WEAPON_DAIKATANA)
+					Entity_Animate(eBot,PlayerAnimation_KatanaIdle);
+				else
+	#endif
+					Entity_Animate(eBot,PlayerAnimation_Idle);
+			}
+		}
+	}
+
 	switch(eBot->monster.iThink)
 	{
 	case THINK_IDLE:
-#if 0
-		char	cJumpSound[128];
+#if 1
+		// Add some random movement. ~hogsy
+		if(rand()%120 == 0)
+		{
+			int	iResult = rand()%3;
 
-		// [4/2/2013] TEMP: Some test stuff for monster jumping... LOL ~hogsy
-		if(!(eBot->v.flags & FL_ONGROUND) || eBot->v.iHealth <= 0)
-			return;
+			if(iResult == 0)
+				eBot->v.velocity[0] += BOT_MIN_SPEED;
+			else if(iResult == 1)
+				eBot->v.velocity[0] -= BOT_MIN_SPEED;
 
-		Monster_Jump(eBot,200.0f);
+			iResult = rand()%3;
+			if(iResult == 0)
+				eBot->v.velocity[1] += BOT_MIN_SPEED;
+			else if(iResult == 1)
+				eBot->v.velocity[1] -= BOT_MIN_SPEED;
 
-		sprintf(cJumpSound,"player/playerjump%i.wav",5+(rand()%3));
+			eBot->v.angles[1] = Math_VectorToYaw(eBot->v.velocity);
+		}
+		else if(rand()%150 == 0)
+		{
+			Monster_Jump(eBot,200.0f);
 
-		Sound(eBot,CHAN_VOICE,cJumpSound,255,ATTN_NORM);
-#else
-		Monster_SetTargets(eBot);
+			Entity_Animate(eBot,PlayerAnimation_Jump);
+		}
 #endif
 		break;
 	case THINK_WANDERING:
@@ -506,10 +550,8 @@ void Bot_Die(edict_t *eBot,edict_t *eOther)
 	{
 		Sound(eBot,CHAN_VOICE,"misc/gib1.wav",255,ATTN_NORM);
 
-		ThrowGib(eBot->v.origin,eBot->v.velocity,"models/gibs/gib0.md2",(float)(eBot->v.iHealth*-1),true);
-		ThrowGib(eBot->v.origin,eBot->v.velocity,"models/gibs/gib1.md2",(float)(eBot->v.iHealth*-1),true);
-		ThrowGib(eBot->v.origin,eBot->v.velocity,"models/gibs/gib2.md2",(float)(eBot->v.iHealth*-1),true);
-
-		Engine.Particle(eBot->v.origin,eBot->v.velocity,1.0f,"blood",5);
+		ThrowGib(eBot->v.origin,eBot->v.velocity,PHYSICS_MODEL_GIB0,(float)(eBot->v.iHealth*-1),true);
+		ThrowGib(eBot->v.origin,eBot->v.velocity,PHYSICS_MODEL_GIB1,(float)(eBot->v.iHealth*-1),true);
+		ThrowGib(eBot->v.origin,eBot->v.velocity,PHYSICS_MODEL_GIB2,(float)(eBot->v.iHealth*-1),true);
 	}
 }

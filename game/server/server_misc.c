@@ -2,14 +2,12 @@
 */
 #include "server_misc.h"
 
-#define MISC_LIGHT_OFF	1
-
 void UseTargets(edict_t *ent, edict_t *other);
 
 #if 0
 edict_t *SpawnField(edict_t *ent,vec3_t fmins,vec3_t fmaxs)
 {
-	edict_t	*trigger = Spawn();
+	edict_t	*trigger = Entity_Spawn();
 
 	trigger->v.movetype		= MOVETYPE_NONE;
 	trigger->Physics.iSolid	= SOLID_TRIGGER;
@@ -40,7 +38,7 @@ void UseTargets(edict_t *ent, edict_t *other)
 
 	if(ent->local.delay)
 	{
-		t = Spawn();
+		t = Entity_Spawn();
 		if(t)
 		{
 			t->v.cClassname	= "DelayedUse";
@@ -99,7 +97,7 @@ void Misc_GibThink(edict_t *ent)
 
 void ThrowGib(vec3_t origin,vec3_t velocity,char *model,float damage,bool bleed)
 {
-	edict_t *gib = Spawn();
+	edict_t *gib = Entity_Spawn();
 
 	gib->v.cClassname	= "gib";
 
@@ -113,7 +111,9 @@ void ThrowGib(vec3_t origin,vec3_t velocity,char *model,float damage,bool bleed)
 	gib->v.velocity[2]	= velocity[2]*((damage+rand()%20)/2.0f);
 	gib->v.movetype		= MOVETYPE_BOUNCE;
 
-	gib->Physics.iSolid	= SOLID_NOT;
+	gib->Physics.iSolid		= SOLID_NOT;
+	gib->Physics.fGravity	= SERVER_GRAVITY;
+	gib->Physics.fMass		= 1.0f;
 
 	Math_VectorSet((float)(rand()%10*damage),gib->v.avelocity);
 
@@ -165,40 +165,4 @@ bool DropToFloor(edict_t *ent)
 	ent->v.groundentity = trace.ent;
 
 	return true;
-}
-
-void LightUse(edict_t *eLight)
-{
-	if(eLight->v.spawnflags & MISC_LIGHT_OFF)
-	{
-		if(!eLight->v.message)
-			Engine.LightStyle(eLight->local.style,"m");
-		else
-			Engine.LightStyle(eLight->local.style,eLight->v.message);
-
-		eLight->v.spawnflags -= MISC_LIGHT_OFF;
-	}
-	else
-	{
-		Engine.LightStyle(eLight->local.style,"a");
-
-		eLight->v.spawnflags += MISC_LIGHT_OFF;
-	}
-
-	if(eLight->v.noise)
-		Sound(eLight,CHAN_VOICE,eLight->v.noise,255,ATTN_NORM);
-}
-
-void light(edict_t *eLight)
-{
-	if(eLight->v.noise)
-		Engine.Server_PrecacheResource(RESOURCE_SOUND,eLight->v.noise);
-
-	if(eLight->v.message)
-		Engine.LightStyle(eLight->local.style,eLight->v.message);
-
-	eLight->v.use = LightUse;
-
-	if(eLight->v.spawnflags & MISC_LIGHT_OFF)
-		Engine.LightStyle(eLight->local.style,"a");
 }

@@ -149,7 +149,7 @@ void SideWinder_SpawnMissle(edict_t *ent,float fSpeed,float ox)
 {
 	// [26/2/2012] Revised and fixed ~hogsy
 	vec3_t	vOrg;
-	edict_t *eMissile = Spawn();
+	edict_t *eMissile = Entity_Spawn();
 
 	/*	TODO:
 			Spawn a flare at our position too

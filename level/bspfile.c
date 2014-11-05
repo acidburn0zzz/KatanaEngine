@@ -24,8 +24,8 @@ byte		dtexdata[BSP_MAX_MIPTEX]; // (dmiptexlump_t)
 int			entdatasize;
 char		dentdata[BSP_MAX_ENTSTRING];
 
-int			numleafs;
-BSPLeaf_t	dleafs[BSP_MAX_LEAFS];
+unsigned int	numleafs;
+BSPLeaf_t		dleafs[BSP_MAX_LEAFS];
 
 int			numplanes;
 BSPPlane_t	dplanes[BSP_MAX_PLANES];
@@ -39,8 +39,8 @@ BSPNode_t	dnodes[BSP_MAX_NODES];
 int					numtexinfo;
 BSPTextureInfo_t	texinfo[BSP_MAX_TEXINFO];
 
-int			numfaces;
-BSPFace_t	dfaces[BSP_MAX_FACES];
+unsigned int	numfaces;
+BSPFace_t		dfaces[BSP_MAX_FACES];
 
 int				numclipnodes;
 BSPClipNode_t	dclipnodes[BSP_MAX_CLIPNODES];
@@ -223,8 +223,8 @@ void LoadBSPFile(char *filename)
 	VectorClear (hullinfo.hullsizes[0][0]);
 	VectorClear (hullinfo.hullsizes[0][1]);
 
-	hullinfo.numhulls = 3;
-	hullinfo.filehulls = 4;
+	hullinfo.numhulls	= 3;
+	hullinfo.filehulls	= BSP_MAX_HULLS;
 	VectorSet (hullinfo.hullsizes[1][0], -16, -16, -24);
 	VectorSet (hullinfo.hullsizes[1][1], 16, 16, 32);
 	VectorSet (hullinfo.hullsizes[2][0], -32, -32, -24);
@@ -373,20 +373,22 @@ void LoadBSPFile(char *filename)
 	nummodels = lump->iFileLength / (48+4*hullinfo.filehulls);
 	for (i = 0; i < nummodels; i++)
 	{
-		dmodels[i].fMins[0] = SB_ReadFloat (&sb);
-		dmodels[i].fMins[1] = SB_ReadFloat (&sb);
-		dmodels[i].fMins[2] = SB_ReadFloat (&sb);
-		dmodels[i].fMaxs[0] = SB_ReadFloat (&sb);
-		dmodels[i].fMaxs[1] = SB_ReadFloat (&sb);
-		dmodels[i].fMaxs[2] = SB_ReadFloat (&sb);
-		dmodels[i].fOrigin[0] = SB_ReadFloat (&sb);
-		dmodels[i].fOrigin[1] = SB_ReadFloat (&sb);
-		dmodels[i].fOrigin[2] = SB_ReadFloat (&sb);
+		dmodels[i].fMins[0]		= SB_ReadFloat (&sb);
+		dmodels[i].fMins[1]		= SB_ReadFloat (&sb);
+		dmodels[i].fMins[2]		= SB_ReadFloat (&sb);
+		dmodels[i].fMaxs[0]		= SB_ReadFloat (&sb);
+		dmodels[i].fMaxs[1]		= SB_ReadFloat (&sb);
+		dmodels[i].fMaxs[2]		= SB_ReadFloat (&sb);
+		dmodels[i].fOrigin[0]	= SB_ReadFloat (&sb);
+		dmodels[i].fOrigin[1]	= SB_ReadFloat (&sb);
+		dmodels[i].fOrigin[2]	= SB_ReadFloat (&sb);
+
 		for (j = 0; j < hullinfo.filehulls; j++)
 			dmodels[i].iHeadNode[j] = SB_ReadInt (&sb);
-		dmodels[i].iVisLeafs = SB_ReadInt (&sb);
-		dmodels[i].iFirstFace = SB_ReadInt (&sb);
-		dmodels[i].iNumFaces = SB_ReadInt (&sb);
+
+		dmodels[i].iVisLeafs	= SB_ReadInt (&sb);
+		dmodels[i].iFirstFace	= SB_ReadInt (&sb);
+		dmodels[i].iNumFaces	= SB_ReadInt (&sb);
 	}
 
 	lump = &lumps[LUMP_LIGHTING];
@@ -413,6 +415,83 @@ void LoadBSPFile(char *filename)
 	SB_Free(&sb);
 }
 
+// Ripped from RMQ ~hogsy
+void BSP_RemoveSkipSurfaces(void)
+{
+	int					i, skipcount;
+	unsigned int		*leafmarks,j,k;
+	BSPLeaf_t			*leaf;
+	BSPFace_t			*face;
+	BSPTextureInfo_t	*ti;
+	miptex_t			*textures, *texture;
+	char				*name;
+	dmiptexlump_t		*miptexlump;
+	BSPModel_t			*model;
+	BSPFace_t			*modfaces;
+
+	miptexlump = (dmiptexlump_t *) dtexdata;
+	textures = (miptex_t *) dtexdata;
+	skipcount = 0;
+
+	for (i = 0, leaf = dleafs; i < numleafs; i++, leaf++)
+	{
+		leafmarks = dmarksurfaces + leaf->uiFirstMarkSurface;
+
+		for (j = 0; j < leaf->uiNumMarkSurfaces;)
+		{
+			face = dfaces + leafmarks[j];
+			ti = texinfo + face->iTexInfo;
+			texture = (miptex_t *) ((byte *) textures + miptexlump->dataofs[ti->iMipTex]);
+			name = texture->name;
+
+			if(!Q_strcasecmp(name,"nodraw"))
+			{
+				// copy each remaining marksurface to previous slot
+				for (k = j; k < leaf->uiNumMarkSurfaces-1; k++)
+					leafmarks[k] = leafmarks[k + 1];
+
+				// reduce marksurface count by one
+				leaf->uiNumMarkSurfaces--;
+
+				skipcount++;
+			}
+			else j++;
+		}
+	}
+
+	// loop through all the models, editing surface lists (this takes care of brush entities)
+	for (i = 0, model = dmodels; i < nummodels; i++, model++)
+	{
+		if (i == 0)
+			continue; // model 0 is worldmodel
+
+		modfaces = dfaces+model->iFirstFace;
+
+		for (j = 0; j < model->iNumFaces;)
+		{
+			face = modfaces + j;
+			ti = texinfo + face->iTexInfo;
+			texture = (miptex_t *) ((byte *) textures + miptexlump->dataofs[ti->iMipTex]);
+			name = texture->name;
+
+			if(!Q_strcasecmp(name,"nodraw"))
+			{
+				// copy each remaining face to previous slot
+				for (k = j; k < model->iNumFaces-1; k++)
+					modfaces[k] = modfaces[k + 1];
+
+				// reduce face count by one
+				model->iNumFaces--;
+
+				skipcount++;
+			}
+			else j++;
+		}
+	}
+
+	printf("Skipped %i surfaces\n",skipcount);
+}
+
 /*	Swaps the bsp file in place, so it should not be referenced again
 */
 void WriteBSPFile (char *filename)
@@ -423,6 +502,8 @@ void WriteBSPFile (char *filename)
 	int				index;
 	int				bspsize;
 	BSPLump_t		lumps[HEADER_LUMPS],*lump;
+
+	BSP_RemoveSkipSurfaces();
 
 	bspsize = BSP_HEADER_SIZE;
 	bspsize += sizeof(lumps)+20*numplanes+(40+BSP_AMBIENT_END)*numleafs+12*numvertexes;

@@ -2,7 +2,7 @@
 */
 #include "engine_server.h"
 
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 #include "engine_console.h"
 
 typedef struct
@@ -21,6 +21,8 @@ EntityField_t	GlobalFields[] =
 	{	"wad",			0,	EV_STRING		},
 	{	"ambient",		0,	EV_NONE			},
 	{	"sky",			0,	EV_STRING		},
+	{	"cloud",		0,	EV_STRING		},
+	{	"scrollspeed",	0,	EV_INTEGER		},
 
 	{	0	}
 };
@@ -69,9 +71,13 @@ EntityField_t	EntityFields[] =
 	// hacks
 	{	"angle",	FIELD(v.angles),	EV_VECTOR,	FL_ANGLEHACK	},
 
+	// Global fields to ignore... Ugh ~hogsy
     {	"wad",			0,	EV_NONE		},
 	{	"ambient",		0,	EV_NONE		},
 	{	"sky",			0,	EV_NONE		},
+	{	"cloud",		0,	EV_NONE		},
+	{	"scrollspeed",	0,	EV_NONE		},
+	{	"mapversion",	0,	EV_NONE		},
 
 	{	0	}
 };
@@ -100,7 +106,7 @@ void Server_ParseEntityField(char *cKey,char *cValue,edict_t *eEntity)
 					{
 					case FL_ANGLEHACK:
 						((float*)((byte*)eEntity+eField->iOffset))[0] = 0;
-						((float*)((byte*)eEntity+eField->iOffset))[1] = (float)atof(cValue);
+						((float*)((byte*)eEntity+eField->iOffset))[1] = strtof(cValue,NULL);
 						((float*)((byte*)eEntity+eField->iOffset))[2] = 0;
 						break;
 					default:
@@ -118,7 +124,7 @@ void Server_ParseEntityField(char *cKey,char *cValue,edict_t *eEntity)
 					((float*)((byte*)eEntity+eField->iOffset))[3] = vVector[3];
 					break;
 				case EV_FLOAT:
-					*(float*)((byte*)eEntity+eField->iOffset) = (float)atof(cValue);
+					*(float*)((byte*)eEntity+eField->iOffset) = strtof(cValue,NULL);
 					break;
 				case EV_DOUBLE:
 					*(double*)((byte*)eEntity+eField->iOffset) = strtod(cValue,NULL);
@@ -139,6 +145,71 @@ void Server_ParseEntityField(char *cKey,char *cValue,edict_t *eEntity)
 					Con_Warning("Unknown entity field type! (%i)\n",(int)eField->eDataType);
 			}
 			return;
+		}
+	}
+
+	Con_Warning("Invalid field! (%s)\n",cKey);
+}
+
+void Server_ParseGlobalField(char *cKey,char *cValue)
+{
+	EntityField_t	*eField;
+
+	for(eField = GlobalFields; eField->cFieldName; eField++)
+	{
+		if(!Q_strcasecmp((char*)eField->cFieldName,cKey))
+		{
+#if 0	// todo
+			switch(eField->eDataType)
+			{
+				case EV_STRING:
+					*(char**)((byte*)eEntity+eField->iOffset) = ED_NewString(cValue);
+					break;
+				case EV_VECTOR:
+					switch(eField->iFlags)
+					{
+					case FL_ANGLEHACK:
+						((float*)((byte*)eEntity+eField->iOffset))[0] = 0;
+						((float*)((byte*)eEntity+eField->iOffset))[1] = strtof(cValue,NULL);
+						((float*)((byte*)eEntity+eField->iOffset))[2] = 0;
+						break;
+					default:
+						sscanf(cValue,"%f %f %f",&vVector[0],&vVector[1],&vVector[2]);
+						((float*)((byte*)eEntity+eField->iOffset))[0] = vVector[0];
+						((float*)((byte*)eEntity+eField->iOffset))[1] = vVector[1];
+						((float*)((byte*)eEntity+eField->iOffset))[2] = vVector[2];
+					}
+					break;
+				case EV_VECTOR4:
+					sscanf(cValue,"%f %f %f %f",&vVector[0],&vVector[1],&vVector[2],&vVector[3]);
+					((float*)((byte*)eEntity+eField->iOffset))[0] = vVector[0];
+					((float*)((byte*)eEntity+eField->iOffset))[1] = vVector[1];
+					((float*)((byte*)eEntity+eField->iOffset))[2] = vVector[2];
+					((float*)((byte*)eEntity+eField->iOffset))[3] = vVector[3];
+					break;
+				case EV_FLOAT:
+					*(float*)((byte*)eEntity+eField->iOffset) = strtof(cValue,NULL);
+					break;
+				case EV_DOUBLE:
+					*(double*)((byte*)eEntity+eField->iOffset) = strtod(cValue,NULL);
+					break;
+				case EV_BOOLEAN:
+					if(!Q_strcasecmp(cValue,"true"))
+						cValue = "1";
+					else if(!Q_strcasecmp(cValue,"false"))
+						cValue = "0";
+					// [2/1/2013] Booleans are handled in the same way as integers, so don't break here! ~hogsy
+				case EV_INTEGER:
+					*(int*)((byte*)eEntity+eField->iOffset) = atoi(cValue);
+					break;
+				// [22/11/2012] Just ignore anything that has skip set! ~hogsy
+				case EV_NONE:
+					break;
+				default:
+					Con_Warning("Unknown entity field type! (%i)\n",(int)eField->eDataType);
+			}
+			return;
+#endif
 		}
 	}
 
@@ -205,9 +276,8 @@ void Server_PrecacheResource(int iType,const char *ccResource)
 
 		Console_ErrorMessage(false,ccResource,"Overflow!");
 		break;
-	case RESOURCE_PARTICLE:
-	case RESOURCE_FLARE:
-		sprintf(name,"%s%s",DIR_PARTICLES,ccResource);
+	case RESOURCE_SPRITE:
+		sprintf(name,PATH_SPRITES"%s",ccResource);
 		for(i = 0; i < MAX_PARTICLES; i++)
 			if(!sv.cParticlePrecache[i])
 			{
@@ -236,6 +306,10 @@ void Server_PrecacheResource(int iType,const char *ccResource)
 	}
 }
 
+/*
+	Console Messages
+*/
+
 void Server_SinglePrint(edict_t *eEntity,char *cMessage)
 {
 	client_t	*cClient;
@@ -243,7 +317,7 @@ void Server_SinglePrint(edict_t *eEntity,char *cMessage)
 
 	if(iEntity > svs.maxclients)
 	{
-		Con_Warning("Attempted to send a message to a non-client!\n");
+		Con_Warning("Attempted to send message to a non-client! (%s)\n",cMessage);
 		return;
 	}
 
@@ -251,4 +325,32 @@ void Server_SinglePrint(edict_t *eEntity,char *cMessage)
 
 	MSG_WriteChar(&cClient->message,SVC_PRINT);
 	MSG_WriteString(&cClient->message,cMessage);
+}
+
+// [25/2/2012] Added CenterPrint ~hogsy
+// [18/7/2012] Renamed to Server_CenterPrint ~hogsy
+void Server_CenterPrint(edict_t *ent,char *msg)
+{
+	client_t	*client;
+	int			entnum = NUM_FOR_EDICT(ent);
+
+	if(entnum < 1 || entnum > svs.maxclients)
+	{
+		Con_Warning("Attempted to send message to a non-client! (%s)\n",msg);
+		return;
+	}
+
+	client = &svs.clients[entnum-1];
+
+	MSG_WriteChar(&client->message,svc_centerprint);
+	MSG_WriteString(&client->message,msg);
+}
+
+/*
+	Utilities
+*/
+
+double Server_GetFrameTime(void)
+{
+	return host_frametime;
 }

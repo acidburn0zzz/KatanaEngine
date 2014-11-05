@@ -84,13 +84,15 @@ void IonBlaster_IonBallExplode(edict_t *ent)
 {
 	vec3_t vel;
 
-	// [18/5/2013] This is was the wrong way, fixed now! ~hogsy
+	// [18/5/2013] This was the wrong way, fixed now! ~hogsy
 	Math_VectorCopy(ent->v.velocity,vel);
 	Math_VectorInverse(vel);
 
 	Sound(ent,CHAN_ITEM,"weapons/ionblaster/ionexplode3.wav",255,ATTN_NORM);
 
 	Engine.Particle(ent->v.origin,vel,3.0f,"spark2",20);
+
+	// TODO: Fancy explosion effect with particles? ~hogsy
 
 	Entity_Remove(ent);
 }
@@ -116,9 +118,9 @@ void IonBlaster_IonBallTouch(edict_t *eIonBall,edict_t *other)
 	else
 		eIonBall->local.hit = true;
 
-	Math_MVToVector(Math_VectorToAngles(eIonBall->v.velocity),eIonBall->v.angles);
 	Math_VectorCopy(eIonBall->v.velocity,vInversed);
 	Math_VectorInverse(vInversed);
+	Math_MVToVector(Math_VectorToAngles(eIonBall->v.velocity),eIonBall->v.angles);
 
 	if(eIonBall->local.hit)
 	{
@@ -169,7 +171,7 @@ void IonBlaster_PrimaryAttack(edict_t *ent)
 	ent->local.ionblaster_ammo--;
 	ent->v.iPrimaryAmmo = ent->local.ionblaster_ammo;
 
-	eIonBall = Spawn();
+	eIonBall = Entity_Spawn();
 	if(eIonBall)
 	{
 		eIonBall->v.cClassname	= "ionball";
@@ -187,9 +189,7 @@ void IonBlaster_PrimaryAttack(edict_t *ent)
 		// [26/8/2012] Start us off facing in the direction we're being fired from ~hogsy
 		Math_VectorCopy(dir,eIonBall->v.avelocity);
 
-		Engine.MakeVectors(eIonBall->v.v_angle);
-
-		Math_MVToVector(Math_VectorToAngles(eIonBall->v.velocity),eIonBall->v.angles);
+		Math_VectorCopy(ent->v.angles,eIonBall->v.angles);
 		Math_VectorCopy(ent->v.origin,orig);
 
 		orig[2] += 25.0f;

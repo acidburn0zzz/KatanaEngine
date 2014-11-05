@@ -99,9 +99,7 @@ GlWindow::handleEvent (mxEvent *event)
 		oldtz = d_transZ;
 		oldx = event->x;
 		oldy = event->y;
-
 		break;
-
 	case mxEvent::MouseDrag:
 		if (event->buttons & mxEvent::MouseLeftButton)
 		{
@@ -117,12 +115,10 @@ GlWindow::handleEvent (mxEvent *event)
 			}
 		}
 		else if (event->buttons & mxEvent::MouseRightButton)
-		{
 			d_transZ = oldtz + (float) (event->y - oldy);
-		}
+
 		redraw ();
 		break;
-
 	case mxEvent::Idle:
 	{
 		static int timer = 0, lastTimer = 0;
@@ -160,6 +156,7 @@ GlWindow::handleEvent (mxEvent *event)
 
 void GlWindow::draw ()
 {
+#if 0
 	glClearColor (d_bgColor[0], d_bgColor[1], d_bgColor[2], 0.0f);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport (0, 0, w2 (), h2 ());
@@ -530,6 +527,7 @@ void GlWindow::draw ()
 	}
 
 	glPopMatrix ();
+#endif
 }
 
 void GlWindow::DumpModelInfo(md2_model_t *model, const char *filename)
@@ -596,6 +594,8 @@ md2_model_t *GlWindow::loadModel (const char *filename, int pos)
 	return d_models[pos];
 }
 
+#include "shared_png.h"
+
 int GlWindow::loadTexture (const char *filename, int name)
 {
 	if (!filename || !strlen (filename))
@@ -623,6 +623,7 @@ int GlWindow::loadTexture (const char *filename, int name)
 	else if(strstr(filename,".png"))
 	{
 		// [24/2/2014] TODO: Png support... ~hogsy
+		//lodepng_decode32_file((unsigned char**)image->data,(UINT32*)&image->width,(UINT32*)&image->height,filename);
 	}
 	else if(strstr (_strlwr ((char *) filename), ".pcx"))
 	{

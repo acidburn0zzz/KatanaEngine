@@ -101,12 +101,33 @@ void Point_Start(edict_t *ent)
 		if(	(ent->local.style != INFO_PLAYER_START)		&&
 			(ent->local.style != INFO_PLAYER_MIKIKO)	&&
 			(ent->local.style != INFO_PLAYER_SUPERFLY))
+        {
+            Engine.Con_Warning("Invalid start style! (%i)\n",ent->local.style);
+
 			ENTITY_REMOVE(ent);
-		break;
+        }
+
 #ifdef OPENKATANA
+        if(ent->local.style == INFO_PLAYER_SUPERFLY)
+        {
+            ent->local.style = BOT_SUPERFLY;
+
+            Bot_Spawn(ent);
+        }
+        else if(ent->local.style == INFO_PLAYER_MIKIKO)
+        {
+            ent->local.style = BOT_MIKIKO;
+
+            Bot_Spawn(ent);
+        }
+		break;
 	case MODE_CAPTURETHEFLAG:
 		if((ent->local.style != INFO_PLAYER_CTF) || !ent->local.pTeam)
+        {
+            Engine.Con_Warning("Invalid start style! (%i)\n",ent->local.style);
+
 			ENTITY_REMOVE(ent);
+        }
 
 		if(ent->local.pTeam == TEAM_RED)
 			ent->v.cClassname = "point_start_red";
@@ -118,14 +139,24 @@ void Point_Start(edict_t *ent)
 			(ent->local.style != INFO_PLAYER_MIKIKO)	&&
 			(ent->local.style != INFO_PLAYER_SUPERFLY)	&&
 			(ent->local.style != INFO_PLAYER_COOP))
+        {
+            Engine.Con_Warning("Invalid start style! (%i)\n",ent->local.style);
+
 			ENTITY_REMOVE(ent);
+        }
 		break;
 	case MODE_DEATHMATCH:
 	case MODE_VEKTAR:
 		if(ent->local.style != INFO_PLAYER_DEATHMATCH)
+        {
+            Engine.Con_Warning("Invalid start style! (%i)\n",ent->local.style);
+
 			ENTITY_REMOVE(ent);
+        }
 
 		ent->v.cClassname = "point_start_deathmatch";
+		break;
+#else
 		break;
 #endif
 	default:
@@ -167,7 +198,7 @@ void Point_ParticleSpawn(edict_t *ent)
 		ent->Model.fScale = 7.0f;
 
 	// [21/3/2012] Updated ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,ent->v.model);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,ent->v.model);
 
 	Entity_SetOrigin(ent,ent->v.origin);
 
@@ -198,11 +229,53 @@ void Point_ParticleSpawn(edict_t *ent)
 
 void Point_FlareSpawn(edict_t *eFlare)
 {
-	Engine.Server_PrecacheResource(RESOURCE_FLARE,eFlare->v.model);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,eFlare->v.model);
 
 	Entity_SetOrigin(eFlare,eFlare->v.origin);
 
 //	Flare(ent->v.origin,ent->local.red,ent->local.green,ent->local.blue,ent->alpha,ent->local.scale,ent->v.model);
+}
+
+/*
+	Light
+*/
+
+#define LIGHT_OFF	1
+
+void Point_LightUse(edict_t *eLight)
+{
+	if(eLight->v.spawnflags & LIGHT_OFF)
+	{
+		if(!eLight->v.message)
+			Engine.LightStyle(eLight->local.style,"m");
+		else
+			Engine.LightStyle(eLight->local.style,eLight->v.message);
+
+		eLight->v.spawnflags -= LIGHT_OFF;
+	}
+	else
+	{
+		Engine.LightStyle(eLight->local.style,"a");
+
+		eLight->v.spawnflags += LIGHT_OFF;
+	}
+
+	if(eLight->v.noise)
+		Sound(eLight,CHAN_VOICE,eLight->v.noise,255,ATTN_NORM);
+}
+
+void Point_LightSpawn(edict_t *eLight)
+{
+	if(eLight->v.noise)
+		Engine.Server_PrecacheResource(RESOURCE_SOUND,eLight->v.noise);
+
+	if(eLight->v.message)
+		Engine.LightStyle(eLight->local.style,eLight->v.message);
+
+	eLight->v.use = Point_LightUse;
+
+	if(eLight->v.spawnflags & LIGHT_OFF)
+		Engine.LightStyle(eLight->local.style,"a");
 }
 
 /*
@@ -420,7 +493,7 @@ enum
 void Point_MessageLocal(edict_t *eEntity)
 {
 	// [4/8/2013] Simplified ~hogsy
-	if(!eEntity->local.activator || ((eEntity->monster.iType != MONSTER_PLAYER) && eEntity->local.activator->v.iHealth <= 0))
+	if(!eEntity->local.activator || (!Entity_IsPlayer(eEntity) && eEntity->local.activator->v.iHealth <= 0))
 		return;
 
 	Engine.Server_SinglePrint(eEntity->local.activator,eEntity->v.message);
@@ -429,7 +502,7 @@ void Point_MessageLocal(edict_t *eEntity)
 void Point_MessageCenter(edict_t *eEntity)
 {
 	// [4/8/2013] Simplified ~hogsy
-	if(!eEntity->local.activator || ((eEntity->monster.iType != MONSTER_PLAYER) && eEntity->local.activator->v.iHealth <= 0))
+	if(!eEntity->local.activator || (!Entity_IsPlayer(eEntity) && eEntity->local.activator->v.iHealth <= 0))
 		return;
 
 	Engine.CenterPrint(eEntity->local.activator,eEntity->v.message);
@@ -708,20 +781,9 @@ void Point_EffectSpawn(edict_t *eEntity)
 	Damage
 */
 
-enum
-{
-	DAMAGE_NORMAL,
-	DAMAGE_BURN,
-	DAMAGE_FREEZE,
-	DAMAGE_EXPLODE,
-	DAMAGE_GRAVITY
-};
-
 void Point_DamageUse(edict_t *eEntity)
 {
-	MONSTER_Damage(eEntity->local.activator,eEntity,eEntity->local.iDamage,DAMAGE_TYPE_NONE);
-
-	Engine.Con_Warning("JIRTT %i", eEntity->local.iDamage);
+	MONSTER_Damage(eEntity->local.activator,eEntity,eEntity->local.iDamage,eEntity->local.style);
 }
 
 void Point_DamageSpawn(edict_t *eEntity)
@@ -730,7 +792,7 @@ void Point_DamageSpawn(edict_t *eEntity)
 		eEntity->local.iDamage = 10;
 
 	if(!eEntity->local.style)
-		eEntity->local.style = 0;
+		eEntity->local.style = DAMAGE_TYPE_NORMAL;
 
 	eEntity->v.use = Point_DamageUse;
 
@@ -942,7 +1004,6 @@ void Point_LogicThink(edict_t *eEntity)
 
 void Point_LogicSpawn(edict_t *eEntity)
 {
-
 	if(!eEntity->local.cTarget1)
 	{
 		Engine.Con_Warning("No target1 set for point_logic! (%i %i %i)\n",

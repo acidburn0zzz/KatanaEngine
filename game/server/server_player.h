@@ -14,6 +14,7 @@ extern	EntityFrame_t	PlayerAnimation_Idle[];
 extern	EntityFrame_t	PlayerAnimation_Jump[];
 extern	EntityFrame_t	PlayerAnimation_RunJump[];
 extern	EntityFrame_t	PlayerAnimation_Walk[];
+extern	EntityFrame_t	PlayerAnimation_KatanaIdle[];
 extern	EntityFrame_t	PlayerAnimation_KatanaAttack1[];
 extern	EntityFrame_t	PlayerAnimation_KatanaAttack2[];
 

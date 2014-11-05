@@ -10,6 +10,12 @@
 */
 edict_t *Entity_Spawn(void)
 {
+#if 0
+	// [30/5/2013] Set physics properties to their defaults! ~hogsy
+	eSpawn->Physics.fMass		= 1.0f;
+	eSpawn->Physics.fGravity	= 600.0f;
+#endif
+
 	return Engine.Spawn();
 }
 
@@ -79,6 +85,27 @@ void Entity_SetSize(edict_t *eEntity,
 	Entity_SetSizeVector(eEntity,vMin,vMax);
 }
 
+/*	Can be used for convenience.
+*/
+void Entity_AddEffects(edict_t *eEntity,int iEffects)
+{
+	eEntity->v.effects |= iEffects;
+}
+
+/*	Can be used for convenience.
+*/
+void Entity_RemoveEffects(edict_t *eEntity,int iEffects)
+{
+	eEntity->v.effects &= ~iEffects;
+}
+
+/*	Can be used for convenience.
+*/
+void Entity_ClearEffects(edict_t *eEntity)
+{
+	eEntity->v.effects = 0;
+}
+
 /*	Find a random spawn point for the entity (point_start).
 	TODO: Rename!
 */
@@ -104,8 +131,10 @@ edict_t *Entity_SpawnPoint(edict_t *eEntity,int iType)
 		}
 		// [27/4/2014] Oops, forgot to break here ~hogsy
 		break;
+#ifdef GAME_OPENKATANA
 	case INFO_PLAYER_SUPERFLY:
 	case INFO_PLAYER_MIKIKO:
+#endif
 	default:
 		cStartName = "point_start";
 	}
@@ -122,6 +151,10 @@ edict_t *Entity_SpawnPoint(edict_t *eEntity,int iType)
 */
 bool Entity_CanDamage(edict_t *eEntity,edict_t *eTarget, int iDamageType)
 {
+	// Can't damage people on the same team.
+	if(eEntity->local.pTeam && (eEntity->local.pTeam == eTarget->local.pTeam))
+		return false;
+
 	if(eTarget->v.bTakeDamage && (!eTarget->local.iDamageType || (eTarget->local.iDamageType == iDamageType)))
 		return true;
 

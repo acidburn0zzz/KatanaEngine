@@ -42,7 +42,7 @@ void projectile_arrow(edict_t *ent)
 	float	*dir;
 	edict_t *eArrow;
 
-	eArrow = Spawn();
+	eArrow = Entity_Spawn();
 	if(eArrow)
 	{
 		eArrow->local.eOwner = ent;

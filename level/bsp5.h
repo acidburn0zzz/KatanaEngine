@@ -167,7 +167,7 @@ tree_t *Tree_ProcessEntity( entity_t *ent, int hullnum );
 
 // writebsp.c
 void EmitVertex( vec3_t point );
-void EmitEdge( int v1, int v2 );
+void EmitEdge( unsigned int v1, unsigned int v2 );
 void EmitNodeFaceEdges( node_t *headnode );
 void EmitNodeFaces( node_t *node );
 void EmitNodePlanes( node_t *headnode );

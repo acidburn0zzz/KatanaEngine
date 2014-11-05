@@ -8,6 +8,17 @@
 
 #define PHYSICS_MAXVELOCITY	2000.0f
 
+/*	Sets the amount of gravity for the object.
+*/
+void Physics_SetGravity(edict_t *eEntity)
+{	
+	eEntity->v.velocity[2] -=
+		// [30/5/2013] Slightly more complex gravity management ~hogsy
+		(eEntity->Physics.fGravity*cvServerGravityTweak.value)*
+		eEntity->Physics.fMass*
+		(float)Engine.Server_GetFrameTime();
+}
+
 void Physics_CheckVelocity(edict_t *eEntity)
 {
 	int i;
@@ -71,26 +82,26 @@ void Physics_EntityImpact(edict_t *eEntity,edict_t *eOther)
 		eOther->v.TouchFunction(eOther,eEntity);
 }
 
-trace_t	Server_PushEntity(edict_t *ent,vec3_t push)
+trace_t	Physics_PushEntity(edict_t *eEntity,vec3_t vPush)
 {
 	trace_t	trace;
 	vec3_t	end;
 
-	Math_VectorAdd(ent->v.origin,push,end);
+	Math_VectorAdd(eEntity->v.origin,vPush,end);
 
-	if(ent->v.movetype == MOVETYPE_FLYMISSILE)
-		trace = Engine.Server_Move(ent->v.origin,ent->v.mins,ent->v.maxs,end,MOVE_MISSILE,ent);
-	else if(ent->Physics.iSolid == SOLID_TRIGGER || ent->Physics.iSolid == SOLID_NOT)
-		trace = Engine.Server_Move(ent->v.origin,ent->v.mins,ent->v.maxs,end,MOVE_NOMONSTERS,ent);
+	if(eEntity->v.movetype == MOVETYPE_FLYMISSILE)
+		trace = Engine.Server_Move(eEntity->v.origin,eEntity->v.mins,eEntity->v.maxs,end,MOVE_MISSILE,eEntity);
+	else if(eEntity->Physics.iSolid == SOLID_TRIGGER || eEntity->Physics.iSolid == SOLID_NOT)
+		trace = Engine.Server_Move(eEntity->v.origin,eEntity->v.mins,eEntity->v.maxs,end,MOVE_NOMONSTERS,eEntity);
 	else
-		trace = Engine.Server_Move(ent->v.origin,ent->v.mins,ent->v.maxs,end,MOVE_NORMAL,ent);
+		trace = Engine.Server_Move(eEntity->v.origin,eEntity->v.mins,eEntity->v.maxs,end,MOVE_NORMAL,eEntity);
 
-	Math_VectorCopy(trace.endpos,ent->v.origin);
+	Math_VectorCopy(trace.endpos,eEntity->v.origin);
 
-	Engine.LinkEntity(ent,true);
+	Engine.LinkEntity(eEntity,true);
 
 	if(trace.ent)
-		Physics_EntityImpact(ent,trace.ent);
+		Physics_EntityImpact(eEntity,trace.ent);
 
 	return trace;
 }

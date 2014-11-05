@@ -2,7 +2,7 @@
 */
 #include "engine_physics.h"
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 
 /*
 
@@ -22,12 +22,10 @@ solid_edge items only clip against bsp models.
 
 */
 
-cvar_t	sv_friction			= {	"sv_friction",		"4",	false,	true	};
-cvar_t	sv_stopspeed		= {	"sv_stopspeed",		"100"					};
-cvar_t	sv_maxvelocity		= {	"sv_maxvelocity",	"2000"					};
-cvar_t	sv_nostep			= {	"sv_nostep",		"0"						};
+cvar_t	cvPhysicsStopSpeed	= {	"physics_stopspeed",	"100"		},
+		cvPhysicsNoStep		= {	"physics_nostep",		"0"			},
 // [18/3/2013] Added per request ~hogsy
-cvar_t	cvPhysicsStepSize	= {	"physics_stepsize",	"18"					};
+		cvPhysicsStepSize	= {	"physics_stepsize",		"18"		};
 
 void Physics_Toss(edict_t *ent);
 
@@ -261,19 +259,6 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 	}
 
 	return blocked;
-}
-
-/*	Sets the amount of gravity for the object.
-*/
-void Physics_SetGravity(edict_t *eEntity)
-{
-	float fNewGravity = Cvar_VariableValue("server_gravityamount");
-
-	eEntity->v.velocity[2] -=
-		// [30/5/2013] Slightly more complex gravity management ~hogsy
-		(eEntity->Physics.fGravity*fNewGravity)*
-		eEntity->Physics.fMass*
-		host_frametime;
 }
 
 /*
@@ -566,9 +551,26 @@ static void Server_PushRotate(edict_t *pusher,float movetime)
 		pusher->Physics.iSolid = SOLID_NOT;
 		SV_PushEntity (check, move);
 	//@@TODO: do we ever want to do anybody's angles?  maybe just yaw???
-	//	if (!((int)check->v.flags & (FL_CLIENT | FL_MONSTER)))
-		Math_VectorAdd (check->v.angles, amove, check->v.angles);
-		check->v.angles[YAW] += amove[YAW];
+		if(check->monster.iType != 1)
+		{
+#if 0
+			vec3_t	vYaw;
+			
+			vYaw[YAW] = Math_AngleMod(pusher->v.angles[YAW]+check->v.angles[YAW]);
+
+			Con_Printf("%i %i\n",(int)check->v.angles[YAW],(int)vYaw[YAW]);
+			//check->v.angles[YAW] = vYaw[YAW];
+			//check->v.angles[YAW] = Math_AngleMod(vYaw[YAW]);
+#endif
+			// move back any entities we already moved
+			for (i = 0; i < num_moved; i++)
+			{
+				Math_VectorAdd(moved_edict[i]->v.angles, amove, moved_edict[i]->v.angles);
+				moved_edict[i]->v.angles[YAW] += amove[YAW]/2.0f;
+
+				SV_LinkEdict(moved_edict[i],false);
+			}
+		}
 
 		pusher->Physics.iSolid = SOLID_BSP;
 
@@ -616,7 +618,7 @@ static void Server_PushRotate(edict_t *pusher,float movetime)
 				Math_VectorSubtract (moved_edict[i]->v.angles, amove, moved_edict[i]->v.angles);
 				moved_edict[i]->v.angles[YAW] -= amove[YAW];
 
-				SV_LinkEdict (moved_edict[i],FALSE);
+				SV_LinkEdict(moved_edict[i],false);
 			}
 			return;
 		}
@@ -639,7 +641,7 @@ void SV_Physics_Pusher (edict_t *ent)
 	else
 		movetime = host_frametime;
 
-	if (movetime)
+	if(movetime)
 	{
 		if((ent->v.avelocity[0] || ent->v.avelocity[1] || ent->v.avelocity[2])
 			&& ent->Physics.iSolid == SOLID_BSP)
@@ -859,7 +861,7 @@ void SV_WalkMove(edict_t *ent)
 		return;		// don't stair up while jumping
 	else if(ent->v.movetype != MOVETYPE_WALK)
 		return;		// gibbed by a trigger
-	else if(sv_nostep.value || (sv_player->v.flags & FL_WATERJUMP))
+	else if(cvPhysicsNoStep.value || (sv_player->v.flags & FL_WATERJUMP))
 		return;
 
 	Math_VectorCopy (ent->v.origin, nosteporg);
@@ -927,7 +929,7 @@ void SV_Physics_Client (edict_t	*ent, int num)
 
 	Game->Game_Init(SERVER_PLAYERPRETHINK,ent,sv.time);
 
-	Game->Server_CheckVelocity(ent);
+	Game->Physics_CheckVelocity(ent);
 
 	// decide which move function to call
 	switch(ent->v.movetype)
@@ -941,7 +943,7 @@ void SV_Physics_Client (edict_t	*ent, int num)
 			return;
 
 		if(!Physics_CheckWater(ent) && !(ent->v.flags & FL_WATERJUMP))
-			Physics_SetGravity(ent);
+			Game->Physics_SetGravity(ent);
 
 		SV_CheckStuck (ent);
 		SV_WalkMove (ent);
@@ -1000,13 +1002,13 @@ void Physics_Toss(edict_t *ent)
 	if(!Server_RunThink(ent) || (ent->v.flags & FL_ONGROUND))
 		return;
 
-	Game->Server_CheckVelocity(ent);
+	Game->Physics_CheckVelocity(ent);
 
 	// Add gravity
 	if(ent->v.movetype != MOVETYPE_FLY
 	&& ent->v.movetype != MOVETYPE_FLYMISSILE
 	&& ent->v.movetype != MOVETYPE_FLYBOUNCE)
-		Physics_SetGravity(ent);
+		Game->Physics_SetGravity(ent);
 
 	// Move angles
 	Math_VectorMA(ent->v.angles,host_frametime,ent->v.avelocity,ent->v.angles);
@@ -1037,7 +1039,7 @@ void Physics_Toss(edict_t *ent)
 			Math_VectorCopy(vec3_origin,ent->v.avelocity);
 		}
 
-	Game->Server_CheckWaterTransition(ent);
+	Game->Physics_CheckWaterTransition(ent);
 }
 
 /*	Monsters freefall when they don't have a ground entity, otherwise
@@ -1057,9 +1059,8 @@ void Physics_Step(edict_t *ent)
 			bHitSound = true;
 #endif
 
-		Physics_SetGravity(ent);
-
-		Game->Server_CheckVelocity(ent);
+		Game->Physics_SetGravity(ent);
+		Game->Physics_CheckVelocity(ent);
 
 		SV_FlyMove(ent,host_frametime,NULL);
 		SV_LinkEdict(ent,true);
@@ -1068,7 +1069,46 @@ void Physics_Step(edict_t *ent)
 	// Regular thinking
 	Server_RunThink(ent);
 
-	Game->Server_CheckWaterTransition(ent);
+	Game->Physics_CheckWaterTransition(ent);
+}
+
+extern cvar_t	sv_edgefriction;
+
+void Physics_AddFriction(edict_t *eEntity,vec3_t vVelocity,vec3_t vOrigin)
+{
+	float	*vel;
+	float	speed, newspeed, control;
+	vec3_t	start, stop;
+	float	friction;
+	trace_t	trace;
+
+	vel = vVelocity;
+
+	speed = sqrt(vel[0]*vel[0] +vel[1]*vel[1]);
+	if(!speed)
+		return;
+
+	// If the leading edge is over a dropoff, increase friction
+	start[0] = stop[0] = vOrigin[0] + vel[0]/speed*16.0f;
+	start[1] = stop[1] = vOrigin[1] + vel[1]/speed*16.0f;
+	start[2] = vOrigin[2] + eEntity->v.mins[2];
+	stop[2] = start[2] - 34;
+
+	trace = SV_Move(start,vec3_origin,vec3_origin,stop,true,eEntity);
+	if(trace.fraction == 1.0f)
+		friction = eEntity->Physics.fFriction*sv_edgefriction.value;
+	else
+		friction = eEntity->Physics.fFriction;
+
+	// Apply friction
+	control = speed < cvPhysicsStopSpeed.value ? cvPhysicsStopSpeed.value : speed;
+	newspeed = speed - host_frametime*control*friction;
+
+	if(newspeed < 0)
+		newspeed = 0;
+	newspeed /= speed;
+
+	Math_VectorScale(vel,newspeed,vel);
 }
 
 //============================================================================
@@ -1082,7 +1122,8 @@ void Physics_ServerFrame(void)
 	pr_global_struct.self	= EDICT_TO_PROG(sv.edicts);
 	pr_global_struct.eOther	= sv.edicts;
 
-	Game->Game_Init(SERVER_STARTFRAME,sv.edicts,sv.time);
+	// TODO: should we pass the time to this? ~hogsy
+	Game->Server_StartFrame();
 
 	// Treat each object in turn
 	eEntity = sv.edicts;
@@ -1114,9 +1155,10 @@ void Physics_ServerFrame(void)
 				break;
 			case MOVETYPE_WALK:
 			case MOVETYPE_STEP:
-				Game->Server_CheckVelocity(eEntity);
+				Game->Physics_CheckVelocity(eEntity);
+				Game->Physics_SetGravity(eEntity);
 
-				Physics_SetGravity(eEntity);
+				Physics_AddFriction(eEntity,eEntity->v.velocity,eEntity->v.origin);
 
 				SV_WalkMove(eEntity);
 				SV_LinkEdict(eEntity,true);
@@ -1130,12 +1172,6 @@ void Physics_ServerFrame(void)
 			case MOVETYPE_FLYBOUNCE:
 				Physics_Toss(eEntity);
 				break;
-#ifdef KATANA_PHYSICS_ODE
-			case MOVETYPE_PHYSICS:
-				{
-				}
-				break;
-#endif
 			default:
 				Con_Warning("Bad movetype set for entity! (%s)",eEntity->v.cClassname);
 			}

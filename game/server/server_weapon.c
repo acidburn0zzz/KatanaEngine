@@ -261,7 +261,7 @@ void Weapon_BulletProjectile(edict_t *eEntity,float fSpread,int iDamage,vec_t *v
 			MONSTER_Damage(tTrace.ent,eEntity,iDamage,DAMAGE_TYPE_NONE);
 		else
 		{
-			edict_t *eSmoke = Spawn();
+			edict_t *eSmoke = Entity_Spawn();
 			if(eSmoke)
 			{
 				char cSound[32];
@@ -414,6 +414,7 @@ bool Weapon_CheckPrimaryAmmo(Weapon_t *wWeapon,edict_t *eEntity)
 			return true;
 		break;
 #endif
+    case AM_PROJECTILE:
 	case AM_MELEE:
 	case AM_SWITCH:
 	case AM_NONE:
@@ -565,13 +566,13 @@ void Weapon_PrimaryAttack(edict_t *eEntity)
 	{
 		Engine.MakeVectors(eEntity->v.v_angle);
 
-#ifdef GAME_OPENKATANA
 		// [15/8/2013] Why write this out again and again for every weapon? Just do it here! ~hogsy
 		if(Entity_IsPlayer(eEntity) && ((eEntity->v.velocity[0] == 0) && (eEntity->v.velocity[1] == 0)))
+#ifdef GAME_OPENKATANA
 			// [15/8/2013] But let's not forget that the Daikatana is a special case :) ~hogsy
 			if(wCurrentWeapon->iItem != WEAPON_DAIKATANA)
-				Entity_Animate(eEntity,PlayerAnimation_Fire);
 #endif
+				Entity_Animate(eEntity,PlayerAnimation_Fire);
 
 		wCurrentWeapon->Primary(eEntity);
 	}
@@ -593,9 +594,9 @@ void Weapon_SecondaryAttack(edict_t *eEntity)
 
 void Weapon_CheatCommand(edict_t *eEntity)
 {
+#ifdef GAME_OPENKATANA
 	Weapon_t *wWeapon;
 
-#ifdef GAME_OPENKATANA
 	eEntity->local.shotcycler_ammo	=
 	eEntity->local.ionblaster_ammo	=
 	eEntity->local.sidewinder_ammo	=
@@ -616,7 +617,6 @@ void Weapon_CheatCommand(edict_t *eEntity)
 	wWeapon = Weapon_GetWeapon(WEAPON_DAIKATANA);
 	if(wWeapon)
 		Weapon_SetActive(wWeapon,eEntity);
-#elif GAME_ADAMAS
 #endif
 
 	eEntity->v.impulse = 0;
@@ -656,10 +656,12 @@ void Weapon_CheckInput(edict_t *eEntity)
 			break;
 		case 7:
 			iNewWeapon = WEAPON_IONRIFLE;
-#endif
+			break;
+#elif GAME_ADAMAS
 		case 1:
 			iNewWeapon = WEAPON_BLAZER;
 			break;
+#endif
 		default:
 			iNewWeapon = WEAPON_NONE;
 		}

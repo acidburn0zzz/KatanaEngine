@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2013 OldTimes Software
+/*	Copyright (C) 2011-2014 OldTimes Software
 */
 #include "server_monster.h"
 
@@ -84,7 +84,7 @@ void Prisoner_Think(edict_t *ePrisoner)
 	case THINK_IDLE:
 		if(ePrisoner->monster.iCommandList[COMMAND_CHECK_CELL] && !Prisoner_CheckCell(ePrisoner))
 		{
-			if(rand()%19 == 1)
+			if(rand()%120 == 1)
 				Sound(ePrisoner,CHAN_VOICE,PRISONER_SOUND_HELP,255,ATTN_NORM);
 		}
 		break;
@@ -157,9 +157,9 @@ void Prisoner_Die(edict_t *ePrisoner,edict_t *eOther)
 		else
 		{
 			// [13/9/2012] Updated paths ~hogsy
-			ThrowGib(ePrisoner->v.origin,ePrisoner->v.velocity,"models/gibs/gib0.md2",(float)ePrisoner->v.iHealth*-1,true);
-			ThrowGib(ePrisoner->v.origin,ePrisoner->v.velocity,"models/gibs/gib1.md2",(float)ePrisoner->v.iHealth*-1,true);
-			ThrowGib(ePrisoner->v.origin,ePrisoner->v.velocity,"models/gibs/gib2.md2",(float)ePrisoner->v.iHealth*-1,true);
+			ThrowGib(ePrisoner->v.origin,ePrisoner->v.velocity,PHYSICS_MODEL_GIB0,(float)ePrisoner->v.iHealth*-1,true);
+			ThrowGib(ePrisoner->v.origin,ePrisoner->v.velocity,PHYSICS_MODEL_GIB1,(float)ePrisoner->v.iHealth*-1,true);
+			ThrowGib(ePrisoner->v.origin,ePrisoner->v.velocity,PHYSICS_MODEL_GIB2,(float)ePrisoner->v.iHealth*-1,true);
 		}
 
 		Engine.Particle(ePrisoner->v.origin,ePrisoner->v.velocity,10.0f,"blood",20);

@@ -1,5 +1,6 @@
 {
-	$basepath	"example"
-	$texturepath	"example/textures"
+	$basepath			"example"
+	$SetTexturePath		"textures/"
+	$SetMaterialPath	"materials/"
 }
 

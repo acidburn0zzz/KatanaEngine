@@ -11,7 +11,7 @@ typedef struct
 			*cModel,						// Model path
 			*cSound;						// Sound that's emitted upon picking the item up
 
-	void	(*Pickup)(edict_t *eEntity);	// Function that's called when the item is touched
+	bool	bRespawn;
 } Item_t;
 
 Item_t *Item_GetItem(int iItemID);

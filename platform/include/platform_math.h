@@ -12,13 +12,17 @@ extern "C" {
 
 #ifndef PLATFORM_MATH_DOUBLE
 typedef	float	vec_t;
+
+#define pMath_PI		3.14159265358979323846f
+#define	pMath_ONEPSILON	0.1f					// Point on plane side epsilon.
 #else
 typedef	double	vec_t;
+
+#define pMath_PI		3.14159265358979323846
+#define	pMath_ONEPSILON	0.1						// Point on plane side epsilon.
 #endif
 
-typedef vec_t	vec2_t[2];
-typedef vec_t	vec3_t[3];
-typedef vec_t	vec4_t[4];
+typedef vec_t	vec2_t[2],vec3_t[3],vec4_t[4];
 
 typedef struct
 {
@@ -26,8 +30,6 @@ typedef struct
 			vY,
 			vZ;
 } MathVector_t;
-
-#define pMath_PI 3.14159265358979323846
 
 #define Math_Min(a,b)					(	((a)<(b))?(a):(b)	                    )
 #define Math_Max(a,b)                   (	((a)>(b))?(a):(b)	                    )
@@ -57,6 +59,9 @@ typedef struct
 #define	Math_VectorSet(a,b)				(	b[0]=b[1]=b[2]=a															)
 #define	Math_VectorDivide(a,b,c)		{	c[0]=a[0]/b;c[1]=a[1]/b;c[2]=a[2]/b;										}
 #define	Math_VectorToMV(a,b)			(	b.vX=a[0],b.vY=a[1],b.vZ=a[2]												)
+
+#define	Math_Vector2Copy(a,b)			(	b[0]=a[0],b[1]=a[1]	)
+#define	Math_Vector2Set(a,b)			(	b[0]=b[1]=a			)
 
 #define	Math_Vector4Copy(a,b)			(	b[0]=a[0],b[1]=a[1],b[2]=a[2],b[3]=a[3]	)
 #define	Math_Vector4Set(a,b)			(	b[0]=b[1]=b[2]=b[3]=a					)

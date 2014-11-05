@@ -5,19 +5,35 @@
 
 typedef enum
 {
-	MODEL_TYPE_MD2,
-	MODEL_TYPE_OBJ,
-	MODEL_SPRITE,
-	MODEL_BRUSH,
+	MODEL_TYPE_MD2,		// MD2 support.
+	MODEL_TYPE_IQM,		// IQM support.
+	MODEL_TYPE_KMDL,	// Extended MD2 support.
+	MODEL_TYPE_OBJ,		// OBJ support.
+	MODEL_TYPE_SPRITE,	// Just a flat-plane with a texture.
+	MODEL_TYPE_BSP,		// BSP support.
 
 	MODEL_NONE
 } ModelType_t;
 
 /*
+	KMDL Format
+	Extension of the already existing MD2 format.
+*/
+
+#define	KMDL_VERSION	9
+
+typedef struct
+{
+	vec3_t	index_xyz[3],
+			index_st[3];
+} KMDLTriangle_t;
+
+/*
 	MD2 Format
 */
 
-#define MD2_HEADER	(('2'<<24)+('P'<<16)+('D'<<8)+'I')
+#define MD2_HEADER		(('2'<<24)+('P'<<16)+('D'<<8)+'I')
+#define	MD2_EXTENSION	".md2"
 
 #define	MD2_VERSION	8
 
@@ -25,7 +41,7 @@ typedef enum
 #define	MD2_MAX_FRAMES		1024
 #define MD2_MAX_SKINS		32
 #define MD2_MAX_TRIANGLES	4096
-#define	MD2_MAX_VERTICES	2048
+#define	MD2_MAX_VERTICES	12288
 
 typedef struct
 {
@@ -58,23 +74,19 @@ typedef struct
 	int			    version;
 	unsigned    int	skinwidth;
 	unsigned    int	skinheight;
-	int			    framesize;							// Byte size of each frame.
+	int			    framesize;		// Byte size of each frame.
 	int			    num_skins;
 	int			    num_xyz;
-	int			    num_st;								// Greater than num_xyz for seams.
+	int			    num_st;			// Greater than num_xyz for seams.
 	int			    numtris;
-	int			    num_glcmds;							// Dwords in strip/fan command list.
+	int			    num_glcmds;		// Dwords in strip/fan command list.
 	int			    num_frames;
-	int			    ofs_skins;							// Each skin is a MAX_SKINNAME string.
-	int			    ofs_st;								// Byte offset from start for stverts.
-	int			    ofs_tris;							// Offset for dtriangles.
-	int			    ofs_frames;							// Offset for first frame.
+	int			    ofs_skins;		// Each skin is a MAX_SKINNAME string.
+	int			    ofs_st;			// Byte offset from start for stverts.
+	int			    ofs_tris;		// Offset for dtriangles.
+	int			    ofs_frames;		// Offset for first frame.
 	int			    ofs_glcmds;
-	int			    ofs_end;							// End of file.
-
-	struct gltexture_s	*gDiffuseTexture[MD2_MAX_SKINS],	// Diffuse texture.
-						*gFullbrightTexture[MD2_MAX_SKINS],	// Texture used for fullbright layer.
-						*gSphereTexture[MD2_MAX_SKINS];		// Texture used for sphere mapping.
+	int			    ofs_end;		// End of file.
 
 	MD2TextureCoordinate_t	*mtcTextureCoord;
 } MD2_t;
@@ -82,6 +94,8 @@ typedef struct
 /*
 	OBJ Format
 */
+
+#define	OBJ_EXTENSION	".obj"
 
 typedef struct
 {
@@ -99,7 +113,8 @@ typedef struct
 	IQM Format
 */
 
-#define IQM_HEADER	"INTERQUAKEMODEL"
+#define IQM_HEADER		"INTERQUAKEMODEL"
+#define	IQM_EXTENSION	".iqm"
 
 #define	IQM_VERSION	2
 
@@ -202,14 +217,24 @@ typedef struct
 } IQMBounds_t;
 
 /*
+	LVL	Format
+*/
+
+#define LVL_HEADER      (('4'<<24)+('L'<<16)+('V'<<8)+'L')
+#define	LVL_EXTENSION	".level"
+
+/*
 	BSP Format
 */
 
 #define	BSP_VERSION	4
 #define	BSP_VERSION_4	// Enable support for version 4 feature set.
 
-#define	BSP_HEADER		(('L'<<24)+('V'<<16)+('E'<<8)+'L')	// For easy identification.
+#define	BSP_HEADER		(('4'<<24)+('L'<<16)+('V'<<8)+'L')	// For easy identification.
 #define	BSP_HEADER_SIZE	8									// "BSP" followed by version number.
+#define	BSP_EXTENSION	".bsp"
+
+#define	BSP_MIP_LEVELS	4
 
 #define	BSP_MAX_HULLS			4
 #define	BSP_MAX_LEAFS			32768			//0x400000
@@ -303,8 +328,10 @@ typedef struct
 			fOrigin[3];
 
 	int		iHeadNode[BSP_MAX_HULLS],
-			iVisLeafs,
-			iFirstFace,iNumFaces;
+			iVisLeafs;
+
+	unsigned int	iFirstFace,
+					iNumFaces;
 } BSPModel_t;
 
 typedef struct
@@ -326,8 +353,8 @@ typedef struct
 
 	float				fMins[3],fMaxs[3];
 
-	unsigned	int		usFirstFace;
-	unsigned	int		usNumFaces;
+	unsigned	int		usFirstFace,
+						usNumFaces;
 } BSPNode_t;
 
 typedef struct
@@ -373,5 +400,29 @@ typedef struct
 
 	byte				bAmbientLevel[BSP_AMBIENT_END];
 } BSPLeaf_t;
+
+// Obsolete
+
+typedef struct
+{
+	int			nummiptex;
+	int			dataofs[4];		// [nummiptex]
+} dmiptexlump_t;
+
+typedef struct miptex_s
+{
+	char		name[16];
+	unsigned	width,height;
+} miptex_t;
+
+// 0-2 are axial planes
+#define	PLANE_X			0
+#define	PLANE_Y			1
+#define	PLANE_Z			2
+
+// 3-5 are non-axial planes snapped to the nearest
+#define	PLANE_ANYX		3
+#define	PLANE_ANYY		4
+#define	PLANE_ANYZ		5
 
 #endif

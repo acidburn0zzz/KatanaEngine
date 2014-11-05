@@ -26,16 +26,16 @@ pINSTANCE hEngineInstance;
 		Handle problems as gracefully as possible.
 
 		List of things I want access to from the engine...
-			Engine->GetGamePath()			(Returns current game path)
-			Engine->CreateEntity()			(Returns an entity instance)
-			Engine->LoadMap(file)			(Loads the specified level)
-			Engine->CreateBrush(xyz,w,h)	(Creates a brush)
-			Engine->CreateWindow(x,y,w,h)	(Creates a new window... Need to handle different window instances somehow... Sigh)
+			Engine->GetBasePath()				(Returns current base path)
+			Engine->CreateEntity()				(Returns an entity instance)
+			Engine->LoadMap(file)				(Loads the specified level)
+			Engine->CreateBrush(origin,size)	(Creates a brush)
+			Engine->CreateWindow(x,y,w,h)		(Creates a new window... Need to handle different window instances somehow... Sigh)
 */
 
 int main(int argc,char *argv[])
 {
-	Engine = (EngineExport_t*)pModule_Load(
+	Engine = (EngineExport_t*)pModule_LoadInterface(
 		hEngineInstance,
 		"./"PATH_ENGINE"/"MODULE_ENGINE,
 		"Engine_Main",

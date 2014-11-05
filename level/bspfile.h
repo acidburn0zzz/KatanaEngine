@@ -16,18 +16,6 @@ typedef struct
 	float		hullsizes[BSP_MAX_HULLS][2][3];
 } hullinfo_t;
 
-typedef struct
-{
-	int			nummiptex;
-	int			dataofs[4];		// [nummiptex]
-} dmiptexlump_t;
-
-typedef struct miptex_s
-{
-	char		name[16];
-	unsigned	width,height;
-} miptex_t;
-
 // 0-2 are axial planes
 #define	PLANE_X			0
 #define	PLANE_Y			1
@@ -64,7 +52,7 @@ extern	int					numnodes;
 extern	BSPNode_t			dnodes[BSP_MAX_NODES];
 extern	int					numtexinfo;
 extern	BSPTextureInfo_t	texinfo[BSP_MAX_TEXINFO];
-extern	int					numfaces;
+extern	unsigned int		numfaces;
 extern	BSPFace_t			dfaces[BSP_MAX_FACES];
 extern	int					numclipnodes;
 extern	BSPClipNode_t		dclipnodes[BSP_MAX_CLIPNODES];

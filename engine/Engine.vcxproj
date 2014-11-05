@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug (Ictus)|Win32">
+      <Configuration>Debug (Ictus)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug (Ictus)|x64">
+      <Configuration>Debug (Ictus)</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -58,6 +66,12 @@
     <CLRSupport>false</CLRSupport>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Ictus)|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CLRSupport>false</CLRSupport>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
@@ -65,6 +79,11 @@
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Ictus)|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <PlatformToolset>v120</PlatformToolset>
@@ -99,11 +118,19 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Ictus)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Ictus)|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.Cpp.UpgradeFromVC60.props" />
   </ImportGroup>
@@ -138,6 +165,14 @@
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Ictus)|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>OpenKatana</TargetName>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Editor|Win32'">
     <OutDir>.\Release\</OutDir>
     <IntDir>.\Release\</IntDir>
@@ -147,6 +182,12 @@
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>OpenKatanax64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Ictus)|x64'">
     <OutDir>.\Release\</OutDir>
     <IntDir>.\Release\</IntDir>
     <LinkIncremental>false</LinkIncremental>
@@ -242,6 +283,51 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>MinSpace</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>.;..\;..\shared;..\platform\include;..\external\sdl2\include;..\external\sdl2_ttf\include;..\external\glee;..\external\anttweakbar\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_AFX_SECURE_NO_WARNINGS;_ATL_SECURE_NO_WARNINGS;KATANA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Release\Engine.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+      <CompileAs>Default</CompileAs>
+      <WarningLevel>Level4</WarningLevel>
+      <CompileAsManaged>false</CompileAsManaged>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+    </ClCompile>
+    <Midl>
+      <TypeLibraryName>.\Release\Fitzquake.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\Engine.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <OutputFile>..\bin\engine\engine.x86.dll</OutputFile>
+      <AdditionalDependencies>opengl32.lib;comctl32.lib;winmm.lib;wsock32.lib;SDL2.lib;SDL2_ttf.lib;anttweakbar.lib;platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\platform\lib;..\external\sdl2\lib\x86;..\external\sdl2_ttf\lib\x86;..\external\anttweakbar\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapExports>false</MapExports>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Ictus)|Win32'">
+    <ClCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -249,7 +335,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>.;..\;..\shared;..\platform\include;..\external\sdl2\include;..\external\glee;..\external\anttweakbar\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\;..\shared;..\platform\include;..\external\sdl2\include;..\external\sdl2_ttf\include;..\external\glee;..\external\anttweakbar\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_AFX_SECURE_NO_WARNINGS;_ATL_SECURE_NO_WARNINGS;KATANA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
       <BrowseInformation>true</BrowseInformation>
@@ -278,8 +364,8 @@
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <OutputFile>..\bin\engine\engine.x86.dll</OutputFile>
-      <AdditionalDependencies>opengl32.lib;comctl32.lib;winmm.lib;wsock32.lib;SDL2.lib;anttweakbar.lib;platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\platform\lib;..\external\sdl2\lib\x86;..\external\anttweakbar\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;comctl32.lib;winmm.lib;wsock32.lib;SDL2.lib;SDL2_ttf.lib;anttweakbar.lib;platform.x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\platform\lib;..\external\sdl2\lib\x86;..\external\sdl2_ttf\lib\x86;..\external\anttweakbar\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>
     </Link>
@@ -327,6 +413,46 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <Optimization>Disabled</Optimization>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>_64;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
+      <BrowseInformation>true</BrowseInformation>
+      <PrecompiledHeaderOutputFile>.\Release\Fitzquake.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+      <CompileAs>Default</CompileAs>
+      <WarningLevel>Level1</WarningLevel>
+      <AdditionalIncludeDirectories>.\;.\libogg\include\;.\libvorbis\include\;.\glee5_4\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Midl>
+      <TypeLibraryName>.\Release\Fitzquake.tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release\Fitzquake.bsc</OutputFile>
+    </Bscmake>
+    <Link>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <OutputFile>..\..\OpenKatanax64.exe</OutputFile>
+      <AdditionalDependencies>dxguid.lib;opengl32.lib;comctl32.lib;winmm.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Ictus)|x64'">
     <ClCompile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
@@ -477,75 +603,87 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\chase.c" />
-    <ClCompile Include="..\cl_demo.c" />
-    <ClCompile Include="..\cl_input.c" />
-    <ClCompile Include="..\cl_main.c" />
-    <ClCompile Include="..\cl_parse.c" />
-    <ClCompile Include="..\cl_tent.c" />
-    <ClCompile Include="..\cmdlib.c" />
-    <ClCompile Include="..\common.c" />
-    <ClCompile Include="..\conproc.c" />
-    <ClCompile Include="..\console.c" />
-    <ClCompile Include="..\crc.c" />
     <ClCompile Include="..\external\glee\GLee.c" />
-    <ClCompile Include="..\gl_draw.c" />
-    <ClCompile Include="..\gl_fog.c" />
-    <ClCompile Include="..\gl_model.c" />
-    <ClCompile Include="..\gl_refrag.c" />
-    <ClCompile Include="..\gl_rmain.c" />
-    <ClCompile Include="..\gl_rmisc.c" />
-    <ClCompile Include="..\gl_sky.c" />
-    <ClCompile Include="..\gl_texmgr.c" />
-    <ClCompile Include="..\gl_vidnt.c" />
-    <ClCompile Include="..\gl_warp.c" />
-    <ClCompile Include="..\host.c" />
-    <ClCompile Include="..\host_cmd.c" />
-    <ClCompile Include="..\image.c" />
-    <ClCompile Include="..\KatGL.c" />
-    <ClCompile Include="..\keys.c" />
-    <ClCompile Include="..\menu.c" />
-    <ClCompile Include="..\net_dgrm.c" />
-    <ClCompile Include="..\net_loop.c" />
-    <ClCompile Include="..\net_main.c" />
-    <ClCompile Include="..\net_win.c" />
-    <ClCompile Include="..\net_wins.c" />
-    <ClCompile Include="..\pr_edict.c" />
-    <ClCompile Include="..\r_brush.c" />
-    <ClCompile Include="..\r_world.c" />
     <ClCompile Include="..\shared\shared_math.c" />
     <ClCompile Include="..\shared\shared_png.c" />
-    <ClCompile Include="..\snd_dma.c" />
-    <ClCompile Include="..\snd_mem.c" />
-    <ClCompile Include="..\snd_mix.c" />
-    <ClCompile Include="..\sv_main.c" />
-    <ClCompile Include="..\sv_user.c" />
-    <ClCompile Include="..\sys_win.c" />
-    <ClCompile Include="..\zone.c" />
-    <ClCompile Include="engine_alias.c" />
+    <ClCompile Include="engine_clientchase.c" />
+    <ClCompile Include="engine_clientdemo.c" />
+    <ClCompile Include="cl_input.c" />
+    <ClCompile Include="cl_main.c" />
+    <ClCompile Include="engine_clientparse.c" />
+    <ClCompile Include="engine_clienttent.c" />
+    <ClCompile Include="cmdlib.c" />
+    <ClCompile Include="common.c" />
+    <ClCompile Include="conproc.c" />
+    <ClCompile Include="console.c" />
+    <ClCompile Include="crc.c" />
+    <ClCompile Include="engine_videoalias.c" />
     <ClCompile Include="engine_audio.c" />
     <ClCompile Include="engine_client.c" />
-    <ClCompile Include="engine_command.c" />
+    <ClCompile Include="engine_consolecommand.c" />
     <ClCompile Include="engine_console.c" />
-    <ClCompile Include="engine_cvar.c" />
+    <ClCompile Include="engine_consolevar.c" />
     <ClCompile Include="engine_editor.c" />
-    <ClCompile Include="engine_game.c" />
-    <ClCompile Include="engine_input.c" />
-    <ClCompile Include="engine_light.c" />
-    <ClCompile Include="engine_loader.c" />
-    <ClCompile Include="engine_main.c" />
-    <ClCompile Include="engine_menu.c" />
-    <ClCompile Include="engine_network.c">
+    <ClCompile Include="engine_videofont.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="engine_modgame.c" />
+    <ClCompile Include="engine_clientinput.c" />
+    <ClCompile Include="engine_videolight.c" />
+    <ClCompile Include="engine_loader.c" />
+    <ClCompile Include="engine_main.c" />
+    <ClCompile Include="engine_netmaster.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug (Ictus)|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="engine_videomaterial.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="engine_modmenu.c" />
+    <ClCompile Include="engine_netdummy.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug (Ictus)|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="engine_physics.c" />
-    <ClCompile Include="engine_screen.c" />
+    <ClCompile Include="engine_videoscreen.c" />
     <ClCompile Include="engine_script.c" />
     <ClCompile Include="engine_server.c" />
-    <ClCompile Include="engine_sprite.c" />
+    <ClCompile Include="engine_videosprite.c" />
     <ClCompile Include="engine_video.c" />
-    <ClCompile Include="engine_view.c" />
-    <ClCompile Include="engine_world.c" />
+    <ClCompile Include="engine_clientview.c" />
+    <ClCompile Include="engine_serverworld.c" />
+    <ClCompile Include="engine_videodraw.c" />
+    <ClCompile Include="engine_videofog.c" />
+    <ClCompile Include="gl_model.c" />
+    <ClCompile Include="engine_videorefrag.c" />
+    <ClCompile Include="engine_videormain.c" />
+    <ClCompile Include="engine_videomisc.c" />
+    <ClCompile Include="engine_videosky.c" />
+    <ClCompile Include="gl_texmgr.c" />
+    <ClCompile Include="gl_vidnt.c" />
+    <ClCompile Include="engine_videowarp.c" />
+    <ClCompile Include="host.c" />
+    <ClCompile Include="host_cmd.c" />
+    <ClCompile Include="image.c" />
+    <ClCompile Include="engine_videoshadow.c" />
+    <ClCompile Include="keys.c" />
+    <ClCompile Include="menu.c" />
+    <ClCompile Include="engine_netdgrm.c" />
+    <ClCompile Include="engine_netloop.c" />
+    <ClCompile Include="engine_netmain.c" />
+    <ClCompile Include="engine_netwin.c" />
+    <ClCompile Include="engine_netwinsock.c" />
+    <ClCompile Include="pr_edict.c" />
+    <ClCompile Include="engine_videobrush.c" />
+    <ClCompile Include="engine_videoworld.c" />
+    <ClCompile Include="engine_audiodma.c" />
+    <ClCompile Include="engine_audiomem.c" />
+    <ClCompile Include="engine_audiomix.c" />
+    <ClCompile Include="snd_win.c" />
+    <ClCompile Include="engine_servermain.c" />
+    <ClCompile Include="engine_serveruser.c" />
+    <ClCompile Include="sys_win.c" />
+    <ClCompile Include="zone.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\shared_client.h" />
@@ -560,7 +698,60 @@
     <ClInclude Include="..\shared\shared_module.h" />
     <ClInclude Include="..\shared\shared_png.h" />
     <ClInclude Include="..\shared\shared_server.h" />
+    <ClInclude Include="client.h" />
+    <ClInclude Include="cmd.h" />
+    <ClInclude Include="cmdlib.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="conproc.h" />
+    <ClInclude Include="console.h" />
+    <ClInclude Include="crc.h" />
+    <ClInclude Include="cvar.h" />
+    <ClInclude Include="draw.h" />
+    <ClInclude Include="engine_audio.h" />
+    <ClInclude Include="engine_client.h" />
+    <ClInclude Include="engine_console.h" />
+    <ClInclude Include="engine_edict.h" />
     <ClInclude Include="engine_editor.h" />
+    <ClInclude Include="engine_modgame.h" />
+    <ClInclude Include="engine_clientinput.h" />
+    <ClInclude Include="engine_loader.h" />
+    <ClInclude Include="engine_main.h" />
+    <ClInclude Include="engine_modmenu.h" />
+    <ClInclude Include="engine_physics.h" />
+    <ClInclude Include="engine_script.h" />
+    <ClInclude Include="engine_server.h" />
+    <ClInclude Include="engine_video.h" />
+    <ClInclude Include="glquake.h" />
+    <ClInclude Include="gl_model.h" />
+    <ClInclude Include="gl_texmgr.h" />
+    <ClInclude Include="image.h" />
+    <ClInclude Include="KatAlias.h" />
+    <ClInclude Include="engine_videoshadow.h" />
+    <ClInclude Include="keys.h" />
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="engine_net.h" />
+    <ClInclude Include="engine_netdgrm.h" />
+    <ClInclude Include="engine_netloop.h" />
+    <ClInclude Include="engine_netserial.h" />
+    <ClInclude Include="engine_netwinsock.h" />
+    <ClInclude Include="progs.h" />
+    <ClInclude Include="protocol.h" />
+    <ClInclude Include="pr_comp.h" />
+    <ClInclude Include="quakedef.h" />
+    <ClInclude Include="render.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="screen.h" />
+    <ClInclude Include="server.h" />
+    <ClInclude Include="sound.h" />
+    <ClInclude Include="sys.h" />
+    <ClInclude Include="vid.h" />
+    <ClInclude Include="view.h" />
+    <ClInclude Include="winquake.h" />
+    <ClInclude Include="world.h" />
+    <ClInclude Include="zone.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="engine.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -31,8 +31,8 @@ typedef struct
 */
 SpawnList_t SpawnList[] =
 {
-	{	"worldspawn",	Server_Spawn	},
-	{	"light",		light			},
+	{	"worldspawn",	Server_Spawn		},
+	{	"light",		Point_LightSpawn	},	// TODO: This should be made obsolete ~hogsy
 
 	// Area/Group Entities
 	{	"area_breakable",	Area_BreakableSpawn	},
@@ -40,7 +40,7 @@ SpawnList_t SpawnList[] =
 	{	"area_changelevel",	Area_ChangeLevel	},
 	{	"area_climb",		Area_ClimbSpawn		},
 	{	"area_door",		Area_DoorSpawn		},
-	{	"area_door_rotate",	Point_NullSpawn		},
+	{	"area_door_rotate",	Area_DoorSpawn		},
 	{	"area_noclip",		Area_NoclipSpawn	},
 	{	"area_push",		Area_PushSpawn		},
 	{	"area_debris",		Area_PushableSpawn	},	// [25/9/2013] For compatability ~hogsy
@@ -52,6 +52,7 @@ SpawnList_t SpawnList[] =
 	{	"area_playerspawn",	Area_PlayerSpawn	},
 
 	// Point Entities
+	{	"point_light",			Point_LightSpawn		},
 	{	"point_ambient",		Point_AmbientSpawn		},
 	{	"point_bot",			Bot_Spawn				},
 	{	"point_damage",			Point_DamageSpawn		},
@@ -75,39 +76,34 @@ SpawnList_t SpawnList[] =
 	{	"point_waypoint",		Point_WaypointSpawn		},
 
 #ifdef GAME_OPENKATANA
-	{	"point_decoration",	Point_DecorationSpawn	},
-	{	"item_flag",		CTF_FlagSpawn			},
+	{	"point_decoration",	Point_DecorationSpawn	},	// TODO: Isn't this made redundant by point_prop? ~hogsy
 #elif GAME_ADAMAS
 #endif
 
 	{	NULL,	NULL	}
 };
 
-cvar_t	cvServerPlayerModel		= { "server_playermodel",	"models/player.md2",	false,	true,   "Sets the main server-side player model."	            };
-cvar_t	cvServerRespawnDelay	= { "server_respawndelay",	"40",					false,	true,	"Sets the amount of time until a player respawns."      };
-cvar_t	cvServerSkill			= { "server_skill",			"1",					false,	true,   "The level of difficulty."	                            };
-cvar_t	cvServerSelfDamage		= { "server_selfdamage",	"0",					false,	true,	"If enabled, your weapons can damage you."              };
+cvar_t	cvServerPlayerModel		= { "server_playermodel",	"models/player.md2",	false,	true,   "Sets the main server-side player model."	            },
+		cvServerRespawnDelay	= { "server_respawndelay",	"40",					false,	true,	"Sets the amount of time until a player respawns."      },
+		cvServerSkill			= { "server_skill",			"1",					false,	true,   "The level of difficulty."	                            },
+		cvServerSelfDamage		= { "server_selfdamage",	"0",					false,	true,	"If enabled, your weapons can damage you."              },
 // [7/12/2012] Changed default maxhealth to 200 ~hogsy
-cvar_t	cvServerMaxHealth		= { "server_maxhealth",		"200",					false,	true,   "Sets the max amount of health."	                    };
-cvar_t	cvServerDefaultHealth	= {	"server_defaulthealth",	"100",					false,	true,   "Changes the default amount of health."	                };
-cvar_t	cvServerMonsters		= { "server_monsters",		"1",					false,	true,   "If enabled, monsters can spawn."	                    };
-cvar_t	cvServerMaxScore		= { "server_maxscore",		"20",					false,	true	};
-cvar_t	cvServerGameMode		= { "server_gamemode",		"0",					false,	true,   "Sets the active mode of play."	                        };
-cvar_t	cvServerGameTime		= {	"server_gametime",		"120",					false,	true	};
-cvar_t	cvServerGameClients		= { "server_gameclients",	"2",					false,	true	};
-cvar_t	cvServerWaypointDelay	= { "server_waypointdelay",	"5.0",					false,	true,   "Delay before attempting to spawn another waypoint."	};
-#ifdef GAME_ADAMAS
-cvar_t	cvServerWaypointSpawn	= { "server_waypointspawn",	"0",					false,	true	};
-#else
-cvar_t	cvServerWaypointSpawn	= { "server_waypointspawn",	"1",					false,	true	};
-#endif
-cvar_t	cvServerWaypointParse	= { "server_waypointparse",	"",						false,	true    };
+		cvServerMaxHealth		= { "server_maxhealth",		"200",					false,	true,   "Sets the max amount of health."	                    },
+		cvServerDefaultHealth	= {	"server_defaulthealth",	"100",					false,	true,   "Changes the default amount of health."	                },
+		cvServerMonsters		= { "server_monsters",		"1",					false,	true,   "If enabled, monsters can spawn."	                    },
+		cvServerMaxScore		= { "server_maxscore",		"20",					false,	true,	"Max score before the round ends."						},
+		cvServerGameMode		= { "server_gamemode",		"0",					false,	true,   "Sets the active mode of play."	                        },
+		cvServerGameTime		= {	"server_gametime",		"120",					false,	true,	"Time before the round ends."							},
+		cvServerGameClients		= { "server_gameclients",	"2",					false,	true,	"Number of clients before round starts."				},
+		cvServerWaypointDelay	= { "server_waypointdelay",	"5.0",					false,	true,   "Delay before attempting to spawn another waypoint."	},
+		cvServerWaypointSpawn	= { "server_waypointspawn",	"0",					false,	true,	"if enabled, waypoints autospawn."						},
+		cvServerWaypointParse	= { "server_waypointparse",	"",						false,	true,	"Overrides the default path to load waypoints from."	};
 // [19/3/2013] Replacement for the engine-side variable ~hogsy
-cvar_t	cvServerGravityTweak	= {	"server_gravityamount",	"1.0",					false,	true	};
-cvar_t	cvServerGravity			= {	"server_gravity",		"600.0",				false,	true	};
+cvar_t	cvServerGravityTweak	= {	"server_gravityamount",	"1.0",					false,	true,	"Gravity modifier."										};
+cvar_t	cvServerGravity			= {	"server_gravity",		"600.0",				false,	true,	"Overall gravity."										};
 #ifdef GAME_OPENKATANA
 // [20/1/2013] By default bots spawn in OpenKatana for both SP and MP ~hogsy
-cvar_t	cvServerBots			= {	"server_bots",			"1",					false,	true	};
+cvar_t	cvServerBots			= {	"server_bots",			"1",					false,	true,	"Can enable and disable bots."							};
 #else
 cvar_t	cvServerBots			= {	"server_bots",			"0",					false,	true	};
 #endif
@@ -208,31 +204,29 @@ void Server_Spawn(edict_t *ent)
 	// Physics
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_SPLASH);
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_BODY);
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet1.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet2.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet3.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet4.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet5.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet6.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet7.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet8.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet9.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/ricochet10.wav");
-
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_RICOCHET0);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_RICOCHET1);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_RICOCHET2);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_RICOCHET3);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_RICOCHET4);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_RICOCHET5);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_RICOCHET6);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_RICOCHET7);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_RICOCHET8);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND,PHYSICS_SOUND_RICOCHET9);
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion1.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion2.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion3.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion4.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion5.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion6.wav");
-
-	// [15/7/2012] Precache gib models ~hogsy
-	// [13/9/2012] Updated paths ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/gib0.md2");
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/gib1.md2");
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/gibs/gib2.md2");
-
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB0);
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB1);
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB2);
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB3);
+	
 	// Player
+	Engine.Server_PrecacheResource(RESOURCE_MODEL,cvServerPlayerModel.string);
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep1.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep2.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep3.wav");
@@ -241,6 +235,16 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain2.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain3.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain4.wav");
+
+	// Particles
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,PARTICLE_BLOOD0);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,PARTICLE_BLOOD1);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,PARTICLE_BLOOD2);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,PARTICLE_BLOOD3);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,PARTICLE_SMOKE0);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,PARTICLE_SMOKE1);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,PARTICLE_SMOKE2);
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,PARTICLE_SMOKE3);
 
 #ifdef GAME_OPENKATANA	// [22/4/2013] OpenKatana specific stuff is now here instead ~hogsy
 	// [29/7/2012] Player sounds ~hogsy
@@ -265,28 +269,13 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/h2ojump.wav");
 
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/blip.md2");
-	// [4/2/2013] Moved here since he's used in singleplayer too :) ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/sprfly.md2");
 
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"poison");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"spark2");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"ice");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"zspark");
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,"poison");
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,"spark");
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,"spark2");
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,"ice");
+	Engine.Server_PrecacheResource(RESOURCE_SPRITE,"zspark");
 #endif
-
-	// [21/3/2012] Updated ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,"pl");
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD0);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD1);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD2);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_BLOOD3);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE0);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE1);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE2);
-	Engine.Server_PrecacheResource(RESOURCE_PARTICLE,PARTICLE_SMOKE3);
-
-	Engine.Server_PrecacheResource(RESOURCE_MODEL,cvServerPlayerModel.string);
 
 	// [10/4/2013] Waypoint debugging models ~hogsy
 #ifdef DEBUG_WAYPOINT
@@ -309,7 +298,7 @@ void Server_Spawn(edict_t *ent)
 		Engine.Server_PrecacheResource(RESOURCE_SOUND,"items/respawn.wav");
 
 		// [20/12/2012] If we're in Vektar mode, then spawn the Vektar! ~hogsy
-		if((int)cvServerGameMode.value == MODE_VEKTAR)
+		if(cvServerGameMode.iValue == MODE_VEKTAR)
 			Vektar_Spawn();
 #endif
 
@@ -359,6 +348,29 @@ bool Server_SpawnEntity(edict_t *ent)
 }
 
 /*	Called by the engine.
+*/
+void Server_StartFrame(void)
+{
+#ifdef GAME_OPENKATANA
+	Deathmatch_Frame();
+#elif GAME_ADAMAS
+	// This is stupid... ~hogsy
+	if(!Server.iMonsters && Server.bRoundStarted)
+	{
+		if(strstr(Engine.Server_GetLevelName(),"0"))
+			Engine.Server_ChangeLevel("room1");
+		else if(strstr(Engine.Server_GetLevelName(),"1"))
+			Engine.Server_ChangeLevel("room2");
+		else
+		{
+			Engine.Server_BroadcastPrint("You Win!!\n");
+			Engine.Server_ChangeLevel("room0");
+		}
+	}
+#endif
+}
+
+/*	Called by the engine.
 	Called per-frame for each entity just before physics.
 */
 void Server_EntityFrame(edict_t *eEntity)
@@ -373,11 +385,10 @@ void Server_EntityFrame(edict_t *eEntity)
 void Server_KillClient(edict_t *eClient)
 {
 	if(eClient->monster.iState != STATE_DEAD)
-		MONSTER_Damage(eClient,eClient,eClient->v.iHealth, 0);
+		MONSTER_Damage(eClient,eClient,eClient->v.iHealth,0);
 }
 
 /*	General function for globally updating the HUD for clients.
-	If the entity comes back empty then we'll just tell everyone...
 */
 void Server_UpdateClientMenu(edict_t *eClient,int iMenuState,bool bShow)
 {

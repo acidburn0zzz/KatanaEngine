@@ -5,11 +5,13 @@
 
 #include <SDL.h>
 
-extern cvar_t	cvShowModels,	// Should we draw models?
-				cvWidth,		// The width of our window (not reliable).
-				cvHeight,		// The height of our window (not reliable).
-				cvFullscreen,	// Should we be fullscreen?
-				cvLitParticles;	// Should particles be lit or not?
+extern cvar_t	cvVideoDrawModels,	// Should we draw models?
+				cvWidth,			// The width of our window (not reliable).
+				cvHeight,			// The height of our window (not reliable).
+				cvFullscreen,		// Should we be fullscreen?
+				cvLitParticles;		// Should particles be lit or not?
+
+#define	VIDEO_MAX_UNITS	4
 
 typedef struct
 {
@@ -17,11 +19,11 @@ typedef struct
 					fBitsPerPixel;
 
     // Texture Management
-	unsigned	int	iCurrentTexture,            // Current/last binded texture.
+	unsigned	int	iCurrentTexture,					// Current/last binded texture.
                     uiActiveUnit,
-                    uiSecondaryUnit;            // Current/last secondary texture.
+                    uiSecondaryUnit;					// Current/last secondary texture.
 
-	int				iSamples,			        // Current number of samples set for AA.
+	int				iSamples,	// Current number of samples set for AA.
 					iBuffers;
 
 	unsigned	int	iWidth,
@@ -36,7 +38,6 @@ typedef struct
 
 	// OpenGL Extensions
 	bool	bFogCoord,					// EXT_fog_coord
-			bMultitexture,				// ARB_multitexture
 			bTextureEnvAdd,				// ARB_texture_env_add
 			bTextureEnvCombine;			// ARB_texture_env_combine
 } Video_t;
@@ -44,11 +45,11 @@ typedef struct
 typedef struct
 {
 	vec3_t	vVertex;
-	vec2_t	vTextureCoord[4];	// Texture coordinates by texture unit.
+	vec2_t	vTextureCoord[VIDEO_MAX_UNITS+1];	// Texture coordinates by texture unit.
 
-	vec4_t	vColour;			// RGBA
+	vec4_t	vColour;							// RGBA
 
-	vec3_t	vNormal;			// Vertex normals.
+	vec3_t	vNormal;							// Vertex normals.
 } VideoObject_t;
 
 Video_t	Video;
@@ -56,21 +57,20 @@ Video_t	Video;
 extern SDL_Window	*sMainWindow;
 
 // Video Capabilities
-#define	VIDEO_ALPHA_TEST	1
-#define	VIDEO_BLEND			2
-#define	VIDEO_TEXTURE_2D	4
-#define	VIDEO_DEPTH_TEST	8	// Depth-testing.
+#define	VIDEO_ALPHA_TEST	1	// Alpha-testing
+#define	VIDEO_BLEND			2	// Blending
+#define	VIDEO_TEXTURE_2D	4	// Enables/disables textures.
+#define	VIDEO_DEPTH_TEST	8	// Depth-testing
 #define	VIDEO_TEXTURE_GEN_T	16
 #define	VIDEO_TEXTURE_GEN_S	32
 #define	VIDEO_CULL_FACE		64
-#define	VIDEO_STENCIL_TEST	128
-#define	VIDEO_NORMALIZE		256	// Normalization for scaled models that are lit
+#define	VIDEO_STENCIL_TEST	128	// Stencil-testing
+#define	VIDEO_NORMALIZE		256	// Normalization for scaled models that are lit.
 
-#define VIDEO_TEXTURE0 0x84C0
-#define VIDEO_TEXTURE1 0x84C1
-
-#define VIDEO_STATE_ENABLE   0
-#define VIDEO_STATE_DISABLE  1
+#define VIDEO_TEXTURE0	0x84C0	// TMU0
+#define VIDEO_TEXTURE1	0x84C1	// TMU1
+#define	VIDEO_TEXTURE2	0x84C2	// TMU2
+#define	VIDEO_TEXTURE3	0x84C3	// TMU3
 
 // Primitive Types
 typedef enum
@@ -87,12 +87,12 @@ typedef enum
     VIDEO_BLEND_ONE,    // ONE			ONE
     VIDEO_BLEND_TWO,    // SRC_ALPHA	ONE_MINUS_SRC_ALPHA
     VIDEO_BLEND_THREE,  // DST_COLOR	SRC_COLOR
-    VIDEO_BLEND_ZERO    // ZERO			ZERO
+    VIDEO_BLEND_FOUR    // ZERO			ZERO
 } VideoBlend_t;
 
 #define VIDEO_DEPTH_TRUE    true
 #define VIDEO_DEPTH_FALSE   false
-#define VIDEO_DEPTH_IGNORE  -1
+#define VIDEO_DEPTH_IGNORE  -1		// Don't bother changing depth mode.
 
 // Shader Types
 #define VIDEO_SHADER_VERTEX     0
@@ -113,6 +113,7 @@ typedef struct
 void Video_Initialize(void);
 void Video_UpdateWindow(void);
 void Video_ClearBuffer(void);
+void Video_GenerateSphereCoordinates(void);
 void Video_SetTexture(gltexture_t *gTexture);
 void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType);
 void Video_EnableMultitexture(void);
@@ -123,7 +124,7 @@ void Video_DisableCapabilities(unsigned int iCapabilities);
 void Video_ResetCapabilities(bool bClearActive);
 void Video_Process(void);
 void Video_DrawFill(VideoObject_t *voFill);
-void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,unsigned int uiTriangles,bool bMultiTexture);
+void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,unsigned int uiVerts);
 void Video_Shutdown(void);
 
 bool Video_CreateWindow(void);

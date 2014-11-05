@@ -21,8 +21,6 @@ enum
 
 void Bot_Spawn(edict_t *ent);
 
-void light(edict_t *self);
-
 void CTF_FlagSpawn(edict_t *eFlag);
 
 void Area_PlayerSpawn(edict_t *eArea);
@@ -61,6 +59,7 @@ void Point_ShakeSpawn(edict_t *ent);
 void Point_TeleportSpawn(edict_t *ent);
 void Point_TimedTriggerSpawn(edict_t *eEntity);
 void Point_WaypointSpawn(edict_t *eEntity);
+void Point_LightSpawn(edict_t *eLight);
 
 // Weapons
 void WEAPON_StickThink(edict_t *ent);

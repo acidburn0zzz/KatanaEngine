@@ -3,7 +3,7 @@
 #include "quakedef.h"
 
 /*
-	KatRenderer is our future renderer code, I imagine most of this
+	This is our future renderer code, I imagine most of this
 	will be fairly incomplete before OpenKatana's release but the
 	base should at least be finished by then just so it's stable...
 	If not then do give me some serious scolding.
@@ -17,9 +17,9 @@
 // Main header
 #include "engine_video.h"
 
-#include "engine_game.h"
-#include "engine_input.h"
-#include "engine_menu.h"
+#include "engine_modgame.h"
+#include "engine_clientinput.h"
+#include "engine_modmenu.h"
 #include "engine_console.h"
 
 // Platform library
@@ -33,21 +33,35 @@ SDL_GLContext	sMainContext;
 #define VIDEO_MAX_SAMPLES	16
 #define VIDEO_MIN_SAMPLES	0
 
-cvar_t	cvShowModels			= {	"video_showmodels",			"1",			false,  false,  "Toggles models."                                   };
-cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",			true,   false,  "Changes the number of samples."	                };
-cvar_t	cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",			true,   false,  "Changes the number of buffers."                    };
-cvar_t	cvFullscreen			= {	"video_fullscreen",			"0",			true,   false,  "1: Fullscreen, 0: Windowed"	                    };
-cvar_t	cvWidth					= {	"video_width",				"640",			true,   false,  "Sets the width of the window."	                    };
-cvar_t	cvHeight				= {	"video_height",				"480",			true,   false,  "Sets the height of the window."	                };
-cvar_t	cvVerticalSync			= {	"video_verticalsync",		"1",			true	                                                            };
-cvar_t	cvVideoDebugLog			= {	"video_debuglog",			"log_video",	true,	false,	"The name of the output log for video debugging."	};
+static unsigned int	iSavedCapabilites[VIDEO_MAX_UNITS+1][2];
+
+#define VIDEO_STATE_ENABLE   0
+#define VIDEO_STATE_DISABLE  1
+
+cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",			true,   false,  "Changes the number of samples."	                },
+		cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",			true,   false,  "Changes the number of buffers."                    },
+		cvFullscreen			= {	"video_fullscreen",			"0",			true,   false,  "1: Fullscreen, 0: Windowed"	                    },
+		cvWidth					= {	"video_width",				"640",			true,   false,  "Sets the width of the window."	                    },
+		cvHeight				= {	"video_height",				"480",			true,   false,  "Sets the height of the window."	                },
+		cvVerticalSync			= {	"video_verticalsync",		"0",			true	                                                            },
+		cvVideoDraw				= {	"video_draw",				"1",			false,	false,	"If disabled, nothing is drawn."					},
+		cvVideoDrawModels		= {	"video_drawmodels",			"1",			false,  false,  "Toggles models."                                   },
+		cvVideoDrawDepth		= {	"video_drawdepth",			"0",			false,	false,	"If enabled, previews the debth buffer."			},
+		cvVideoDebugLog			= {	"video_debuglog",			"log_video",	true,	false,	"The name of the output log for video debugging."	};
 
 gltexture_t	*gDepthTexture;
 
-bool	bVideoIgnoreCapabilities = false;
-bool	bVideoDebug	= false;
+bool	bVideoIgnoreCapabilities	= false,
+		bVideoDebug					= false;
+
+vec2_t	**vVideoTextureArray;
+vec3_t	*vVideoVertexArray;
+vec4_t	*vVideoColourArray;
+
+unsigned int	uiVideoArraySize = 32768;
 
 void Video_DebugCommand(void);
+void Video_AllocateArrays(int iSize);
 
 /*	Initialize the renderer
 */
@@ -65,14 +79,18 @@ void Video_Initialize(void)
 	Video.bActive				=			// Window is intially assumed active.
 	Video.bUnlocked				= true;		// Video mode is initially locked.
 
+	Video_AllocateArrays(uiVideoArraySize);
+	
 	Cvar_RegisterVariable(&cvMultisampleSamples,NULL);
 	Cvar_RegisterVariable(&cvMultisampleBuffers,NULL);
-	Cvar_RegisterVariable(&cvShowModels,NULL);
+	Cvar_RegisterVariable(&cvVideoDrawModels,NULL);
 	Cvar_RegisterVariable(&cvFullscreen,NULL);
 	Cvar_RegisterVariable(&cvWidth,NULL);
 	Cvar_RegisterVariable(&cvHeight,NULL);
 	Cvar_RegisterVariable(&cvVerticalSync,NULL);
 	Cvar_RegisterVariable(&cvVideoDebugLog,NULL);
+	Cvar_RegisterVariable(&cvVideoDraw,NULL);
+	Cvar_RegisterVariable(&cvVideoDrawDepth,NULL);
 
 	Cmd_AddCommand("video_restart",Video_UpdateWindow);
 	Cmd_AddCommand("video_debug",Video_DebugCommand);
@@ -92,6 +110,26 @@ void Video_Initialize(void)
 	// [31/10/2013] Get hardware capabilities ~hogsy
 	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,&Video.fMaxAnisotropy);
 }
+
+/*
+	OpenGL Initialization
+*/
+
+#if 0
+#include "platform_module.h"
+
+pINSTANCE	iVideoGLModule;
+
+/*	Load module, bind functions, blah blah blah
+	TODO: Implement me...
+*/
+void Video_InitializeOpenGL(void)
+{
+	iVideoGLModule = pModule_Load("OpenGL32");
+	if(!iVideoGLModule)
+		Sys_Error("Failed to load OpenGL module!\n%s",pError_Get());
+}
+#endif
 
 /*
 	Video Commands
@@ -130,14 +168,19 @@ void Video_ClearBuffer(void)
 */
 void Video_DrawDepthBuffer(void)
 {
+	if(!cvVideoDrawDepth.bValue)
+		return;
+
 	if(!gDepthTexture)
 		gDepthTexture = TexMgr_NewTexture();
 
+	GL_SetCanvas(CANVAS_BOTTOMLEFT);
+
 	Video_SetTexture(gDepthTexture);
 
-	glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT24,512,512,0,GL_DEPTH_COMPONENT24,GL_UNSIGNED_BYTE,0);
+	glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT32,Video.iWidth,Video.iHeight,0,GL_DEPTH_COMPONENT32,GL_UNSIGNED_BYTE,0);
 
-	//Video_DrawFill()
+	Draw_Fill(0,0,512,512,1.0f,1.0f,1.0f,1.0f);
 }
 
 /*
@@ -170,7 +213,8 @@ bool Video_CreateWindow(void)
 		SDL_WINDOW_RESIZABLE	|
 		SDL_WINDOW_SHOWN		|
 		SDL_WINDOW_OPENGL		|
-		SDL_WINDOW_FULLSCREEN;
+		SDL_WINDOW_FULLSCREEN,
+				iSupportedUnits;
 	SDL_Surface	*sIcon;
 
 	// [2/12/2012] Normal window can't be resized ~hogsy
@@ -220,12 +264,10 @@ bool Video_CreateWindow(void)
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,8);
-#if 0
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,8);
-#endif
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
@@ -250,7 +292,7 @@ bool Video_CreateWindow(void)
 		iFlags);
 	if(!sMainWindow)
 		Sys_Error("Failed to create window!\n%s\n",SDL_GetError());
-
+	
 	// [6/2/2014] Set the icon for the window ~hogsy
 	// [25/3/2014] Grab the icon from our game directory ~hogsy
 	sIcon = SDL_LoadBMP(va("%s/icon.bmp",com_gamedir));
@@ -268,7 +310,11 @@ bool Video_CreateWindow(void)
 	if(!sMainContext)
 		Sys_Error("Failed to create context!\n%s\n",SDL_GetError());
 
-	SDL_GL_SetSwapInterval(1);
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS,&iSupportedUnits);
+	if(iSupportedUnits < VIDEO_MAX_UNITS)
+		Sys_Error("Your system doesn't support the required number of TMUs! (%i)",iSupportedUnits);
+
+	SDL_GL_SetSwapInterval(0);
 
 	// [13/8/2012] Get any information that will be presented later ~hogsy
 	gl_vendor		= (char*)glGetString(GL_VENDOR);
@@ -280,21 +326,20 @@ bool Video_CreateWindow(void)
 	GLeeInit();
 
     // [31/3/2014] Initialize AntTweakBar ~hogsy
-	TwInit(TW_OPENGL,NULL);
-	TwWindowSize(Video.iWidth,Video.iHeight);
+	if(COM_CheckParm("-tweak"))
+	{
+		TwInit(TW_OPENGL,NULL);
+		TwWindowSize(Video.iWidth,Video.iHeight);
+	}
 
 	// [13/8/2012] Do we want to check for extensions? ~hogsy
 	if(!COM_CheckParm("-noextensions"))
 	{
 		Con_DPrintf(" Checking for extensions...\n");
 
-		if(!COM_CheckParm("-nomtex"))
-			if(GLEE_ARB_multitexture)
-			{
-				Con_DPrintf("  ARB_multitexture\n");
-
-				Video.bMultitexture = true;
-			}
+		// Multitexturing MUST be supported.
+		if(!GLEE_ARB_multitexture)
+			Sys_Error("Video hardware incapable of multi-texturing!\n");
 
 		if(!COM_CheckParm("-nocombine"))
 			if(GLEE_ARB_texture_env_combine || GLEE_EXT_texture_env_combine)
@@ -312,10 +357,6 @@ bool Video_CreateWindow(void)
 				Video.bTextureEnvAdd = true;
 			}
 
-#ifdef KATANA_VIDEO_NEXT
-		if(!GLEE_ARB_vertex_program || !GLEE_ARB_fragment_program)
-			Con_Error("Unsupported video hardware!\n");
-
 		// [5/9/2013] For future volumetric fog implementation? ~hogsy
 		if(!COM_CheckParm("-nofogcoord"))
 			if(GLEE_EXT_fog_coord)
@@ -324,29 +365,23 @@ bool Video_CreateWindow(void)
 
 				Video.bFogCoord = true;
 			}
-#endif
 
-#if 0
-		if(!COM_CheckParm("-noswap"))
-		{
-			if(GLEE_WGL_EXT_swap_control)
-				Con_DPrintf("  WGL_EXT_swap_control\n");
-			else
-				bSwapControl = false;
-		}
+#ifdef KATANA_VIDEO_NEXT
+		if(!GLEE_ARB_vertex_program || !GLEE_ARB_fragment_program)
+			Sys_Error("Unsupported video hardware!\n");
 #endif
 	}
 
 	Video_EnableCapabilities(VIDEO_TEXTURE_2D|VIDEO_ALPHA_TEST|VIDEO_NORMALIZE);
+	Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_IGNORE);
 
 	glClearColor(0,0,0,0);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
-	glAlphaFunc(GL_GREATER,0.4f);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glAlphaFunc(GL_GREATER,0.25f);
+	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	glShadeModel(GL_SMOOTH);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -417,6 +452,17 @@ void Video_UpdateWindow(void)
 	vid.conheight	= vid.conwidth*Video.iHeight/Video.iWidth;
 }
 
+/*
+	Coordinate Generation
+*/
+
+void Video_GenerateSphereCoordinates(void)
+{
+	// OpenGL makes this pretty easy for us (though this should probably be more abstract)...
+	glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
+	glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_SPHERE_MAP);
+}
+
 /**/
 
 static bool sbVideoCleanup      = false,
@@ -458,9 +504,6 @@ void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
     {
         switch(voBlendMode)
         {
-        case VIDEO_BLEND_ZERO:
-            glBlendFunc(GL_ZERO,GL_ZERO);
-            break;
         case VIDEO_BLEND_ONE:
             glBlendFunc(GL_ONE,GL_ONE);
             break;
@@ -470,10 +513,16 @@ void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
         case VIDEO_BLEND_THREE:
             glBlendFunc(GL_DST_COLOR,GL_SRC_COLOR);
             break;
+        case VIDEO_BLEND_FOUR:
+            glBlendFunc(GL_ZERO,GL_ZERO);
+            break;
         default:
             Sys_Error("Unknown blend mode! (%i)\n",voBlendMode);
         }
     }
+
+	if(bVideoDebug)
+		Console_WriteToLog(cvVideoDebugLog.string,"Video: Setting blend mode (%i) (%i)\n",(int)voBlendMode,iDepthType);
 }
 
 /*
@@ -489,6 +538,9 @@ void Video_SelectTexture(unsigned int uiTarget)
 	if(uiTarget == Video.uiActiveUnit)
         return;
 
+	if(uiTarget > VIDEO_MAX_UNITS)
+		Sys_Error("Invalid texture unit! (%i)\n",uiTarget);
+
     switch(uiTarget)
     {
     case 0:
@@ -497,13 +549,22 @@ void Video_SelectTexture(unsigned int uiTarget)
     case 1:
         uiUnit = GL_TEXTURE1;
         break;
+	case 2:
+		uiUnit = GL_TEXTURE2;
+		break;
+	case 3:
+		uiUnit = GL_TEXTURE3;
+		break;
+	case 4:
+		uiUnit = GL_TEXTURE4;
+		break;
     default:
         Sys_Error("Unknown texture unit! (%i)\n",uiTarget);
 		// Return to resolve VS warning.
 		return;
     }
 
-	glActiveTextureARB(uiUnit);
+	glActiveTexture(uiUnit);
 
 	Video.uiActiveUnit = uiTarget;
 
@@ -511,12 +572,18 @@ void Video_SelectTexture(unsigned int uiTarget)
 		Console_WriteToLog(cvVideoDebugLog.string,"Video: Texture Unit %i\n",Video.uiActiveUnit);
 }
 
+/*	Disable multi-texturing.
+	Obsolete!
+*/
 void Video_DisableMultitexture(void)
 {
 //  Video_DisableCapabilities(VIDEO_TEXTURE_2D);
     Video_SelectTexture(0);
 }
 
+/*	Enable multi-texturing.
+	Obsolete!
+*/
 void Video_EnableMultitexture(void)
 {
     Video_SelectTexture(1);
@@ -526,6 +593,23 @@ void Video_EnableMultitexture(void)
 /*
     Drawing
 */
+
+/*	Reallocates video arrays.
+*/
+void Video_AllocateArrays(int iSize)
+{
+	int i;
+
+	vVideoTextureArray	= (vec2_t**)Hunk_AllocName(iSize*sizeof(vec3_t),"video_texturearray");
+	for(i = 0; i < iSize; i++)
+		vVideoTextureArray[i] = (vec2_t*)Hunk_Alloc((VIDEO_MAX_UNITS+1)*sizeof(vec2_t));
+
+	vVideoVertexArray	= (vec3_t*)Hunk_AllocName(iSize*sizeof(vec3_t),"video_vertexarray");
+	vVideoColourArray	= (vec4_t*)Hunk_AllocName(iSize*sizeof(vec4_t),"video_colourarray");
+
+	// Keep this up to date.
+	uiVideoArraySize = iSize;
+}
 
 /*	Draw terrain.
 	Unfinished
@@ -540,92 +624,133 @@ void Video_DrawTerrain(VideoObject_t *voTerrain)
 */
 void Video_DrawFill(VideoObject_t *voFill)
 {
-	Video_DrawObject(voFill,VIDEO_PRIMITIVE_TRIANGLE_FAN,4,false);
+	Video_DrawObject(voFill,VIDEO_PRIMITIVE_TRIANGLE_FAN,4);
 }
 
 /*	Draw 3D object.
 */
-void Video_DrawObject(
-	VideoObject_t		    *voObject,
-	VideoPrimitive_t        vpPrimitiveType,
-	unsigned            int	uiTriangles,
-	bool				    bMultiTexture)
+void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,unsigned int	uiVerts)
 {
-	int i;
+	unsigned int	i,j;
+    GLenum			gPrimitive;
+
+	if(!cvVideoDraw.bValue)
+		return;
+
+	if(bVideoDebug)
+		Console_WriteToLog(cvVideoDebugLog.string,"Video: Drawing object (%i) (%i)\n",uiVerts,vpPrimitiveType);
 
 	if(!voObject)
         Sys_Error("Invalid video object!\n");
-    else if(!uiTriangles)
-        Sys_Error("Invalid number of triangles for video object!\n");
+    else if(!uiVerts)
+        Sys_Error("Invalid number of vertices for video object! (%i)\n",uiVerts);
 
     // [8/5/2014] Ignore any additional changes ~hogsy
     bVideoIgnoreCapabilities = true;
 
-	if(r_showtris.value > 0)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-
-		GL_PolygonOffset(OFFSET_SHOWTRIS);
-
+	if(r_showtris.bValue)
 		// [29/10/2013] Disable crap for tris view ~hogsy
-		Video_DisableCapabilities(VIDEO_TEXTURE_2D/*|VIDEO_BLEND*/);
-	}
+		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 
     // [11/3/2014] Support different primitive types; TODO: Move into its own function? ~hogsy
+    switch(vpPrimitiveType)
     {
-        GLenum gPrimitive;
+    case VIDEO_PRIMITIVE_TRIANGLES:
+		if(r_showtris.bValue)
+			gPrimitive = GL_LINES;
+		else
+			gPrimitive = GL_TRIANGLES;
+        break;
+    case VIDEO_PRIMITIVE_TRIANGLE_FAN:
+		if(r_showtris.bValue)
+			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 
-        switch(vpPrimitiveType)
-        {
-        case VIDEO_PRIMITIVE_TRIANGLES:
-            gPrimitive = GL_TRIANGLES;
-            break;
-        case VIDEO_PRIMITIVE_TRIANGLE_FAN:
-            gPrimitive = GL_TRIANGLE_FAN;
-            break;
-        default:
-            // [16/3/2014] Anything else and give us an error ~hogsy
-            Sys_Error("Unknown object primitive type! (%i)\n",vpPrimitiveType);
-			// Return to resolve VS warning.
-			return;
-        }
+        gPrimitive = GL_TRIANGLE_FAN;
+        break;
+    default:
+        // [16/3/2014] Anything else and give us an error ~hogsy
+        Sys_Error("Unknown object primitive type! (%i)\n",vpPrimitiveType);
+        // Return to resolve VS warning.
+        return;
+    }
 
-        glBegin(gPrimitive);
+	// Vertices count is too high for this object, bump up array sizes to manage it.
+	if(uiVerts > uiVideoArraySize)
+	{
+		free(vVideoVertexArray);
+		free(vVideoColourArray);
+		free(vVideoTextureArray);
+
+		// Double the array size to cope.
+		Video_AllocateArrays(uiVerts*2);
 	}
 
-	for(i = 0; i < uiTriangles; i++)
+	for(i = 0; i < uiVerts; i++)
 	{
 		if(!r_showtris.value)
 		{
-			if(bMultiTexture)
-			{
-				glMultiTexCoord2fv(GL_TEXTURE0,voObject[i].vTextureCoord[0]);
-				glMultiTexCoord2fv(GL_TEXTURE1,voObject[i].vTextureCoord[1]);
-			}
-			else
-				glTexCoord2fv(voObject[i].vTextureCoord[0]);
+			Math_Vector4Copy(voObject[i].vColour,vVideoColourArray[i]);
 
-			glColor4fv(voObject[i].vColour);
-		}
+			// Copy over coords for each TMU.
+			for(j = 0; j < VIDEO_MAX_UNITS; j++)
+				//if(iSavedCapabilites[j][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
+					Math_VectorCopy(voObject[i].vTextureCoord[j],vVideoTextureArray[j][i]);
+		}		
+		else
+			Math_Vector4Set(1.0f,vVideoColourArray[i]);
 
-		glVertex3fv(voObject[i].vVertex);
+		Math_VectorCopy(voObject[i].vVertex,vVideoVertexArray[i]);
 	}
 
-	glEnd();
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3,GL_FLOAT,0,vVideoVertexArray);
 
-	if(r_showtris.value > 0)
+	glEnableClientState(GL_COLOR_ARRAY);
+	glColorPointer(4,GL_FLOAT,0,vVideoColourArray);
+
+	if(!r_showtris.bValue)
+	{
+		//for(i = 0; i > VIDEO_MAX_UNITS; i++)
+		{
+			//if(iSavedCapabilites[i][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
+			{
+				glClientActiveTexture(VIDEO_TEXTURE0);
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+				glTexCoordPointer(2,GL_FLOAT,0,vVideoTextureArray[0]);
+
+				glClientActiveTexture(VIDEO_TEXTURE1);
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+				glTexCoordPointer(2,GL_FLOAT,0,vVideoTextureArray[1]);
+			}
+		}
+	}
+
+	glDrawArrays(gPrimitive,0,uiVerts);
+
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	if(r_showtris.bValue)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
-		GL_PolygonOffset(OFFSET_NONE);
-
 		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
+	}
+	else
+	{
+		for(i = 0; i > VIDEO_MAX_UNITS; i++)
+		{
+			//if(iSavedCapabilites[i][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
+			{
+				glClientActiveTexture(VIDEO_TEXTURE0+i);
+				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			}
+		}
+
+		glClientActiveTexture(VIDEO_TEXTURE0);
 	}
 
 	bVideoIgnoreCapabilities = false;
-
-	// [20/10/2013] Reset colour value ~hogsy
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
 }
 
 /*
@@ -654,8 +779,6 @@ VideoCapabilities_t	vcCapabilityList[]=
 
 	{   0   }
 };
-
-static unsigned int	iSavedCapabilites[4][2];
 
 /*	Set rendering capabilities for current draw.
 	Cleared using Video_DisableCapabilities.
@@ -720,6 +843,8 @@ void Video_DisableCapabilities(unsigned int iCapabilities)
 */
 void Video_ResetCapabilities(bool bClearActive)
 {
+	int i;
+
     if(bVideoDebug)
         Console_WriteToLog(cvVideoDebugLog.string,"Video: Resetting capabilities...\n");
 
@@ -731,17 +856,16 @@ void Video_ResetCapabilities(bool bClearActive)
         sbVideoCleanup = true;
 
         // [7/5/2014] Disable/Enable old states by unit... Ugh ~hogsy
-        {
-            Video_SelectTexture(1);
+		// Go through each TMU that we support.
+		for(i = VIDEO_MAX_UNITS; i > -1; i--)
+		{
+			Video_SelectTexture(i);
+			Video_DisableCapabilities(iSavedCapabilites[i][VIDEO_STATE_ENABLE]);
+			Video_EnableCapabilities(iSavedCapabilites[i][VIDEO_STATE_DISABLE]);
 
-            Video_DisableCapabilities(iSavedCapabilites[1][0]);
-            Video_EnableCapabilities(iSavedCapabilites[1][1]);
-
-            Video_SelectTexture(0);
-
-            Video_DisableCapabilities(iSavedCapabilites[0][0]);
-            Video_EnableCapabilities(iSavedCapabilites[0][1]);
-        }
+			// Set this back too...
+			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+		}
 
         if(sbVideoIgnoreDepth)
             Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_IGNORE);
@@ -749,7 +873,7 @@ void Video_ResetCapabilities(bool bClearActive)
             // [12/3/2014] Reset our blend mode too. ~hogsy
             Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_TRUE);
 
-        // [28/3/2014] Set defau;ts ~hogsy
+        // [28/3/2014] Set defaults ~hogsy
         sbVideoIgnoreDepth  = true;
 		sbVideoCleanup      = false;
 
@@ -757,11 +881,10 @@ void Video_ResetCapabilities(bool bClearActive)
             Console_WriteToLog(cvVideoDebugLog.string,"Video: Finished clearing capabilities.\n");
 	}
 
-    // [7/5/2014] Clear out capability list ~hogsy
-    iSavedCapabilites[1][0] =
-    iSavedCapabilites[1][1] =
-    iSavedCapabilites[0][0] =
-    iSavedCapabilites[0][1] = 0;
+	// [7/5/2014] Clear out capability list ~hogsy
+	for(i = 0; i < VIDEO_MAX_UNITS; i++)
+		iSavedCapabilites[i][0] =
+		iSavedCapabilites[i][1] = 0;
 }
 
 /*
@@ -813,6 +936,8 @@ void Video_Process(void)
 
 	SCR_UpdateScreen();
 
+	Video_DrawDepthBuffer();
+
     // [31/3/2014] Draw any ATB windows ~hogsy
 	TwDraw();
 
@@ -821,7 +946,7 @@ void Video_Process(void)
     if(bVideoDebug)
     {
         Console_WriteToLog(cvVideoDebugLog.string,"Video: End of frame\n");
-        
+
 		bVideoDebug = false;
     }
 #else	// New renderer
@@ -879,6 +1004,9 @@ void Video_Shutdown(void)
 {
 	if(!Video.bInitialized)
 		return;
+
+	// Let us know that we're shutting down the video sub-system...
+	Con_Printf("Shutting down video...\n");
 
     TwTerminate();
 

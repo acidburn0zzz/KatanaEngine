@@ -7,21 +7,24 @@
 	error handling.
 */
 
-char	cErrorMessage[2048] = "null",
-		cLastFunction[1024]	= "null";
+#define	MAX_FUNCTION_LENGTH	64
+#define	MAX_ERROR_LENGTH	1024
+
+char	cErrorMessage[MAX_ERROR_LENGTH]		= "null",
+		cLastFunction[MAX_FUNCTION_LENGTH]	= "null";
 
 /*	Sets the name of the currently entered function.
 */
 void pError_SetFunction(const char *ccFunction,...)
 {
-	char	cOut[2048];
+	char	cOut[MAX_FUNCTION_LENGTH];
 	va_list vlArguments;
 
 	va_start(vlArguments,ccFunction);
 	vsprintf(cOut,ccFunction,vlArguments);
 	va_end(vlArguments);
 
-	strcpy(cLastFunction,ccFunction);
+	strncpy(cLastFunction,ccFunction,sizeof(ccFunction));
 }
 
 void pError_Reset(void)
@@ -31,17 +34,14 @@ void pError_Reset(void)
 
 void pError_Set(const char *ccMessage,...)
 {
-	char	cOut[2048];
-	va_list	vlArguments;
+	char	cOut[MAX_ERROR_LENGTH];
+	va_list vlArguments;
 
 	va_start(vlArguments,ccMessage);
 	vsprintf(cOut,ccMessage,vlArguments);
 	va_end(vlArguments);
 
-	sprintf(cErrorMessage,cOut);
-
-	// [9/10/2013] TEMP: Bleh just print the fucking thing to console ~hogsy
-	printf("Error: %s",cOut);
+	strncpy(cErrorMessage,ccMessage,sizeof(cErrorMessage));
 }
 
 char *pError_Get(void)

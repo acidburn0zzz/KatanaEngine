@@ -8,6 +8,7 @@
 EngineExport_t	eExport;
 EngineImport_t	Launcher;
 
+#if 0
 /*	On failure returns false.
 */
 bool Engine_Initialize(int argc,char *argv[])
@@ -18,7 +19,7 @@ bool Engine_Initialize(int argc,char *argv[])
 
 	for(;;)
     {
-        dNewTime        = Sys_FloatTime();
+        dNewTime        = System_DoubleTime();
         dCurrentTime    = dNewTime-dOldTime;
 
         Host_Frame(dCurrentTime);
@@ -28,6 +29,7 @@ bool Engine_Initialize(int argc,char *argv[])
 
     return true;
 }
+#endif
 
 // [8/3/2014] Oops, this didn't match! Fixed ~hogsy
 bool System_Main(int iArgumentCount,char *cArguments[]);

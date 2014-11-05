@@ -52,9 +52,7 @@ void Light_CalculateTextureReflectivity(void)
 	miptex_t	*mt;
 
 	// Always set index 0 even if no textures
-	vTextureReflectivity[0][0] = 0.5f;
-	vTextureReflectivity[0][1] = 0.5f;
-	vTextureReflectivity[0][2] = 0.5f;
+	VectorSet(vTextureReflectivity[0],0.5,0.5,0.5);
 
 	for(i = 0; i < numtexinfo; i++)
 	{
@@ -77,6 +75,7 @@ void Light_CalculateTextureReflectivity(void)
 		// [1/8/2012] TODO: How to do for 32bpp images :/ ~hogsy
 		for(j = 0; j < texels; j++)
 		{
+			mt->
 			texel = ((byte*)mt)[LittleLong(mt->offsets[o])+j];
 			for(k = 0; k < 3; k++)
 				vColor[k] += palette
@@ -219,6 +218,7 @@ void ParseLightEntities( void )
 		if( !vec[0] )
 			vec[0] = 1;
 		if (vec[0] != 1)
+		{
 			if (vec[0] <= 0)
 			{
 				l->type		= LIGHTTYPE_NONE;
@@ -226,6 +226,7 @@ void ParseLightEntities( void )
 			}
 			else
 				l->radius /= vec[0];
+        }
 
 		l->radius *= globallightradiusscale;
 		l->clampradius = l->radius;
@@ -336,15 +337,15 @@ int lightchainbufindex;
 
 void LightWorld( void )
 {
-	int			i, k, n, m, count, pass, surfacesdone, lightvisibilitydone;
-	unsigned int	*mark;
-	time_t		lightstarttime, oldtime, newtime;
-	directlight_t *light;
+	int				i, k, n, m, pass, surfacesdone, lightvisibilitydone;
+	unsigned int	*mark,count;
+	time_t			lightstarttime, oldtime, newtime;
+	directlight_t	*light;
 	BSPLeaf_t		*leaf;
-	int			lightcount = 0, castcount = 0, emptycount = 0, solidcount = 0, watercount = 0, slimecount = 0, lavacount = 0, skycount = 0, misccount = 0, ignorevis;
-	vec3_t		org;
-	char		name[8];
-	entity_t	*ent;
+	int				lightcount = 0, castcount = 0, emptycount = 0, solidcount = 0, watercount = 0, slimecount = 0, lavacount = 0, skycount = 0, misccount = 0, ignorevis;
+	vec3_t			org;
+	char			name[8];
+	entity_t		*ent;
 
 	lightdatasize = 0;
 	rgblightdatasize = 0;

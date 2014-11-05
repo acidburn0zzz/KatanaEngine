@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="platform.c" />
+    <ClCompile Include="platform_filesystem.c" />
+    <ClCompile Include="platform_input.c" />
+    <ClCompile Include="platform_module.c" />
+    <ClCompile Include="platform_net.c" />
+    <ClCompile Include="platform_window.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\platform.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platform_filesystem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platform_inttypes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platform_math.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platform_module.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platform_stdint.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platform_window.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Include">
+      <UniqueIdentifier>{3f927dcb-3779-430f-9901-5e649246219e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -7,5 +7,6 @@
 
 void Physics_CheckVelocity(edict_t *eEntity);
 void Physics_CheckWaterTransition(edict_t *eEntity);
+void Physics_SetGravity(edict_t *eEntity);
 
 #endif
