@@ -6,7 +6,7 @@
 	Model Rendering Crap!
 */
 
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 #include "engine_video.h"
 #include "engine_material.h"
 

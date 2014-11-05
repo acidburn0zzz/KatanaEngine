@@ -54,7 +54,7 @@ unsigned long inet_addr(const char *cp);
 #endif	// BAN_TEST
 
 #include "quakedef.h"
-#include "net_dgrm.h"
+#include "engine_netdgrm.h"
 
 // these two macros are to make the code more readable
 #define sfunc	net_landrivers[sock->landriver]

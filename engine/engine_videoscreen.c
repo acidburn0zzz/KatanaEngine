@@ -21,12 +21,12 @@
 
 #include "platform_filesystem.h"
 
-#include "engine_menu.h"
+#include "engine_modmenu.h"
 #include "engine_editor.h"
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 
 #include "engine_video.h"
-#include "engine_input.h"
+#include "engine_clientinput.h"
 
 /*
 

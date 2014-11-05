@@ -2,7 +2,7 @@
 */
 #include "engine_server.h"
 
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 #include "engine_console.h"
 
 typedef struct

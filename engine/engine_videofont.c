@@ -50,7 +50,7 @@ void Font_Load(const char *ccName,int iSize)
 	sprintf(cPath,"./engine/fonts/%s",ccName);
 
 	for(i = 0; i < sizeof(fFonts); i++)
-		if(!Q_strcmp(fFonts[i].cName,ccName))
+		if(!strcmp(fFonts[i].cName,ccName))
 			return;
 		else if(!fFonts[i].tfFont)
 		{

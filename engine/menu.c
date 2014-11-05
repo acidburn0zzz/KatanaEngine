@@ -1,8 +1,8 @@
 #include "quakedef.h"
 
 #include "engine_video.h"
-#include "engine_game.h"
-#include "engine_menu.h"
+#include "engine_modgame.h"
+#include "engine_modmenu.h"
 
 #define	MENU_MAINITEMS							5	// Main Menu
 #	define	MENU_NEWITEMS						4	// New Game

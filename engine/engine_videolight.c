@@ -141,11 +141,12 @@ void Light_Draw(void)
 
 void Light_MarkLights(DynamicLight_t *light,int bit,mnode_t *node)
 {
-	mplane_t	*splitplane;
-	msurface_t	*surf;
-	vec3_t		impact;
-	float		dist, l, maxdist;
-	int			i, j, s, t;
+	mplane_t		*splitplane;
+	msurface_t		*surf;
+	vec3_t			impact;
+	float			dist, l, maxdist;
+	int				j, s, t;
+	unsigned int	i;
 
 START:
 	if (node->contents < 0)
@@ -278,8 +279,9 @@ loc0:
 		return true;	// hit something
 	else
 	{
-		int i, ds, dt;
-		msurface_t *surf;
+		int				ds,dt;
+		unsigned int	i;
+		msurface_t		*surf;
 
 		// Check for impact on this node
 		Math_VectorCopy(mid,lightspot);

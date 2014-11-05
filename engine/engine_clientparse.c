@@ -25,7 +25,7 @@
 
 #include "engine_client.h"
 #include "engine_console.h"
-#include "engine_menu.h"
+#include "engine_modmenu.h"
 
 #include "shared_server.h"
 
@@ -775,7 +775,7 @@ void CL_ParseStaticSound (int version) //johnfitz -- added argument
 	S_StaticSound (cl.sound_precache[sound_num], org, vol, atten);
 }
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 
 #define SHOWNET(x) if(cl_shownet.value==2)Con_Printf ("%3i:%s\n", msg_readcount-1, x);
 

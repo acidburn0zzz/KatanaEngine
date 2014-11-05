@@ -1,10 +1,10 @@
 /*	Copyright (C) 2011-2014 OldTimes Software
 */
-#include "engine_menu.h"
+#include "engine_modmenu.h"
 
 #include "engine_video.h"
 #include "engine_client.h"
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 
 #include "shared_module.h"
 
@@ -13,7 +13,7 @@
 
 pINSTANCE	hMenuInstance;
 
-void Game_AddCommand(char *c,void *f);	// [21/5/2013] TEMP: See engine_game.c ~hogsy
+void Game_AddCommand(char *c,void (*Function)(void));	// [21/5/2013] TEMP: See engine_game.c ~hogsy
 
 int	Menu_GetScreenWidth(void);
 int Menu_GetScreenHeight(void);

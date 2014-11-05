@@ -19,7 +19,7 @@
 */
 #include "quakedef.h"
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 #include "engine_server.h"
 
 extern cvar_t	pausable;
@@ -183,7 +183,7 @@ void Host_Game_f (void)
 		if(!bIsDedicated)
 		{
 			// Delete all textures where TEXPREF_PERSIST is unset
-			TexMgr_FreeTextures(0,TEXPREF_PERSIST);
+			TextureManager_FreeTextures(0,TEXPREF_PERSIST);
 
 			Draw_NewGame();
 
@@ -750,7 +750,7 @@ SERVER TRANSITIONS
 ===============================================================================
 */
 
-#include "engine_input.h"
+#include "engine_clientinput.h"
 
 /*	handle a
 	map <servername>

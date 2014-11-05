@@ -19,7 +19,7 @@
 */
 #include "quakedef.h"
 
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 #include "engine_video.h"
 #include "engine_client.h"
 

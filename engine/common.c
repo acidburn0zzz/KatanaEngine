@@ -23,6 +23,8 @@
 	Misc functions used in client and server.
 */
 
+#include "engine_script.h"
+
 #include "platform_filesystem.h"
 
 #define NUM_SAFE_ARGVS  7

@@ -280,7 +280,12 @@ void R_DrawTextureChains_Glow (void)
 	for(i = 0; i < cl.worldmodel->numtextures; i++)
 	{
 		t = cl.worldmodel->textures[i];
-		if (!t || !t->texturechain || !(glt = R_TextureAnimation(t,0)->fullbright))
+
+		if (!t || !t->texturechain)
+			continue;
+
+		glt = R_TextureAnimation(t,0)->fullbright;
+		if(!glt)
 			continue;
 
 		bBound = false;

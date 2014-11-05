@@ -1,4 +1,5 @@
-#ifndef __KATPHYSICS__
+#ifndef __ENGINEPHYSICS__
+#define __ENGINEPHYSICS__
 
 #include "quakedef.h"
 

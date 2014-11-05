@@ -12,11 +12,11 @@ typedef struct
 
 typedef struct
 {
-	struct gltexture_s	*gDiffuseTexture,		// Diffuse texture.
-						*gFullbrightTexture,	// Texture used for fullbright layer.
-						*gSphereTexture;		// Texture used for sphere mapping.
+	struct gltexture_s	*gDiffuseTexture,			// Diffuse texture.
+						*gFullbrightTexture,		// Texture used for fullbright layer.
+						*gSphereTexture;			// Texture used for sphere mapping.
 
-	int	iTextureWidth,iTextureHeight;	// Size of the skin.
+	unsigned int	iTextureWidth,iTextureHeight;	// Size of the skin.
 } MaterialSkin_t;
 
 typedef struct
@@ -37,5 +37,6 @@ void	Material_Initialize(void);
 void	Material_Draw(Material_t *mMaterial,int iSkin);
 
 Material_t *Material_Load(const char *ccPath);
+Material_t *Material_Get(int iMaterialID);
 
 #endif // __ENGINEMATERIAL__

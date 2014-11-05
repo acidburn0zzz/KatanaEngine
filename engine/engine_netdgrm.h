@@ -18,17 +18,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// net_loop.h
+// engine_netdgrm.h
 
-int			Loop_Init (void);
-void		Loop_Listen (bool state);
-void		Loop_SearchForHosts (bool xmit);
-qsocket_t 	*Loop_Connect (char *host);
-qsocket_t 	*Loop_CheckNewConnections (void);
-int			Loop_GetMessage (qsocket_t *sock);
-int			Loop_SendMessage (qsocket_t *sock, sizebuf_t *data);
-int			Loop_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data);
-bool		Loop_CanSendMessage (qsocket_t *sock);
-bool		Loop_CanSendUnreliableMessage (qsocket_t *sock);
-void		Loop_Close (qsocket_t *sock);
-void		Loop_Shutdown (void);
+#define	DATAGRAM_NAME	"SWORD"
+
+int			Datagram_Init (void);
+void		Datagram_Listen (bool state);
+void		Datagram_SearchForHosts (bool xmit);
+qsocket_t	*Datagram_Connect (char *host);
+qsocket_t 	*Datagram_CheckNewConnections (void);
+int			Datagram_GetMessage (qsocket_t *sock);
+int			Datagram_SendMessage (qsocket_t *sock, sizebuf_t *data);
+int			Datagram_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data);
+bool		Datagram_CanSendMessage (qsocket_t *sock);
+bool		Datagram_CanSendUnreliableMessage (qsocket_t *sock);
+void		Datagram_Close (qsocket_t *sock);
+void		Datagram_Shutdown (void);

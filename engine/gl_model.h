@@ -220,7 +220,7 @@ typedef struct model_s
 	vec3_t		clipmins, clipmaxs;
 
 	// brush model
-	int			firstmodelsurface, nummodelsurfaces;
+	unsigned int	firstmodelsurface, nummodelsurfaces;
 
 	int			numsubmodels;
 	BSPModel_t	*submodels;

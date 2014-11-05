@@ -1,14 +1,14 @@
 /*	Copyright (C) 2011-2014 OldTimes Software
 */
-#include "engine_game.h"
+#include "engine_modgame.h"
 
 /*
 	Game Interface
 */
 
 #include "engine_console.h"
-#include "KatGL.h"			// [23/9/2013] TODO: Rename to engine_draw.h? ~hogsy
-#include "engine_menu.h"
+#include "engine_videoshadow.h"			// [23/9/2013] TODO: Rename to engine_draw.h? ~hogsy
+#include "engine_modmenu.h"
 #include "engine_server.h"
 
 #include "shared_module.h"

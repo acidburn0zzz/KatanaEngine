@@ -9,7 +9,7 @@
 */
 
 #include "engine_video.h"
-#include "engine_game.h"
+#include "engine_modgame.h"
 
 #include "shared_math.h"
 

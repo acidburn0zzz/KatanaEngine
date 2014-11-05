@@ -10,7 +10,7 @@
 		Move the following out into its own shared module.
 */
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 
 #if 0
 #include "Python.h"

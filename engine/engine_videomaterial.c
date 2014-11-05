@@ -85,6 +85,67 @@ void Material_Initialize(void)
 	bInitialized = true;
 }
 
+
+MaterialSkin_t *Material_GetSkin(Material_t *mMaterial,int iSkin)
+{
+	if(!mMaterial)
+	{
+		Con_Warning("Invalid material!\n");
+		return NULL;
+	}
+	else if(!mMaterial->iSkins)
+	{
+		Con_Warning("Material with no valid skins! (%s)\n",mMaterial->cName);
+		return NULL;
+	}
+	else if((iSkin > mMaterial->iSkins) || (iSkin < mMaterial->iSkins))
+	{
+		Con_Warning("Attempted to get an invalid skin! (%i) (%s)\n",iSkin,mMaterial->cName);
+		return NULL;
+	}
+
+	return &mMaterial->msSkin[iSkin];
+}
+
+/*	Returns a material from the given ID.
+*/
+Material_t *Material_Get(int iMaterialID)
+{
+	int i;
+
+	if(iMaterialID < 0)
+	{
+		Con_Warning("Invalid material id! (%i)\n",iMaterialID);
+		return NULL;
+	}
+
+	for(i = 0; i < sizeof(iMaterialCount); i++)
+		if(mMaterials[i].iIdentification == iMaterialID)
+			return &mMaterials[i];
+
+	return NULL;
+}
+
+/*	Returns true on success.
+	Unfinished
+*/
+Material_t *Material_GetByName(const char *ccMaterialName)
+{
+	int i;
+
+	if(ccMaterialName[0] == ' ')
+	{
+		Con_Warning("Attempted to find material, but recieved invalid material name!\n");
+		return NULL;
+	}
+
+	for(i = 0; i < sizeof(iMaterialCount); i++)
+		if(!strncmp(mMaterials[i].cName,ccMaterialName,sizeof(ccMaterialName)))
+			return &mMaterials[i];
+
+	return NULL;
+}
+
 /*	Routine for applying each of our materials.
 */
 void Material_Draw(Material_t *mMaterial,int iSkin)
@@ -122,78 +183,18 @@ void Material_Draw(Material_t *mMaterial,int iSkin)
 	}
 }
 
-MaterialSkin_t *Material_GetSkin(Material_t *mMaterial,int iSkin)
-{
-	if(!mMaterial)
-	{
-		Con_Warning("Invalid material!\n");
-		return NULL;
-	}
-	else if(!mMaterial->iSkins)
-	{
-		Con_Warning("Material with no valid skins! (%s)\n",mMaterial->cName);
-		return NULL;
-	}
-	else if((iSkin > mMaterial->iSkins) || (iSkin < mMaterial->iSkins))
-	{
-		Con_Warning("Attempted to get an invalid skin! (%i) (%s)\n",iSkin,mMaterial->cName);
-		return NULL;
-	}
-
-	return &mMaterial->msSkin[iSkin];
-}
-
-/*	Returns a material from the given ID.
-*/
-Material_t *Material_Get(int iMaterialID)
-{
-	int i;
-
-	if(iMaterialID < 0)
-	{
-		Con_Warning("Invalid material id! (%i)\n",iMaterialID);
-		return NULL;
-	}
-
-	for(i = 0; i < sizeof(iMaterialCount); i++)
-	{
-	}
-
-	// Return the material we want.
-	return &mMaterials[i];
-}
-
-/*	Returns true on success.
-	Unfinished
-*/
-Material_t *Material_GetByName(const char *ccMaterialName)
-{
-	int i;
-
-	if(ccMaterialName[0] == ' ')
-	{
-		Con_Warning("Attempted to find material, but recieved invalid material name!\n");
-		return NULL;
-	}
-
-	for(i = 0; i < sizeof(iMaterialCount); i++)
-		if(!Q_strcmp(mMaterials[i].cName,ccMaterialName))
-			return &mMaterials[i];
-
-	return NULL;
-}
-
 /*
 	Scripting
 */
 
 void _Material_SetType(Material_t *mCurrentMaterial,char *cArg)
 {
-	int	iMaterialType = atoi(cArg);
+	int	iMaterialType = Q_atoi(cArg);
 
+	if(iMaterialType < MATERIAL_TYPE_NONE)
+		Con_Warning("Invalid material type! (%i)\n",iMaterialType);
 
-
-	mCurrentMaterial->iType == iMaterialType;
+	mCurrentMaterial->iType = iMaterialType;
 }
 
 void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
@@ -279,7 +280,6 @@ MaterialKey_t	mkMaterialFunctions[]=
 Material_t *Material_Load(const char *ccPath)
 {
     Material_t  *mNewMaterial;
-	int			iSkins = 0;
 	char        *cData,
 				cPath[PLATFORM_MAX_PATH];
 

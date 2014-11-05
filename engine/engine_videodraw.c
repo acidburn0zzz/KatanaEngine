@@ -19,7 +19,7 @@
 */
 #include "quakedef.h"
 
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 #include "engine_console.h"
 #include "engine_video.h"
 #include "engine_client.h"	// [28/7/2013] Added for precache functions ~hogsy
@@ -152,13 +152,31 @@ void Draw_ExternPic(char *path,float alpha,int x,int y,int w,int h)
 		}
 
 	{
-		VideoObject_t voPicture[]=
-		{
-			{	{	x,		y,		0	},	{	{	0,		0		}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
-			{	{	x+w,	y,		0	},	{	{	1.0f,	0		}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
-			{	{	x+w,	y+h,	0	},	{	{	1.0f,	1.0f	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	},
-			{	{	x,		y+h,	0	},	{	{	0,		1.0f	}	},	{	1.0f,	1.0f,	1.0f,	alpha	}	}
-		};
+		vec4_t			vColour = { 1.0f, 1.0f,	1.0f };
+		VideoObject_t	voPicture[4];
+
+		vColour[3] = alpha;
+
+		for(i = 0; i < 4; i++)
+			Math_Vector4Copy(vColour,voPicture[i].vColour);
+
+		voPicture[0].vVertex[1]	=
+		voPicture[1].vVertex[1]	= y;
+		voPicture[2].vVertex[1]	=
+		voPicture[3].vVertex[1]	= y+h;
+		voPicture[1].vVertex[0]	=
+		voPicture[2].vVertex[0]	= x+w;
+		voPicture[0].vVertex[0]	=
+		voPicture[3].vVertex[0]	= x;
+
+		voPicture[0].vTextureCoord[0][0]	=
+		voPicture[0].vTextureCoord[0][1]	= 
+		voPicture[1].vTextureCoord[0][1]	= 
+		voPicture[3].vTextureCoord[0][0]	= 0;
+		voPicture[1].vTextureCoord[0][0]	=
+		voPicture[2].vTextureCoord[0][0]	= 
+		voPicture[2].vTextureCoord[0][1]	= 
+		voPicture[3].vTextureCoord[0][1]	= 1.0f;
 
 		Video_DrawFill(voPicture);
 

@@ -55,7 +55,7 @@ struct hostent FAR * (PASCAL FAR *pgethostbyaddr)(const char FAR * addr,
 int (PASCAL FAR *pgetsockname)(SOCKET s, struct sockaddr FAR *name,
 							   int FAR * namelen);
 
-#include "net_wins.h"
+#include "engine_netwinsock.h"
 
 int winsock_initialized = 0;
 WSADATA		winsockdata;

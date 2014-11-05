@@ -20,14 +20,15 @@
 #include "quakedef.h"
 
 #include "engine_console.h"
-#include "engine_game.h"
-#include "engine_menu.h"
+#include "engine_modgame.h"
+#include "engine_modmenu.h"
 #include "engine_editor.h"
-#include "engine_input.h"
+#include "engine_clientinput.h"
 #include "engine_video.h"
 #include "engine_physics.h"
 #include "engine_client.h"
 #include "engine_audio.h"
+#include "engine_material.h"
 
 #include "shared_server.h"
 

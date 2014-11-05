@@ -72,7 +72,7 @@
 #include "draw.h"
 #include "cvar.h"
 #include "screen.h"
-#include "net.h"
+#include "engine_net.h"
 #include "protocol.h"
 #include "cmd.h"
 #include "sound.h"

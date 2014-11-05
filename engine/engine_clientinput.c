@@ -1,6 +1,6 @@
 /*	Copyright (C) 2011-2014 OldTimes Software
 */
-#include "engine_input.h"
+#include "engine_clientinput.h"
 
 /*
 	Input System
@@ -13,7 +13,7 @@
 */
 
 #include "engine_video.h"
-#include "engine_menu.h"
+#include "engine_modmenu.h"
 
 #define INPUT_MAX_CONTROLLERS	3
 #define INPUT_MAX_VIBRATION		65535

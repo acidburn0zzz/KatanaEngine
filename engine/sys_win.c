@@ -582,6 +582,4 @@ bool System_Main(int iArgumentCount,char *cArguments[])
 		Host_Frame(time);
 		oldtime = newtime;
 	}
-
-	return true;
 }

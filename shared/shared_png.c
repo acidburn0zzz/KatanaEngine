@@ -57,6 +57,11 @@ define them in your own project's source files without needing to change
 lodepng source code. Don't forget to remove "static" if you copypaste them
 from here.*/
 
+#ifdef _MSC_VER 
+// Ignore this warning, since I have no intention to do anything with this. ~hogsy
+#pragma warning(disable:4244)
+#endif
+
 #ifdef LODEPNG_COMPILE_ALLOCATORS
 static void* lodepng_malloc(size_t size)
 {

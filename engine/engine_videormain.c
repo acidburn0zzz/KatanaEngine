@@ -21,7 +21,7 @@
 
 #include "engine_editor.h"
 #include "engine_console.h"
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 #include "engine_video.h"
 #include "KatAlias.h"
 

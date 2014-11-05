@@ -52,7 +52,7 @@ extern	int					numnodes;
 extern	BSPNode_t			dnodes[BSP_MAX_NODES];
 extern	int					numtexinfo;
 extern	BSPTextureInfo_t	texinfo[BSP_MAX_TEXINFO];
-extern	int					numfaces;
+extern	unsigned int		numfaces;
 extern	BSPFace_t			dfaces[BSP_MAX_FACES];
 extern	int					numclipnodes;
 extern	BSPClipNode_t		dclipnodes[BSP_MAX_CLIPNODES];

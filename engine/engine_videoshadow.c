@@ -1,6 +1,6 @@
 /*	Copyright (C) 2011-2014 OldTimes Software
 */
-#include "KatGL.h"	// [7/8/2013] TODO: Change to engine_video ~hogsy
+#include "engine_videoshadow.h"	// [7/8/2013] TODO: Change to engine_video ~hogsy
 
 /*
 	Contains all basic drawing routines.

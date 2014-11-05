@@ -23,7 +23,7 @@
 	Client-side Temporary Entities
 */
 
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 
 int			num_temp_entities;
 entity_t	cl_temp_entities[MAX_TEMP_ENTITIES];

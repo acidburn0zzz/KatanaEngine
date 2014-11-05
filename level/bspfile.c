@@ -24,8 +24,8 @@ byte		dtexdata[BSP_MAX_MIPTEX]; // (dmiptexlump_t)
 int			entdatasize;
 char		dentdata[BSP_MAX_ENTSTRING];
 
-int			numleafs;
-BSPLeaf_t	dleafs[BSP_MAX_LEAFS];
+unsigned int	numleafs;
+BSPLeaf_t		dleafs[BSP_MAX_LEAFS];
 
 int			numplanes;
 BSPPlane_t	dplanes[BSP_MAX_PLANES];
@@ -39,8 +39,8 @@ BSPNode_t	dnodes[BSP_MAX_NODES];
 int					numtexinfo;
 BSPTextureInfo_t	texinfo[BSP_MAX_TEXINFO];
 
-int			numfaces;
-BSPFace_t	dfaces[BSP_MAX_FACES];
+unsigned int	numfaces;
+BSPFace_t		dfaces[BSP_MAX_FACES];
 
 int				numclipnodes;
 BSPClipNode_t	dclipnodes[BSP_MAX_CLIPNODES];
@@ -373,20 +373,22 @@ void LoadBSPFile(char *filename)
 	nummodels = lump->iFileLength / (48+4*hullinfo.filehulls);
 	for (i = 0; i < nummodels; i++)
 	{
-		dmodels[i].fMins[0] = SB_ReadFloat (&sb);
-		dmodels[i].fMins[1] = SB_ReadFloat (&sb);
-		dmodels[i].fMins[2] = SB_ReadFloat (&sb);
-		dmodels[i].fMaxs[0] = SB_ReadFloat (&sb);
-		dmodels[i].fMaxs[1] = SB_ReadFloat (&sb);
-		dmodels[i].fMaxs[2] = SB_ReadFloat (&sb);
-		dmodels[i].fOrigin[0] = SB_ReadFloat (&sb);
-		dmodels[i].fOrigin[1] = SB_ReadFloat (&sb);
-		dmodels[i].fOrigin[2] = SB_ReadFloat (&sb);
+		dmodels[i].fMins[0]		= SB_ReadFloat (&sb);
+		dmodels[i].fMins[1]		= SB_ReadFloat (&sb);
+		dmodels[i].fMins[2]		= SB_ReadFloat (&sb);
+		dmodels[i].fMaxs[0]		= SB_ReadFloat (&sb);
+		dmodels[i].fMaxs[1]		= SB_ReadFloat (&sb);
+		dmodels[i].fMaxs[2]		= SB_ReadFloat (&sb);
+		dmodels[i].fOrigin[0]	= SB_ReadFloat (&sb);
+		dmodels[i].fOrigin[1]	= SB_ReadFloat (&sb);
+		dmodels[i].fOrigin[2]	= SB_ReadFloat (&sb);
+
 		for (j = 0; j < hullinfo.filehulls; j++)
 			dmodels[i].iHeadNode[j] = SB_ReadInt (&sb);
-		dmodels[i].iVisLeafs = SB_ReadInt (&sb);
-		dmodels[i].iFirstFace = SB_ReadInt (&sb);
-		dmodels[i].iNumFaces = SB_ReadInt (&sb);
+
+		dmodels[i].iVisLeafs	= SB_ReadInt (&sb);
+		dmodels[i].iFirstFace	= SB_ReadInt (&sb);
+		dmodels[i].iNumFaces	= SB_ReadInt (&sb);
 	}
 
 	lump = &lumps[LUMP_LIGHTING];
@@ -416,8 +418,8 @@ void LoadBSPFile(char *filename)
 // Ripped from RMQ ~hogsy
 void BSP_RemoveSkipSurfaces(void)
 {
-	int					i, j, k, skipcount;
-	unsigned int		*leafmarks;
+	int					i, skipcount;
+	unsigned int		*leafmarks,j,k;
 	BSPLeaf_t			*leaf;
 	BSPFace_t			*face;
 	BSPTextureInfo_t	*ti;

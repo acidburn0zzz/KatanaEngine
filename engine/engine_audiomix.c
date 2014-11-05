@@ -35,6 +35,8 @@ int		snd_scaletable[32][256];
 int 	*snd_p, snd_linear_count, snd_vol;
 short	*snd_out;
 
+#pragma warning(disable:4310)
+
 void Snd_WriteLinearBlastStereo16(void)
 {
 	int		i;

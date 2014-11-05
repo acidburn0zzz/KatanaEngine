@@ -569,8 +569,8 @@ void GetSoundtime(void);
 void S_Update_(void)
 {
 #ifndef KATANA_AUDIO_OPENAL
-	unsigned        endtime;
-	int				samps;
+	int	endtime,
+		samps;
 
 	if (!sound_started || (snd_blocked > 0))
 		return;

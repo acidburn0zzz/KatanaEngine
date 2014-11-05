@@ -19,7 +19,7 @@
 */
 #include "quakedef.h"
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 #include "engine_physics.h"
 #include "engine_edict.h"
 

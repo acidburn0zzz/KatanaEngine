@@ -20,7 +20,7 @@
 #include "quakedef.h"
 
 #include "engine_video.h"
-#include "engine_menu.h"
+#include "engine_modmenu.h"
 #include "engine_editor.h"
 
 /*

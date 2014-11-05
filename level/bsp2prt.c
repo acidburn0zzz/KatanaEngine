@@ -35,10 +35,11 @@ static node_t *Bsp2Prt_BuildTree_r( int nodenum )
 
 static void Bsp2Prt_GetWorldBounds( vec3_t mins, vec3_t maxs )
 {
-	int			i, j, e;
-	BSPFace_t	*face;
-	BSPVertex_t	*v;
-	vec3_t		point;
+	int				j, e;
+	unsigned int	i;
+	BSPFace_t		*face;
+	BSPVertex_t		*v;
+	vec3_t			point;
 
 	ClearBounds( mins, maxs );
 

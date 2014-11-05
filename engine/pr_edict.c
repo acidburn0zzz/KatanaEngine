@@ -19,7 +19,7 @@
 */
 #include "engine_edict.h"
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 
 ddef_t				*pr_fielddefs,
 					*pr_globaldefs;

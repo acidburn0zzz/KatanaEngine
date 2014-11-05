@@ -17,9 +17,9 @@
 // Main header
 #include "engine_video.h"
 
-#include "engine_game.h"
-#include "engine_input.h"
-#include "engine_menu.h"
+#include "engine_modgame.h"
+#include "engine_clientinput.h"
+#include "engine_modmenu.h"
 #include "engine_console.h"
 
 // Platform library
@@ -74,7 +74,6 @@ void Video_Initialize(void)
 
 	// [23/7/2013] Set default values ~hogsy
 	Video.iCurrentTexture		= (unsigned int)-1;	// [29/8/2012] "To avoid unnecessary texture sets" ~hogsy
-	Video.bCSAASupported		=
 	Video.bTextureEnvCombine	=
 	Video.bFogCoord				= false;
 	Video.bActive				=			// Window is intially assumed active.

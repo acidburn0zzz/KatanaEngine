@@ -24,7 +24,7 @@
 	Manages OpenGL texture images.
 */
 
-#include "platform/include/platform_filesystem.h"
+#include "platform_filesystem.h"
 
 #include "engine_console.h"
 #include "engine_video.h"
@@ -336,7 +336,7 @@ void TexMgr_FreeTexture (gltexture_t *kill)
 
 /*	Compares each bit in "flags" to the one in glt->flags only if that bit is active in "mask"
 */
-void TexMgr_FreeTextures (int flags, int mask)
+void TextureManager_FreeTextures(unsigned int flags,unsigned int mask)
 {
 	gltexture_t *glt, *next;
 
@@ -845,8 +845,7 @@ void TexMgr_LoadImage8 (gltexture_t *glt, byte *data)
 	extern		cvar_t	gl_fullbrights;
 	bool				padw = false,padh = false;
 	byte				padbyte;
-	unsigned	int		*usepal;
-	int					i;
+	unsigned	int		i,*usepal;
 
 	// detect FALSE alpha cases
 	if (glt->flags & TEXPREF_ALPHA && !(glt->flags & TEXPREF_CONCHARS))
@@ -952,10 +951,12 @@ gltexture_t *TexMgr_LoadImage(model_t *owner,char *name,int width,int height,enu
 			Console_ErrorMessage(true,source_file,va("Unknown source format (%i).",format));
 	}
 
-	if ((flags & TEXPREF_OVERWRITE) && (glt = TexMgr_FindTexture (owner, name)))
+	if((flags & TEXPREF_OVERWRITE))
 	{
-		if (glt->source_crc == crc)
-			return glt;
+		glt = TexMgr_FindTexture(owner,name);
+		if(glt)
+			if (glt->source_crc == crc)
+				return glt;
 	}
 	else
 		glt = TexMgr_NewTexture ();
