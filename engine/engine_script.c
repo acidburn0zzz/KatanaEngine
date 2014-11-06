@@ -296,7 +296,7 @@ bool Script_Load(/*const */char *ccPath)
 {
 	char *cData;
 
-	if(LoadFile(ccPath,(void**)&cData) == -1)
+	if(!LoadFile(ccPath,(void**)&cData))
 	{
 		cData = (char*)COM_LoadTempFile(ccPath);
 		if(!cData)
