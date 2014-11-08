@@ -83,7 +83,7 @@ void Sky_LoadCloudTexture(const char *cPath)
 	if(!cPath[0])
 		return;
 
-	sprintf(cFileName,"textures/sky/%scloud",cPath);
+	sprintf(cFileName,"%ssky/%scloud",Global.cTexturePath,cPath);
 
 	bData = Image_LoadImage(cFileName,&iWidth,&iHeight);
 	if(bData)
@@ -137,7 +137,7 @@ void Sky_LoadSkyBox (char *name)
 	{
 		mark = Hunk_LowMark ();
 
-		sprintf (filename, "textures/sky/%s%s", name, suf[i]);
+		sprintf (filename, "%ssky/%s%s",Global.cTexturePath, name, suf[i]);
 		data = Image_LoadImage (filename, &width, &height);
 		if (data)
 		{

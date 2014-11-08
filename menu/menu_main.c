@@ -159,6 +159,11 @@ void Menu_Initialize(void)
 
 	// Allocate global elements.
 	mMenuElements = (Menu_t*)malloc(iMenuAllocated*sizeof(Menu_t));
+	if(!mMenuElements)
+	{
+		Engine.Sys_Error("Failed to allocate menu elements!\n");
+		return;
+	}
 
 	// [2/8/2012] Precache all the HUD digits ~hogsy
 	for(i = 0; i < 10; i++)
@@ -204,8 +209,9 @@ void Menu_Initialize(void)
 	// [3/8/2012] Automatically precache images being used by each element ~hogsy
 	for(i = 0; i < iMenuElements; i++)
 	{
-		if(!mMenuElements[i].cResource)
-			return;
+		if(!&mMenuElements[i] || !mMenuElements[i].cResource)
+			// Break, don't return in-case we want to do here later.
+			break;
 
 		switch(mMenuElements[i].mMenuType)
 		{

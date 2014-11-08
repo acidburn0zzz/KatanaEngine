@@ -808,12 +808,6 @@ void *Cache_Alloc (cache_user_t *c, int size, char *name)
 
 //============================================================================
 
-
-/*
-========================
-Memory_Init
-========================
-*/
 void Memory_Init (void *buf, int size)
 {
 	int p;

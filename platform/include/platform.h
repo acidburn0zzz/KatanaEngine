@@ -35,7 +35,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#ifdef _WIN32
+#ifdef _WIN32	// Windows
+	// Windows Headers
 #	include <Windows.h>
 #	include <WindowsX.h>
 #	include <CommCtrl.h>
@@ -43,7 +44,7 @@
 
 	// Platform information
 #	define	PLATFORM_NAME		"WINDOWS"	// Platform name.
-#	define	PLATFORM_MAX_PATH	260			// Maximum path length.
+#	define	PLATFORM_MAX_PATH	MAX_PATH-1	// Maximum path length.
 
 	// Other
 #	define	pINSTANCE	HINSTANCE       // Instance definition.
@@ -62,6 +63,9 @@
 #	define	pINSTANCE	void *		// Instance definition.
 #	define	pFARPROC	void *		// Function pointer.
 #endif
+
+// Apparently generally the case for both ~hogsy
+#define	PLATFORM_MAX_USER	256			// Maximum length allowed for a username.
 
 // [25/3/2014] Quickly threw this in so we can add these extensions to modules in a clean way :) ~hogsy
 #if defined(__amd64) || defined(__amd64__)
@@ -95,6 +99,7 @@ typedef int	bool;
 #else
 #	define	pFUNCTION	__func__		// Returns the active function.
 #endif
+#define	pARRAYELEMENTS(a)	(sizeof(a)/sizeof(*(a)))	// Returns the number of elements within an array.
 
 typedef unsigned int	pUINT;
 typedef	unsigned char	pBYTE;

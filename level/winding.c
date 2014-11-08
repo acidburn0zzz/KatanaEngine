@@ -68,18 +68,17 @@ winding_t *CopyWinding( winding_t *w )
 	return c;
 }
 
-/*
-==================
-CopyWindingExt
-==================
-*/
 winding_t *CopyWindingExt( int numpoints, vec3_t *points )
 {
 	winding_t	*c;
 	size_t		size;
 
 	if( numpoints > MAX_POINTS_ON_WINDING )
+	{
 		Error( "CopyWinding: %i points", numpoints );
+		// Not necessary but some compilers are stupid, so fuck it.
+		return;
+	}
 
 	size = ( size_t )((winding_t *)0)->points[numpoints];
 	c = malloc( size );
@@ -89,11 +88,6 @@ winding_t *CopyWindingExt( int numpoints, vec3_t *points )
 	return c;
 }
 
-/*
-==================
-ReverseWinding
-==================
-*/
 winding_t *ReverseWinding( winding_t *w )
 {
 	int		i;

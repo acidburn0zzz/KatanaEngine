@@ -167,11 +167,7 @@ void RunThreadsOn (int workcnt, bool showpacifier, void(*func)(int))
 	//
 	InitializeCriticalSection (&crit);
 
-	if (numthreads == 1)
-	{	// use same thread
-		func (0);
-	}
-	else
+	if(numthreads > 1)
 	{
 		for (i=0 ; i<numthreads ; i++)
 		{
@@ -182,11 +178,20 @@ void RunThreadsOn (int workcnt, bool showpacifier, void(*func)(int))
 			   (LPVOID)i,	// LPVOID lpvThreadParm,
 			   0,			//   DWORD fdwCreate,
 			   &threadid[i]);
+			if(!threadhandle[i])
+			{
+				Error("Failed to create thread! (%i)",i);
+				// Not necessary but some compilers are stupid, so fuck it.
+				return;
+			}
 		}
 
 		for (i=0 ; i<numthreads ; i++)
 			WaitForSingleObject (threadhandle[i], INFINITE);
 	}
+	else
+		func(0);
+
 	DeleteCriticalSection (&crit);
 
 	threaded = false;

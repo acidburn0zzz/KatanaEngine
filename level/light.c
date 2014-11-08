@@ -337,8 +337,8 @@ int lightchainbufindex;
 
 void LightWorld( void )
 {
-	int				i, k, n, m, pass, surfacesdone, lightvisibilitydone;
-	unsigned int	*mark,count;
+	int				i, pass, surfacesdone, lightvisibilitydone;
+	unsigned int	*mark,count,n,m,k;
 	time_t			lightstarttime, oldtime, newtime;
 	directlight_t	*light;
 	BSPLeaf_t		*leaf;

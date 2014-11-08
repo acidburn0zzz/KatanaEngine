@@ -248,7 +248,7 @@ sfx_t *S_FindName (char *name)
 		Sys_Error ("S_FindName: out of sfx_t");
 
 	sfx = &known_sfx[i];
-	strcpy (sfx->name, name);
+	strncpy (sfx->name, name,sizeof(name));
 
 	num_sfx++;
 

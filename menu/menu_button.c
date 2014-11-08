@@ -57,6 +57,7 @@ void Button_Frame(MenuButton_t *mbButton)
 */
 }
 
+#if 0
 MenuButton_t *Button_Create(void)
 {
 	MenuButton_t	*mbOut;
@@ -67,3 +68,4 @@ MenuButton_t *Button_Create(void)
 
     return mbOut;
 }
+#endif

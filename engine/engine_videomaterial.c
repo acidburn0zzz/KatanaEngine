@@ -66,6 +66,7 @@ void Material_Initialize(void)
 	mMaterials = Hunk_AllocName(iAllocatedMaterials*sizeof(Material_t),"materials");
 
 	// Add dummy material.
+#if 0
 	{
 		Material_t *mDummy;
 
@@ -81,10 +82,10 @@ void Material_Initialize(void)
 		mDummy->msSkin[0].iTextureHeight		= notexture->height;
 		mDummy->msSkin[0].iTextureWidth			= notexture->width;
 	}
+#endif
 
 	bInitialized = true;
 }
-
 
 MaterialSkin_t *Material_GetSkin(Material_t *mMaterial,int iSkin)
 {

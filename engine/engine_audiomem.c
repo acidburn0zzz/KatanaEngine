@@ -98,11 +98,10 @@ sfxcache_t *S_LoadSound (sfx_t *s)
 		return sc;
 
 	// load it in
-    Q_strcpy(namebuffer,PATH_SOUNDS"/");
+	sprintf(namebuffer,"%s/",Global.cSoundPath);
     Q_strcat(namebuffer,s->name);
 
 	data = COM_LoadStackFile(namebuffer, stackbuf, sizeof(stackbuf));
-
 	if (!data)
 	{
 		Con_Warning("Couldn't load %s\n", namebuffer);

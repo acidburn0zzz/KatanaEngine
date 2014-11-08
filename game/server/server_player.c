@@ -13,6 +13,7 @@
 #include "server_weapon.h"
 #include "server_item.h"
 
+#define	PLAYER_MAX_HEALTH	cvServerMaxHealth.iValue
 #define	PLAYER_MIN_HEALTH	-20
 
 // [10/4/2013] Moved entity frames here so that bots can refer to them! ~hogsy
@@ -634,9 +635,9 @@ void Player_Spawn(edict_t *ePlayer)
 
 	ePlayer->v.cClassname	= "player";
 	// [30/1/2013] Default health can now be changed by admins ~hogsy
-	ePlayer->v.iHealth		= (int)cvServerDefaultHealth.value;
+	ePlayer->v.iHealth		= cvServerDefaultHealth.iValue;
 	// [5/6/2012] Make max_health changable for admins ~hogsy
-	ePlayer->v.iMaxHealth	= (int)cvServerMaxHealth.value;
+	ePlayer->v.iMaxHealth	= PLAYER_MAX_HEALTH;
 	ePlayer->v.movetype		= MOVETYPE_WALK;
 	ePlayer->v.bTakeDamage	= true;
 	ePlayer->v.model		= cvServerPlayerModel.string;

@@ -824,7 +824,7 @@ void Host_Changelevel_f (void)
 	}
 
 	//johnfitz -- check for client having map before anything else
-	sprintf (level,PATH_MAPS"/%s"BSP_EXTENSION, Cmd_Argv(1));
+	sprintf(level,"%s/%s"BSP_EXTENSION,Global.cLevelPath,Cmd_Argv(1));
 	if (COM_OpenFile (level, &i) == -1)
 		Host_Error ("cannot find map %s", level);
 	//johnfitz

@@ -447,8 +447,7 @@ static unsigned int GetVertex( vec3_t in, int planenum )
 */
 static int EmitFaceEdge( vec3_t p1, vec3_t p2, face_t *f )
 {
-	int				i;
-	unsigned int	v1, v2;
+	unsigned int	i, v1, v2;
 	BSPEdge_t		*edge;
 
 	v1 = GetVertex( p1, f->planenum );

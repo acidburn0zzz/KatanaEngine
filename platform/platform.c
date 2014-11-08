@@ -7,6 +7,8 @@
 	error handling.
 */
 
+#include "platform_system.h"
+
 #define	MAX_FUNCTION_LENGTH	64
 #define	MAX_ERROR_LENGTH	1024
 

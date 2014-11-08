@@ -340,6 +340,9 @@ int LoadFile(char *filename,void **bufferptr)
 	stat(filename,&sFileSize);
 
 	buffer = malloc(sFileSize.st_size+1);
+	if(!buffer)
+		Sys_Error("Failed to allocate file buffer! (%s)\n",filename);
+
 	((char*)buffer)[sFileSize.st_size] = 0;
 
 	SafeRead(f,buffer,sFileSize.st_size);

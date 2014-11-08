@@ -61,7 +61,7 @@ void ShockLaser_Touch(edict_t *ent, edict_t *other)
 {
 	char	*cSound;
 
-	if(other && other == ent->local.eOwner)
+	if(!other || (other == ent->local.eOwner))
 		return;
 
 	if(other->v.bTakeDamage)

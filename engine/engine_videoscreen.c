@@ -110,8 +110,7 @@ viddef_t	vid;				// global video state
 
 vrect_t		scr_vrect;
 
-bool	scr_disabled_for_loading,
-		scr_drawloading;
+bool	scr_disabled_for_loading;
 
 float		scr_disabled_time;
 
@@ -556,7 +555,7 @@ void SCR_SetUpToDrawConsole (void)
 
 	Con_CheckResize();
 
-	if(scr_drawloading)
+	if(Menu->GetState() & MENU_STATE_LOADING)
 		return;		// never a console with loading plaque
 
 	// Decide on the height of the console
@@ -619,13 +618,13 @@ void SCR_ScreenShot_f (void)
 	char	tganame[32],checkname[MAX_OSPATH];
 	int		i;
 
-	if(!pFileSystem_CreateDirectory(va(PATH_SCREENSHOTS,com_gamedir)))
+	if(!pFileSystem_CreateDirectory(va("%s/%s",com_gamedir,Global.cScreenshotPath)))
 		Sys_Error("Failed to create directory!\n%s",pError_Get());
 
 	// find a file name to save it to
 	for (i = 0; i < 10000; i++)
 	{
-		sprintf(tganame,"screenshots/%04i.tga",i);
+		sprintf(tganame,"%s%04i.tga",Global.cScreenshotPath,i);
 		sprintf(checkname,"%s/%s",com_gamedir,tganame);
 		if(Sys_FileTime(checkname) == -1)
 			break;	// file doesn't exist
@@ -662,7 +661,6 @@ void SCR_BeginLoadingPlaque (void)
 
 	scr_centertime_off	= 0;
 	scr_con_current		= 0;
-	scr_drawloading		= true;
 
 	Menu->AddState(MENU_STATE_LOADING);
 
@@ -670,7 +668,6 @@ void SCR_BeginLoadingPlaque (void)
 
 	Menu->RemoveState(MENU_STATE_LOADING);
 
-	scr_drawloading				= false;
 	scr_disabled_for_loading	= true;
 	scr_disabled_time			= realtime;
 }
@@ -868,7 +865,7 @@ void SCR_UpdateScreen (void)
 		Draw_FadeScreen();
 		SCR_DrawNotifyString();
 	}
-	else if(scr_drawloading) //loading
+	else if(Menu->GetState() & MENU_STATE_LOADING) //loading
 		Menu->Draw();
 	else if(cl.intermission == 1 && key_dest == key_game) //end of level
 	{}

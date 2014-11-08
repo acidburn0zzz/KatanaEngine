@@ -42,12 +42,13 @@ bool bVisibilityChanged; //if true, force pvs to be refreshed
 
 void R_MarkSurfaces (void)
 {
-	byte		*vis;
-	mleaf_t		*leaf;
-	mnode_t		*node;
-	msurface_t	*surf, **mark;
-	int			i, j;
-	bool		nearwaterportal;
+	byte			*vis;
+	mleaf_t			*leaf;
+	mnode_t			*node;
+	msurface_t		*surf, **mark;
+	int				i;
+	unsigned int	j;
+	bool			nearwaterportal;
 
 	// clear lightmap chains
 	memset(lightmap_polys,0,sizeof(lightmap_polys));
@@ -158,8 +159,8 @@ bool R_BackFaceCull (msurface_t *surf)
 
 void R_CullSurfaces (void)
 {
-	msurface_t *s;
-	int i;
+	msurface_t		*s;
+	unsigned int	i;
 
 	if (!r_drawworld_cheatsafe)
 		return;

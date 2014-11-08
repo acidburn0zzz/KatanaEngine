@@ -349,12 +349,12 @@ void Model_LoadBSPTextures(BSPLump_t *blLump)
 				//external textures -- first look in "textures/mapname/" then look in "textures/"
 				mark = Hunk_LowMark();
 				COM_StripExtension(loadmodel->name+5,mapname);
-				sprintf (filename, "textures/%s/#%s", mapname, tx->name+1); //this also replaces the '*' with a '#'
+				sprintf (filename, "%s%s/#%s",Global.cTexturePath, mapname, tx->name+1); //this also replaces the '*' with a '#'
 
 				data = Image_LoadImage(filename,&fwidth,&fheight);
 				if(!data)
 				{
-					sprintf (filename, "textures/#%s", tx->name+1);
+					sprintf (filename, "%s#%s",Global.cTexturePath, tx->name+1);
 					data = Image_LoadImage (filename, &fwidth, &fheight);
 					if(!data)
 						Con_Warning("Failed to load %s\n",filename);
@@ -384,12 +384,12 @@ void Model_LoadBSPTextures(BSPLump_t *blLump)
 
 				COM_StripExtension(loadmodel->name+5,mapname);
 
-				sprintf(filename,"textures/%s/%s",mapname,tx->name);
+				sprintf(filename,"%s%s/%s",Global.cTexturePath,mapname,tx->name);
 
 				data = Image_LoadImage(filename,&fwidth,&fheight);
 				if(!data)
 				{
-					sprintf(filename,"textures/%s",tx->name);
+					sprintf(filename,"%s%s",Global.cTexturePath,tx->name);
 					data = Image_LoadImage(filename,&fwidth,&fheight);
 					if(!data)
 						Con_Warning("Failed to load %s\n",filename);

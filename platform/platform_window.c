@@ -30,6 +30,13 @@ GIPLWindow_t *gWindow_Allocate(void)
 	pERROR_UPDATE;
 
 	pwAllocated = (GIPLWindow_t*)malloc(sizeof(GIPLWindow_t));
+	// Don't continue if we failed to allocate.
+	if(!pwAllocated)
+	{
+		gWindow_MessageBox("Platform Error","Failed to allocate a new window!\n");
+		return NULL;
+	}
+
 	memset(pwAllocated,0,sizeof(GIPLWindow_t));
 
 	return pwAllocated;
