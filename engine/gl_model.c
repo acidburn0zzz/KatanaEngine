@@ -85,7 +85,10 @@ mleaf_t *Mod_PointInLeaf (vec3_t p, model_t *model)
 	mplane_t	*plane;
 
 	if (!model || !model->nodes)
+	{
 		Sys_Error ("Mod_PointInLeaf: bad model");
+		return NULL;
+	}
 
 	node = model->nodes;
 	for(;;)
@@ -825,9 +828,19 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 
 	in = (void *)(mod_base + blLump->iFileOffset);
 	if (blLump->iFileLength % sizeof(*in))
+	{
 		Sys_Error ("Model_LoadBSPFaces: funny lump size in %s",loadmodel->name);
+		return;
+	}
+
 	count = blLump->iFileLength / sizeof(*in);
+
 	out = (msurface_t*)Hunk_AllocName ( count*sizeof(*out), loadname);
+	if(!out)
+	{
+		Sys_Error("Failed to allocate surface!\n");
+		return;
+	}
 
 	loadmodel->surfaces = out;
 	loadmodel->numsurfaces = count;
@@ -1548,7 +1561,7 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 			poutframe->translate[j] = LittleFloat(pinframe->translate[j]);
 		}
 
-		for(j=0; j < 17; j++)
+		for(j=0; j < 16; j++)
 			poutframe->name[j] = pinframe->name[j];
 
 		for(j=0; j < mMD2Model->num_xyz; j++)
@@ -1571,6 +1584,11 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 	// Ugh, kill me.
 	{
 		mMD2Model->mtcTextureCoord = (MD2TextureCoordinate_t*)malloc(mMD2Model->num_st*sizeof(MD2TextureCoordinate_t));
+		if(!mMD2Model->mtcTextureCoord)
+		{
+			Sys_Error("Failed to allocate MD2 texture coordinates!\n");
+			return;
+		}
 
 		pST	= (MD2TextureCoordinate_t*)((uint8_t*)pinmodel+LittleLong(pinmodel->ofs_st));
 		for(i = 0; i < mMD2Model->num_st; i++)
@@ -1648,6 +1666,7 @@ void Model_LoadMD2(model_t *mModel,void *Buffer)
 
 bool Model_LoadOBJ(model_t *mModel,void *Buffer)
 {
+#if 0
 	char	cExtension[4];
 	OBJ_t	*oObject;
 
@@ -1687,6 +1706,7 @@ bool Model_LoadOBJ(model_t *mModel,void *Buffer)
 			// Ignore for now... ~hogsy
 		}
 	}
+#endif
 
 	return false;
 }

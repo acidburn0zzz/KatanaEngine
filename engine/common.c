@@ -1108,10 +1108,16 @@ int COM_FindFile (char *filename, int *handle, FILE **file)
 	int             i;
 	int             findtime, cachetime;
 
-	if(file && handle)
-		Sys_Error ("COM_FindFile: both handle and file set");
 	if(!file && !handle)
+	{
 		Sys_Error ("COM_FindFile: neither handle or file set");
+		return 0;
+	}
+	else if(file && handle)
+	{
+		Sys_Error ("COM_FindFile: both handle and file set");
+		return 0;
+	}
 
     // [10/3/2014] Switch the path to lowercase ~hogsy
     FileSystem_UpdatePath(filename);
@@ -1268,7 +1274,10 @@ byte *COM_LoadFile (char *path, int usehunk)
 		Sys_Error ("COM_LoadFile: bad usehunk");
 
 	if(!buf)
+	{
 		Sys_Error ("COM_LoadFile: not enough space for %s", path);
+		return NULL;
+	}
 
 	((byte*)buf)[len] = 0;
 

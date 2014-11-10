@@ -401,6 +401,12 @@ void Modlist_Init(void) //TODO: move win32 specific stuff to sys_win.c
 					return;
 
 			mod = (mod_t*)Z_Malloc(sizeof(mod_t));
+			if(!mod)
+			{
+				Sys_Error("Failed to allocate mod!\n");
+				return;
+			}
+
 			strcpy (mod->name,FindFileData.cFileName);
 
 			//insert each entry in alphabetical order

@@ -182,7 +182,10 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 			 break;		// moved the entire distance
 
 		if(!trace.ent)
+		{
 			Sys_Error ("SV_FlyMove: !trace.ent");
+			return 0;
+		}
 
 		if (trace.plane.normal[2] > 0.7)
 		{

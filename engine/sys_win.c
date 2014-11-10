@@ -122,7 +122,9 @@ int Sys_FileOpenRead (char *path, int *hndl)
 
 	i = findhandle ();
 	if(i == -1)
+	{
 		Sys_Error("Out of handles!");
+	}
 
 	f = fopen(path, "rb");
 	if (!f)
@@ -147,11 +149,15 @@ int Sys_FileOpenWrite (char *path)
 
 	i = findhandle();
 	if(i == -1)
+	{
 		Sys_Error("Out of handles!");
+	}
 
 	f = fopen(path, "wb");
 	if (!f)
+	{
 		Sys_Error ("Error opening %s: %s", path,strerror(errno));
+	}
 
 	sys_handles[i] = f;
 

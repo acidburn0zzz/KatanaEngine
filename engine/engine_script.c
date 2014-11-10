@@ -300,11 +300,11 @@ ScriptKey_t	skScriptKeys[]=
 */
 bool Script_Load(/*const */char *ccPath)
 {
-	char *cData;
+	void *cData;
 
-	if(!LoadFile(ccPath,(void**)&cData))
+	if(!LoadFile(ccPath,&cData))
 	{
-		cData = (char*)COM_LoadTempFile(ccPath);
+		cData = COM_LoadTempFile(ccPath);
 		if(!cData)
 		{
 			Con_Warning("Failed to load script! (%s)\n",ccPath);
@@ -312,7 +312,7 @@ bool Script_Load(/*const */char *ccPath)
 		}
 	}
 
-	Script_StartTokenParsing(cData);
+	Script_StartTokenParsing((char*)cData);
 
 	if(!Script_GetToken(true))
 	{

@@ -880,7 +880,11 @@ void CL_ParseServerMessage(void)
 		case svc_lightstyle:
 			i = MSG_ReadByte ();
 			if (i >= MAX_LIGHTSTYLES)
+			{
 				Sys_Error ("svc_lightstyle > MAX_LIGHTSTYLES");
+				return;
+			}
+
 			Q_strcpy (cl_lightstyle[i].cMap,  MSG_ReadString());
 			cl_lightstyle[i].length = Q_strlen(cl_lightstyle[i].cMap);
 			//johnfitz -- save extra info
@@ -972,7 +976,10 @@ void CL_ParseServerMessage(void)
 		case SVC_UPDATESTAT:
 			i = MSG_ReadByte ();
 			if(i < 0 || i >= STAT_NONE)
+			{
 				Sys_Error("svc_updatestat: %i is invalid",i);
+				return;
+			}
 
 			cl.stats[i] = MSG_ReadLong();
 			break;

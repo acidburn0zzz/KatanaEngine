@@ -234,7 +234,10 @@ sfx_t *S_FindName (char *name)
 	sfx_t	*sfx;
 
 	if(!name)
+	{
 		Sys_Error ("S_FindName: NULL\n");
+		return NULL;
+	}
 
 	if(Q_strlen(name) >= MAX_QPATH)
 		Sys_Error ("Sound name too long: %s", name);

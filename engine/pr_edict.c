@@ -140,6 +140,7 @@ Done:
 */
 char *PR_ValueString (EntityType_t type, eval_t *val)
 {
+#if 0
 	static char	line[256];
 
 	type &= ~DEF_SAVEGLOBAL;
@@ -164,6 +165,9 @@ char *PR_ValueString (EntityType_t type, eval_t *val)
 	}
 
 	return line;
+#else
+	return "null";
+#endif
 }
 
 /*	Returns a string describing *data in a type specific manner
@@ -502,11 +506,12 @@ char *ED_ParseEdict(char *data, edict_t *ent)
 
 		// Hack to fix keynames with trailing spaces
 		n = strlen(keyname);
-		while(n && keyname[n-1] == ' ')
-		{
-			keyname[n-1] = 0;
-			n--;
-		}
+		if(n > 0)
+			while(n && keyname[n-1] == ' ')
+			{
+				keyname[n-1] = 0;
+				n--;
+			}
 
 		// Parse value
 		data = COM_Parse(data);

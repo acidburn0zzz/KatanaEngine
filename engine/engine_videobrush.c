@@ -54,8 +54,7 @@ void R_UploadLightmap (int lmap);
 */
 texture_t *R_TextureAnimation (texture_t *base, int frame)
 {
-	int		relative;
-	int		count;
+	int		relative,count;
 
 	if (frame)
 		if (base->alternate_anims)
@@ -71,9 +70,15 @@ texture_t *R_TextureAnimation (texture_t *base, int frame)
 	{
 		base = base->anim_next;
 		if (!base)
+		{
 			Sys_Error ("R_TextureAnimation: broken cycle");
-		if (++count > 100)
+			return NULL;
+		}
+		else if(++count > 100)
+		{
 			Sys_Error ("R_TextureAnimation: infinite cycle");
+			return NULL;
+		}
 	}
 
 	return base;

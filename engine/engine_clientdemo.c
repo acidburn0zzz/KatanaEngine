@@ -100,7 +100,10 @@ int CL_GetMessage (void)
 
         // Get the next message
 		if(fread(&net_message.cursize,4,1,cls.demofile) != 1)
+		{
             Sys_Error("Failed to recieve next message!\n");
+			return 0;
+		}
 
 		Math_VectorCopy (cl.mviewangles[0], cl.mviewangles[1]);
 

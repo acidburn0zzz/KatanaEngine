@@ -585,7 +585,7 @@ void View_ModelDrift(vec3_t vOrigin,vec3_t vAngles,vec3_t vOldAngles)
 void V_CalcRefdef (void)
 {
 	int				i;
-	float			fBob[1],fCycle[1],
+	float			fBob[2],fCycle[2],
 					delta;
 	static	float	oldz = 0;
 	entity_t		*ent,*view;

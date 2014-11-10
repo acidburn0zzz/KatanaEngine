@@ -607,6 +607,12 @@ void Video_AllocateArrays(int iSize)
 	vVideoVertexArray	= (vec3_t*)Hunk_AllocName(iSize*sizeof(vec3_t),"video_vertexarray");
 	vVideoColourArray	= (vec4_t*)Hunk_AllocName(iSize*sizeof(vec4_t),"video_colourarray");
 
+	if(!vVideoColourArray || !vVideoTextureArray || !vVideoVertexArray)
+	{
+		Sys_Error("Failed to allocate video arrays!\n");
+		return;
+	}
+
 	// Keep this up to date.
 	uiVideoArraySize = iSize;
 }
@@ -641,9 +647,15 @@ void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,u
 		Console_WriteToLog(cvVideoDebugLog.string,"Video: Drawing object (%i) (%i)\n",uiVerts,vpPrimitiveType);
 
 	if(!voObject)
+	{
         Sys_Error("Invalid video object!\n");
+		return;
+	}
     else if(!uiVerts)
+	{
         Sys_Error("Invalid number of vertices for video object! (%i)\n",uiVerts);
+		return;
+	}
 
     // [8/5/2014] Ignore any additional changes ~hogsy
     bVideoIgnoreCapabilities = true;
@@ -693,8 +705,10 @@ void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,u
 
 			// Copy over coords for each TMU.
 			for(j = 0; j < VIDEO_MAX_UNITS; j++)
+			{
 				//if(iSavedCapabilites[j][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
-					Math_VectorCopy(voObject[i].vTextureCoord[j],vVideoTextureArray[j][i]);
+					Math_Vector2Copy(voObject[i].vTextureCoord[j],vVideoTextureArray[j][i]);
+			}
 		}		
 		else
 			Math_Vector4Set(1.0f,vVideoColourArray[i]);

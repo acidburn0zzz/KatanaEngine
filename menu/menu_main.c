@@ -147,14 +147,11 @@ void Menu_Initialize(void)
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"armor");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair0");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair1");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair2");
 #elif GAME_ADAMAS
     Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"health");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"ammo");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"armor");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair");
-#elif GAME_ICTUS
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"int040a");
 #endif
 
 	// Allocate global elements.

@@ -469,13 +469,14 @@ void Sky_ProcessTextureChains(void)
 
 void Sky_ProcessEntities(void)
 {
-	int			i,j,k,mark;
-	float		dot;
-	bool		bRotated;
-	entity_t	*e;
-	msurface_t	*s;
-	glpoly_t	*p;
-	vec3_t		vTemp, forward, right, up;
+	int				i,k,mark;
+	unsigned int	j;
+	float			dot;
+	bool			bRotated;
+	entity_t		*e;
+	msurface_t		*s;
+	glpoly_t		*p;
+	vec3_t			vTemp, forward, right, up;
 
 	if (!r_drawentities.value)
 		return;

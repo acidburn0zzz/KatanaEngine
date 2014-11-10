@@ -37,7 +37,7 @@ int			gl_hardware_maxsize;
 const int	gl_solid_format = 3;
 const int	gl_alpha_format = 4;
 
-#define	MAX_GLTEXTURES 2048
+#define	MAX_GLTEXTURES 4096	// Bumped up, since we support seperate materials now.
 
 gltexture_t	*active_gltextures, *free_gltextures;
 
@@ -320,7 +320,8 @@ void TexMgr_FreeTexture (gltexture_t *kill)
 	}
 
 	for (glt = active_gltextures; glt; glt = glt->next)
-		if (glt->next == kill)
+	{
+		if(glt->next && (glt->next == kill))
 		{
 			glt->next = kill->next;
 			kill->next = free_gltextures;
@@ -330,6 +331,7 @@ void TexMgr_FreeTexture (gltexture_t *kill)
 			numgltextures--;
 			return;
 		}
+	}
 
 	Con_Printf ("TexMgr_FreeTexture: not found\n");
 }
@@ -951,30 +953,30 @@ gltexture_t *TexMgr_LoadImage(model_t *owner,char *name,int width,int height,enu
 			Console_ErrorMessage(true,source_file,va("Unknown source format (%i).",format));
 	}
 
-	if((flags & TEXPREF_OVERWRITE))
+	// I originally wrote my own solution to this, but there's something odd occuring here, so I just borrowed Bakers workaround for now... ~hogsy
+	// (I hate assignments in conditions, just fyi)
+	if((flags & TEXPREF_OVERWRITE) && (glt = TexMgr_FindTexture(owner,name)))
 	{
-		glt = TexMgr_FindTexture(owner,name);
-		if(glt)
-			if (glt->source_crc == crc)
-				return glt;
+		if (glt->source_crc == crc)
+			return glt;
 	}
 	else
 		glt = TexMgr_NewTexture ();
 
 	// copy data
-	glt->owner = owner;
-	strncpy (glt->name, name, sizeof(glt->name));
-	glt->width = width;
-	glt->height = height;
-	glt->flags = flags;
-	glt->shirt = -1;
-	glt->pants = -1;
-	strncpy(glt->source_file,source_file, sizeof(glt->source_file));
+	glt->owner			= owner;
+	glt->width			= width;
+	glt->height			= height;
+	glt->flags			= flags;
+	glt->shirt			= -1;
+	glt->pants			= -1;
 	glt->source_offset  = source_offset;
 	glt->source_format  = format;
 	glt->source_width   = width;
 	glt->source_height  = height;
 	glt->source_crc     = crc;
+	strncpy(glt->name,name,sizeof(glt->name));
+	strncpy(glt->source_file,source_file,sizeof(glt->source_file));
 
 	//upload it
 	mark = Hunk_LowMark();

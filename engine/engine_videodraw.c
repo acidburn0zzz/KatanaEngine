@@ -134,6 +134,8 @@ void Scrap_Upload (void)
 
 extern gltexture_t	*gMenuTexture[128];
 
+/*	TODO: Make me obsolete!
+*/
 void Draw_ExternPic(char *path,float alpha,int x,int y,int w,int h)
 {
 	int	i;
@@ -152,14 +154,18 @@ void Draw_ExternPic(char *path,float alpha,int x,int y,int w,int h)
 		}
 
 	{
-		vec4_t			vColour = { 1.0f, 1.0f,	1.0f };
 		VideoObject_t	voPicture[4];
 
-		vColour[3] = alpha;
-
 		for(i = 0; i < 4; i++)
-			Math_Vector4Copy(vColour,voPicture[i].vColour);
+		{
+			// Set RGB values to 1.0f...
+			Math_VectorSet(1.0f,voPicture[i].vColour);
 
+			// Alpha needs to be set last, to the given value...
+			voPicture[i].vColour[3] = alpha;
+		}
+
+		// Give each vertex the coord it needs...
 		voPicture[0].vVertex[1]	=
 		voPicture[1].vVertex[1]	= y;
 		voPicture[2].vVertex[1]	=
@@ -169,6 +175,7 @@ void Draw_ExternPic(char *path,float alpha,int x,int y,int w,int h)
 		voPicture[0].vVertex[0]	=
 		voPicture[3].vVertex[0]	= x;
 
+		// Give each texture coord the coord it needs...
 		voPicture[0].vTextureCoord[0][0]	=
 		voPicture[0].vTextureCoord[0][1]	= 
 		voPicture[1].vTextureCoord[0][1]	= 
@@ -178,9 +185,8 @@ void Draw_ExternPic(char *path,float alpha,int x,int y,int w,int h)
 		voPicture[2].vTextureCoord[0][1]	= 
 		voPicture[3].vTextureCoord[0][1]	= 1.0f;
 
+		// Throw it off to the rendering pipeline.
 		Video_DrawFill(voPicture);
-
-		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 	}
 }
 //==================================================================

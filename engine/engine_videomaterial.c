@@ -9,8 +9,9 @@
 
 bool	bInitialized = false;
 
-int	iMaterialCount,
-	iAllocatedMaterials	= 1024;
+#define	MATERIALS_MAX_ALLOCATED	2048
+
+int	iMaterialCount;
 
 typedef enum
 {
@@ -47,49 +48,66 @@ Material_t	*mMaterials;	// Global array.
 
 Material_t *Material_Allocate(void)
 {
-	Material_t *mAllocated;
+	int			i;
+	Material_t	*mAllocated;
 
 	// TODO: Do stuff...
+	for(i = 0; i < MATERIALS_MAX_ALLOCATED; i++)
+	{
+		if(mMaterials[i].iIdentification <= 0)
+			break;
+
+	}
+
+	mAllocated = &mMaterials[i];
+	if(!mAllocated)
+	{
+		Con_Warning("Failed to allocate material!\n");
+		return NULL;
+	}
 	
-	mAllocated->iSkins = 0;
+	mAllocated->iIdentification = i;
+	mAllocated->iSkins			= 0;
 
 	return mAllocated;
 }
 
 void Material_Initialize(void)
 {
+	Material_t *mDummy;
+
 	if(bInitialized)
 		return;
 
 	Con_Printf("Initializing material system...\n");
 
-	mMaterials = Hunk_AllocName(iAllocatedMaterials*sizeof(Material_t),"materials");
-
-	// Add dummy material.
-#if 0
-	{
-		Material_t *mDummy;
-
-		mDummy = Material_Allocate();
-		if(!mDummy)
-			Sys_Error("Failed to allocated dummy material!\n");
-
-		mDummy->iSkins							= 1;
-		mDummy->iType							= MATERIAL_TYPE_NONE;
-		mDummy->msSkin[0].gDiffuseTexture		= notexture;
-		mDummy->msSkin[0].gFullbrightTexture	= NULL;
-		mDummy->msSkin[0].gSphereTexture		= NULL;
-		mDummy->msSkin[0].iTextureHeight		= notexture->height;
-		mDummy->msSkin[0].iTextureWidth			= notexture->width;
-	}
-#endif
+	mMaterials = Hunk_AllocName(MATERIALS_MAX_ALLOCATED*sizeof(Material_t),"materials");
 
 	bInitialized = true;
+
+	// Add dummy material.
+	mDummy = Material_Allocate();
+	if(!mDummy)
+		Sys_Error("Failed to allocated dummy material!\n");
+
+	mDummy->cName							= "dummy";
+	mDummy->iSkins							= 1;
+	mDummy->iType							= MATERIAL_TYPE_NONE;
+	mDummy->msSkin[0].gDiffuseTexture		= notexture;
+	mDummy->msSkin[0].gFullbrightTexture	= NULL;
+	mDummy->msSkin[0].gSphereTexture		= NULL;
+	mDummy->msSkin[0].iTextureHeight		= notexture->height;
+	mDummy->msSkin[0].iTextureWidth			= notexture->width;
 }
 
 MaterialSkin_t *Material_GetSkin(Material_t *mMaterial,int iSkin)
 {
-	if(!mMaterial)
+	if(iSkin <= 0)
+	{
+		Con_Warning("Invalid skin identification, should be 1 or more! (%i)\n",iSkin);
+		return NULL;
+	}
+	else if(!mMaterial)
 	{
 		Con_Warning("Invalid material!\n");
 		return NULL;
@@ -120,7 +138,7 @@ Material_t *Material_Get(int iMaterialID)
 		return NULL;
 	}
 
-	for(i = 0; i < sizeof(iMaterialCount); i++)
+	for(i = 0; i < MATERIALS_MAX_ALLOCATED; i++)
 		if(mMaterials[i].iIdentification == iMaterialID)
 			return &mMaterials[i];
 
@@ -140,9 +158,19 @@ Material_t *Material_GetByName(const char *ccMaterialName)
 		return NULL;
 	}
 
-	for(i = 0; i < sizeof(iMaterialCount); i++)
-		if(!strncmp(mMaterials[i].cName,ccMaterialName,sizeof(ccMaterialName)))
-			return &mMaterials[i];
+	for(i = 0; i < MATERIALS_MAX_ALLOCATED; i++)
+	{
+		// Check the material is valid first!
+		if(&mMaterials[i])
+		{
+			// This is rather messy, but let us find a material based on path name too.
+			if(!strncmp(mMaterials[i].cName,ccMaterialName,sizeof(mMaterials[i].cName)) || !strncmp(mMaterials[i].cPath,ccMaterialName,sizeof(mMaterials[i].cPath)))
+				return &mMaterials[i];
+		}
+		// Probably reached the end of viable materials, move on...
+		else
+			break;
+	}
 
 	return NULL;
 }
@@ -281,8 +309,8 @@ MaterialKey_t	mkMaterialFunctions[]=
 Material_t *Material_Load(const char *ccPath)
 {
     Material_t  *mNewMaterial;
-	char        *cData,
-				cPath[PLATFORM_MAX_PATH];
+	void        *cData;
+	char		cPath[PLATFORM_MAX_PATH];
 
 	if(!bInitialized)
 	{
@@ -290,15 +318,21 @@ Material_t *Material_Load(const char *ccPath)
 		return false;
 	}
 
+	// Update the given path with the base path plus extension.
 	sprintf(cPath,"%s%s.material",Global.cMaterialPath,ccPath);
 
-	if(LoadFile(ccPath,(void**)&cData) == -1)
+	// Check if it's been cached already...
+	mNewMaterial = Material_GetByName(cPath);
+	if(mNewMaterial)
+		return mNewMaterial;
+
+	if(LoadFile(cPath,&cData) == -1)
 	{
 		Con_Warning("Failed to load material! (%s)\n",ccPath);
 		return false;
 	}
 
-	Script_StartTokenParsing(cData);
+	Script_StartTokenParsing((char*)cData);
 
 	if(!Script_GetToken(true))
 	{
@@ -313,6 +347,7 @@ Material_t *Material_Load(const char *ccPath)
 		return false;
 	}
 
+	// Assume that the material hasn't been cached yet, so allocate a new copy of one.
 	mNewMaterial = Material_Allocate();
 
 	while(true)
@@ -375,6 +410,8 @@ Material_t *Material_Load(const char *ccPath)
 			}
 		}
 	}
+
+	free(cData);
 
 	return NULL;
 }

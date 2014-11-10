@@ -142,7 +142,10 @@ void *Z_Malloc(int size)
 
 	Buffer = Z_TagMalloc(size,1);
 	if(!Buffer)
+	{
 		Sys_Error ("Z_Malloc: failed on allocation of %i bytes",size);
+		return NULL;
+	}
 
 	memset(Buffer,0,size);
 
@@ -585,7 +588,7 @@ void Cache_FreeHigh (int new_high_hunk)
 			return;		// nothing in cache at all
 		if ( (byte *)c + c->size <= hunk_base + hunk_size - new_high_hunk)
 			return;		// there is space to grow the hunk
-		if (c == prev)
+		if (prev && (c == prev))
 			Cache_Free(c->user,TRUE);	// didn't move out of the way //johnfitz -- added second argument
 		else
 		{
@@ -598,7 +601,10 @@ void Cache_FreeHigh (int new_high_hunk)
 void Cache_UnlinkLRU (cache_system_t *cs)
 {
 	if (!cs->lru_next || !cs->lru_prev)
+	{
 		Sys_Error ("Cache_UnlinkLRU: NULL link");
+		return;
+	}
 
 	cs->lru_next->lru_prev = cs->lru_prev;
 	cs->lru_prev->lru_next = cs->lru_next;
@@ -740,6 +746,11 @@ void Cache_Free(cache_user_t *c,bool freetextures) //johnfitz -- added second ar
 		Sys_Error ("Cache_Free: not allocated");
 
 	cs = ((cache_system_t *)c->data) - 1;
+	if(!cs)
+	{
+		Sys_Error("Failed to reference pointer, this shouldn't happen!\n");
+		return;
+	}
 
 	cs->prev->next = cs->next;
 	cs->next->prev = cs->prev;

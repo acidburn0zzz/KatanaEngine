@@ -341,7 +341,9 @@ int LoadFile(char *filename,void **bufferptr)
 
 	buffer = malloc(sFileSize.st_size+1);
 	if(!buffer)
-		Sys_Error("Failed to allocate file buffer! (%s)\n",filename);
+	{
+		Error("Failed to allocate file buffer! (%s)\n",filename);
+	}
 
 	((char*)buffer)[sFileSize.st_size] = 0;
 

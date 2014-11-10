@@ -19,6 +19,10 @@ void Console_ErrorMessage(bool bCrash,const char *ccFile,char *reason)
 		Con_Error("Failed to load %s\nReason: %s",ccFile,reason);
 }
 
+/*
+	Log Output
+*/
+
 void Console_WriteToLog(const char *ccFile,char *fmt,...)
 {
 	FILE			*fLog;
