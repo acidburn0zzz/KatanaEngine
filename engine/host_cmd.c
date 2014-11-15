@@ -268,7 +268,7 @@ void ExtraMaps_Init(void)
                 WIN32_FIND_DATA	FindFileData;
                 HANDLE			Find;
 
-                sprintf(filestring,"%s/maps/*"BSP_EXTENSION,search->filename);
+                sprintf(filestring,"%s/%s*"BSP_EXTENSION,search->filename,Global.cLevelPath);
 
                 Find = FindFirstFile(filestring,&FindFileData);
                 if(Find == INVALID_HANDLE_VALUE)
@@ -286,7 +286,7 @@ void ExtraMaps_Init(void)
                 DIR             *dDirectory;
                 struct  dirent  *dEntry;
 
-                sprintf(filestring,"%s/maps",search->filename);
+                sprintf(filestring,"%s/%s",search->filename,Global.cLevelPath);
 
                 dDirectory = opendir(filestring);
                 if(dDirectory)
@@ -1905,6 +1905,7 @@ void Host_Stopdemo_f (void)
 void Host_InitCommands (void)
 {
 	Cmd_AddCommand("maps",Host_Maps_f); //johnfitz
+	Cmd_AddCommand("levels",Host_Maps_f);
 	Cmd_AddCommand("game",Host_Game_f); //johnfitz
 	Cmd_AddCommand("mods",Host_Mods_f); //johnfitz
 	Cmd_AddCommand("mapname",Host_Mapname_f); //johnfitz

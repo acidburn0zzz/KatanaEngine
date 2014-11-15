@@ -162,6 +162,9 @@ void CL_ParseStartSoundPacket(void)
 	for (i=0 ; i<3 ; i++)
 		pos[i] = MSG_ReadCoord();
 
+#ifdef _MSC_VER
+#pragma warning(suppress: 6385)
+#endif
 	S_StartSound (ent, channel, cl.sound_precache[sound_num], pos, volume, attenuation);
 }
 

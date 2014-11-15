@@ -115,8 +115,7 @@ void Menu_GetScreenSize(void);
 
 void Menu_Initialize(void)
 {
-//	char	script[1024];
-	int		i;
+	int	i;
 
 	Engine.Con_Printf("Initializing menu...\n");
 

@@ -288,6 +288,9 @@ void Draw_NewGame (void)
 	memset(&scrap_texels,255,sizeof(scrap_texels));
 	memset(&gEffectTexture,0,sizeof(gEffectTexture));
 
+	// First slot is reserved.
+	gEffectTexture[0] = notexture;
+
 	Scrap_Upload (); //creates 2 empty gltextures
 
 	// reload wad pics

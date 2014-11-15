@@ -42,9 +42,6 @@ void R_InitExperimental(void)
 		gShadow	= TexMgr_LoadImage(NULL,cvShadowPath.string,iWidth,iHeight,SRC_RGBA,bShadowData,cvShadowPath.string,0,TEXPREF_ALPHA|TEXPREF_PERSIST);
 	else
 		Con_Warning("Failed to load %s!\n",cvShadowPath.string);
-
-	// First slot is reserved.
-	gEffectTexture[0] = notexture;
 }
 
 void R_RocketTrail(vec3_t start, vec3_t end, int type)

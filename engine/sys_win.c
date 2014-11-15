@@ -122,9 +122,7 @@ int Sys_FileOpenRead (char *path, int *hndl)
 
 	i = findhandle ();
 	if(i == -1)
-	{
 		Sys_Error("Out of handles!");
-	}
 
 	f = fopen(path, "rb");
 	if (!f)
@@ -134,6 +132,9 @@ int Sys_FileOpenRead (char *path, int *hndl)
 	}
 	else
 	{
+#ifdef _MSC_VER	// This is false, since the function above shuts us down, but MSC doesn't understand that.
+#pragma warning(suppress: 6386)
+#endif
 		sys_handles[i] = f;
 		*hndl = i;
 		retval = filelength(f);
@@ -149,16 +150,15 @@ int Sys_FileOpenWrite (char *path)
 
 	i = findhandle();
 	if(i == -1)
-	{
 		Sys_Error("Out of handles!");
-	}
 
 	f = fopen(path, "wb");
 	if (!f)
-	{
 		Sys_Error ("Error opening %s: %s", path,strerror(errno));
-	}
 
+#ifdef _MSC_VER	// This is false, since the function above shuts us down, but MSC doesn't understand that.
+#pragma warning(suppress: 6386)
+#endif
 	sys_handles[i] = f;
 
 	return i;

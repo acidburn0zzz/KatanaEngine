@@ -341,10 +341,11 @@ int LoadFile(char *filename,void **bufferptr)
 
 	buffer = malloc(sFileSize.st_size+1);
 	if(!buffer)
-	{
 		Error("Failed to allocate file buffer! (%s)\n",filename);
-	}
 
+#ifdef _MSC_VER	// This is false, since the function above shuts us down, but MSC doesn't understand that.
+#pragma warning(suppress: 6011)
+#endif
 	((char*)buffer)[sFileSize.st_size] = 0;
 
 	SafeRead(f,buffer,sFileSize.st_size);

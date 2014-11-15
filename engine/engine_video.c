@@ -608,10 +608,7 @@ void Video_AllocateArrays(int iSize)
 	vVideoColourArray	= (vec4_t*)Hunk_AllocName(iSize*sizeof(vec4_t),"video_colourarray");
 
 	if(!vVideoColourArray || !vVideoTextureArray || !vVideoVertexArray)
-	{
 		Sys_Error("Failed to allocate video arrays!\n");
-		return;
-	}
 
 	// Keep this up to date.
 	uiVideoArraySize = iSize;
@@ -689,9 +686,13 @@ void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,u
 	// Vertices count is too high for this object, bump up array sizes to manage it.
 	if(uiVerts > uiVideoArraySize)
 	{
-		free(vVideoVertexArray);
-		free(vVideoColourArray);
-		free(vVideoTextureArray);
+		// Check that each of these have been initialized before freeing them.
+		if(vVideoVertexArray)
+			free(vVideoVertexArray);
+		if(vVideoColourArray)
+			free(vVideoColourArray);
+		if(vVideoTextureArray)
+			free(vVideoTextureArray);
 
 		// Double the array size to cope.
 		Video_AllocateArrays(uiVerts*2);

@@ -245,11 +245,12 @@ void R_DrawSequentialPoly(msurface_t *s)
 
 void Brush_Draw(entity_t *e)
 {
-	int			k,i;
-	msurface_t	*psurf;
-	float		dot;
-	mplane_t	*pplane;
-	model_t		*clmodel;
+	int				k;
+	unsigned int	i;
+	msurface_t		*psurf;
+	float			dot;
+	mplane_t		*pplane;
+	model_t			*clmodel;
 
 	if(R_CullModelForEntity(e) || !cvVideoDrawBrushes.bValue)
 		return;
@@ -352,12 +353,12 @@ void Brush_Draw(entity_t *e)
 
 void R_DrawBrushModel_ShowTris (entity_t *e)
 {
-	int			i;
-	msurface_t	*psurf;
-	float		dot;
-	mplane_t	*pplane;
-	model_t		*clmodel;
-	glpoly_t	*p;
+	unsigned int	i;
+	msurface_t		*psurf;
+	float			dot;
+	mplane_t		*pplane;
+	model_t			*clmodel;
+	glpoly_t		*p;
 
 	if (R_CullModelForEntity(e))
 		return;
@@ -759,10 +760,10 @@ void R_UploadLightmap(int lmap)
 
 void R_RebuildAllLightmaps (void)
 {
-	int			i, j;
-	model_t		*mod;
-	msurface_t	*fa;
-	byte		*base;
+	unsigned int	i, j;
+	model_t			*mod;
+	msurface_t		*fa;
+	byte			*base;
 
 	if(!cl.worldmodel) // is this the correct test?
 		return;

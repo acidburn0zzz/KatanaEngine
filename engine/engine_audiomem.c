@@ -84,7 +84,7 @@ void ResampleSfx (sfx_t *sfx, int inrate, int inwidth, byte *data)
 
 sfxcache_t *S_LoadSound (sfx_t *s)
 {
-    char		namebuffer[256];
+    char		namebuffer[512];
 	byte		*data;
 	wavinfo_t	info;
 	int			len;
@@ -138,10 +138,10 @@ WAV loading
 ===============================================================================
 */
 
-byte	*data_p;
-byte 	*iff_end;
-byte 	*last_chunk;
-byte 	*iff_data;
+byte	*data_p,
+		*iff_end,
+		*last_chunk,
+		*iff_data;
 int 	iff_chunk_len;
 
 short GetLittleShort(void)

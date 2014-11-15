@@ -62,7 +62,7 @@ AudioSound_t *Audio_LoadSound(sfx_t *sSoundEffect)
 //	if(sSoundCache)
 //		return sSoundCache;
 
-	sprintf(cNameBuffer,"%s/",Global.cSoundPath);
+	sprintf(cNameBuffer,"%s",Global.cSoundPath);
 	strncat(cNameBuffer,sSoundEffect->name,sizeof(sSoundEffect->name));
 
 	bData = COM_LoadStackFile(cNameBuffer,bStackBuffer,sizeof(bStackBuffer));

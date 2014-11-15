@@ -64,11 +64,6 @@ void GL_Overbright_f(void)
 	R_RebuildAllLightmaps ();
 }
 
-void GL_Fullbrights_f (void)
-{
-	TexMgr_ReloadNobrightImages ();
-}
-
 void R_Novis_f (void)
 {
 	extern bool bVisibilityChanged;
@@ -182,7 +177,7 @@ void R_Init (void)
 	Cvar_RegisterVariable (&r_showtris, NULL);
 	Cvar_RegisterVariable (&r_showbboxes, NULL);
 	Cvar_RegisterVariable (&gl_farclip, NULL);
-	Cvar_RegisterVariable (&gl_fullbrights, GL_Fullbrights_f);
+	Cvar_RegisterVariable (&gl_fullbrights, NULL);
 	Cvar_RegisterVariable (&gl_overbright, GL_Overbright_f);
 	Cvar_RegisterVariable (&r_lerpmodels, NULL);
 	Cvar_RegisterVariable (&r_lerpmove, NULL);

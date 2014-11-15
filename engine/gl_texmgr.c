@@ -304,7 +304,7 @@ void TexMgr_FreeTexture (gltexture_t *kill)
 
 	if (kill == NULL)
 	{
-		Con_Printf ("TexMgr_FreeTexture: NULL texture\n");
+		Con_Warning("Attempted to free NULL texture!\n");
 		return;
 	}
 
@@ -953,8 +953,9 @@ gltexture_t *TexMgr_LoadImage(model_t *owner,char *name,int width,int height,enu
 			Console_ErrorMessage(true,source_file,va("Unknown source format (%i).",format));
 	}
 
-	// I originally wrote my own solution to this, but there's something odd occuring here, so I just borrowed Bakers workaround for now... ~hogsy
-	// (I hate assignments in conditions, just fyi)
+	/*	I originally wrote my own solution to this, but there's something odd occuring here, so I just borrowed Bakers workaround for now... ~hogsy
+		(I hate assignments in conditions, just fyi)
+	*/
 	if((flags & TEXPREF_OVERWRITE) && (glt = TexMgr_FindTexture(owner,name)))
 	{
 		if (glt->source_crc == crc)
@@ -1117,18 +1118,4 @@ void TexMgr_ReloadImages (void)
 		glGenTextures(1, &glt->texnum);
 		TexMgr_ReloadImage (glt, -1, -1);
 	}
-}
-
-/*
-================
-TexMgr_ReloadNobrightImages -- reloads all texture that were loaded with the nobright palette.  called when gl_fullbrights changes
-================
-*/
-void TexMgr_ReloadNobrightImages (void)
-{
-	gltexture_t *glt;
-
-	for (glt=active_gltextures; glt; glt=glt->next)
-		if (glt->flags & TEXPREF_NOBRIGHT)
-			TexMgr_ReloadImage(glt, -1, -1);
 }

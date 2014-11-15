@@ -505,6 +505,9 @@ char *ED_ParseEdict(char *data, edict_t *ent)
 		strncpy(keyname,com_token,sizeof(keyname)-1);
 
 		// Hack to fix keynames with trailing spaces
+#ifdef _MSC_VER
+#pragma warning(suppress: 6053)	// This is intended.
+#endif
 		n = strlen(keyname);
 		if(n > 0)
 			while(n && keyname[n-1] == ' ')

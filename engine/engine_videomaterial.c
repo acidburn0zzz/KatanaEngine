@@ -88,9 +88,13 @@ void Material_Initialize(void)
 	// Add dummy material.
 	mDummy = Material_Allocate();
 	if(!mDummy)
-		Sys_Error("Failed to allocated dummy material!\n");
+		Sys_Error("Failed to create dummy material!\n");
 
+#ifdef _MSC_VER // This is false, since the function above shuts us down, but MSC doesn't understand that.
+#pragma warning(suppress: 6011)
+#endif
 	mDummy->cName							= "dummy";
+	mDummy->cPath							= "";
 	mDummy->iSkins							= 1;
 	mDummy->iType							= MATERIAL_TYPE_NONE;
 	mDummy->msSkin[0].gDiffuseTexture		= notexture;
@@ -102,9 +106,9 @@ void Material_Initialize(void)
 
 MaterialSkin_t *Material_GetSkin(Material_t *mMaterial,int iSkin)
 {
-	if(iSkin <= 0)
+	if(iSkin <= 0 || iSkin > MODEL_MAX_TEXTURES)
 	{
-		Con_Warning("Invalid skin identification, should be 1 or more! (%i)\n",iSkin);
+		Con_Warning("Invalid skin identification, should be greater than 0 and less than %i! (%i)\n",MODEL_MAX_TEXTURES,iSkin);
 		return NULL;
 	}
 	else if(!mMaterial)
@@ -132,7 +136,8 @@ Material_t *Material_Get(int iMaterialID)
 {
 	int i;
 
-	if(iMaterialID < 0)
+	// The identification would never be less than 0, and never more than our maximum.
+	if(iMaterialID < 0 || iMaterialID > MATERIALS_MAX_ALLOCATED)
 	{
 		Con_Warning("Invalid material id! (%i)\n",iMaterialID);
 		return NULL;
@@ -150,7 +155,7 @@ Material_t *Material_Get(int iMaterialID)
 */
 Material_t *Material_GetByName(const char *ccMaterialName)
 {
-	int i;
+	Material_t	*mMaterial;
 
 	if(ccMaterialName[0] == ' ')
 	{
@@ -158,28 +163,50 @@ Material_t *Material_GetByName(const char *ccMaterialName)
 		return NULL;
 	}
 
-	for(i = 0; i < MATERIALS_MAX_ALLOCATED; i++)
+	for(mMaterial = mMaterials; mMaterial; mMaterial++)
 	{
-		// Check the material is valid first!
-		if(&mMaterials[i])
-		{
-			// This is rather messy, but let us find a material based on path name too.
-			if(!strncmp(mMaterials[i].cName,ccMaterialName,sizeof(mMaterials[i].cName)) || !strncmp(mMaterials[i].cPath,ccMaterialName,sizeof(mMaterials[i].cPath)))
-				return &mMaterials[i];
-		}
-		// Probably reached the end of viable materials, move on...
-		else
-			break;
+		// If the material has no name, then it's not valid.
+		if(mMaterial->cName[0] != ' ')
+			if(!strncmp(mMaterial->cName,ccMaterialName,sizeof(mMaterial->cName)))
+				return mMaterial;
 	}
 
 	return NULL;
 }
+
+Material_t *Material_GetByPath(const char *ccPath)
+{
+	Material_t	*mMaterial;
+
+	if(ccPath[0] == ' ')
+	{
+		Con_Warning("Attempted to find material, but recieved invalid path!\n");
+		return NULL;
+	}
+
+	for(mMaterial = mMaterials; mMaterial; mMaterial++)
+	{
+		if(mMaterial->cPath[0] != ' ')
+			if(!strncmp(mMaterial->cPath,ccPath,sizeof(mMaterial->cPath)))
+				return mMaterial;
+	}
+
+	return NULL;
+}
+
+extern cvar_t gl_fullbrights;
 
 /*	Routine for applying each of our materials.
 */
 void Material_Draw(Material_t *mMaterial,int iSkin)
 {
 	MaterialSkin_t	*msCurrentSkin;
+
+	if(!mMaterial)
+	{
+		Con_Warning("Invalid material, either not found or wasn't cached!\n");
+		return;
+	}
 
 	// If we're drawing flat, then don't apply textures.
 	if(r_drawflat_cheatsafe)
@@ -207,8 +234,13 @@ void Material_Draw(Material_t *mMaterial,int iSkin)
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 	}
 	// Can't have both sphere and fullbright, it's one or the other.
-	else if(msCurrentSkin->gFullbrightTexture)
+	else if(msCurrentSkin->gFullbrightTexture && gl_fullbrights.bValue)
 	{
+		Video_EnableMultitexture();
+        Video_EnableCapabilities(VIDEO_BLEND);
+		Video_SetTexture(msCurrentSkin->gFullbrightTexture);
+
+		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
 	}
 }
 
@@ -286,6 +318,10 @@ void _Material_SetSphereTexture(Material_t *mCurrentMaterial,char *cArg)
 		Con_Warning("Failed to load texture %s!\n",cArg);
 }
 
+void _Material_SetFlags(Material_t *mCurrentMaterial,char *cArg)
+{
+}
+
 typedef struct
 {
 	char	*cKey;
@@ -299,6 +335,7 @@ MaterialKey_t	mkMaterialFunctions[]=
 	{	"diffuse",		_Material_SetDiffuseTexture		},	// Sets the diffuse texture.
 	{	"sphere",		_Material_SetSphereTexture		},	// Sets the spheremap texture.
 	{	"fullbright",	_Material_SetFullbrightTexture	},	// Sets the fullbright texture.
+	{	"SetFlags",		_Material_SetFlags				},	// Sets seperate flags for the material; e.g. persist etc.
 
 	{	0	}
 };
@@ -322,7 +359,7 @@ Material_t *Material_Load(const char *ccPath)
 	sprintf(cPath,"%s%s.material",Global.cMaterialPath,ccPath);
 
 	// Check if it's been cached already...
-	mNewMaterial = Material_GetByName(cPath);
+	mNewMaterial = Material_GetByPath(cPath);
 	if(mNewMaterial)
 		return mNewMaterial;
 

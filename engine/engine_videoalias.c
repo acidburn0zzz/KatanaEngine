@@ -417,7 +417,6 @@ void R_RotateForEntity(vec3_t origin,vec3_t angles);
 void Alias_Draw(entity_t *eEntity)
 {
 	lerpdata_t	lLerpData;
-	Material_t	*mMaterial;
 	MD2_t		*mModel;
 
 	// [17/10/2013] Oops! Added this back in :) ~hogsy
@@ -436,8 +435,6 @@ void Alias_Draw(entity_t *eEntity)
 	Alias_SetupFrame(mModel,&lLerpData);
 	Alias_SetupEntityTransform(&lLerpData);
 
-	mMaterial = Material_Get(eEntity->model->iAssignedMaterial);
-
 	glPushMatrix();
 
 	if(r_drawflat_cheatsafe)
@@ -448,46 +445,14 @@ void Alias_Draw(entity_t *eEntity)
 
     Video_ResetCapabilities(false);
 
-#if 0
-	if(!r_drawflat_cheatsafe)
-	{
-		Video_SetTexture(mMaterial->msSkin[eEntity->skinnum].gDiffuseTexture);
+	// Simulate overbright...
+	glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE);
+	glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB,GL_MODULATE);
+	glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB,GL_TEXTURE);
+	glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB,GL_PRIMARY_COLOR);
+	glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE,4);
 
-#if 0
-		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE);
-		glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB,GL_MODULATE);
-		glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB,GL_TEXTURE);
-		glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB,GL_PRIMARY_COLOR);
-		glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE,4);
-#endif
-
-		// [20/8/2013] Set us up for sphere mapping! ~hogsy
-		if(mMaterial->msSkin[eEntity->skinnum].gSphereTexture)
-		{
-			Video_EnableMultitexture();
-
-			Video_GenerateSphereCoordinates();
-
-			Video_SetTexture(mMaterial->msSkin[eEntity->skinnum].gSphereTexture);
-			Video_EnableCapabilities(VIDEO_BLEND|VIDEO_TEXTURE_GEN_S|VIDEO_TEXTURE_GEN_T);
-
-			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-		}
-		// [20/8/2013] Or fullbright! ~hogsy
-		else if(mMaterial->msSkin[eEntity->skinnum].gFullbrightTexture)
-		{
-			Video_EnableMultitexture();
-            Video_EnableCapabilities(VIDEO_BLEND);
-			Video_SetTexture(mMaterial->msSkin[eEntity->skinnum].gFullbrightTexture);
-
-			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
-		}
-	}
-	else if(r_drawflat_cheatsafe)
-		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
-#else
-	Material_Draw(mMaterial,eEntity->skinnum);
-#endif
+	Material_Draw(Material_Get(eEntity->model->iAssignedMaterial),eEntity->skinnum);
 
 	Alias_DrawModelFrame(mModel,lLerpData);
 
@@ -502,30 +467,4 @@ void Alias_Draw(entity_t *eEntity)
 	glPopMatrix();
 
     Video_ResetCapabilities(true);
-}
-
-void R_DrawAliasModel_ShowTris(entity_t *e)
-{
-	MD2_t		*mModel;
-	lerpdata_t	lerpdata;
-
-	if(R_CullModelForEntity(e))
-		return;
-
-	mModel = (MD2_t*)Mod_Extradata(e->model);
-
-	Alias_SetupFrame(mModel,&lerpdata);
-	Alias_SetupEntityTransform(&lerpdata);
-
-	glPushMatrix();
-
-	R_RotateForEntity(e->origin,e->angles);
-
-	bShading = false;
-
-	glColor3f(1.0f,1.0f,1.0f);
-
-	Alias_DrawModelFrame(mModel,lerpdata);
-
-	glPopMatrix();
 }

@@ -38,5 +38,6 @@ void	Material_Draw(Material_t *mMaterial,int iSkin);
 
 Material_t *Material_Load(const char *ccPath);
 Material_t *Material_Get(int iMaterialID);
+Material_t *Material_GetByPath(const char *ccPath);
 
 #endif // __ENGINEMATERIAL__
