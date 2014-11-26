@@ -5,7 +5,7 @@
 
 /*
 	gWindow
-	Window Manager
+	Window/Display management.
 */
 
 #include "platform_system.h"
@@ -22,6 +22,39 @@ bool	bShowingCursor	    = true,		// Are we showing the cursor?
 
 int	iActive = 0,	// Number of current active windows.
 	iScreen;		// Default screen.
+
+/*	
+	Display Information
+*/
+
+int	pWindow_GetScreenWidth(void)
+{
+#ifdef _WIN32
+	return 0;
+#else
+	return 0;
+#endif
+}
+
+int pWindow_GetScreenHeight(void)
+{
+#ifdef _WIN32
+	return 0;
+#else
+	return 0;
+#endif
+}
+
+int pWindow_GetMonitorCount(void)
+{
+#ifdef _WIN32
+	return GetSystemMetrics(SM_CMONITORS);
+#else
+	return XScreenCount(dMainDisplay);
+#endif
+}
+
+/**/
 
 GIPLWindow_t *gWindow_Allocate(void)
 {

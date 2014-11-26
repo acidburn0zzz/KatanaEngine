@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2014 OldTimes Software
+	Copyright (C) 2011-2015 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@
 
 #include "engine_console.h"
 #include "engine_script.h"
-#include "engine_material.h"
+#include "engine_videomaterial.h"
 
 model_t	*loadmodel;
 char	loadname[32];	// for hunk tags
@@ -1389,6 +1389,7 @@ void Model_LoadTextures(model_t *mModel)
 
 	COM_StripExtension(mModel->name,cOutName);
 
+#if 0
 	mAssignedMaterial = Material_Load((char*)cOutName);
 	if(!mAssignedMaterial)
 	{
@@ -1398,6 +1399,7 @@ void Model_LoadTextures(model_t *mModel)
 	}
 	else
 		mModel->iAssignedMaterial = mAssignedMaterial->iIdentification;
+#endif
 }
 
 /*	Calculate bounds of alias model for nonrotated, yawrotated, and fullrotated cases

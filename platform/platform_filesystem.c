@@ -138,9 +138,10 @@ void pFileSystem_GetWorkingDirectory(char *cOut)
     pERROR_UPDATE;
 
 #ifdef _WIN32
-    _getcwd(cOut,256);
+    if(!_getcwd(cOut,256))
 #else   // Linux
     if(!getcwd(cOut,256))
+#endif
     {
         // [3/3/2014] Simple error handling. ~hogsy
         switch(errno)
@@ -153,7 +154,6 @@ void pFileSystem_GetWorkingDirectory(char *cOut)
         }
         return;
     }
-#endif
 
     strcat(cOut,"\\");
 }

@@ -654,7 +654,7 @@
     <ClCompile Include="engine_serverworld.c" />
     <ClCompile Include="engine_videodraw.c" />
     <ClCompile Include="engine_videofog.c" />
-    <ClCompile Include="gl_model.c" />
+    <ClCompile Include="engine_model.c" />
     <ClCompile Include="engine_videorefrag.c" />
     <ClCompile Include="engine_videormain.c" />
     <ClCompile Include="engine_videomisc.c" />
@@ -662,7 +662,7 @@
     <ClCompile Include="gl_texmgr.c" />
     <ClCompile Include="gl_vidnt.c" />
     <ClCompile Include="engine_videowarp.c" />
-    <ClCompile Include="host.c" />
+    <ClCompile Include="engine_host.c" />
     <ClCompile Include="host_cmd.c" />
     <ClCompile Include="image.c" />
     <ClCompile Include="engine_videoshadow.c" />
@@ -712,6 +712,7 @@
     <ClInclude Include="engine_console.h" />
     <ClInclude Include="engine_edict.h" />
     <ClInclude Include="engine_editor.h" />
+    <ClInclude Include="engine_videomaterial.h" />
     <ClInclude Include="engine_modgame.h" />
     <ClInclude Include="engine_clientinput.h" />
     <ClInclude Include="engine_loader.h" />
@@ -722,7 +723,7 @@
     <ClInclude Include="engine_server.h" />
     <ClInclude Include="engine_video.h" />
     <ClInclude Include="glquake.h" />
-    <ClInclude Include="gl_model.h" />
+    <ClInclude Include="engine_model.h" />
     <ClInclude Include="gl_texmgr.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="KatAlias.h" />

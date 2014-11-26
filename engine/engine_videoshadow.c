@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "engine_videoshadow.h"	// [7/8/2013] TODO: Change to engine_video ~hogsy
 

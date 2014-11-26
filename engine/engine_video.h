@@ -1,4 +1,4 @@
-/*  Copyright (C) 2011-2014 OldTimes Software
+/*  Copyright (C) 2011-2015 OldTimes Software
 */
 #ifndef __ENGINEVIDEO__
 #define __ENGINEVIDEO__
@@ -23,7 +23,7 @@ typedef struct
                     uiActiveUnit,
                     uiSecondaryUnit;					// Current/last secondary texture.
 
-	int				iSamples,	// Current number of samples set for AA.
+	int				iSamples,		// Current number of samples set for AA.
 					iBuffers;
 
 	unsigned	int	iWidth,

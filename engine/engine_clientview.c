@@ -14,7 +14,6 @@
 #include "shared_math.h"
 
 cvar_t	scr_ofsx			= { "scr_ofsx",			"0",		false	};
-// [10/11/2013] For development purposes, default offset for y is -5 ~hogsy
 cvar_t	scr_ofsy			= { "scr_ofsy",			"0",		false	};
 cvar_t	scr_ofsz			= { "scr_ofsz",			"0",		false	};
 cvar_t	cl_rollspeed		= { "cl_rollspeed",		"200"				};
@@ -35,10 +34,10 @@ cvar_t	v_iroll_cycle		= { "v_iroll_cycle",	"0.5",		false	};
 cvar_t	v_ipitch_cycle		= { "v_ipitch_cycle",	"1",		false	};
 cvar_t	v_iyaw_level		= { "v_iyaw_level",		"0.3",		false	};
 cvar_t	v_iroll_level		= { "v_iroll_level",	"0.1",		false	};
-cvar_t	v_ipitch_level		= { "v_ipitch_level",	"0.3",		false	};
+cvar_t	v_ipitch_level		= { "v_ipitch_level",		"0.3",		false	};
 cvar_t	v_idlescale			= { "v_idlescale",			"0",	false	},
-		cViewModelPosition	= {	"view_modelposition",	"1",	true,	false,	"0 = Center, 1 = Left and 2 = Right."	};
-cvar_t	gl_cshiftpercent	= {	"gl_cshiftpercent",	"100",		false	};
+		cViewModelPosition	= {	"view_modelposition",	"2",	true,	false,	"0 = Center, 1 = Left and 2 = Right."	};
+cvar_t	gl_cshiftpercent	= {	"gl_cshiftpercent",		"100",		false	};
 
 float	v_dmg_time, v_dmg_roll, v_dmg_pitch;
 

@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "quakedef.h"
 
@@ -10,7 +10,6 @@
 
 	TODO:
 		- Get our desktop width and height, set initial settings to that.
-		- Get the maximum supported hardware samples.
 		- Move all/most API-specific code here.
 */
 
@@ -28,26 +27,27 @@
 SDL_Window		*sMainWindow;
 SDL_GLContext	sMainContext;
 
-#define VIDEO_MIN_WIDTH		640
-#define VIDEO_MIN_HEIGHT	480
-#define VIDEO_MAX_SAMPLES	16
-#define VIDEO_MIN_SAMPLES	0
-
 static unsigned int	iSavedCapabilites[VIDEO_MAX_UNITS+1][2];
 
 #define VIDEO_STATE_ENABLE   0
 #define VIDEO_STATE_DISABLE  1
 
-cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",	"0",			true,   false,  "Changes the number of samples."	                },
-		cvMultisampleBuffers	= {	"video_multisamplebuffers",	"1",			true,   false,  "Changes the number of buffers."                    },
-		cvFullscreen			= {	"video_fullscreen",			"0",			true,   false,  "1: Fullscreen, 0: Windowed"	                    },
-		cvWidth					= {	"video_width",				"640",			true,   false,  "Sets the width of the window."	                    },
-		cvHeight				= {	"video_height",				"480",			true,   false,  "Sets the height of the window."	                },
-		cvVerticalSync			= {	"video_verticalsync",		"0",			true	                                                            },
-		cvVideoDraw				= {	"video_draw",				"1",			false,	false,	"If disabled, nothing is drawn."					},
-		cvVideoDrawModels		= {	"video_drawmodels",			"1",			false,  false,  "Toggles models."                                   },
-		cvVideoDrawDepth		= {	"video_drawdepth",			"0",			false,	false,	"If enabled, previews the debth buffer."			},
-		cvVideoDebugLog			= {	"video_debuglog",			"log_video",	true,	false,	"The name of the output log for video debugging."	};
+cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",		"0",			true,   false,  "Changes the number of samples."	                },
+		cvMultisampleMaxSamples = { "video_multisamplemaxsamples",	"16",			true,	false,	"Sets the maximum number of allowed samples."		},
+		cvMultisampleBuffers	= {	"video_multisamplebuffers",		"1",			true,   false,  "Changes the number of buffers."                    },
+		cvFullscreen			= {	"video_fullscreen",				"0",			true,   false,  "1: Fullscreen, 0: Windowed"	                    },
+		cvWidth					= {	"video_width",					"640",			true,   false,  "Sets the width of the window."	                    },
+		cvHeight				= {	"video_height",					"480",			true,   false,  "Sets the height of the window."	                },
+		cvVerticalSync			= {	"video_verticalsync",			"0",			true	                                                            },
+		cvVideoDraw				= {	"video_draw",					"1",			false,	false,	"If disabled, nothing is drawn."					},
+		cvVideoDrawModels		= {	"video_drawmodels",				"1",			false,  false,  "Toggles models."                                   },
+		cvVideoDrawDepth		= {	"video_drawdepth",				"0",			false,	false,	"If enabled, previews the debth buffer."			},
+		cvVideoDebugLog			= {	"video_debuglog",				"log_video",	true,	false,	"The name of the output log for video debugging."	};
+
+#define VIDEO_MIN_WIDTH		640
+#define VIDEO_MIN_HEIGHT	480
+#define VIDEO_MAX_SAMPLES	cvMultisampleMaxSamples.iValue
+#define VIDEO_MIN_SAMPLES	0
 
 gltexture_t	*gDepthTexture;
 
@@ -600,6 +600,14 @@ void Video_AllocateArrays(int iSize)
 {
 	int i;
 
+	// Check that each of these have been initialized before freeing them.
+	if (vVideoVertexArray)
+		free(vVideoVertexArray);
+	if (vVideoColourArray)
+		free(vVideoColourArray);
+	if (vVideoTextureArray)
+		free(vVideoTextureArray);
+
 	vVideoTextureArray	= (vec2_t**)Hunk_AllocName(iSize*sizeof(vec3_t),"video_texturearray");
 	for(i = 0; i < iSize; i++)
 		vVideoTextureArray[i] = (vec2_t*)Hunk_Alloc((VIDEO_MAX_UNITS+1)*sizeof(vec2_t));
@@ -685,18 +693,8 @@ void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,u
 
 	// Vertices count is too high for this object, bump up array sizes to manage it.
 	if(uiVerts > uiVideoArraySize)
-	{
-		// Check that each of these have been initialized before freeing them.
-		if(vVideoVertexArray)
-			free(vVideoVertexArray);
-		if(vVideoColourArray)
-			free(vVideoColourArray);
-		if(vVideoTextureArray)
-			free(vVideoTextureArray);
-
 		// Double the array size to cope.
 		Video_AllocateArrays(uiVerts*2);
-	}
 
 	for(i = 0; i < uiVerts; i++)
 	{

@@ -7,9 +7,6 @@
     <Filter Include="Console">
       <UniqueIdentifier>{dcf4305a-6ad4-4a1d-8c03-7d16abc3355f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Server">
-      <UniqueIdentifier>{c6c573d9-03fe-45e0-9029-90769b73ea14}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Legacy">
       <UniqueIdentifier>{e00778df-b576-4da4-ada2-0e2b7435e56d}</UniqueIdentifier>
     </Filter>
@@ -36,9 +33,6 @@
       <Filter>Legacy</Filter>
     </ClCompile>
     <ClCompile Include="menu.c">
-      <Filter>Legacy</Filter>
-    </ClCompile>
-    <ClCompile Include="host.c">
       <Filter>Legacy</Filter>
     </ClCompile>
     <ClCompile Include="sys_win.c">
@@ -68,13 +62,7 @@
     <ClCompile Include="gl_texmgr.c">
       <Filter>Video</Filter>
     </ClCompile>
-    <ClCompile Include="gl_model.c">
-      <Filter>Video</Filter>
-    </ClCompile>
     <ClCompile Include="engine_script.c" />
-    <ClCompile Include="engine_physics.c">
-      <Filter>Server</Filter>
-    </ClCompile>
     <ClCompile Include="engine_editor.c" />
     <ClCompile Include="engine_netwinsock.c" />
     <ClCompile Include="engine_netwin.c" />
@@ -138,6 +126,9 @@
     <ClCompile Include="engine_serverworld.c" />
     <ClCompile Include="engine_serveruser.c" />
     <ClCompile Include="engine_servermain.c" />
+    <ClCompile Include="engine_model.c" />
+    <ClCompile Include="engine_physics.c" />
+    <ClCompile Include="engine_host.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\shared_client.h">
@@ -243,17 +234,8 @@
     <ClInclude Include="cmdlib.h">
       <Filter>Console</Filter>
     </ClInclude>
-    <ClInclude Include="gl_model.h">
-      <Filter>Video</Filter>
-    </ClInclude>
     <ClInclude Include="gl_texmgr.h">
       <Filter>Video</Filter>
-    </ClInclude>
-    <ClInclude Include="engine_physics.h">
-      <Filter>Server</Filter>
-    </ClInclude>
-    <ClInclude Include="engine_edict.h">
-      <Filter>Server</Filter>
     </ClInclude>
     <ClInclude Include="cmd.h">
       <Filter>Console</Filter>
@@ -293,6 +275,10 @@
     <ClInclude Include="conproc.h">
       <Filter>Legacy</Filter>
     </ClInclude>
+    <ClInclude Include="engine_videomaterial.h" />
+    <ClInclude Include="engine_model.h" />
+    <ClInclude Include="engine_physics.h" />
+    <ClInclude Include="engine_edict.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="engine.rc">

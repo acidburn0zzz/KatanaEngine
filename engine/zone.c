@@ -270,12 +270,7 @@ int		hunk_tempmark;
 
 void R_FreeTextures (void);
 
-/*
-==============
-Hunk_Check
-
-Run consistancy and sentinal trahing checks
-==============
+/*	Run consistancy and sentinal trahing checks
 */
 void Hunk_Check (void)
 {

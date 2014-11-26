@@ -122,6 +122,9 @@ extern	void	pError_Reset(void);								// Resets the error message to "null", so
 extern	void	pError_Set(const char *ccMessage,...);			// Sets the error message, so we can grab it outside the library.
 extern	void	pError_SetFunction(const char *ccFunction,...);	// Sets the currently active function, for error reporting.
 
+extern char *pError_SystemGet(void);							// Returns the error message currently given by the operating system.
+extern void pError_SystemReset(void);
+
 extern char	*pError_Get(void);									// Returns the last recorded error.
 
 #ifdef __cplusplus

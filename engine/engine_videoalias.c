@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "KatAlias.h"
 
@@ -8,7 +8,7 @@
 
 #include "engine_videoshadow.h"
 #include "engine_video.h"
-#include "engine_material.h"
+#include "engine_videomaterial.h"
 
 extern cvar_t r_drawflat, gl_fullbrights, r_lerpmodels, r_lerpmove; //johnfitz
 
@@ -218,17 +218,18 @@ void R_SetupModelLighting(vec3_t vOrigin)
 	if(!bShading)
 		return;
 
+	Math_MVToVector(Light_GetSample(vOrigin), vLightColour);
+
+	// Check to see if we can grab the light source, for directional information.
 	dlLightSource = Light_GetDynamic(vOrigin);
-	if(!dlLightSource)
-	{
-		Math_MVToVector(Light_GetSample(vOrigin),vLightColour);
-		Math_VectorCopy(vOrigin,vLightOrigin);
-	}
-	else
+	if(dlLightSource)
 	{
 		Math_VectorCopy(dlLightSource->color,vLightColour);
 		Math_VectorCopy(dlLightSource->origin,vLightOrigin);
 	}
+	else
+		// Default light origin to our current origin.
+		Math_VectorCopy(vOrigin, vLightOrigin);
 
 	// Minimum light value on players (8)
 	if(currententity > cl_entities && currententity <= cl_entities + cl.maxclients)

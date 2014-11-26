@@ -1,8 +1,8 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "quakedef.h"
 
-#include "engine_material.h"
+#include "engine_videomaterial.h"
 
 #include "engine_script.h"
 #include "engine_video.h"
@@ -13,43 +13,30 @@ bool	bInitialized = false;
 
 int	iMaterialCount;
 
-typedef enum
-{
-	MATERIAL_TYPE_NONE,
-	MATERIAL_TYPE_METAL,
-	MATERIAL_TYPE_GLASS,
-	MATERIAL_TYPE_CONCRETE,
-	MATERIAL_TYPE_GRASS,
-	MATERIAL_TYPE_WOOD,
-	MATERIAL_TYPE_WATER,
-	MATERIAL_TYPE_DIRT,
-	MATERIAL_TYPE_RUBBER,
-
-#if 0
-	MATERIAL_TYPE_CARPET,
-	MATERIAL_TYPE_SNOW,
-
-#endif // 0
-};
-
 MaterialType_t	MaterialTypes[]=
 {
-	{	MATERIAL_TYPE_NONE,		"default"	},
-	{	MATERIAL_TYPE_METAL,	"metal"		},
-	{	MATERIAL_TYPE_GLASS,	"glass"		},
-	{	MATERIAL_TYPE_CONCRETE,	"concrete"	},
-	{	MATERIAL_TYPE_WOOD,		"wood"		},
-	{	MATERIAL_TYPE_DIRT,		"dirt"		},
-	{	MATERIAL_TYPE_RUBBER,	"rubber"	},
-	{	MATERIAL_TYPE_WATER,	"water"		}
+	{ MATERIAL_TYPE_NONE, "default" },
+	{ MATERIAL_TYPE_METAL, "metal" },
+	{ MATERIAL_TYPE_GLASS, "glass" },
+	{ MATERIAL_TYPE_CONCRETE, "concrete" },
+	{ MATERIAL_TYPE_WOOD, "wood" },
+	{ MATERIAL_TYPE_DIRT, "dirt" },
+	{ MATERIAL_TYPE_RUBBER, "rubber" },
+	{ MATERIAL_TYPE_WATER, "water" },
+	{ MATERIAL_TYPE_FLESH, "flesh" },
+	{ MATERIAL_TYPE_MUD, "mud" }
 };
 
 Material_t	*mMaterials;	// Global array.
+
+cvar_t	cvMaterialDraw = { "material_draw", "1", false, false, "Enables and disables the drawing of materials." };
 
 Material_t *Material_Allocate(void)
 {
 	int			i;
 	Material_t	*mAllocated;
+
+	Cvar_RegisterVariable(&cvMaterialDraw, NULL);
 
 	// TODO: Do stuff...
 	for(i = 0; i < MATERIALS_MAX_ALLOCATED; i++)
@@ -81,49 +68,73 @@ void Material_Initialize(void)
 
 	Con_Printf("Initializing material system...\n");
 
+#if 0
 	mMaterials = Hunk_AllocName(MATERIALS_MAX_ALLOCATED*sizeof(Material_t),"materials");
 
+	// Must be set to initialized before anything else.
 	bInitialized = true;
 
-	// Add dummy material.
-	mDummy = Material_Allocate();
-	if(!mDummy)
-		Sys_Error("Failed to create dummy material!\n");
+	{
+		// Add dummy material.
+		mDummy = Material_Allocate();
+		if (!mDummy)
+			Sys_Error("Failed to create dummy material!\n");
 
 #ifdef _MSC_VER // This is false, since the function above shuts us down, but MSC doesn't understand that.
 #pragma warning(suppress: 6011)
 #endif
-	mDummy->cName							= "dummy";
-	mDummy->cPath							= "";
-	mDummy->iSkins							= 1;
-	mDummy->iType							= MATERIAL_TYPE_NONE;
-	mDummy->msSkin[0].gDiffuseTexture		= notexture;
-	mDummy->msSkin[0].gFullbrightTexture	= NULL;
-	mDummy->msSkin[0].gSphereTexture		= NULL;
-	mDummy->msSkin[0].iTextureHeight		= notexture->height;
-	mDummy->msSkin[0].iTextureWidth			= notexture->width;
+		mDummy->cName							= "dummy";
+		mDummy->cPath							= "";
+		mDummy->iSkins							= 1;
+		mDummy->iType							= MATERIAL_TYPE_NONE;
+		mDummy->msSkin[0].gDiffuseTexture		= notexture;
+		mDummy->msSkin[0].gFullbrightTexture	= NULL;
+		mDummy->msSkin[0].gSphereTexture		= NULL;
+		mDummy->msSkin[0].iTextureHeight		= notexture->height;
+		mDummy->msSkin[0].iTextureWidth			= notexture->width;
+	}
+#endif
 }
 
 MaterialSkin_t *Material_GetSkin(Material_t *mMaterial,int iSkin)
 {
+	// Don't let us spam the console; silly but whatever.
+	static	int	iPasses = 0;
+
 	if(iSkin <= 0 || iSkin > MODEL_MAX_TEXTURES)
 	{
-		Con_Warning("Invalid skin identification, should be greater than 0 and less than %i! (%i)\n",MODEL_MAX_TEXTURES,iSkin);
+		if (iPasses < 50)
+		{
+			Con_Warning("Invalid skin identification, should be greater than 0 and less than %i! (%i)\n", MODEL_MAX_TEXTURES, iSkin);
+			iPasses++;
+		}
 		return NULL;
 	}
 	else if(!mMaterial)
 	{
-		Con_Warning("Invalid material!\n");
+		if (iPasses < 50)
+		{
+			Con_Warning("Invalid material!\n");
+			iPasses++;
+		}
 		return NULL;
 	}
 	else if(!mMaterial->iSkins)
 	{
-		Con_Warning("Material with no valid skins! (%s)\n",mMaterial->cName);
+		if (iPasses < 50)
+		{
+			Con_Warning("Material with no valid skins! (%s)\n", mMaterial->cName);
+			iPasses++;
+		}
 		return NULL;
 	}
 	else if((iSkin > mMaterial->iSkins) || (iSkin < mMaterial->iSkins))
 	{
-		Con_Warning("Attempted to get an invalid skin! (%i) (%s)\n",iSkin,mMaterial->cName);
+		if (iPasses < 50)
+		{
+			Con_Warning("Attempted to get an invalid skin! (%i) (%s)\n", iSkin, mMaterial->cName);
+			iPasses++;
+		}
 		return NULL;
 	}
 
@@ -136,8 +147,10 @@ Material_t *Material_Get(int iMaterialID)
 {
 	int i;
 
+	if (!bInitialized)
+		return NULL;
 	// The identification would never be less than 0, and never more than our maximum.
-	if(iMaterialID < 0 || iMaterialID > MATERIALS_MAX_ALLOCATED)
+	else if(iMaterialID < 0 || iMaterialID > MATERIALS_MAX_ALLOCATED)
 	{
 		Con_Warning("Invalid material id! (%i)\n",iMaterialID);
 		return NULL;
@@ -202,14 +215,15 @@ void Material_Draw(Material_t *mMaterial,int iSkin)
 {
 	MaterialSkin_t	*msCurrentSkin;
 
-	if(!mMaterial)
+	if (!cvMaterialDraw.bValue)
+		return;
+	else if(!mMaterial)
 	{
 		Con_Warning("Invalid material, either not found or wasn't cached!\n");
 		return;
 	}
-
 	// If we're drawing flat, then don't apply textures.
-	if(r_drawflat_cheatsafe)
+	else if(r_drawflat_cheatsafe)
 	{
 		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 		return;
@@ -252,7 +266,8 @@ void _Material_SetType(Material_t *mCurrentMaterial,char *cArg)
 {
 	int	iMaterialType = Q_atoi(cArg);
 
-	if(iMaterialType < MATERIAL_TYPE_NONE)
+	// Ensure that the given type is valid.
+	if((iMaterialType < MATERIAL_TYPE_NONE) || (iMaterialType >= MATERIAL_TYPE_MAX))
 		Con_Warning("Invalid material type! (%i)\n",iMaterialType);
 
 	mCurrentMaterial->iType = iMaterialType;
@@ -263,7 +278,7 @@ void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
 	byte *bDiffuseMap = Image_LoadImage(cArg,
 		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureWidth,
 		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureHeight);
-	if(bDiffuseMap)
+	if (bDiffuseMap)
 		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].gDiffuseTexture = TexMgr_LoadImage(
 		NULL,
 		cArg,
@@ -275,7 +290,7 @@ void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
 		0,
 		TEXPREF_ALPHA);
 	else
-		Con_Warning("Failed to load texture %s!\n",cArg);
+		Con_Warning("Failed to load texture %s!\n", cArg);
 }
 
 void _Material_SetFullbrightTexture(Material_t *mCurrentMaterial,char *cArg)
@@ -335,7 +350,7 @@ MaterialKey_t	mkMaterialFunctions[]=
 	{	"diffuse",		_Material_SetDiffuseTexture		},	// Sets the diffuse texture.
 	{	"sphere",		_Material_SetSphereTexture		},	// Sets the spheremap texture.
 	{	"fullbright",	_Material_SetFullbrightTexture	},	// Sets the fullbright texture.
-	{	"SetFlags",		_Material_SetFlags				},	// Sets seperate flags for the material; e.g. persist etc.
+	{	"flags",		_Material_SetFlags				},	// Sets seperate flags for the material; e.g. persist etc.
 
 	{	0	}
 };
@@ -395,12 +410,13 @@ Material_t *Material_Load(const char *ccPath)
 			break;
 		}
 
+		// End
 		if(cToken[0] == '}')
 			break;
+		// Start
 		else if(cToken[0] == '{')
 		{
-			// do stuff...
-
+			
 			mNewMaterial->iSkins++;
 
 			while(true)

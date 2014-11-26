@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #ifndef __SHAREDFLAGS__
 #define __SHAREDFLAGS__
@@ -21,7 +21,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	788	// 12/11/2014
+#define ENGINE_VERSION_BUILD	792	// 27/11/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"

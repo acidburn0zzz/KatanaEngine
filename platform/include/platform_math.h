@@ -1,5 +1,5 @@
 /*  Copyright (C) 1996-2001 Id Software, Inc.
-	Copyright (C) 2011-2014 OldTimes Software
+	Copyright (C) 2011-2015 OldTimes Software
 */
 #ifndef __PLATFORMMATH__
 #define	__PLATFORMMATH__
