@@ -453,7 +453,7 @@ void Alias_Draw(entity_t *eEntity)
 	glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB,GL_PRIMARY_COLOR);
 	glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE,4);
 
-	Material_Draw(Material_Get(eEntity->model->iAssignedMaterial),eEntity->skinnum);
+	Material_Draw(Material_Get(eEntity->model->iAssignedMaterials[0]),eEntity->skinnum);
 
 	Alias_DrawModelFrame(mModel,lLerpData);
 

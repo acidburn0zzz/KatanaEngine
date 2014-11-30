@@ -534,6 +534,7 @@ int		loadable[MAX_SAVEGAMES];
 
 void M_ScanSaves (void)
 {
+#if 0
 	int		i,j,version;
 	char	name[MAX_OSPATH];
 	FILE	*f;
@@ -560,6 +561,7 @@ void M_ScanSaves (void)
 		loadable[i] = true;
 		fclose (f);
 	}
+#endif
 }
 
 void M_Menu_Load_f (void)

@@ -751,7 +751,7 @@ void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,u
 	}
 	else
 	{
-		for(i = 0; i > VIDEO_MAX_UNITS; i++)
+		for (i = 0; i < VIDEO_MAX_UNITS; i++)
 		{
 			//if(iSavedCapabilites[i][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
 			{

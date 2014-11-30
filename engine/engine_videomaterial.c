@@ -9,55 +9,27 @@
 
 bool	bInitialized = false;
 
-#define	MATERIALS_MAX_ALLOCATED	2048
-
-int	iMaterialCount;
+Material_t	mMaterials[MATERIALS_MAX_ALLOCATED];	// Global array.
 
 MaterialType_t	MaterialTypes[]=
 {
-	{ MATERIAL_TYPE_NONE, "default" },
-	{ MATERIAL_TYPE_METAL, "metal" },
-	{ MATERIAL_TYPE_GLASS, "glass" },
-	{ MATERIAL_TYPE_CONCRETE, "concrete" },
-	{ MATERIAL_TYPE_WOOD, "wood" },
-	{ MATERIAL_TYPE_DIRT, "dirt" },
-	{ MATERIAL_TYPE_RUBBER, "rubber" },
-	{ MATERIAL_TYPE_WATER, "water" },
-	{ MATERIAL_TYPE_FLESH, "flesh" },
-	{ MATERIAL_TYPE_MUD, "mud" }
+	{	MATERIAL_TYPE_NONE,		"default"	},
+	{	MATERIAL_TYPE_METAL,	"metal"		},
+	{	MATERIAL_TYPE_GLASS,	"glass"		},
+	{	MATERIAL_TYPE_CONCRETE,	"concrete"	},
+	{	MATERIAL_TYPE_WOOD,		"wood"		},
+	{	MATERIAL_TYPE_DIRT,		"dirt"		},
+	{	MATERIAL_TYPE_RUBBER,	"rubber"	},
+	{	MATERIAL_TYPE_WATER,	"water"		},
+	{	MATERIAL_TYPE_FLESH,	"flesh"		},
+	{	MATERIAL_TYPE_MUD,		"mud"		}
 };
 
-Material_t	*mMaterials;	// Global array.
+int	iMaterialCount = 0;
 
 cvar_t	cvMaterialDraw = { "material_draw", "1", false, false, "Enables and disables the drawing of materials." };
 
-Material_t *Material_Allocate(void)
-{
-	int			i;
-	Material_t	*mAllocated;
-
-	Cvar_RegisterVariable(&cvMaterialDraw, NULL);
-
-	// TODO: Do stuff...
-	for(i = 0; i < MATERIALS_MAX_ALLOCATED; i++)
-	{
-		if(mMaterials[i].iIdentification <= 0)
-			break;
-
-	}
-
-	mAllocated = &mMaterials[i];
-	if(!mAllocated)
-	{
-		Con_Warning("Failed to allocate material!\n");
-		return NULL;
-	}
-	
-	mAllocated->iIdentification = i;
-	mAllocated->iSkins			= 0;
-
-	return mAllocated;
-}
+Material_t *Material_Allocate(void);
 
 void Material_Initialize(void)
 {
@@ -68,11 +40,22 @@ void Material_Initialize(void)
 
 	Con_Printf("Initializing material system...\n");
 
+	Cvar_RegisterVariable(&cvMaterialDraw, NULL);
+
 #if 0
+	Con_DPrintf(" Allocating materials array... ");
+
 	mMaterials = Hunk_AllocName(MATERIALS_MAX_ALLOCATED*sizeof(Material_t),"materials");
+	if (!mMaterials)
+		Sys_Error("Failed to allocate material array!\n");
+
+	Con_DPrintf("DONE!\n");
+#endif
 
 	// Must be set to initialized before anything else.
 	bInitialized = true;
+
+	Con_DPrintf(" Creating dummy material... ");
 
 	{
 		// Add dummy material.
@@ -83,17 +66,39 @@ void Material_Initialize(void)
 #ifdef _MSC_VER // This is false, since the function above shuts us down, but MSC doesn't understand that.
 #pragma warning(suppress: 6011)
 #endif
-		mDummy->cName							= "dummy";
-		mDummy->cPath							= "";
+		sprintf(mDummy->cName, "dummy");
 		mDummy->iSkins							= 1;
 		mDummy->iType							= MATERIAL_TYPE_NONE;
+		mDummy->iFlags							= MATERIAL_FLAG_PRESERVE;
 		mDummy->msSkin[0].gDiffuseTexture		= notexture;
 		mDummy->msSkin[0].gFullbrightTexture	= NULL;
 		mDummy->msSkin[0].gSphereTexture		= NULL;
 		mDummy->msSkin[0].iTextureHeight		= notexture->height;
 		mDummy->msSkin[0].iTextureWidth			= notexture->width;
 	}
-#endif
+
+	Con_DPrintf("DONE!\n");
+}
+
+Material_t *Material_Allocate(void)
+{
+	int			i;
+	Material_t	*mMaterial;
+
+	for (mMaterial = mMaterials,i = 0; i < sizeof(mMaterials); mMaterial++,i++)
+		if (!(mMaterial->iFlags & MATERIAL_FLAG_PRESERVE))
+			if (!mMaterial->iIdentification || !mMaterial->iSkins)
+			{
+				memset(mMaterial, 0, sizeof(*mMaterial));
+
+				mMaterial->iIdentification = i + 1;
+
+				iMaterialCount++;
+
+				return mMaterial;
+			}
+
+	return NULL;
 }
 
 MaterialSkin_t *Material_GetSkin(Material_t *mMaterial,int iSkin)
@@ -147,16 +152,14 @@ Material_t *Material_Get(int iMaterialID)
 {
 	int i;
 
-	if (!bInitialized)
-		return NULL;
 	// The identification would never be less than 0, and never more than our maximum.
-	else if(iMaterialID < 0 || iMaterialID > MATERIALS_MAX_ALLOCATED)
+	if(iMaterialID < 0 || iMaterialID > MATERIALS_MAX_ALLOCATED)
 	{
-		Con_Warning("Invalid material id! (%i)\n",iMaterialID);
+		Con_Warning("Invalid material ID! (%i)\n",iMaterialID);
 		return NULL;
 	}
 
-	for(i = 0; i < MATERIALS_MAX_ALLOCATED; i++)
+	for (i = 0; i < iMaterialCount; i++)
 		if(mMaterials[i].iIdentification == iMaterialID)
 			return &mMaterials[i];
 
@@ -168,7 +171,7 @@ Material_t *Material_Get(int iMaterialID)
 */
 Material_t *Material_GetByName(const char *ccMaterialName)
 {
-	Material_t	*mMaterial;
+	int i;
 
 	if(ccMaterialName[0] == ' ')
 	{
@@ -176,20 +179,18 @@ Material_t *Material_GetByName(const char *ccMaterialName)
 		return NULL;
 	}
 
-	for(mMaterial = mMaterials; mMaterial; mMaterial++)
-	{
+	for (i = 0; i < iMaterialCount; i++)
 		// If the material has no name, then it's not valid.
-		if(mMaterial->cName[0] != ' ')
-			if(!strncmp(mMaterial->cName,ccMaterialName,sizeof(mMaterial->cName)))
-				return mMaterial;
-	}
+		if (mMaterials[i].cName[0])
+			if (!strncmp(mMaterials[i].cName, ccMaterialName, sizeof(mMaterials[i].cName)))
+				return &mMaterials[i];
 
 	return NULL;
 }
 
 Material_t *Material_GetByPath(const char *ccPath)
 {
-	Material_t	*mMaterial;
+	int i;
 
 	if(ccPath[0] == ' ')
 	{
@@ -197,12 +198,10 @@ Material_t *Material_GetByPath(const char *ccPath)
 		return NULL;
 	}
 
-	for(mMaterial = mMaterials; mMaterial; mMaterial++)
-	{
-		if(mMaterial->cPath[0] != ' ')
-			if(!strncmp(mMaterial->cPath,ccPath,sizeof(mMaterial->cPath)))
-				return mMaterial;
-	}
+	for (i = 0; i < iMaterialCount; i++)
+		if (mMaterials[i].cPath[0])
+			if (!strncmp(mMaterials[i].cPath, ccPath, sizeof(mMaterials[i].cPath)))
+				return &mMaterials[i];
 
 	return NULL;
 }
@@ -346,11 +345,11 @@ typedef struct
 
 MaterialKey_t	mkMaterialFunctions[]=
 {
-	{	"type",			_Material_SetType				},	// Sets the type of material.
-	{	"diffuse",		_Material_SetDiffuseTexture		},	// Sets the diffuse texture.
-	{	"sphere",		_Material_SetSphereTexture		},	// Sets the spheremap texture.
-	{	"fullbright",	_Material_SetFullbrightTexture	},	// Sets the fullbright texture.
-	{	"flags",		_Material_SetFlags				},	// Sets seperate flags for the material; e.g. persist etc.
+	{	"SetType",				_Material_SetType				},	// Sets the type of material.
+	{	"SetDiffuseTexture",	_Material_SetDiffuseTexture		},	// Sets the diffuse texture.
+	{	"SetSphereTexture",		_Material_SetSphereTexture		},	// Sets the spheremap texture.
+	{	"SetFullbrightTexture",	_Material_SetFullbrightTexture	},	// Sets the fullbright texture.
+	{	"SetFlags",				_Material_SetFlags				},	// Sets seperate flags for the material; e.g. persist etc.
 
 	{	0	}
 };
@@ -358,10 +357,10 @@ MaterialKey_t	mkMaterialFunctions[]=
 /*	Loads and parses material.
 	Returns false on complete failure.
 */
-Material_t *Material_Load(const char *ccPath)
+Material_t *Material_Load(/*const */char *ccPath)
 {
     Material_t  *mNewMaterial;
-	void        *cData;
+	byte        *cData;
 	char		cPath[PLATFORM_MAX_PATH];
 
 	if(!bInitialized)
@@ -377,10 +376,11 @@ Material_t *Material_Load(const char *ccPath)
 	mNewMaterial = Material_GetByPath(cPath);
 	if(mNewMaterial)
 		return mNewMaterial;
-
-	if(LoadFile(cPath,&cData) == -1)
+	
+	cData = COM_LoadTempFile(cPath);
+	if(!cData)
 	{
-		Con_Warning("Failed to load material! (%s)\n",ccPath);
+		Con_Warning("Failed to load material! (%s) (%s)\n", cPath, ccPath);
 		return false;
 	}
 
@@ -389,13 +389,11 @@ Material_t *Material_Load(const char *ccPath)
 	if(!Script_GetToken(true))
 	{
 		Con_Warning("Failed to get initial token! (%s) (%i)\n",ccPath,iScriptLine);
-		free(cData);
 		return false;
 	}
 	else if(cToken[0] != '{')
 	{
 		Con_Warning("Missing '{'! (%s) (%i)\n",ccPath,iScriptLine);
-		free(cData);
 		return false;
 	}
 
@@ -434,6 +432,7 @@ Material_t *Material_Load(const char *ccPath)
 				{
 					MaterialKey_t *mKey;
 
+					// Find the related function.
 					for(mKey = mkMaterialFunctions; mKey->cKey; mKey++)
 						// Remain case sensitive.
 						if(!Q_strcasecmp(mKey->cKey,cToken+1))
@@ -464,9 +463,20 @@ Material_t *Material_Load(const char *ccPath)
 		}
 	}
 
-	free(cData);
-
 	return NULL;
+}
+
+/*	Returns default dummy material.
+*/
+Material_t *Material_GetDummy(void)
+{
+	Material_t *mDummy;
+
+	mDummy = Material_GetByName("dummy");
+	if (!mDummy)
+		Sys_Error("Failed to assign dummy material!\n");
+
+	return mDummy;
 }
 
 /**/

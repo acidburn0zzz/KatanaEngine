@@ -929,9 +929,9 @@ void TexMgr_LoadLightmap(gltexture_t *glt,byte *data)
 
 gltexture_t *TexMgr_LoadImage(model_t *owner,char *name,int width,int height,enum srcformat format,byte *data,char *source_file,unsigned source_offset,unsigned flags)
 {
-	unsigned    short   crc = 0;
-	gltexture_t *glt;
-	int mark;
+	unsigned    short   crc		= 0;
+	gltexture_t			*glt	= NULL;
+	int					mark;
 
 	// [28/4/2013] TODO: Really? ~hogsy
 	if(bIsDedicated)
@@ -953,16 +953,16 @@ gltexture_t *TexMgr_LoadImage(model_t *owner,char *name,int width,int height,enu
 			Console_ErrorMessage(true,source_file,va("Unknown source format (%i).",format));
 	}
 
-	/*	I originally wrote my own solution to this, but there's something odd occuring here, so I just borrowed Bakers workaround for now... ~hogsy
-		(I hate assignments in conditions, just fyi)
-	*/
-	if((flags & TEXPREF_OVERWRITE) && (glt = TexMgr_FindTexture(owner,name)))
+	if (flags & TEXPREF_OVERWRITE)
 	{
-		if (glt->source_crc == crc)
-			return glt;
+		glt = TexMgr_FindTexture(owner, name);
+		if (glt)
+			if (glt->source_crc == crc)
+				return glt;
 	}
-	else
-		glt = TexMgr_NewTexture ();
+
+	if (!glt)
+		glt = TexMgr_NewTexture();
 
 	// copy data
 	glt->owner			= owner;

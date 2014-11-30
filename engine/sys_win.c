@@ -465,23 +465,45 @@ bool System_Main(int iArgumentCount,char *cArguments[])
 
 #ifdef _WIN32
 	{
-		MEMORYSTATUS    lpBuffer;
+#if 0 // Future replacement...
+		MEMORYSTATUSEX    lpBuffer;
 
-		lpBuffer.dwLength = sizeof(MEMORYSTATUS);
-		GlobalMemoryStatus (&lpBuffer);
+		lpBuffer.dwLength = sizeof(lpBuffer);
+
+		GlobalMemoryStatusEx (&lpBuffer);
+
+		// take the greater of all the available memory or half the total memory,
+		// but at least 8 Mb and no more than 16 Mb, unless they explicitly
+		// request otherwise
+		epParameters.memsize = lpBuffer.ullAvailPhys;
+		if(epParameters.memsize < MINIMUM_MEMORY)
+			epParameters.memsize = MINIMUM_MEMORY;
+
+		if((unsigned)epParameters.memsize < (lpBuffer.ullTotalPhys >> 1))
+			epParameters.memsize = lpBuffer.ullTotalPhys >> 1;
+
+		if(epParameters.memsize > MAXIMUM_MEMORY)
+			epParameters.memsize = MAXIMUM_MEMORY;
+#else // Old...
+		MEMORYSTATUS lpBuffer;
+
+		lpBuffer.dwLength = sizeof(lpBuffer);
+
+		GlobalMemoryStatus(&lpBuffer);
 
 		// take the greater of all the available memory or half the total memory,
 		// but at least 8 Mb and no more than 16 Mb, unless they explicitly
 		// request otherwise
 		epParameters.memsize = lpBuffer.dwAvailPhys;
-		if(epParameters.memsize < MINIMUM_MEMORY)
+		if (epParameters.memsize < MINIMUM_MEMORY)
 			epParameters.memsize = MINIMUM_MEMORY;
 
-		if((unsigned)epParameters.memsize < (lpBuffer.dwTotalPhys >> 1))
+		if ((unsigned)epParameters.memsize < (lpBuffer.dwTotalPhys >> 1))
 			epParameters.memsize = lpBuffer.dwTotalPhys >> 1;
 
-		if(epParameters.memsize > MAXIMUM_MEMORY)
+		if (epParameters.memsize > MAXIMUM_MEMORY)
 			epParameters.memsize = MAXIMUM_MEMORY;
+#endif
 	}
 #else
 	

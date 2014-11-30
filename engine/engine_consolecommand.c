@@ -187,7 +187,7 @@ void Cbuf_Execute (void)
 void Cmd_StuffCmds_f(void)
 {
 	char	cCommands[CMDLINE_LENGTH];
-	int		i,iLength	= 0;
+	int		i, iLength = 0, iCommands = 0;
 	bool	bIsPlus		= false;
 
 	for(i = 1; i < com_argc; i++)
@@ -196,7 +196,7 @@ void Cmd_StuffCmds_f(void)
 		{
 			int j;
 
-			if(cCommands[iLength-1] == ' ')
+			if((iLength > 1) && cCommands[iLength-1] == ' ')
 				cCommands[iLength++] = ';';
 
 			for(j = 1; j < com_argv[i][j]; j++)
@@ -204,6 +204,8 @@ void Cmd_StuffCmds_f(void)
 
 			// [1/1/2014] Add a space :) ~hogsy
 			cCommands[iLength++] = ' ';
+
+			iCommands++;
 
 			bIsPlus = true;
 		}
@@ -221,7 +223,9 @@ void Cmd_StuffCmds_f(void)
 		}
 	}
 
-	Cbuf_InsertText(cCommands);
+	// Don't, unless we have some commands to actually send over.
+	if (iCommands > 0)
+		Cbuf_InsertText(cCommands);
 }
 
 // [3/5/2012] Revised ~hogsy

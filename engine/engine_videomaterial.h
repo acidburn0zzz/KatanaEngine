@@ -25,6 +25,8 @@ typedef enum
 	MATERIAL_TYPE_MAX		// This isn't valid, don't use it (just used for utility).
 } MaterialProperty_t;
 
+#define	MATERIAL_FLAG_PRESERVE	1	// Preserves the material during clear outs.
+
 typedef struct
 {
 	MaterialProperty_t	iType;
@@ -44,22 +46,26 @@ typedef struct
 typedef struct
 {
 	int		iIdentification,
+			iFlags,				// Flags for the material.
 			iType,				// The type of properties.
 			iSkins;				// Number of skins provided by this material.
 
-	char	*cPath,	// Path of the material.
-			*cName;	// Name of the material.
+	char	cPath[PLATFORM_MAX_PATH],	// Path of the material.
+			cName[128];					// Name of the material.
 
 	MaterialSkin_t	msSkin[MODEL_MAX_TEXTURES];
 } Material_t;
 
-Material_t	*mMaterials;	// Global pointer
+#define	MATERIALS_MAX_ALLOCATED	2048
+
+extern Material_t	mMaterials[MATERIALS_MAX_ALLOCATED];	// Global array.
 
 void	Material_Initialize(void);
 void	Material_Draw(Material_t *mMaterial,int iSkin);
 
-Material_t *Material_Load(const char *ccPath);
+Material_t *Material_Load(/*const */char *ccPath);
 Material_t *Material_Get(int iMaterialID);
 Material_t *Material_GetByPath(const char *ccPath);
+Material_t *Material_GetDummy(void);
 
 #endif // __ENGINEMATERIAL__

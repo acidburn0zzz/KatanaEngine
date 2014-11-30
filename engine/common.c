@@ -1478,6 +1478,9 @@ void FileSystem_Initialize(void)
 	else
 		strncpy(basedir,host_parms.basedir,sizeof(basedir));
 
+#ifdef _MSC_VER
+#pragma warning(suppress: 6053)	// This isn't an issue in this case.
+#endif
 	j = strnlen(basedir,sizeof(basedir));
 	if (j > 0)
 		if ((basedir[j-1] == '\\') || (basedir[j-1] == '/'))

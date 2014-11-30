@@ -885,7 +885,7 @@ void Model_LoadBSPFaces(BSPLump_t *blLump)
 		{
 			out->flags |= (SURF_DRAWTURB | SURF_DRAWTILED);
 
-			if((!out->samples && SURF_DRAWTURB) || SURF_DRAWTILED)
+			if ((!out->samples && SURF_DRAWTURB) || (out->samples && SURF_DRAWTILED))
 				Mod_PolyForUnlitSurface(out);
 
 			GL_SubdivideSurface (out);
@@ -1389,17 +1389,18 @@ void Model_LoadTextures(model_t *mModel)
 
 	COM_StripExtension(mModel->name,cOutName);
 
-#if 0
-	mAssignedMaterial = Material_Load((char*)cOutName);
+	mAssignedMaterial = Material_Load(cOutName);
 	if(!mAssignedMaterial)
 	{
 		Con_Warning("Failed to load material for model! (%s) (%s)\n",mModel->name,cOutName);
 
-		mModel->iAssignedMaterial = 0;
+		// Set us up to just use the dummy material instead.
+		mModel->iAssignedMaterials[0] = Material_GetDummy()->iIdentification;
+
+		return;
 	}
-	else
-		mModel->iAssignedMaterial = mAssignedMaterial->iIdentification;
-#endif
+	
+	mModel->iAssignedMaterials[0] = mAssignedMaterial->iIdentification;
 }
 
 /*	Calculate bounds of alias model for nonrotated, yawrotated, and fullrotated cases
