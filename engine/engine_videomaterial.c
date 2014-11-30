@@ -82,20 +82,20 @@ void Material_Initialize(void)
 
 Material_t *Material_Allocate(void)
 {
-	int			i;
-	Material_t	*mMaterial;
+	int	i;
 
-	for (mMaterial = mMaterials,i = 0; i < sizeof(mMaterials); mMaterial++,i++)
-		if (!(mMaterial->iFlags & MATERIAL_FLAG_PRESERVE))
-			if (!mMaterial->iIdentification || !mMaterial->iSkins)
+	// In the case of allocation, we go through the entire array.
+	for (i = 0; i < MATERIALS_MAX_ALLOCATED; i++)
+		if (!(mMaterials[i].iFlags & MATERIAL_FLAG_PRESERVE))
+			if (!mMaterials[i].iIdentification || !mMaterials[i].iSkins)
 			{
-				memset(mMaterial, 0, sizeof(*mMaterial));
+				//memset(mMaterial, 0, sizeof(*mMaterial));
 
-				mMaterial->iIdentification = i + 1;
+				mMaterials[i].iIdentification = i + 1;
 
 				iMaterialCount++;
 
-				return mMaterial;
+				return &mMaterials[i];
 			}
 
 	return NULL;
@@ -106,7 +106,7 @@ MaterialSkin_t *Material_GetSkin(Material_t *mMaterial,int iSkin)
 	// Don't let us spam the console; silly but whatever.
 	static	int	iPasses = 0;
 
-	if(iSkin <= 0 || iSkin > MODEL_MAX_TEXTURES)
+	if(iSkin < 0 || iSkin > MODEL_MAX_TEXTURES)
 	{
 		if (iPasses < 50)
 		{
@@ -133,7 +133,7 @@ MaterialSkin_t *Material_GetSkin(Material_t *mMaterial,int iSkin)
 		}
 		return NULL;
 	}
-	else if((iSkin > mMaterial->iSkins) || (iSkin < mMaterial->iSkins))
+	else if (iSkin > (mMaterial->iSkins - 1))
 	{
 		if (iPasses < 50)
 		{
@@ -275,14 +275,14 @@ void _Material_SetType(Material_t *mCurrentMaterial,char *cArg)
 void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
 {
 	byte *bDiffuseMap = Image_LoadImage(cArg,
-		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureWidth,
-		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureHeight);
+		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureWidth,
+		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureHeight);
 	if (bDiffuseMap)
-		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].gDiffuseTexture = TexMgr_LoadImage(
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].gDiffuseTexture = TexMgr_LoadImage(
 		NULL,
 		cArg,
-		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureWidth,
-		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureHeight,
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureWidth,
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureHeight,
 		SRC_RGBA,
 		bDiffuseMap,
 		cArg,
@@ -295,14 +295,14 @@ void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
 void _Material_SetFullbrightTexture(Material_t *mCurrentMaterial,char *cArg)
 {
 	byte *bFullbrightMap = Image_LoadImage(cArg,
-		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureWidth,
-		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureHeight);
+		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureWidth,
+		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureHeight);
 	if(bFullbrightMap)
-		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].gFullbrightTexture = TexMgr_LoadImage(
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].gFullbrightTexture = TexMgr_LoadImage(
 		NULL,
 		cArg,
-		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureWidth,
-		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureHeight,
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureWidth,
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureHeight,
 		SRC_RGBA,
 		bFullbrightMap,
 		cArg,
@@ -315,14 +315,14 @@ void _Material_SetFullbrightTexture(Material_t *mCurrentMaterial,char *cArg)
 void _Material_SetSphereTexture(Material_t *mCurrentMaterial,char *cArg)
 {
 	byte *bSphereMap = Image_LoadImage(cArg,
-		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureWidth,
-		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureHeight);
+		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureWidth,
+		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureHeight);
 	if(bSphereMap)
-		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].gSphereTexture = TexMgr_LoadImage(
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].gSphereTexture = TexMgr_LoadImage(
 		NULL,
 		cArg,
-		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureWidth,
-		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins].iTextureHeight,
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureWidth,
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins-1].iTextureHeight,
 		SRC_RGBA,
 		bSphereMap,
 		cArg,
@@ -414,7 +414,6 @@ Material_t *Material_Load(/*const */char *ccPath)
 		// Start
 		else if(cToken[0] == '{')
 		{
-			
 			mNewMaterial->iSkins++;
 
 			while(true)
@@ -454,16 +453,14 @@ Material_t *Material_Load(/*const */char *ccPath)
 				}
 				else
 				{
-					Con_Warning("Invalid function call!\n");
+					Con_Warning("Invalid field! (%s) (%i)\n", ccPath, iScriptLine);
 					break;
 				}
-
-				Con_Warning("Invalid field! (%s) (%i)\n",ccPath,iScriptLine);
 			}
 		}
 	}
 
-	return NULL;
+	return mNewMaterial;
 }
 
 /*	Returns default dummy material.
