@@ -28,6 +28,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "sound.h"
 
+#include "engine_audio.h"
+
 // =======================================================================
 // Internal sound data & structures
 // =======================================================================
@@ -59,7 +61,7 @@ int			num_sfx;
 
 sfx_t		*ambient_sfx[BSP_AMBIENT_END];
 
-int 		desired_speed = 11025;
+int 		desired_speed = AUDIO_SAMPLE_RATE;
 int 		desired_bits = 16;
 int			sound_started=0;
 

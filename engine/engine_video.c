@@ -24,6 +24,8 @@
 // Platform library
 #include "platform_window.h"
 
+#include <SDL_syswm.h>
+
 SDL_Window		*sMainWindow;
 SDL_GLContext	sMainContext;
 
@@ -104,6 +106,9 @@ void Video_Initialize(void)
 	// [9/7/2013] TEMP: Should honestly be called from the launcher (in a perfect world) ~hogsy
 	if(!Video_CreateWindow())
 		Sys_Error("Failed to create window!\n");
+
+	if (!SDL_GetWindowWMInfo(sMainWindow, &Video.sSystemInfo))
+		Sys_Error("Failed to get WM information!\n");
 
 	SDL_DisableScreenSaver();
 

@@ -4,6 +4,7 @@
 #define __ENGINEVIDEO__
 
 #include <SDL.h>
+#include <SDL_syswm.h>
 
 extern cvar_t	cvVideoDrawModels,	// Should we draw models?
 				cvWidth,			// The width of our window (not reliable).
@@ -40,6 +41,8 @@ typedef struct
 	bool	bFogCoord,					// EXT_fog_coord
 			bTextureEnvAdd,				// ARB_texture_env_add
 			bTextureEnvCombine;			// ARB_texture_env_combine
+
+	SDL_SysWMinfo	sSystemInfo;
 } Video_t;
 
 typedef struct
