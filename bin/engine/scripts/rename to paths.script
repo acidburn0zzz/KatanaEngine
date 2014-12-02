@@ -1,5 +1,5 @@
 {
-	$SetBasePath		"example"
+	$SetBasePath		"../../katanacontent"
 	$SetTexturePath		"textures/"
 	$SetMaterialPath	"materials/"
 	$SetSoundPath		"sounds/"

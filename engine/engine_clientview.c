@@ -13,31 +13,31 @@
 
 #include "shared_math.h"
 
-cvar_t	scr_ofsx			= { "scr_ofsx",			"0",		false	};
-cvar_t	scr_ofsy			= { "scr_ofsy",			"0",		false	};
-cvar_t	scr_ofsz			= { "scr_ofsz",			"0",		false	};
-cvar_t	cl_rollspeed		= { "cl_rollspeed",		"200"				};
-cvar_t	cl_rollangle		= { "cl_rollangle",		"2.0"				};
-cvar_t	cl_bob				= { "cl_bob",			"0.002",	false	};
-cvar_t	cl_bobcycle			= { "cl_bobcycle",		"0.43",		false	};
-cvar_t	cl_bobup			= { "cl_bobup",			"0.45",		false	};
-cvar_t	cSideBobUp			= {	"view_sideup",		"0.5",		false	};
-cvar_t	cSideBobCycle		= { "view_sidecycle",	"0.86",		false	};
-cvar_t	cSideBob			= {	"view_sidebob",		"0.007",	false	};
-cvar_t	cViewModelLag		= {	"view_modellag",	"0.2"				};
-cvar_t	v_kicktime			= { "v_kicktime",		"0.5",		false	};
-cvar_t	v_kickroll			= { "v_kickroll",		"0.6",		false	};
-cvar_t	v_kickpitch			= { "v_kickpitch",		"0.6",		false	};
-cvar_t	v_gunkick			= {	"v_gunkick",		"1"					}; //johnfitz
-cvar_t	v_iyaw_cycle		= { "v_iyaw_cycle",		"2",		false	};
-cvar_t	v_iroll_cycle		= { "v_iroll_cycle",	"0.5",		false	};
-cvar_t	v_ipitch_cycle		= { "v_ipitch_cycle",	"1",		false	};
-cvar_t	v_iyaw_level		= { "v_iyaw_level",		"0.3",		false	};
-cvar_t	v_iroll_level		= { "v_iroll_level",	"0.1",		false	};
-cvar_t	v_ipitch_level		= { "v_ipitch_level",		"0.3",		false	};
-cvar_t	v_idlescale			= { "v_idlescale",			"0",	false	},
-		cViewModelPosition	= {	"view_modelposition",	"2",	true,	false,	"0 = Center, 1 = Left and 2 = Right."	};
-cvar_t	gl_cshiftpercent	= {	"gl_cshiftpercent",		"100",		false	};
+cvar_t	scr_ofsx			= { "scr_ofsx",				"0",		false													};
+cvar_t	scr_ofsy			= { "scr_ofsy",				"0",		false													};
+cvar_t	scr_ofsz			= { "scr_ofsz",				"0",		false													};
+cvar_t	cl_rollspeed		= { "cl_rollspeed",			"200"																};
+cvar_t	cl_rollangle		= { "cl_rollangle",			"2.0"																};
+cvar_t	cl_bob				= { "cl_bob",				"0.002",	false													};
+cvar_t	cl_bobcycle			= { "cl_bobcycle",			"0.43",		false													};
+cvar_t	cl_bobup			= { "cl_bobup",				"0.45",		false													};
+cvar_t	cSideBobUp			= {	"view_sideup",			"0.5",		false													};
+cvar_t	cSideBobCycle		= { "view_sidecycle",		"0.86",		false													};
+cvar_t	cSideBob			= {	"view_sidebob",			"0.007",	false													};
+cvar_t	cViewModelLag		= {	"view_modellag",		"0.2"																};
+cvar_t	v_kicktime			= { "v_kicktime",			"0.5",		false													};
+cvar_t	v_kickroll			= { "v_kickroll",			"0.6",		false													};
+cvar_t	v_kickpitch			= { "v_kickpitch",			"0.6",		false													};
+cvar_t	v_gunkick			= {	"v_gunkick",			"1"																	}; //johnfitz
+cvar_t	v_iyaw_cycle		= { "v_iyaw_cycle",			"2",		false													};
+cvar_t	v_iroll_cycle		= { "v_iroll_cycle",		"0.5",		false													};
+cvar_t	v_ipitch_cycle		= { "v_ipitch_cycle",		"1",		false													};
+cvar_t	v_iyaw_level		= { "v_iyaw_level",			"0.3",		false													};
+cvar_t	v_iroll_level		= { "v_iroll_level",		"0.1",		false													};
+cvar_t	v_ipitch_level		= { "v_ipitch_level",		"0.3",		false													};
+cvar_t	v_idlescale			= { "v_idlescale",			"0",		false													},
+		cViewModelPosition	= {	"view_modelposition",	"2",		true,	false,	"0 = Center, 1 = Left and 2 = Right."	};
+cvar_t	gl_cshiftpercent	= {	"gl_cshiftpercent",		"100",		false													};
 
 float	v_dmg_time, v_dmg_roll, v_dmg_pitch;
 
@@ -167,10 +167,10 @@ void V_DriftPitch (void)
 ==============================================================================
 */
 
-cshift_t	cshift_empty	= { {130,	80,	50	},	0	};
-cshift_t	cshift_water	= { {130,	80,	50	},	128	};
-cshift_t	cshift_slime	= { {0,		25,	5	},	150 };
-cshift_t	cshift_lava		= { {255,	80,	0	},	150 };
+cshift_t	cshift_empty	= {	{	0,		0,	0	},	0	};
+cshift_t	cshift_water	= { {	0,		0,	100	},	100	};
+cshift_t	cshift_slime	= { {	0,		25,	5	},	150 };
+cshift_t	cshift_lava		= { {	255,	80,	0	},	150 };
 
 vec4_t		vViewBlend;		// rgba 0.0 - 1.0
 
@@ -314,10 +314,11 @@ void V_CalcPowerupCshift (void)
 // [26/3/2013] Revised ~hogsy
 void View_CalculateBlend(void)
 {
-	vec4_t	vColor;
+	vec4_t	vColour;
+	float	fAlpha;
 	int		j;
 
-	Math_VectorClear(vColor);
+	Math_VectorClear(vColour);
 
 	for(j = 0; j < NUM_CSHIFTS; j++)
 	{
@@ -329,17 +330,21 @@ void View_CalculateBlend(void)
 			continue;
 		//johnfitz
 
-		vColor[ALPHA] = ((cl.cshifts[j].percent*gl_cshiftpercent.value)/100.0)/255.0f;
-		if(!vColor[ALPHA])
+		fAlpha = ((cl.cshifts[j].percent*gl_cshiftpercent.value)/100.0)/255.0f;
+		if(!fAlpha)
 			continue;
 
-		vColor[RED]		= vColor[RED]*(1-vColor[ALPHA])+cl.cshifts[j].destcolor[0]*vColor[ALPHA];
-		vColor[GREEN]	= vColor[GREEN]*(1-vColor[ALPHA])+cl.cshifts[j].destcolor[1]*vColor[ALPHA];
-		vColor[BLUE]	= vColor[BLUE]*(1-vColor[ALPHA])+cl.cshifts[j].destcolor[2]*vColor[ALPHA];
+		vColour[ALPHA] += fAlpha*(1 - vColour[ALPHA]);
+		fAlpha /= vColour[ALPHA];
+
+		vColour[RED]	= cl.cshifts[j].destcolor[RED] * fAlpha;
+		vColour[GREEN]	= cl.cshifts[j].destcolor[GREEN] * fAlpha;
+		vColour[BLUE]	= cl.cshifts[j].destcolor[BLUE] * fAlpha;
 	}
 
-	Math_VectorDivide(vColor,255.0f,vColor);
-	Math_VectorCopy(vColor,vViewBlend);
+	Math_VectorDivide(vColour, 255.0f, vViewBlend);
+
+	vViewBlend[ALPHA] = vColour[ALPHA];
 
 	if(vViewBlend[3] > 1.0f)
 		vViewBlend[3] = 1.0f;
@@ -386,12 +391,13 @@ void V_UpdateBlend(void)
 
 void View_PolyBlend(void)
 {
-	if(!gl_polyblend.value || !vViewBlend[3])
+	if (!gl_polyblend.value || !cl.cshifts[CSHIFT_CONTENTS].percent)
 		return;
 
     Video_ResetCapabilities(false);
 
-	Video_DisableCapabilities(VIDEO_DEPTH_TEST);
+	Video_DisableCapabilities(VIDEO_DEPTH_TEST|VIDEO_ALPHA_TEST|VIDEO_TEXTURE_2D);
+	Video_EnableCapabilities(VIDEO_BLEND);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity ();
