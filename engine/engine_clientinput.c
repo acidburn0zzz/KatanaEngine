@@ -62,8 +62,6 @@ void Input_Initialize(void)
 	Cvar_RegisterVariable(&cvInputMouseFilter,NULL);
 	Cvar_RegisterVariable(&cvInputMouseGrab,NULL);
 
-	Cmd_AddCommand("input_tweak",Input_OpenTweakMenu);
-
 	if(SDL_Init(SDL_INIT_JOYSTICK) < 0)
 	{
 		Con_Warning("Failed to initialize input!\n%s",SDL_GetError());
@@ -226,36 +224,6 @@ int Input_ConvertKey(int iKey)
 		default:    			return iKey;
 	}
 }
-
-/*
-    Input Tweaking Menu
-*/
-
-TwBar   *tbInputOptions;
-
-void Input_OpenTweakMenu(void)
-{
-    static  bool bOpen = false;
-
-    if(bOpen)
-    {
-        TwDeleteBar(tbInputOptions);
-
-        bOpen = false;
-        return;
-    }
-
-    tbInputOptions = TwNewBar("Input Options");
-    TwAddVarRW(tbInputOptions,cvInputMouseFilter.name,TW_TYPE_FLOAT,&cvInputMouseFilter.value,"");
-	TwAddVarRW(tbInputOptions,cvInputMouseGrab.name,TW_TYPE_BOOL16,&cvInputMouseFilter.value,"");
-	TwAddVarRW(tbInputOptions,cvInputMouseLook.name,TW_TYPE_BOOL16,&cvInputMouseFilter.value,"");
-	TwAddSeparator(tbInputOptions,"Information","");
-	TwAddVarRO(tbInputOptions,"Controllers",TW_TYPE_INT16,&iNumControllers,"");
-
-    bOpen = true;
-}
-
-/**/
 
 // [13/7/2013] Ripped from Raynorpat's code ~hogsy
 static int InputMouseRemap[18]=

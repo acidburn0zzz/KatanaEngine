@@ -164,11 +164,6 @@ void Item_Touch(edict_t *eItem,edict_t *eOther)
 		return;
 	}
 
-	if(iItem->cSound)
-		Sound(eOther,CHAN_ITEM,iItem->cSound,255,ATTN_NORM);
-	else
-		Engine.Con_Warning("No pickup sound set for %s!",iItem->cName);
-
 	if (Item_CheckInventory(iItem, eOther))
 	{
 		Engine.Server_SinglePrint(eOther, "You already have the");
@@ -176,6 +171,11 @@ void Item_Touch(edict_t *eItem,edict_t *eOther)
 		Engine.Server_SinglePrint(eOther, "!\n");
 		return;
 	}
+
+	if (iItem->cSound)
+		Sound(eOther, CHAN_ITEM, iItem->cSound, 255, ATTN_NORM);
+	else
+		Engine.Con_Warning("No pickup sound set for %s!", iItem->cName);
 
 	// [20/1/2013] Changed from Con_Printf to Server_SinglePrint ~hogsy
 	Engine.Server_SinglePrint(eOther,"You got the");

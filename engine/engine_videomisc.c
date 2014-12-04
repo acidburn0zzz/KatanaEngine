@@ -141,8 +141,7 @@ void R_Envmap_f(void)
 
 void R_Init (void)
 {
-	extern cvar_t	gl_finish,
-					r_norefresh;
+	extern cvar_t	r_norefresh;
 
 	Cmd_AddCommand ("timerefresh", R_TimeRefresh_f);
 	Cmd_AddCommand ("envmap", R_Envmap_f);
@@ -160,7 +159,6 @@ void R_Init (void)
 	Cvar_RegisterVariable (&r_novis, R_Novis_f);
 	Cvar_RegisterVariable (&r_nocull, NULL);
 	Cvar_RegisterVariable (&r_speeds, NULL);
-	Cvar_RegisterVariable (&gl_finish, NULL);
 	Cvar_RegisterVariable (&gl_cull, NULL);
 	Cvar_RegisterVariable (&gl_smoothmodels, NULL);
 	Cvar_RegisterVariable (&gl_polyblend, NULL);

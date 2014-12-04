@@ -20,8 +20,8 @@
 	Release needs to be updated
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
-#define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	799	// 3/12/2014
+#define ENGINE_VERSION_MINOR	3
+#define ENGINE_VERSION_BUILD	801	// 5/12/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"

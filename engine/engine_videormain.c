@@ -72,7 +72,6 @@ cvar_t	r_wateralpha			= {	"r_wateralpha",			"0.98",		true,	false,	"Changes the l
 cvar_t	r_dynamic				= {	"r_dynamic",			"1"					};
 cvar_t	r_novis					= {	"r_novis",				"0"					};
 cvar_t	r_nocull				= {	"r_nocull",				"0"					};
-cvar_t	gl_finish				= {	"gl_finish",			"0"					};
 cvar_t	gl_cull					= {	"gl_cull",				"1"					};
 cvar_t	gl_smoothmodels			= {	"gl_smoothmodels",		"1"					};
 cvar_t	gl_polyblend			= {	"gl_polyblend",			"1"					};
@@ -660,8 +659,6 @@ void R_RenderView (void)
 		rs_brushpolys = rs_aliaspolys = rs_skypolys = rs_particles = rs_fogpolys = rs_megatexels =
 		rs_dynamiclightmaps = rs_aliaspasses = rs_skypasses = rs_brushpasses = 0;
 	}
-	else if (gl_finish.value)
-		glFinish ();
 
 	R_SetupView (); //johnfitz -- this does everything that should be done once per frame
 

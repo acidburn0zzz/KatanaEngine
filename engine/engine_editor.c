@@ -117,15 +117,6 @@ void Editor_Launch(void)
 		pFileSystem_ScanDirectory(va("./%s/textures/",com_gamedir),Editor_LoadTexture);
 	}
 
-    // [6/4/2014] Set up the editor interface ~hogsy
-	{
-        tbMainMenu = TwNewBar("Editor Menu");
-        if(!tbMainMenu)
-            Sys_Error("Failed to create editor window!\n");
-
-		TwAddButton(tbMainMenu,"Input Settings",(TwButtonCallback)Input_OpenTweakMenu,NULL,"");
-	}
-
 #if 0
 	{
 		ModuleImport_t	Import;
