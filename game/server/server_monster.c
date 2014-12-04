@@ -537,6 +537,9 @@ void Monster_Killed(edict_t *eTarget,edict_t *eAttacker)
 
 	if(eTarget->monster.think_die)
 		eTarget->monster.think_die(eTarget,eAttacker);
+
+	// Update our current state.
+	eTarget->monster.iState = STATE_DEAD;
 }
 
 void MONSTER_Damage(edict_t *target,edict_t *inflictor,int iDamage, int iDamageType)

@@ -55,8 +55,6 @@ typedef enum
 	EDITOR_SELECT_EDGE
 } EditorSelect_t;
 
-TwBar   *tbMainMenu;
-
 void Editor_Launch(void);
 
 /*  Initialization function.

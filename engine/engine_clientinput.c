@@ -279,21 +279,11 @@ void Input_Process(void)
                 break;
             case SDL_KEYDOWN:
             case SDL_KEYUP:
-				// Let ATB handle some key input when it wants to.
-				if((sEvent.key.state == SDL_PRESSED) && TwKeyPressed(sEvent.key.keysym.sym,0))
-					break;
-
 				Key_Event(Input_ConvertKey(sEvent.key.keysym.sym),(sEvent.key.state == SDL_PRESSED));
                 break;
             case SDL_MOUSEMOTION:
-                if(bIsDedicated)
+				if (bIsDedicated || !bMouseActive)
                     return;
-                else if(!bMouseActive)
-                {
-                    // [5/4/2014] Do this manually, since it doesn't seem to work well with SDL2 ~hogsy
-                    TwMouseMotion(sEvent.motion.x,sEvent.motion.y);
-                    return;
-                }
 
                 // [30/7/2013] Originally handled this differently for fullscreen but this works fine apparently ~hogsy
                 if(((unsigned)sEvent.motion.x != (Video.iWidth/2)) || ((unsigned)sEvent.motion.y != (Video.iHeight/2)))
@@ -310,9 +300,8 @@ void Input_Process(void)
                 break;
             case SDL_MOUSEBUTTONDOWN:
             case SDL_MOUSEBUTTONUP:
-                if(!TwMouseButton(sEvent.button.state,TW_MOUSE_LEFT))
-                    if(sEvent.button.button <= 18)
-                        Key_Event(InputMouseRemap[sEvent.button.button-1],(sEvent.button.state == SDL_PRESSED));
+				if(sEvent.button.button <= 18)
+					Key_Event(InputMouseRemap[sEvent.button.button-1],(sEvent.button.state == SDL_PRESSED));
                 break;
             case SDL_MOUSEWHEEL:
                 if(sEvent.wheel.y > 0)

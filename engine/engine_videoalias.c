@@ -309,7 +309,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 			iVert++;
         }
 
-	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,iVert);
+	//Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,iVert);
 }
 
 void Alias_SetupFrame(MD2_t *mModel,lerpdata_t *ldLerp)

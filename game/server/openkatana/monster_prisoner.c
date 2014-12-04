@@ -84,7 +84,7 @@ void Prisoner_Think(edict_t *ePrisoner)
 	case THINK_IDLE:
 		if(ePrisoner->monster.iCommandList[COMMAND_CHECK_CELL] && !Prisoner_CheckCell(ePrisoner))
 		{
-			if(rand()%120 == 1)
+			if(rand()%200 == 1)
 				Sound(ePrisoner,CHAN_VOICE,PRISONER_SOUND_HELP,255,ATTN_NORM);
 		}
 		break;

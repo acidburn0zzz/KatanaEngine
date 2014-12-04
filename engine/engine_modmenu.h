@@ -7,8 +7,6 @@
 
 #include "shared_menu.h"
 
-#include "AntTweakBar.h"
-
 MenuExport_t *Menu;
 
 void Menu_Initialize(void);

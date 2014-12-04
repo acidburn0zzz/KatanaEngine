@@ -48,6 +48,7 @@ typedef struct
 typedef struct
 {
 	vec3_t	vVertex;
+
 	vec2_t	vTextureCoord[VIDEO_MAX_UNITS+1];	// Texture coordinates by texture unit.
 
 	vec4_t	vColour;							// RGBA
@@ -64,9 +65,9 @@ extern SDL_Window	*sMainWindow;
 #define	VIDEO_BLEND			2	// Blending
 #define	VIDEO_TEXTURE_2D	4	// Enables/disables textures.
 #define	VIDEO_DEPTH_TEST	8	// Depth-testing
-#define	VIDEO_TEXTURE_GEN_T	16
-#define	VIDEO_TEXTURE_GEN_S	32
-#define	VIDEO_CULL_FACE		64
+#define	VIDEO_TEXTURE_GEN_T	16	// Generate T coordinate.
+#define	VIDEO_TEXTURE_GEN_S	32	// Generate S coordinate.
+#define	VIDEO_CULL_FACE		64	// Automatically cull faces.
 #define	VIDEO_STENCIL_TEST	128	// Stencil-testing
 #define	VIDEO_NORMALIZE		256	// Normalization for scaled models that are lit.
 

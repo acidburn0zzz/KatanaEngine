@@ -332,13 +332,6 @@ bool Video_CreateWindow(void)
 	// [3/6/2013] Added to fix a bug on some systems when calling wglGetExtensionString* ~hogsy
 	GLeeInit();
 
-    // [31/3/2014] Initialize AntTweakBar ~hogsy
-	if(COM_CheckParm("-tweak"))
-	{
-		TwInit(TW_OPENGL,NULL);
-		TwWindowSize(Video.iWidth,Video.iHeight);
-	}
-
 	// [13/8/2012] Do we want to check for extensions? ~hogsy
 	if(!COM_CheckParm("-noextensions"))
 	{
@@ -450,9 +443,6 @@ void Video_UpdateWindow(void)
 	if(!cvFullscreen.value)
 		// [15/7/2013] Center the window ~hogsy
 		SDL_SetWindowPosition(sMainWindow,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED);
-
-    // [31/3/2014] Keep AntTweakBar informed of our windows size :) ~hogsy
-    TwWindowSize(Video.iWidth,Video.iHeight);
 
 	// [15/7/2013] Update console size ~hogsy
 	vid.conwidth	= Video.iWidth & 0xFFFFFFF8;
@@ -711,10 +701,8 @@ void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,u
 
 			// Copy over coords for each TMU.
 			for(j = 0; j < VIDEO_MAX_UNITS; j++)
-			{
-				//if(iSavedCapabilites[j][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
+				if(iSavedCapabilites[j][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
 					Math_Vector2Copy(voObject[i].vTextureCoord[j],vVideoTextureArray[j][i]);
-			}
 		}		
 		else
 			Math_Vector4Set(1.0f,vVideoColourArray[i]);
@@ -1027,8 +1015,6 @@ void Video_Shutdown(void)
 
 	// Let us know that we're shutting down the video sub-system...
 	Con_Printf("Shutting down video...\n");
-
-    TwTerminate();
 
 	// [6/12/2012] Delete our context ~hogsy
 	if(sMainContext)
