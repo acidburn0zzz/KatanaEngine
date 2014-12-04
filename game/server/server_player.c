@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "server_player.h"
 
@@ -13,6 +13,7 @@
 #include "server_weapon.h"
 #include "server_item.h"
 
+#define	PLAYER_MAX_HEALTH	cvServerMaxHealth.iValue
 #define	PLAYER_MIN_HEALTH	-20
 
 // [10/4/2013] Moved entity frames here so that bots can refer to them! ~hogsy
@@ -324,7 +325,7 @@ void Player_CheckFootsteps(edict_t *ePlayer)
 		dDelay = CLAMP(0.1,(double)(1.0f/(fForce/100.0f)),1.0);
 
 		// [9/6/2013] TODO: Check if we're in water or not and change this accordingly :) ~hogsy
-		Sound(ePlayer,CHAN_VOICE,va("player/playerstep%i.wav",rand()%4+1),35,ATTN_NORM);
+		Sound(ePlayer,CHAN_VOICE,va("physics/concrete%i_footstep.wav",rand()%4),35,ATTN_NORM);
 
 		ePlayer->local.dStepTime = Server.dTime+dDelay;
 	}
@@ -634,9 +635,9 @@ void Player_Spawn(edict_t *ePlayer)
 
 	ePlayer->v.cClassname	= "player";
 	// [30/1/2013] Default health can now be changed by admins ~hogsy
-	ePlayer->v.iHealth		= (int)cvServerDefaultHealth.value;
+	ePlayer->v.iHealth		= cvServerDefaultHealth.iValue;
 	// [5/6/2012] Make max_health changable for admins ~hogsy
-	ePlayer->v.iMaxHealth	= (int)cvServerMaxHealth.value;
+	ePlayer->v.iMaxHealth	= PLAYER_MAX_HEALTH;
 	ePlayer->v.movetype		= MOVETYPE_WALK;
 	ePlayer->v.bTakeDamage	= true;
 	ePlayer->v.model		= cvServerPlayerModel.string;
@@ -862,7 +863,7 @@ void Player_Jump(edict_t *ePlayer)
 	{
 		ePlayer->v.velocity[2] += 250.0f;
 
-		sprintf(cJumpSound,"player/playerjump%i.wav",rand()%3+5);
+		sprintf(cJumpSound,"player/jump%i.wav",rand()%4);
 	}
 
 	Sound(ePlayer,CHAN_VOICE,cJumpSound,255,ATTN_NORM);

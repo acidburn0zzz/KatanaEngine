@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "menu_main.h"
 
@@ -115,8 +115,7 @@ void Menu_GetScreenSize(void);
 
 void Menu_Initialize(void)
 {
-//	char	script[1024];
-	int		i;
+	int	i;
 
 	Engine.Con_Printf("Initializing menu...\n");
 
@@ -147,18 +146,20 @@ void Menu_Initialize(void)
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"armor");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair0");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair1");
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair2");
 #elif GAME_ADAMAS
     Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"health");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"ammo");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"armor");
 	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_HUD_PATH"crosshair");
-#elif GAME_ICTUS
-	Engine.Client_PrecacheResource(RESOURCE_TEXTURE,MENU_BASE_PATH"int040a");
 #endif
 
 	// Allocate global elements.
 	mMenuElements = (Menu_t*)malloc(iMenuAllocated*sizeof(Menu_t));
+	if(!mMenuElements)
+	{
+		Engine.Sys_Error("Failed to allocate menu elements!\n");
+		return;
+	}
 
 	// [2/8/2012] Precache all the HUD digits ~hogsy
 	for(i = 0; i < 10; i++)
@@ -204,8 +205,9 @@ void Menu_Initialize(void)
 	// [3/8/2012] Automatically precache images being used by each element ~hogsy
 	for(i = 0; i < iMenuElements; i++)
 	{
-		if(!mMenuElements[i].cResource)
-			return;
+		if(!&mMenuElements[i] || !mMenuElements[i].cResource)
+			// Break, don't return in-case we want to do here later.
+			break;
 
 		switch(mMenuElements[i].mMenuType)
 		{

@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2014 OldTimes Software
+	Copyright (C) 2011-2015 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -24,7 +24,7 @@
 	Manages OpenGL texture images.
 */
 
-#include "platform/include/platform_filesystem.h"
+#include "platform_filesystem.h"
 
 #include "engine_console.h"
 #include "engine_video.h"
@@ -37,7 +37,7 @@ int			gl_hardware_maxsize;
 const int	gl_solid_format = 3;
 const int	gl_alpha_format = 4;
 
-#define	MAX_GLTEXTURES 2048
+#define	MAX_GLTEXTURES 4096	// Bumped up, since we support seperate materials now.
 
 gltexture_t	*active_gltextures, *free_gltextures;
 
@@ -304,7 +304,7 @@ void TexMgr_FreeTexture (gltexture_t *kill)
 
 	if (kill == NULL)
 	{
-		Con_Printf ("TexMgr_FreeTexture: NULL texture\n");
+		Con_Warning("Attempted to free NULL texture!\n");
 		return;
 	}
 
@@ -320,7 +320,8 @@ void TexMgr_FreeTexture (gltexture_t *kill)
 	}
 
 	for (glt = active_gltextures; glt; glt = glt->next)
-		if (glt->next == kill)
+	{
+		if(glt->next && (glt->next == kill))
 		{
 			glt->next = kill->next;
 			kill->next = free_gltextures;
@@ -330,13 +331,14 @@ void TexMgr_FreeTexture (gltexture_t *kill)
 			numgltextures--;
 			return;
 		}
+	}
 
 	Con_Printf ("TexMgr_FreeTexture: not found\n");
 }
 
 /*	Compares each bit in "flags" to the one in glt->flags only if that bit is active in "mask"
 */
-void TexMgr_FreeTextures (int flags, int mask)
+void TextureManager_FreeTextures(unsigned int flags,unsigned int mask)
 {
 	gltexture_t *glt, *next;
 
@@ -414,7 +416,7 @@ void TexMgr_RecalcWarpImageSize (void)
 
 /*	Must be called before any texture loading
 */
-void TexMgr_Init (void)
+void TextureManager_Initialize(void)
 {
 	int			i;
 	static byte notexture_data[16] =
@@ -434,9 +436,6 @@ void TexMgr_Init (void)
 		free_gltextures[i].next = &free_gltextures[i+1];
 	free_gltextures[i].next = NULL;
 	numgltextures = 0;
-
-	// palette
-//	TexMgr_LoadPalette ();
 
 	Cvar_RegisterVariable (&gl_max_size, NULL);
 	Cvar_RegisterVariable (&gl_picmip, NULL);
@@ -848,8 +847,7 @@ void TexMgr_LoadImage8 (gltexture_t *glt, byte *data)
 	extern		cvar_t	gl_fullbrights;
 	bool				padw = false,padh = false;
 	byte				padbyte;
-	unsigned	int		*usepal;
-	int					i;
+	unsigned	int		i,*usepal;
 
 	// detect FALSE alpha cases
 	if (glt->flags & TEXPREF_ALPHA && !(glt->flags & TEXPREF_CONCHARS))
@@ -931,9 +929,9 @@ void TexMgr_LoadLightmap(gltexture_t *glt,byte *data)
 
 gltexture_t *TexMgr_LoadImage(model_t *owner,char *name,int width,int height,enum srcformat format,byte *data,char *source_file,unsigned source_offset,unsigned flags)
 {
-	unsigned    short   crc = 0;
-	gltexture_t *glt;
-	int mark;
+	unsigned    short   crc		= 0;
+	gltexture_t			*glt	= NULL;
+	int					mark;
 
 	// [28/4/2013] TODO: Really? ~hogsy
 	if(bIsDedicated)
@@ -955,28 +953,31 @@ gltexture_t *TexMgr_LoadImage(model_t *owner,char *name,int width,int height,enu
 			Console_ErrorMessage(true,source_file,va("Unknown source format (%i).",format));
 	}
 
-	if ((flags & TEXPREF_OVERWRITE) && (glt = TexMgr_FindTexture (owner, name)))
+	if (flags & TEXPREF_OVERWRITE)
 	{
-		if (glt->source_crc == crc)
-			return glt;
+		glt = TexMgr_FindTexture(owner, name);
+		if (glt)
+			if (glt->source_crc == crc)
+				return glt;
 	}
-	else
-		glt = TexMgr_NewTexture ();
+
+	if (!glt)
+		glt = TexMgr_NewTexture();
 
 	// copy data
-	glt->owner = owner;
-	strncpy (glt->name, name, sizeof(glt->name));
-	glt->width = width;
-	glt->height = height;
-	glt->flags = flags;
-	glt->shirt = -1;
-	glt->pants = -1;
-	strncpy(glt->source_file,source_file, sizeof(glt->source_file));
+	glt->owner			= owner;
+	glt->width			= width;
+	glt->height			= height;
+	glt->flags			= flags;
+	glt->shirt			= -1;
+	glt->pants			= -1;
 	glt->source_offset  = source_offset;
 	glt->source_format  = format;
 	glt->source_width   = width;
 	glt->source_height  = height;
 	glt->source_crc     = crc;
+	strncpy(glt->name,name,sizeof(glt->name));
+	strncpy(glt->source_file,source_file,sizeof(glt->source_file));
 
 	//upload it
 	mark = Hunk_LowMark();
@@ -1117,18 +1118,4 @@ void TexMgr_ReloadImages (void)
 		glGenTextures(1, &glt->texnum);
 		TexMgr_ReloadImage (glt, -1, -1);
 	}
-}
-
-/*
-================
-TexMgr_ReloadNobrightImages -- reloads all texture that were loaded with the nobright palette.  called when gl_fullbrights changes
-================
-*/
-void TexMgr_ReloadNobrightImages (void)
-{
-	gltexture_t *glt;
-
-	for (glt=active_gltextures; glt; glt=glt->next)
-		if (glt->flags & TEXPREF_NOBRIGHT)
-			TexMgr_ReloadImage(glt, -1, -1);
 }

@@ -220,6 +220,10 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion4.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion5.wav");
 	Engine.Server_PrecacheResource(RESOURCE_SOUND,"fx/explosion6.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND, PHYSICS_SOUND_CONCRETESTEP0);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND, PHYSICS_SOUND_CONCRETESTEP1);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND, PHYSICS_SOUND_CONCRETESTEP2);
+	Engine.Server_PrecacheResource(RESOURCE_SOUND, PHYSICS_SOUND_CONCRETESTEP3);
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB0);
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB1);
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,PHYSICS_MODEL_GIB2);
@@ -227,14 +231,6 @@ void Server_Spawn(edict_t *ent)
 	
 	// Player
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,cvServerPlayerModel.string);
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep1.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep2.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep3.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerstep4.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain1.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain2.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain3.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerpain4.wav");
 
 	// Particles
 	Engine.Server_PrecacheResource(RESOURCE_SPRITE,PARTICLE_BLOOD0);
@@ -247,26 +243,11 @@ void Server_Spawn(edict_t *ent)
 	Engine.Server_PrecacheResource(RESOURCE_SPRITE,PARTICLE_SMOKE3);
 
 #ifdef GAME_OPENKATANA	// [22/4/2013] OpenKatana specific stuff is now here instead ~hogsy
-	// [29/7/2012] Player sounds ~hogsy
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerjump5.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerjump6.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerjump7.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/acroboost.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerlandhurt.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerlandhurt2.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerswim1.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerdeath1.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerdeath2.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerdeath3.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerdeath4.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerwaterdeath.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerland1.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerland2.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerland3.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerland4.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/playerexitwater.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/gasp2.wav");
-	Engine.Server_PrecacheResource(RESOURCE_SOUND,"player/h2ojump.wav");
+	// Player
+	Engine.Server_PrecacheResource(RESOURCE_SOUND, "player/jump0.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND, "player/jump1.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND, "player/jump2.wav");
+	Engine.Server_PrecacheResource(RESOURCE_SOUND, "player/jump3.wav");
 
 	Engine.Server_PrecacheResource(RESOURCE_MODEL,"models/blip.md2");
 

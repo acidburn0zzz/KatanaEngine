@@ -1,8 +1,8 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "engine_physics.h"
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 
 /*
 
@@ -182,7 +182,10 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 			 break;		// moved the entire distance
 
 		if(!trace.ent)
+		{
 			Sys_Error ("SV_FlyMove: !trace.ent");
+			return 0;
+		}
 
 		if (trace.plane.normal[2] > 0.7)
 		{

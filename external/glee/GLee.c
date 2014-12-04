@@ -15987,6 +15987,12 @@ GLboolean __GLeeGetExtensions(ExtensionList* extList)
 	platExtStrLen = strlen(platExtStr);
 	totalExtStrLen = platExtStrLen + strlen(glExtStr);
 	extStr=(char *)malloc( (totalExtStrLen+2) * sizeof(char) ); /* we add 2 to allow for an extra space and a null terminator */
+	// Should never happen, but regardless.
+	if(!extStr)
+	{
+		__GLeeWriteError("Malloc failed in GetExtensions.");
+		return GL_FALSE;
+	}
 
 	/* If the last character of platExtStr is not a space, we need to add one when we concatenate the extension strings*/
 	addASpace = 0;

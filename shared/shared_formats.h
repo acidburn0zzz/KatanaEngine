@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #ifndef	__SHAREDFORMATS__
 #define	__SHAREDFORMATS__
@@ -328,8 +328,10 @@ typedef struct
 			fOrigin[3];
 
 	int		iHeadNode[BSP_MAX_HULLS],
-			iVisLeafs,
-			iFirstFace,iNumFaces;
+			iVisLeafs;
+
+	unsigned int	iFirstFace,
+					iNumFaces;
 } BSPModel_t;
 
 typedef struct
@@ -351,8 +353,8 @@ typedef struct
 
 	float				fMins[3],fMaxs[3];
 
-	unsigned	int		usFirstFace;
-	unsigned	int		usNumFaces;
+	unsigned	int		usFirstFace,
+						usNumFaces;
 } BSPNode_t;
 
 typedef struct

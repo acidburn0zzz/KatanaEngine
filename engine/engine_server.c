@@ -1,8 +1,8 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "engine_server.h"
 
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 #include "engine_console.h"
 
 typedef struct

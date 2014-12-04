@@ -337,15 +337,15 @@ int lightchainbufindex;
 
 void LightWorld( void )
 {
-	int			i, k, n, m, count, pass, surfacesdone, lightvisibilitydone;
-	unsigned int	*mark;
-	time_t		lightstarttime, oldtime, newtime;
-	directlight_t *light;
+	int				i, pass, surfacesdone, lightvisibilitydone;
+	unsigned int	*mark,count,n,m,k;
+	time_t			lightstarttime, oldtime, newtime;
+	directlight_t	*light;
 	BSPLeaf_t		*leaf;
-	int			lightcount = 0, castcount = 0, emptycount = 0, solidcount = 0, watercount = 0, slimecount = 0, lavacount = 0, skycount = 0, misccount = 0, ignorevis;
-	vec3_t		org;
-	char		name[8];
-	entity_t	*ent;
+	int				lightcount = 0, castcount = 0, emptycount = 0, solidcount = 0, watercount = 0, slimecount = 0, lavacount = 0, skycount = 0, misccount = 0, ignorevis;
+	vec3_t			org;
+	char			name[8];
+	entity_t		*ent;
 
 	lightdatasize = 0;
 	rgblightdatasize = 0;

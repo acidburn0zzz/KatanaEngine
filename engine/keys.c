@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2014 OldTimes Software
+	Copyright (C) 2011-2015 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 #include "quakedef.h"
 
 #include "engine_video.h"
-#include "engine_menu.h"
+#include "engine_modmenu.h"
 #include "engine_editor.h"
 
 /*

@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2014 OldTimes Software
+	Copyright (C) 2011-2015 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 */
 #include "quakedef.h"
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 #include "engine_server.h"
 
 extern cvar_t	pausable;
@@ -183,7 +183,7 @@ void Host_Game_f (void)
 		if(!bIsDedicated)
 		{
 			// Delete all textures where TEXPREF_PERSIST is unset
-			TexMgr_FreeTextures(0,TEXPREF_PERSIST);
+			TextureManager_FreeTextures(0,TEXPREF_PERSIST);
 
 			Draw_NewGame();
 
@@ -268,7 +268,7 @@ void ExtraMaps_Init(void)
                 WIN32_FIND_DATA	FindFileData;
                 HANDLE			Find;
 
-                sprintf(filestring,"%s/maps/*"BSP_EXTENSION,search->filename);
+                sprintf(filestring,"%s/%s*"BSP_EXTENSION,search->filename,Global.cLevelPath);
 
                 Find = FindFirstFile(filestring,&FindFileData);
                 if(Find == INVALID_HANDLE_VALUE)
@@ -286,7 +286,7 @@ void ExtraMaps_Init(void)
                 DIR             *dDirectory;
                 struct  dirent  *dEntry;
 
-                sprintf(filestring,"%s/maps",search->filename);
+                sprintf(filestring,"%s/%s",search->filename,Global.cLevelPath);
 
                 dDirectory = opendir(filestring);
                 if(dDirectory)
@@ -401,6 +401,12 @@ void Modlist_Init(void) //TODO: move win32 specific stuff to sys_win.c
 					return;
 
 			mod = (mod_t*)Z_Malloc(sizeof(mod_t));
+			if(!mod)
+			{
+				Sys_Error("Failed to allocate mod!\n");
+				return;
+			}
+
 			strcpy (mod->name,FindFileData.cFileName);
 
 			//insert each entry in alphabetical order
@@ -750,7 +756,7 @@ SERVER TRANSITIONS
 ===============================================================================
 */
 
-#include "engine_input.h"
+#include "engine_clientinput.h"
 
 /*	handle a
 	map <servername>
@@ -824,7 +830,7 @@ void Host_Changelevel_f (void)
 	}
 
 	//johnfitz -- check for client having map before anything else
-	sprintf (level,PATH_MAPS"/%s"BSP_EXTENSION, Cmd_Argv(1));
+	sprintf(level,"%s/%s"BSP_EXTENSION,Global.cLevelPath,Cmd_Argv(1));
 	if (COM_OpenFile (level, &i) == -1)
 		Host_Error ("cannot find map %s", level);
 	//johnfitz
@@ -1899,6 +1905,7 @@ void Host_Stopdemo_f (void)
 void Host_InitCommands (void)
 {
 	Cmd_AddCommand("maps",Host_Maps_f); //johnfitz
+	Cmd_AddCommand("levels",Host_Maps_f);
 	Cmd_AddCommand("game",Host_Game_f); //johnfitz
 	Cmd_AddCommand("mods",Host_Mods_f); //johnfitz
 	Cmd_AddCommand("mapname",Host_Mapname_f); //johnfitz

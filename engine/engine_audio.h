@@ -3,6 +3,8 @@
 
 #include "quakedef.h"
 
+#define	AUDIO_SAMPLE_RATE	44100
+
 typedef struct
 {
 	unsigned	int		iSampleID;	// The ID of the sound.

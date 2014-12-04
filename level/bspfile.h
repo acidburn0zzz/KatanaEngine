@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #ifndef BSPFILE_H
 #define BSPFILE_H
@@ -30,7 +30,7 @@ typedef struct
 
 // the utilities get to be lazy and just use large static arrays
 
-extern	int					nummodels;
+extern	unsigned int		nummodels;
 extern	BSPModel_t			dmodels[BSP_MAX_MODELS];
 extern	int					visdatasize;
 extern	byte				dvisdata[BSP_MAX_VISIBILITY];
@@ -42,25 +42,25 @@ extern	int					texdatasize;
 extern	byte				dtexdata[BSP_MAX_MIPTEX]; // (dmiptexlump_t)
 extern	int					entdatasize;
 extern	char				dentdata[BSP_MAX_ENTSTRING];
-extern	int					numleafs;
+extern	unsigned int		numleafs;
 extern	BSPLeaf_t			dleafs[BSP_MAX_LEAFS];
-extern	int					numplanes;
+extern	unsigned int		numplanes;
 extern	BSPPlane_t			dplanes[BSP_MAX_PLANES];
-extern	int					numvertexes;
+extern	unsigned int		numvertexes;
 extern	BSPVertex_t			dvertexes[BSP_MAX_VERTS];
-extern	int					numnodes;
+extern	unsigned int		numnodes;
 extern	BSPNode_t			dnodes[BSP_MAX_NODES];
-extern	int					numtexinfo;
+extern	unsigned int		numtexinfo;
 extern	BSPTextureInfo_t	texinfo[BSP_MAX_TEXINFO];
-extern	int					numfaces;
+extern	unsigned int		numfaces;
 extern	BSPFace_t			dfaces[BSP_MAX_FACES];
 extern	int					numclipnodes;
 extern	BSPClipNode_t		dclipnodes[BSP_MAX_CLIPNODES];
-extern	int					numedges;
+extern	unsigned int		numedges;
 extern	BSPEdge_t			dedges[BSP_MAX_EDGES];
-extern	int					nummarksurfaces;
+extern	unsigned int		nummarksurfaces;
 extern	unsigned int		dmarksurfaces[BSP_MAX_MARKSURFACES];
-extern	int					numsurfedges;
+extern	unsigned int		numsurfedges;
 extern	int					dsurfedges[BSP_MAX_SURFEDGES];
 
 extern	hullinfo_t	hullinfo;

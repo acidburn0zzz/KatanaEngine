@@ -79,16 +79,15 @@ float TexMgr_FrameUsage (void);
 gltexture_t *TexMgr_FindTexture (model_t *owner, char *name);
 gltexture_t *TexMgr_NewTexture (void);
 void TexMgr_FreeTexture (gltexture_t *kill);
-void TexMgr_FreeTextures (int flags, int mask);
+void	TextureManager_FreeTextures(unsigned int flags,unsigned int mask);
 void TexMgr_FreeTexturesForOwner (model_t *owner);
-void TexMgr_Init (void);
+void	TextureManager_Initialize(void);
 
 // IMAGE LOADING
 gltexture_t *TexMgr_LoadImage (model_t *owner, char *name, int width, int height, enum srcformat format,
 							   byte *data, char *source_file, unsigned source_offset, unsigned flags);
 void TexMgr_ReloadImage (gltexture_t *glt, int shirt, int pants);
 void TexMgr_ReloadImages (void);
-void TexMgr_ReloadNobrightImages (void);
 
 int TexMgr_Pad(int s);
 int TexMgr_SafeTextureSize (int s);

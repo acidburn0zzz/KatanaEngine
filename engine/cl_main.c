@@ -1,8 +1,8 @@
 #include "quakedef.h"
 
-#include "engine_game.h"
-#include "engine_input.h"
-#include "engine_menu.h"
+#include "engine_modgame.h"
+#include "engine_clientinput.h"
+#include "engine_modmenu.h"
 
 // we need to declare some mouse variables here, because the menu system
 // references them even when on a unix system.

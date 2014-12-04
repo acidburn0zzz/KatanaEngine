@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "engine_audio.h"
 
@@ -62,8 +62,8 @@ AudioSound_t *Audio_LoadSound(sfx_t *sSoundEffect)
 //	if(sSoundCache)
 //		return sSoundCache;
 
-	strcpy(cNameBuffer,PATH_SOUNDS"/");
-	strcat(cNameBuffer,sSoundEffect->name);
+	sprintf(cNameBuffer,"%s",Global.cSoundPath);
+	strncat(cNameBuffer,sSoundEffect->name,sizeof(sSoundEffect->name));
 
 	bData = COM_LoadStackFile(cNameBuffer,bStackBuffer,sizeof(bStackBuffer));
 	if(!bData)

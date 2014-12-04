@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2014 OldTimes Software
+	Copyright (C) 2011-2015 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 */
 #include "engine_edict.h"
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 
 ddef_t				*pr_fielddefs,
 					*pr_globaldefs;
@@ -140,6 +140,7 @@ Done:
 */
 char *PR_ValueString (EntityType_t type, eval_t *val)
 {
+#if 0
 	static char	line[256];
 
 	type &= ~DEF_SAVEGLOBAL;
@@ -164,6 +165,9 @@ char *PR_ValueString (EntityType_t type, eval_t *val)
 	}
 
 	return line;
+#else
+	return "null";
+#endif
 }
 
 /*	Returns a string describing *data in a type specific manner
@@ -501,12 +505,16 @@ char *ED_ParseEdict(char *data, edict_t *ent)
 		strncpy(keyname,com_token,sizeof(keyname)-1);
 
 		// Hack to fix keynames with trailing spaces
+#ifdef _MSC_VER
+#pragma warning(suppress: 6053)	// This is intended.
+#endif
 		n = strlen(keyname);
-		while(n && keyname[n-1] == ' ')
-		{
-			keyname[n-1] = 0;
-			n--;
-		}
+		if(n > 0)
+			while(n && keyname[n-1] == ' ')
+			{
+				keyname[n-1] = 0;
+				n--;
+			}
 
 		// Parse value
 		data = COM_Parse(data);

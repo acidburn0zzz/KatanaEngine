@@ -64,15 +64,13 @@ pINSTANCE pModule_Load(const char *ccPath)
 #endif
 	if(!iModule)
 	{
-		pError_Set("Failed to load library! (%s)\n%s",cUpdatedPath,
-#ifdef _WIN32
-			GetLastError());
-#else
-			dlerror());
-#endif
+		pError_Set("Failed to load library! (%s)\n%s", cUpdatedPath, pError_SystemGet());
+
+		pError_SystemReset();
+
 		return NULL;
 	}
-
+	
 	return iModule;
 }
 
@@ -90,11 +88,13 @@ void *pModule_LoadInterface(pINSTANCE hModule,const char *cPath,const char *cEnt
 	hModule = pModule_Load(cUpdatedPath);
 	if(!hModule)
 	{
+#if 0	// Dealt with by pModule_Load.
 		pError_Set("Failed to load library! (%s)\n",
 #ifdef _WIN32
 			cUpdatedPath);
 #else
 			dlerror());
+#endif
 #endif
 		return NULL;
 	}

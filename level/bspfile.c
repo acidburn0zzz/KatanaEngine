@@ -1,12 +1,12 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "cmdlib.h"
 #include "mathlib.h"
 #include "bspfile.h"
 #include "mem.h"
 
-int			nummodels;
-BSPModel_t	dmodels[BSP_MAX_MODELS];
+unsigned int	nummodels;
+BSPModel_t		dmodels[BSP_MAX_MODELS];
 
 int			visdatasize;
 byte		dvisdata[BSP_MAX_VISIBILITY];
@@ -24,35 +24,35 @@ byte		dtexdata[BSP_MAX_MIPTEX]; // (dmiptexlump_t)
 int			entdatasize;
 char		dentdata[BSP_MAX_ENTSTRING];
 
-int			numleafs;
-BSPLeaf_t	dleafs[BSP_MAX_LEAFS];
+unsigned int	numleafs;
+BSPLeaf_t		dleafs[BSP_MAX_LEAFS];
 
-int			numplanes;
+unsigned int	numplanes;
 BSPPlane_t	dplanes[BSP_MAX_PLANES];
 
-int			numvertexes;
-BSPVertex_t	dvertexes[BSP_MAX_VERTS];
+unsigned int	numvertexes;
+BSPVertex_t		dvertexes[BSP_MAX_VERTS];
 
-int			numnodes;
-BSPNode_t	dnodes[BSP_MAX_NODES];
+unsigned int	numnodes;
+BSPNode_t		dnodes[BSP_MAX_NODES];
 
-int					numtexinfo;
+unsigned int		numtexinfo;
 BSPTextureInfo_t	texinfo[BSP_MAX_TEXINFO];
 
-int			numfaces;
-BSPFace_t	dfaces[BSP_MAX_FACES];
+unsigned int	numfaces;
+BSPFace_t		dfaces[BSP_MAX_FACES];
 
 int				numclipnodes;
 BSPClipNode_t	dclipnodes[BSP_MAX_CLIPNODES];
 
-int			numedges;
-BSPEdge_t	dedges[BSP_MAX_EDGES];
+unsigned int	numedges;
+BSPEdge_t		dedges[BSP_MAX_EDGES];
 
-int				nummarksurfaces;
+unsigned int	nummarksurfaces;
 unsigned int	dmarksurfaces[BSP_MAX_MARKSURFACES];
 
-int			numsurfedges;
-int			dsurfedges[BSP_MAX_SURFEDGES];
+unsigned int	numsurfedges;
+int				dsurfedges[BSP_MAX_SURFEDGES];
 
 hullinfo_t	hullinfo;
 
@@ -203,7 +203,8 @@ int SB_Tell (swappedbuffer_t *sbuf)
 
 void LoadBSPFile(char *filename)
 {
-	int				i, j, headerend;
+	int				j, headerend;
+	unsigned int	i;
 	swappedbuffer_t	sb;
 	BSPLump_t		lumps[HEADER_LUMPS], *lump;
 
@@ -373,20 +374,22 @@ void LoadBSPFile(char *filename)
 	nummodels = lump->iFileLength / (48+4*hullinfo.filehulls);
 	for (i = 0; i < nummodels; i++)
 	{
-		dmodels[i].fMins[0] = SB_ReadFloat (&sb);
-		dmodels[i].fMins[1] = SB_ReadFloat (&sb);
-		dmodels[i].fMins[2] = SB_ReadFloat (&sb);
-		dmodels[i].fMaxs[0] = SB_ReadFloat (&sb);
-		dmodels[i].fMaxs[1] = SB_ReadFloat (&sb);
-		dmodels[i].fMaxs[2] = SB_ReadFloat (&sb);
-		dmodels[i].fOrigin[0] = SB_ReadFloat (&sb);
-		dmodels[i].fOrigin[1] = SB_ReadFloat (&sb);
-		dmodels[i].fOrigin[2] = SB_ReadFloat (&sb);
+		dmodels[i].fMins[0]		= SB_ReadFloat (&sb);
+		dmodels[i].fMins[1]		= SB_ReadFloat (&sb);
+		dmodels[i].fMins[2]		= SB_ReadFloat (&sb);
+		dmodels[i].fMaxs[0]		= SB_ReadFloat (&sb);
+		dmodels[i].fMaxs[1]		= SB_ReadFloat (&sb);
+		dmodels[i].fMaxs[2]		= SB_ReadFloat (&sb);
+		dmodels[i].fOrigin[0]	= SB_ReadFloat (&sb);
+		dmodels[i].fOrigin[1]	= SB_ReadFloat (&sb);
+		dmodels[i].fOrigin[2]	= SB_ReadFloat (&sb);
+
 		for (j = 0; j < hullinfo.filehulls; j++)
 			dmodels[i].iHeadNode[j] = SB_ReadInt (&sb);
-		dmodels[i].iVisLeafs = SB_ReadInt (&sb);
-		dmodels[i].iFirstFace = SB_ReadInt (&sb);
-		dmodels[i].iNumFaces = SB_ReadInt (&sb);
+
+		dmodels[i].iVisLeafs	= SB_ReadInt (&sb);
+		dmodels[i].iFirstFace	= SB_ReadInt (&sb);
+		dmodels[i].iNumFaces	= SB_ReadInt (&sb);
 	}
 
 	lump = &lumps[LUMP_LIGHTING];
@@ -416,8 +419,8 @@ void LoadBSPFile(char *filename)
 // Ripped from RMQ ~hogsy
 void BSP_RemoveSkipSurfaces(void)
 {
-	int					i, j, k, skipcount;
-	unsigned int		*leafmarks;
+	int					i, skipcount;
+	unsigned int		*leafmarks,j,k;
 	BSPLeaf_t			*leaf;
 	BSPFace_t			*face;
 	BSPTextureInfo_t	*ti;
@@ -494,11 +497,10 @@ void BSP_RemoveSkipSurfaces(void)
 */
 void WriteBSPFile (char *filename)
 {
-	int				i, j;
+	unsigned int	i;
 	FILE			*f;
 	swappedbuffer_t	sb;
-	int				index;
-	int				bspsize;
+	int				index,j,bspsize;
 	BSPLump_t		lumps[HEADER_LUMPS],*lump;
 
 	BSP_RemoveSkipSurfaces();

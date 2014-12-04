@@ -9,6 +9,8 @@
 
 #include "common.h"
 
+#include "platform_window.h"
+
 #define PATHSEPERATOR   '/'
 
 // set these before calling CheckParm
@@ -18,8 +20,8 @@ char **myargv;
 char	com_token[1024],
 		archivedir[1024];
 
-char    cErrorOpeningString[] = "Error opening %s: %s!",
-        cErrorString[] = "File read failure!";
+char    cErrorOpeningString[]	= "Error opening %s: %s!",
+        cErrorString[]			= "File read failure!";
 
 bool	com_eof,
 		archive;
@@ -35,6 +37,7 @@ void Error (const char *error, ...)
 	va_start (argptr,error);
 	vprintf (error,argptr);
 	va_end (argptr);
+	
 	printf ("\n");
 	exit (1);
 }
@@ -287,9 +290,11 @@ FILE *SafeOpenWrite (char *filename)
 	FILE	*f;
 
 	f = fopen(filename, "wb");
-
-	if (!f)
-		Error (cErrorOpeningString,filename,strerror(errno));
+	if(!f)
+	{
+		gWindow_MessageBox("Katana Engine",cErrorOpeningString,filename,strerror(errno));
+		exit(1);
+	}
 
 	return f;
 }
@@ -302,8 +307,11 @@ FILE *SafeOpenRead (char *filename)
 	FileSystem_UpdatePath(filename);
 
 	f = fopen(filename,"rb");
-	if (!f)
-		Error (cErrorOpeningString,filename,strerror(errno));
+	if(!f)
+	{
+		gWindow_MessageBox("Katana Engine",cErrorOpeningString,filename,strerror(errno));
+		exit(1);
+	}
 
 	return f;
 }
@@ -332,6 +340,12 @@ int LoadFile(char *filename,void **bufferptr)
 	stat(filename,&sFileSize);
 
 	buffer = malloc(sFileSize.st_size+1);
+	if(!buffer)
+		Error("Failed to allocate file buffer! (%s)\n",filename);
+
+#ifdef _MSC_VER	// This is false, since the function above shuts us down, but MSC doesn't understand that.
+#pragma warning(suppress: 6011)
+#endif
 	((char*)buffer)[sFileSize.st_size] = 0;
 
 	SafeRead(f,buffer,sFileSize.st_size);

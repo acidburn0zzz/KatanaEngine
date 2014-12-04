@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "server_monster.h"
 
@@ -264,7 +264,7 @@ bool Monster_MoveStep(edict_t *ent,vec3_t move,bool bRelink)
 			return true;
 		}
 
-		Math_VectorCopy(oldorg,ent->v.origin);
+		Math_VectorCopy(ent->v.origin,oldorg);
 
 		return false;
 	}

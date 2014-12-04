@@ -26,11 +26,13 @@
 #include "server_weapon.h"
 #include "server_player.h"
 
-#define	BOT_MAX_HEALTH	100
-#define	BOT_MAX_SIGHT	900.0f
-#define	BOT_MAX_SPEED	320.0f	// Must match player speed.
-#define	BOT_MIN_SPEED	200.0f	// Must match player walk speed.
-#define BOT_MIN_HEALTH	-20		// [2/1/2013] Same as in server_player ~hogsy
+// These need to match player specs!
+#define	BOT_MAX_HEALTH		cvServerMaxHealth.iValue
+#define	BOT_MAX_SIGHT		900.0f
+#define	BOT_MAX_SPEED		320.0f	// Must match player speed.
+#define	BOT_DEFAULT_HEALTH	cvServerDefaultHealth.iValue
+#define	BOT_MIN_SPEED		200.0f	// Must match player walk speed.
+#define BOT_MIN_HEALTH		-20		// [2/1/2013] Same as in server_player ~hogsy
 
 // [15/7/2012] List of death phrases ~hogsy
 char *BotDeathPhrases[] =
@@ -146,7 +148,7 @@ void Bot_Spawn(edict_t *eBot)
 		iSpawnType = INFO_PLAYER_DEATHMATCH;
 
 		eBot->v.model	= cvServerPlayerModel.string;
-		eBot->v.netname	= BotNames[rand()%sizeof(BotNames)];
+		eBot->v.netname	= BotNames[(rand()%pARRAYELEMENTS(BotNames))];
 
 		eBot->monster.iType	= MONSTER_PLAYER;
 		break;
@@ -354,17 +356,17 @@ void Bot_BroadcastMessage(edict_t *eBot,edict_t *other)
 		return;
 
 	if(eBot->v.iHealth <= 0)
-		cPhrase = BotDeathPhrases[(rand()%sizeof(BotDeathPhrases))];
+		cPhrase = BotDeathPhrases[(rand()%pARRAYELEMENTS(BotDeathPhrases))];
 	else
 	{
 		if(eBot->monster.fEmotion[EMOTION_ANGER] > 5.0f)
-			cPhrase = BotAngryPhrases[(rand()%sizeof(BotAngryPhrases))];
+			cPhrase = BotAngryPhrases[(rand()%pARRAYELEMENTS(BotAngryPhrases))];
 		else if(eBot->monster.fEmotion[EMOTION_BOREDOM] > 5.0f)
-			cPhrase = BotBoredPhrases[(rand()%sizeof(BotBoredPhrases))];
+			cPhrase = BotBoredPhrases[(rand()%pARRAYELEMENTS(BotBoredPhrases))];
 		else if(eBot->monster.fEmotion[EMOTION_FEAR] > 5.0f)
-			cPhrase = BotFearPhrases[(rand()%sizeof(BotFearPhrases))];
+			cPhrase = BotFearPhrases[(rand()%pARRAYELEMENTS(BotFearPhrases))];
 		else if(eBot->monster.fEmotion[EMOTION_JOY] > 5.0f)
-			cPhrase = BotJoyPhrases[(rand()%sizeof(BotJoyPhrases))];
+			cPhrase = BotJoyPhrases[(rand()%pARRAYELEMENTS(BotJoyPhrases))];
 		else
 			// [22/3/2013] Emotions don't give us anything worth saying... ~hogsy
 			return;

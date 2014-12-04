@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "engine_editor.h"
 
@@ -18,10 +18,10 @@
 */
 
 #include "engine_video.h"
-#include "engine_input.h"
-#include "KatGL.h"			// [14/10/2013] TODO: Obsolete! ~hogsy
+#include "engine_clientinput.h"
+#include "engine_videoshadow.h"			// [14/10/2013] TODO: Obsolete! ~hogsy
 #include "engine_console.h"
-#include "engine_menu.h"
+#include "engine_modmenu.h"
 
 // Platform library
 #include "platform_module.h"

@@ -1,8 +1,8 @@
 
 #include "bsp5.h"
 
-int		firstface,
-		*planemapping;
+unsigned int	firstface;
+int				*planemapping;
 
 //===========================================================================
 
@@ -110,7 +110,7 @@ void EmitVertex( vec3_t point )
 	VectorCopy(point,vert->fPoint);
 }
 
-void EmitEdge( int v1, int v2 )
+void EmitEdge( unsigned int v1, unsigned int v2 )
 {
 	BSPEdge_t	*edge;
 
@@ -203,11 +203,11 @@ void EmitDrawNodes( node_t *headnode )
 	if( nummodels == BSP_MAX_MODELS )
 		Error( "nummodels == BSP_MAX_MODELS" );
 
-	bm = &dmodels[nummodels++];		// emit a model
-	bm->iHeadNode[0] = numnodes;
-	bm->iFirstFace = firstface;
-	bm->iNumFaces = numfaces - firstface;
-	firstface = numfaces;
+	bm					= &dmodels[nummodels++];		// emit a model
+	bm->iHeadNode[0]	= numnodes;
+	bm->iFirstFace		= firstface;
+	bm->iNumFaces		= numfaces-firstface;
+	firstface			= numfaces;
 
 	firstleaf = numleafs;
 	if( headnode->contents < 0 )

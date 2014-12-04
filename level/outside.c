@@ -47,9 +47,15 @@ void MarkLeakTrail (portal_t *n2)
 	VectorNormalize (dir);
 
 	if (!leakfile)
+	{
 		leakfile = fopen (filename_pts, "w");
-	if (!leakfile)
-		Error ("Couldn't open %s\n", filename_pts);
+		if (!leakfile)
+		{
+			Error ("Couldn't open %s\n", filename_pts);
+			// Not necessary but some compilers are stupid, so fuck it.
+			return;
+		}
+	}
 
 	while (len > 2)
 	{

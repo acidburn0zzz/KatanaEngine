@@ -1,9 +1,10 @@
-/*  Copyright (C) 2011-2014 OldTimes Software
+/*  Copyright (C) 2011-2015 OldTimes Software
 */
 #ifndef __ENGINEVIDEO__
 #define __ENGINEVIDEO__
 
 #include <SDL.h>
+#include <SDL_syswm.h>
 
 extern cvar_t	cvVideoDrawModels,	// Should we draw models?
 				cvWidth,			// The width of our window (not reliable).
@@ -23,7 +24,7 @@ typedef struct
                     uiActiveUnit,
                     uiSecondaryUnit;					// Current/last secondary texture.
 
-	int				iSamples,	// Current number of samples set for AA.
+	int				iSamples,		// Current number of samples set for AA.
 					iBuffers;
 
 	unsigned	int	iWidth,
@@ -40,6 +41,8 @@ typedef struct
 	bool	bFogCoord,					// EXT_fog_coord
 			bTextureEnvAdd,				// ARB_texture_env_add
 			bTextureEnvCombine;			// ARB_texture_env_combine
+
+	SDL_SysWMinfo	sSystemInfo;
 } Video_t;
 
 typedef struct

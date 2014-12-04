@@ -494,7 +494,11 @@ void WritePortalfile (tree_t *tree)
 	printf ("writing %s\n", filename_prt);
 	pf = fopen (filename_prt, "w");
 	if (!pf)
+	{
 		Error ("Error opening %s", filename_prt);
+		// Not necessary but some compilers are stupid, so fuck it.
+		return;
+	}
 
 	fprintf (pf, "%s\n", PORTALFILE);
 	fprintf (pf, "%i\n", num_visleafs);

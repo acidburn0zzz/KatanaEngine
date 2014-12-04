@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2014 OldTimes Software
+	Copyright (C) 2011-2015 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -132,6 +132,9 @@ int Sys_FileOpenRead (char *path, int *hndl)
 	}
 	else
 	{
+#ifdef _MSC_VER	// This is false, since the function above shuts us down, but MSC doesn't understand that.
+#pragma warning(suppress: 6386)
+#endif
 		sys_handles[i] = f;
 		*hndl = i;
 		retval = filelength(f);
@@ -153,6 +156,9 @@ int Sys_FileOpenWrite (char *path)
 	if (!f)
 		Sys_Error ("Error opening %s: %s", path,strerror(errno));
 
+#ifdef _MSC_VER	// This is false, since the function above shuts us down, but MSC doesn't understand that.
+#pragma warning(suppress: 6386)
+#endif
 	sys_handles[i] = f;
 
 	return i;
@@ -459,23 +465,45 @@ bool System_Main(int iArgumentCount,char *cArguments[])
 
 #ifdef _WIN32
 	{
-		MEMORYSTATUS    lpBuffer;
+#if 0 // Future replacement...
+		MEMORYSTATUSEX    lpBuffer;
 
-		lpBuffer.dwLength = sizeof(MEMORYSTATUS);
-		GlobalMemoryStatus (&lpBuffer);
+		lpBuffer.dwLength = sizeof(lpBuffer);
+
+		GlobalMemoryStatusEx (&lpBuffer);
+
+		// take the greater of all the available memory or half the total memory,
+		// but at least 8 Mb and no more than 16 Mb, unless they explicitly
+		// request otherwise
+		epParameters.memsize = lpBuffer.ullAvailPhys;
+		if(epParameters.memsize < MINIMUM_MEMORY)
+			epParameters.memsize = MINIMUM_MEMORY;
+
+		if((unsigned)epParameters.memsize < (lpBuffer.ullTotalPhys >> 1))
+			epParameters.memsize = lpBuffer.ullTotalPhys >> 1;
+
+		if(epParameters.memsize > MAXIMUM_MEMORY)
+			epParameters.memsize = MAXIMUM_MEMORY;
+#else // Old...
+		MEMORYSTATUS lpBuffer;
+
+		lpBuffer.dwLength = sizeof(lpBuffer);
+
+		GlobalMemoryStatus(&lpBuffer);
 
 		// take the greater of all the available memory or half the total memory,
 		// but at least 8 Mb and no more than 16 Mb, unless they explicitly
 		// request otherwise
 		epParameters.memsize = lpBuffer.dwAvailPhys;
-		if(epParameters.memsize < MINIMUM_MEMORY)
+		if (epParameters.memsize < MINIMUM_MEMORY)
 			epParameters.memsize = MINIMUM_MEMORY;
 
-		if((unsigned)epParameters.memsize < (lpBuffer.dwTotalPhys >> 1))
+		if ((unsigned)epParameters.memsize < (lpBuffer.dwTotalPhys >> 1))
 			epParameters.memsize = lpBuffer.dwTotalPhys >> 1;
 
-		if(epParameters.memsize > MAXIMUM_MEMORY)
+		if (epParameters.memsize > MAXIMUM_MEMORY)
 			epParameters.memsize = MAXIMUM_MEMORY;
+#endif
 	}
 #else
 	
@@ -582,6 +610,4 @@ bool System_Main(int iArgumentCount,char *cArguments[])
 		Host_Frame(time);
 		oldtime = newtime;
 	}
-
-	return true;
 }

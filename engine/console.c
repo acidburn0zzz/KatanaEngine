@@ -26,9 +26,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdio.h>
 
 #include "engine_console.h"
-#include "KatGL.h"
+#include "engine_videoshadow.h"
 
-#include "engine_input.h"
+#include "engine_clientinput.h"
 #include "engine_video.h"
 
 int 		con_linewidth;

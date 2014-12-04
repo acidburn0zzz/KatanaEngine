@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "engine_script.h"
 
@@ -10,7 +10,7 @@
 		Move the following out into its own shared module.
 */
 
-#include "engine_game.h"
+#include "engine_modgame.h"
 
 #if 0
 #include "Python.h"
@@ -270,6 +270,11 @@ typedef struct
 } ScriptKey_t;
 
 void _FileSystem_SetBasePath(char *cArg);		// common.c
+void _FileSystem_SetTexturePath(char *cArg);
+void _FileSystem_SetMaterialPath(char *cArg);
+void _FileSystem_SetSoundPath(char *cArg);
+void _FileSystem_SetLevelPath(char *cArg);
+void _FileSystem_SetScreenshotPath(char *cArg);
 void _FileSystem_AddGameDirectory(char *cArg);	// common.c
 
 /*	Allows for console variables to be set from scripts.
@@ -280,8 +285,13 @@ void _Script_SetConsoleVariable(char *cArguments)
 
 ScriptKey_t	skScriptKeys[]=
 {
-	{	"basepath",		_FileSystem_SetBasePath			},
-	{	"gamedir",		_FileSystem_AddGameDirectory	},
+	{	"SetBasePath",			_FileSystem_SetBasePath			},
+	{	"SetTexturePath",		_FileSystem_SetTexturePath		},
+	{	"SetMaterialPath",		_FileSystem_SetMaterialPath		},
+	{	"SetSoundPath",			_FileSystem_SetSoundPath		},
+	{	"SetLevelPath",			_FileSystem_SetLevelPath		},
+	{	"SetScreenshotPath",	_FileSystem_SetScreenshotPath	},
+	{	"AddGameDirectory",		_FileSystem_AddGameDirectory	},
 
 	{	0	}
 };
@@ -290,11 +300,11 @@ ScriptKey_t	skScriptKeys[]=
 */
 bool Script_Load(/*const */char *ccPath)
 {
-	char *cData;
+	void *cData;
 
-	if(LoadFile(ccPath,(void**)&cData) == -1)
+	if(!LoadFile(ccPath,&cData))
 	{
-		cData = (char*)COM_LoadTempFile(ccPath);
+		cData = COM_LoadTempFile(ccPath);
 		if(!cData)
 		{
 			Con_Warning("Failed to load script! (%s)\n",ccPath);
@@ -302,7 +312,7 @@ bool Script_Load(/*const */char *ccPath)
 		}
 	}
 
-	Script_StartTokenParsing(cData);
+	Script_StartTokenParsing((char*)cData);
 
 	if(!Script_GetToken(true))
 	{

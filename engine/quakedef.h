@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2014 OldTimes Software
+	Copyright (C) 2011-2015 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -72,7 +72,7 @@
 #include "draw.h"
 #include "cvar.h"
 #include "screen.h"
-#include "net.h"
+#include "engine_net.h"
 #include "protocol.h"
 #include "cmd.h"
 #include "sound.h"
@@ -80,7 +80,7 @@
 #include "client.h"
 #include "progs.h"
 #include "server.h"
-#include "gl_model.h"
+#include "engine_model.h"
 #include "image.h" //johnfitz
 #include "gl_texmgr.h" //johnfitz
 #include "world.h"

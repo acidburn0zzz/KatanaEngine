@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #ifndef __GAMERESOURCES__
 #define	__GAMERESOURCES__
@@ -44,6 +44,10 @@
 #define	PHYSICS_SOUND_ROCK0			PHYSICS_SOUND_PATH"rock0.wav"
 #define	PHYSICS_SOUND_ROCK1			PHYSICS_SOUND_PATH"rock1.wav"
 #define	PHYSICS_SOUND_ROCK2			PHYSICS_SOUND_PATH"rock2.wav"
+#define	PHYSICS_SOUND_CONCRETESTEP0	PHYSICS_SOUND_PATH"concrete0_footstep.wav"
+#define	PHYSICS_SOUND_CONCRETESTEP1	PHYSICS_SOUND_PATH"concrete1_footstep.wav"
+#define	PHYSICS_SOUND_CONCRETESTEP2	PHYSICS_SOUND_PATH"concrete2_footstep.wav"
+#define	PHYSICS_SOUND_CONCRETESTEP3	PHYSICS_SOUND_PATH"concrete3_footstep.wav"
 #define	PHYSICS_MODEL_PATH			"models/physics/"
 #define	PHYSICS_MODEL_GLASS(a)		sprintf(a,PHYSICS_MODEL_PATH"glass_gib%i.md2",rand()%3)
 #define	PHYSICS_MODEL_GLASS0		PHYSICS_MODEL_PATH"glass_gib0.md2"

@@ -1,4 +1,4 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #ifndef __SHAREDFLAGS__
 #define __SHAREDFLAGS__
@@ -21,18 +21,15 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	2
-#define ENGINE_VERSION_BUILD	778	// 24/10/2014
+#define ENGINE_VERSION_BUILD	799	// 3/12/2014
 
 #define	MODULE_ENGINE	"engine"
 #define MODULE_GAME		"game"
 #define	MODULE_MENU		"menu"
 #define MODULE_EDITOR	"editor"
 
-#define	PATH_ENGINE			"engine"			// Directory to look in for engine specific modules / assets
-#define	PATH_MAPS			"maps"				// Default directory for opening, loading and exporting maps
-#define	PATH_SOUNDS			"sounds"			// Default directory for opening, loading and exporting sounds
+#define	PATH_ENGINE			"engine"			// Directory to look in for engine specific modules / assets.
 #define	PATH_LOGS			PATH_ENGINE"/logs"	// Default directory for saving logs.
-#define	PATH_SCREENSHOTS	"%s/screenshots"	// Directory for screenshots. Pass current game directory.
 #define	PATH_SPRITES		"textures/sprites/"	// Directory that contains sprites, used for particles etc.
 
 typedef unsigned char byte;

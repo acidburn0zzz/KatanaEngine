@@ -1,8 +1,6 @@
-/*	Copyright (C) 2011-2014 OldTimes Software
+/*	Copyright (C) 2011-2015 OldTimes Software
 */
 #include "engine_console.h"
-
-#include <fcntl.h>
 
 // TODO: Rewrite and clean
 
@@ -21,13 +19,18 @@ void Console_ErrorMessage(bool bCrash,const char *ccFile,char *reason)
 		Con_Error("Failed to load %s\nReason: %s",ccFile,reason);
 }
 
+/*
+	Log Output
+*/
+
 void Console_WriteToLog(const char *ccFile,char *fmt,...)
 {
+	FILE			*fLog;
 	va_list		    argptr;
 	static  char	scData[1024];
 	char			cPath[MAX_OSPATH];
-	int			    fd,iData;
-
+	unsigned int	iData;
+	
 	sprintf(cPath,PATH_LOGS"/%s",ccFile);
 
 	COM_DefaultExtension(cPath,".txt");
@@ -38,16 +41,16 @@ void Console_WriteToLog(const char *ccFile,char *fmt,...)
 
     iData = strlen(scData);
 
-	fd = open(cPath,O_WRONLY|O_CREAT|O_APPEND,0666);
-	if(write(fd,scData,iData) != iData)
-        Sys_Error("Failed to write to log!\n");
+	fLog = fopen(cPath,"a");
+	if(fwrite(scData,sizeof(char),iData,fLog) != iData)
+        Sys_Error("Failed to write to log! (%s)\n",ccFile);
 
-	close(fd);
+	fclose(fLog);
 }
 
 void Console_ClearLog(const char *ccFile)
 {
-	char	cPath[MAX_OSPATH];
+	char cPath[MAX_OSPATH];
 
 	sprintf(cPath,PATH_LOGS"/%s",ccFile);
 

@@ -1,6 +1,6 @@
 /*	Copyright (C) 1996-2001 Id Software, Inc.
 	Copyright (C) 2002-2009 John Fitzgibbons and others
-	Copyright (C) 2011-2014 OldTimes Software
+	Copyright (C) 2011-2015 OldTimes Software
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -22,6 +22,8 @@
 /*
 	Misc functions used in client and server.
 */
+
+#include "engine_script.h"
 
 #include "platform_filesystem.h"
 
@@ -1106,10 +1108,16 @@ int COM_FindFile (char *filename, int *handle, FILE **file)
 	int             i;
 	int             findtime, cachetime;
 
-	if(file && handle)
-		Sys_Error ("COM_FindFile: both handle and file set");
 	if(!file && !handle)
+	{
 		Sys_Error ("COM_FindFile: neither handle or file set");
+		return 0;
+	}
+	else if(file && handle)
+	{
+		Sys_Error ("COM_FindFile: both handle and file set");
+		return 0;
+	}
 
     // [10/3/2014] Switch the path to lowercase ~hogsy
     FileSystem_UpdatePath(filename);
@@ -1266,7 +1274,10 @@ byte *COM_LoadFile (char *path, int usehunk)
 		Sys_Error ("COM_LoadFile: bad usehunk");
 
 	if(!buf)
+	{
 		Sys_Error ("COM_LoadFile: not enough space for %s", path);
+		return NULL;
+	}
 
 	((byte*)buf)[len] = 0;
 
@@ -1386,7 +1397,7 @@ void FileSystem_AddGameDirectory(char *dir)
 
 	// add the directory to the search path
 	search = (searchpath_t*)Z_Malloc(sizeof(searchpath_t));
-	Q_strcpy (search->filename, dir);
+	Q_strncpy (search->filename, dir,sizeof(search->filename));
 	search->next = com_searchpaths;
 	com_searchpaths = search;
 
@@ -1406,12 +1417,41 @@ void FileSystem_AddGameDirectory(char *dir)
 	}
 }
 
+/*
+	Script Functions
+*/
+
 /*	Script specific function that sets the base data path.
 	SetBasePath
 */
 void _FileSystem_SetBasePath(char *cArg)
 {
-	strcpy(host_parms.cBasePath,cArg);
+	Q_strncpy(host_parms.cBasePath,cArg,PLATFORM_MAX_PATH);
+}
+
+void _FileSystem_SetMaterialPath(char *cArg)
+{
+	Q_strncpy(Global.cMaterialPath,cArg,PLATFORM_MAX_PATH);
+}
+
+void _FileSystem_SetTexturePath(char *cArg)
+{
+	Q_strncpy(Global.cTexturePath,cArg,PLATFORM_MAX_PATH);
+}
+
+void _FileSystem_SetSoundPath(char *cArg)
+{
+	Q_strncpy(Global.cSoundPath,cArg,PLATFORM_MAX_PATH);
+}
+
+void _FileSystem_SetLevelPath(char *cArg)
+{
+	Q_strncpy(Global.cLevelPath,cArg,PLATFORM_MAX_PATH);
+}
+
+void _FileSystem_SetScreenshotPath(char *cArg)
+{
+	Q_strncpy(Global.cScreenshotPath,cArg,PLATFORM_MAX_PATH);
 }
 
 /*	Script specific function that adds a new data path.
@@ -1421,6 +1461,8 @@ void _FileSystem_AddGameDirectory(char *cArg)
 {
 	FileSystem_AddGameDirectory(va("%s/%s",host_parms.basedir,cArg));
 }
+
+/**/
 
 void FileSystem_Initialize(void)
 {
@@ -1432,11 +1474,14 @@ void FileSystem_Initialize(void)
 
 	i = COM_CheckParm ("-basedir");
 	if (i && i < com_argc-1)
-		strcpy(basedir,com_argv[i+1]);
+		strncpy(basedir,com_argv[i+1],sizeof(basedir));
 	else
-		strcpy(basedir,host_parms.basedir);
+		strncpy(basedir,host_parms.basedir,sizeof(basedir));
 
-	j = strlen (basedir);
+#ifdef _MSC_VER
+#pragma warning(suppress: 6053)	// This isn't an issue in this case.
+#endif
+	j = strnlen(basedir,sizeof(basedir));
 	if (j > 0)
 		if ((basedir[j-1] == '\\') || (basedir[j-1] == '/'))
 			basedir[j-1] = 0;
@@ -1450,7 +1495,7 @@ void FileSystem_Initialize(void)
 			strcpy (com_cachedir, com_argv[i+1]);
 	}
 	else if (host_parms.cachedir)
-		strcpy (com_cachedir, host_parms.cachedir);
+		strncpy (com_cachedir, host_parms.cachedir,sizeof(com_cachedir));
 	else
 		com_cachedir[0] = 0;
 
@@ -1458,9 +1503,39 @@ void FileSystem_Initialize(void)
 	if(!Script_Load(va("%s/"PATH_ENGINE"/scripts/paths.script",basedir)))
 		Sys_Error("Failed to load paths script!\n");
 
+	// Check each of our set paths to make sure they're set!
+	if(basedir[0] == ' ')
+		// TODO: Close down in this instance, though I might change so we try to load "base" instead? ~hogsy
+		Sys_Error("Base path wasn't set in paths script!\n");
+	else if(Global.cLevelPath[0] == ' ')
+	{
+		Con_Warning("Levels path wasn't set in paths script!\n");
+		sprintf(Global.cLevelPath,"levels/");
+	}
+	else if(Global.cMaterialPath[0] == ' ')
+	{
+		Con_Warning("Materials path wasn't set in paths script!\n");
+		sprintf(Global.cMaterialPath,"materials/");
+	}
+	else if(Global.cScreenshotPath[0] == ' ')
+	{
+		Con_Warning("Screenshots path wasn't set in paths script!\n");
+		sprintf(Global.cScreenshotPath,"screenshots/");
+	}
+	else if(Global.cSoundPath[0] == ' ')
+	{
+		Con_Warning("Sounds path wasn't set in paths script!\n");
+		sprintf(Global.cSoundPath,"sounds/");
+	}
+	else if(Global.cTexturePath[0] == ' ')
+	{
+		Con_Warning("Textures path wasn't set in paths script!\n");
+		sprintf(Global.cTexturePath,"textures/");
+	}
+
 	// Start up with the default path
 	FileSystem_AddGameDirectory(va("%s/%s",basedir,host_parms.cBasePath));
-	Q_strcpy(com_gamedir,va("%s/%s",basedir,host_parms.cBasePath));
+	Q_strncpy(com_gamedir,va("%s/%s",basedir,host_parms.cBasePath),sizeof(com_gamedir));
 
 	i = COM_CheckParm ("-game");
 	if (i && i < com_argc-1)
