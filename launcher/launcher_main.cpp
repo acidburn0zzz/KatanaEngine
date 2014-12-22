@@ -42,7 +42,7 @@ int main(int argc,char *argv[])
 		gWindow_MessageBox("Launcher",pError_Get());
 		return -1;
 	}
-	else if(Engine->iVersion != ENGINE_INTERFACE)
+	else if (Engine->iVersion != ENGINE_VERSION)
 	{
 		gWindow_MessageBox("Launcher","Launcher is outdated, please rebuild!");
 

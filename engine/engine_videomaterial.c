@@ -239,18 +239,18 @@ void Material_Draw(Material_t *mMaterial,int iSkin)
 
 	if(msCurrentSkin->gSphereTexture)
 	{
-		Video_EnableMultitexture();
+		Video_SelectTexture(1);
 		Video_GenerateSphereCoordinates();
 		Video_SetTexture(msCurrentSkin->gSphereTexture);
-		Video_EnableCapabilities(VIDEO_BLEND|VIDEO_TEXTURE_GEN_S|VIDEO_TEXTURE_GEN_T);
+		Video_EnableCapabilities(VIDEO_TEXTURE_2D | VIDEO_BLEND | VIDEO_TEXTURE_GEN_S | VIDEO_TEXTURE_GEN_T);
 
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 	}
 	// Can't have both sphere and fullbright, it's one or the other.
 	else if(msCurrentSkin->gFullbrightTexture && gl_fullbrights.bValue)
 	{
-		Video_EnableMultitexture();
-        Video_EnableCapabilities(VIDEO_BLEND);
+		Video_SelectTexture(1);
+		Video_EnableCapabilities(VIDEO_TEXTURE_2D|VIDEO_BLEND);
 		Video_SetTexture(msCurrentSkin->gFullbrightTexture);
 
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);

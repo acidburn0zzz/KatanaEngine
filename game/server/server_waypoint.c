@@ -295,7 +295,7 @@ void Waypoint_Spawn(vec3_t vOrigin,WaypointType_t type)
 		wPoint->eDebug->v.effects = EF_MOTION_ROTATE;
 
 		Entity_SetModel(wPoint->eDebug,cModelName);
-		Entity_SetSizeVector(wPoint->eDebug,vec3_origin,vec3_origin);
+		Entity_SetSizeVector(wPoint->eDebug,mv3Origin,mv3Origin);
 		Entity_SetOrigin(wPoint->eDebug,wPoint->position);
 	}
 

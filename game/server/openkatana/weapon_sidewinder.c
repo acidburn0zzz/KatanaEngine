@@ -186,7 +186,7 @@ void SideWinder_SpawnMissle(edict_t *ent,float fSpeed,float ox)
 	vOrg[1] += eMissile->v.vForward[1]*8+eMissile->local.vRight[1]*ox;
 	vOrg[2] += eMissile->v.vForward[2]*24;
 
-	Entity_SetSizeVector(eMissile,vec3_origin,vec3_origin);
+	Entity_SetSizeVector(eMissile,mv3Origin,mv3Origin);
 	Entity_SetOrigin(eMissile,vOrg);
 
 	// [4/8/2012] Time at which we'll be removed if nothing hit ~hogsy

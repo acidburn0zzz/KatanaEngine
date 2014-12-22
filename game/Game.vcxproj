@@ -138,7 +138,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Shared\shared_math.c" />
     <ClCompile Include="client\client_effects.c" />
     <ClCompile Include="client\client_main.c" />
     <ClCompile Include="client\client_view.c" />
@@ -277,7 +276,6 @@
   <ItemGroup>
     <ClInclude Include="..\Shared\shared_client.h" />
     <ClInclude Include="..\shared\shared_game.h" />
-    <ClInclude Include="..\Shared\shared_math.h" />
     <ClInclude Include="..\Shared\shared_menu.h" />
     <ClInclude Include="game_main.h" />
     <ClInclude Include="game_resources.h" />

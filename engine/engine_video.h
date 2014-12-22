@@ -24,11 +24,8 @@ typedef struct
                     uiActiveUnit,
                     uiSecondaryUnit;					// Current/last secondary texture.
 
-	int				iSamples,		// Current number of samples set for AA.
-					iBuffers;
-
-	unsigned	int	iWidth,
-					iHeight;
+	unsigned	int	uiMSAASamples,	// Number of AA samples.
+					iWidth,iHeight;
 
 	bool			bInitialized,		// Is the video system started?
 					bFullscreen,		// Is the window fullscreen or not?
@@ -84,7 +81,7 @@ typedef enum
 } VideoPrimitive_t;
 
 // Blending Modes
-typedef enum
+typedef enum VideoBlend_e
 {
     VIDEO_BLEND_IGNORE, // Don't bother changing blend mode.
 
@@ -94,34 +91,25 @@ typedef enum
     VIDEO_BLEND_FOUR    // ZERO			ZERO
 } VideoBlend_t;
 
-#define VIDEO_DEPTH_TRUE    true
-#define VIDEO_DEPTH_FALSE   false
-#define VIDEO_DEPTH_IGNORE  -1		// Don't bother changing depth mode.
+// Depth Modes
+typedef enum VideoDepth_e
+{
+	VIDEO_DEPTH_IGNORE = -1,	// Don't bother changing depth mode.
+	VIDEO_DEPTH_FALSE,			// Don't enable depth mask.
+	VIDEO_DEPTH_TRUE			// Enable depth mask.
+} VideoDepth_t;
 
 // Shader Types
 #define VIDEO_SHADER_VERTEX     0
 #define VIDEO_SHADER_FRAGMENT   1
 
-#if 0
-typedef struct
-{
-    VideoPrimitive_t    vpPrimitiveType;
-    VideoBlend_t        vbBlendType;
-
-    int                 iCapabilities;
-
-    VideoObject_t       *voObject;
-} VideoInstance_t;
-#endif
-
 void Video_Initialize(void);
+void Video_CreateWindow(void);
 void Video_UpdateWindow(void);
 void Video_ClearBuffer(void);
 void Video_GenerateSphereCoordinates(void);
 void Video_SetTexture(gltexture_t *gTexture);
-void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType);
-void Video_EnableMultitexture(void);
-void Video_DisableMultitexture(void);
+void Video_SetBlend(VideoBlend_t voBlendMode, VideoDepth_t vdDepthMode);
 void Video_SelectTexture(unsigned int uiTarget);
 void Video_EnableCapabilities(unsigned int iCapabilities);
 void Video_DisableCapabilities(unsigned int iCapabilities);
@@ -130,8 +118,6 @@ void Video_Process(void);
 void Video_DrawFill(VideoObject_t *voFill);
 void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,unsigned int uiVerts);
 void Video_Shutdown(void);
-
-bool Video_CreateWindow(void);
 
 /*
 	Draw

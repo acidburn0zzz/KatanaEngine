@@ -122,23 +122,23 @@ void Fog_FogCommand_f (void)
 		break;
 	case 4:
 		Fog_Update(fog_density,
-				   CLAMP(0.0, atof(Cmd_Argv(1)), 1.0),
-				   CLAMP(0.0, atof(Cmd_Argv(2)), 1.0),
-				   CLAMP(0.0, atof(Cmd_Argv(3)), 1.0),
+			Math_Clamp(0.0, atof(Cmd_Argv(1)), 1.0),
+			Math_Clamp(0.0, atof(Cmd_Argv(2)), 1.0),
+			Math_Clamp(0.0, atof(Cmd_Argv(3)), 1.0),
 				   0.0);
 		break;
 	case 5:
 		Fog_Update(Math_Max(0.0,atof(Cmd_Argv(1))),
-				   CLAMP(0.0,atof(Cmd_Argv(2)),1.0),
-				   CLAMP(0.0,atof(Cmd_Argv(3)),1.0),
-				   CLAMP(0.0,atof(Cmd_Argv(4)),1.0),
+			Math_Clamp(0.0, atof(Cmd_Argv(2)), 1.0),
+			Math_Clamp(0.0, atof(Cmd_Argv(3)), 1.0),
+			Math_Clamp(0.0, atof(Cmd_Argv(4)), 1.0),
 				   0.0);
 		break;
 	case 6: //TEST
 		Fog_Update(Math_Max(0.0, atof(Cmd_Argv(1))),
-				   CLAMP(0.0, atof(Cmd_Argv(2)), 1.0),
-				   CLAMP(0.0, atof(Cmd_Argv(3)), 1.0),
-				   CLAMP(0.0, atof(Cmd_Argv(4)), 1.0),
+			Math_Clamp(0.0, atof(Cmd_Argv(2)), 1.0),
+			Math_Clamp(0.0, atof(Cmd_Argv(3)), 1.0),
+			Math_Clamp(0.0, atof(Cmd_Argv(4)), 1.0),
 				   atof(Cmd_Argv(5)));
 		break;
 	}
@@ -212,7 +212,7 @@ float *Fog_GetColor (void)
 
 	//find closest 24-bit RGB value, so solid-colored sky can match the fog perfectly
 	for (i=0;i<3;i++)
-		c[i] = (float)(Q_rint(c[i] * 255)) / 255.0f;
+		c[i] = (float)(pMath_RINT(c[i] * 255)) / 255.0f;
 
 	return c;
 }

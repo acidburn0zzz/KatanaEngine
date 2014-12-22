@@ -74,7 +74,7 @@ void SV_SetIdealPitch (void)
 		bottom[1] = top[1];
 		bottom[2] = top[2] - 160;
 
-		tr = SV_Move (top, vec3_origin, vec3_origin, bottom, 1, sv_player);
+		tr = SV_Move (top, mv3Origin, mv3Origin, bottom, 1, sv_player);
 		if (tr.bAllSolid)
 			return;	// looking at a wall, leave ideal the way is was
 
@@ -89,10 +89,10 @@ void SV_SetIdealPitch (void)
 	for (j=1 ; j<i ; j++)
 	{
 		step = z[j] - z[j-1];
-		if (step > -pMath_ONEPSILON && step < pMath_ONEPSILON)
+		if (step > -pMath_EPSILON_ON && step < pMath_EPSILON_ON)
 			continue;
 
-		if (dir && ( step-dir > pMath_ONEPSILON || step-dir < -pMath_ONEPSILON ) )
+		if (dir && (step - dir > pMath_EPSILON_ON || step - dir < -pMath_EPSILON_ON))
 			return;		// mixed changes
 
 		steps++;

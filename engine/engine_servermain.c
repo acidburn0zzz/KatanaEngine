@@ -567,7 +567,7 @@ void SV_WriteEntitiesToClient (edict_t	*clent, sizebuf_t *msg)
 		if (bits & U_MODEL2)
 			MSG_WriteByte(msg, (int)ent->v.modelindex >> 8);
 		if (bits & U_LERPFINISH)
-			MSG_WriteByte(msg,(byte)(Q_rint((ent->v.dNextThink-sv.time)*255)));
+			MSG_WriteByte(msg,(byte)(pMath_RINT((ent->v.dNextThink-sv.time)*255)));
 	}
 
 	//johnfitz -- devstats
@@ -1084,7 +1084,7 @@ void SV_SpawnServer(char *server)
 	sv.protocol	= SERVER_PROTOCOL;
 
 	// Allocate server memory
-	sv.max_edicts	= CLAMP(MIN_EDICTS,(int)max_edicts.value,MAX_EDICTS); //johnfitz -- max_edicts cvar
+	sv.max_edicts = Math_Clamp(MIN_EDICTS, (int)max_edicts.value, MAX_EDICTS); //johnfitz -- max_edicts cvar
 	sv.edicts		= (edict_t*)Hunk_AllocName(sv.max_edicts*sizeof(edict_t),"edicts");
 
 	sv.datagram.maxsize = sizeof(sv.datagram_buf);

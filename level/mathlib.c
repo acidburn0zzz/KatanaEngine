@@ -18,7 +18,7 @@ vec_t VectorNormalize( vec3_t v )
 	return length;
 }
 
-vec_t Q_rint( vec_t n )
+vec_t Q_rint(vec_t n)
 {
 	if (n >= 0)
 		return ( vec_t )(( int )(n + 0.5));

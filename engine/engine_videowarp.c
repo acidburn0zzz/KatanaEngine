@@ -223,7 +223,7 @@ void Warp_DrawWaterPoly(glpoly_t *p)
 	{
 		voWaterPoly[i].vTextureCoord[0][0]	= WARPCALC(v[3],v[4]);
 		voWaterPoly[i].vTextureCoord[0][1]	= WARPCALC(v[4],v[3]);
-		voWaterPoly[i].vColour[3]			= CLAMP(0,r_wateralpha.value,1.0f);
+		voWaterPoly[i].vColour[3] = Math_Clamp(0, r_wateralpha.value, 1.0f);
 
 		Math_VectorCopy(v,vWave);
 
@@ -271,7 +271,7 @@ void R_UpdateWarpTextures (void)
 	if (r_oldwater.value || cl.bIsPaused || r_drawflat_cheatsafe || r_lightmap_cheatsafe)
 		return;
 
-	warptess = 128.0f/CLAMP(3.0f,floor(r_waterquality.value),64.0f);
+	warptess = 128.0f / Math_Clamp(3.0f, floor(r_waterquality.value), 64.0f);
 
 	for (i=0; i<cl.worldmodel->numtextures; i++)
 	{

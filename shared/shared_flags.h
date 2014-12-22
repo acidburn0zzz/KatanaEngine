@@ -10,8 +10,7 @@
 
 //#define   PARANOID				// Speed sapping error checking.
 #ifndef _WIN32	// [21/1/2013] Only Linux release is currently using this... ~hogsy
-#define	KATANA_AUDIO_OPENAL			// OpenAL implementation.
-#define	KATANA_NETWORK_NEXT			// New network system.
+#define	KATANA_AUDIO_OPENAL	// OpenAL implementation.
 #endif
 
 /*	Build needs to be updated
@@ -21,12 +20,7 @@
 	when a build is released publically.	*/
 #define ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	3
-#define ENGINE_VERSION_BUILD	802	// 6/12/2014
-
-#define	MODULE_ENGINE	"engine"
-#define MODULE_GAME		"game"
-#define	MODULE_MENU		"menu"
-#define MODULE_EDITOR	"editor"
+#define ENGINE_VERSION_BUILD	816	// 23/12/2014
 
 #define	PATH_ENGINE			"engine"			// Directory to look in for engine specific modules / assets.
 #define	PATH_LOGS			PATH_ENGINE"/logs"	// Default directory for saving logs.

@@ -567,13 +567,14 @@ void World_Draw(void)
 
 	if(Video.bTextureEnvCombine)
 	{
-		Video_EnableMultitexture();
+		Video_SelectTexture(1);
+		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
 
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE);
 		glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB,GL_MODULATE);
 		glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE,4);
 
-		Video_DisableMultitexture();
+		Video_SelectTexture(0);
 
 		{
 			int			i, j;
@@ -595,7 +596,8 @@ void World_Draw(void)
 						if(!bBound) //only bind once we are sure we need this texture
 						{
 							Video_SetTexture((R_TextureAnimation(t,0))->gltexture);
-							Video_EnableMultitexture(); // selects TEXTURE1
+							Video_SelectTexture(1);
+							Video_EnableCapabilities(VIDEO_TEXTURE_2D);
 
 							bBound = true;
 						}
@@ -612,8 +614,8 @@ void World_Draw(void)
 						v = s->polys->verts[0];
 						for(j = 0; j < s->polys->numverts; j++,v += VERTEXSIZE)
 						{
-							glMultiTexCoord2fv(GL_TEXTURE0,v+3);
-							glMultiTexCoord2fv(GL_TEXTURE1,v+5);
+							glMultiTexCoord2fv(VIDEO_TEXTURE0,v+3);
+							glMultiTexCoord2fv(VIDEO_TEXTURE1,v+5);
 							glVertex3fv(v);
 						}
 
@@ -642,7 +644,7 @@ void World_Draw(void)
 			}
 		}
 
-		Video_DisableMultitexture();
+		Video_SelectTexture(0);
 
 		glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 	}

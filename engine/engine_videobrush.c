@@ -159,7 +159,7 @@ void R_DrawSequentialPoly(msurface_t *s)
         glpoly_t *pBrushPoly;
 
 		if(currententity->alpha == ENTALPHA_DEFAULT)
-			fAlpha = CLAMP(0.0,r_wateralpha.value,1.0f);
+			fAlpha = Math_Clamp(0.0, r_wateralpha.value, 1.0f);
 
 		if(fAlpha < 1.0f)
 		{

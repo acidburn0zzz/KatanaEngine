@@ -4,9 +4,6 @@
     <ClInclude Include="..\Shared\shared_client.h">
       <Filter>Shared</Filter>
     </ClInclude>
-    <ClInclude Include="..\Shared\shared_math.h">
-      <Filter>Shared</Filter>
-    </ClInclude>
     <ClInclude Include="..\Shared\shared_menu.h">
       <Filter>Shared</Filter>
     </ClInclude>
@@ -46,9 +43,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Shared\shared_math.c">
-      <Filter>Shared</Filter>
-    </ClCompile>
     <ClCompile Include="game_main.c" />
     <ClCompile Include="server\monster_bot.c">
       <Filter>Server</Filter>

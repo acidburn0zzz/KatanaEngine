@@ -420,7 +420,7 @@ static void WriteFloatToPortalFile (vec_t f)
 {
 	int i;
 
-	i = Q_rint( f );
+	i = Q_rint(f);
 	if( f == i )
 		fprintf( pf, "%i", i );
 	else

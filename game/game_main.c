@@ -12,7 +12,7 @@
 
 #include "client_main.h"
 
-ModuleExport_t	Export;	// Game exports.
+GameExport_t	Export;	// Game exports.
 ModuleImport_t	Engine;	// Engine imports.
 
 int	iOldGameMode;
@@ -72,13 +72,13 @@ void ChangeYaw(edict_t *ent)
 
 /*	Used for use tracing and shot
 	targeting. Traces are blocked by
-	bbox and exact bsp entityes, and
+	bbox and exact bsp entities, and
 	also slide box entities	if the
 	tryents flag is set.
 */
 trace_t Traceline(edict_t *ent,vec3_t vStart,vec3_t vEnd,int type)
 {
-	return Engine.Server_Move(vStart,vec3_origin,vec3_origin,vEnd,type,ent);
+	return Engine.Server_Move(vStart, mv3Origin, mv3Origin, vEnd, type, ent);
 }
 
 /*	Each entity can have eight
@@ -129,22 +129,12 @@ void Sound(edict_t *ent,int channel,char *sound,int volume,float attenuation)
 	*/
 }
 
-void Flare(vec3_t org,float r,float g,float b,float a,float scale,char *texture)
-{
-	// OBSOLETE
-}
-
-void DrawPic(char *texture,float alpha,int x,int y,int w,int h)
-{
-	// OBSOLETE
-}
-
 void WriteByte(int mode,int c)
 {
 	Engine.WriteByte(mode,c);
 }
 
-// Future replacement for SV_Init and CL_Init ~hogsy
+// OBSOLETE
 bool Game_Init(int state,edict_t *ent,double dTime)
 {
 	Server.dTime = dTime;
@@ -194,7 +184,7 @@ bool Game_Init(int state,edict_t *ent,double dTime)
 void	Server_StartFrame(void);	// server_main
 void	Game_Shutdown(void);
 
-pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
+pMODULE_EXPORT GameExport_t *Game_Main(ModuleImport_t *Import)
 {
 	Engine.Con_Printf				= Import->Con_Printf;
 	Engine.Con_DPrintf				= Import->Con_DPrintf;
@@ -246,7 +236,7 @@ pMODULE_EXPORT ModuleExport_t *Game_Main(ModuleImport_t *Import)
 	Engine.Server_GetLevelName		= Import->Server_GetLevelName;
 	Engine.Server_GetFrameTime		= Import->Server_GetFrameTime;
 
-	Export.Version						= MODULE_VERSION2;
+	Export.iVersion = GAME_VERSION;
 #ifdef GAME_OPENKATANA
 	Export.Name							= "OpenKatana";
 #elif GAME_ADAMAS

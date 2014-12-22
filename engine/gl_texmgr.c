@@ -168,7 +168,7 @@ void TexMgr_Anisotropy_f(void)
 {
 	gltexture_t	*glt;
 
-	Cvar_SetValue("gl_texture_anisotropy", CLAMP(1.0f,gl_texture_anisotropy.value,Video.fMaxAnisotropy));
+	Cvar_SetValue("gl_texture_anisotropy", Math_Clamp(1.0f, gl_texture_anisotropy.value, Video.fMaxAnisotropy));
 
 	for (glt=active_gltextures; glt; glt=glt->next)
 		TexMgr_SetFilterModes(glt);

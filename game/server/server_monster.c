@@ -138,7 +138,7 @@ bool Monster_CheckBottom(edict_t *ent)
 
 				stop[2]	= start[2]-2*MONSTER_STEPSIZE;
 
-				trace = Engine.Server_Move(start,vec3_origin,vec3_origin,stop,true,ent);
+				trace = Engine.Server_Move(start,mv3Origin,mv3Origin,stop,true,ent);
 				if(trace.fraction == 1.0)
 					return false;
 
@@ -151,7 +151,7 @@ bool Monster_CheckBottom(edict_t *ent)
 						start[0] = stop[0] = x ? maxs[0] : mins[0];
 						start[1] = stop[1] = x ? maxs[1] : mins[1];
 
-						trace = Engine.Server_Move(start,vec3_origin,vec3_origin,stop,true,ent);
+						trace = Engine.Server_Move(start,mv3Origin,mv3Origin,stop,true,ent);
 						if(trace.fraction != 1.0 && trace.endpos[2] > bottom)
 							bottom = trace.endpos[2];
 						if(trace.fraction == 1.0 || mid-trace.endpos[2] > MONSTER_STEPSIZE)

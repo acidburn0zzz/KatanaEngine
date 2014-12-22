@@ -91,8 +91,8 @@ void Audio_Process(void)
 	}
 	else
 	{
-		Math_VectorCopy(vec3_origin,vPosition);
-		Math_VectorCopy(vec3_origin,vOrientation);
+		Math_VectorCopy(mv3Origin,vPosition);
+		Math_VectorCopy(mv3Origin,vOrientation);
 	}
 
 	// [5/8/2013] Update listener position ~hogsy

@@ -25,13 +25,13 @@ void Physics_CheckVelocity(edict_t *eEntity)
 
 	for(i = 0; i < 3; i++)
 	{
-		if(IS_NAN(eEntity->v.velocity[i]))
+		if (pMath_ISNAN(eEntity->v.velocity[i]))
 		{
 			Engine.Con_DPrintf("Got a NaN velocity on %s\n",eEntity->v.cClassname);
 			eEntity->v.velocity[i] = 0;
 		}
 
-		if(IS_NAN(eEntity->v.origin[i]))
+		if (pMath_ISNAN(eEntity->v.origin[i]))
 		{
 			Engine.Con_DPrintf("Got a NaN origin on %s\n",eEntity->v.cClassname);
 			eEntity->v.origin[i] = 0;

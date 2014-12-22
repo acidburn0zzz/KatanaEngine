@@ -282,7 +282,7 @@ void Client_ProcessParticles(void)
 			pParticle->org[i] += pParticle->vel[i]*frametime;
 
 		// [14/8/2013] Set the alpha here ~hogsy
-		pParticle->color[3] = CLAMP(0,pParticle->die-cl.time,1.0f);
+		pParticle->color[3] = Math_Clamp(0, pParticle->die - cl.time, 1.0f);
 
 		// [16/6/2012] Ripped from gl_alias.c ~hogsy
 		// [3/9/2012] Moved here ~hogsy

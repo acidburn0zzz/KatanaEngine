@@ -67,7 +67,7 @@ void Ballista_SpawnLogProjectile(edict_t *ent)
 	Engine.MakeVectors(log->v.v_angle);
 
 	Entity_SetModel(log,"models/log.md2");
-	Entity_SetSizeVector(log,vec3_origin,vec3_origin);
+	Entity_SetSizeVector(log,mv3Origin,mv3Origin);
 
 	// [1/7/2012] Simplified ~hogsy
 	Math_VectorCopy(ent->v.origin,log->v.origin);

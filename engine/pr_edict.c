@@ -96,8 +96,8 @@ void ED_Free (edict_t *ed)
 	ed->Model.fScale	= 1.0f;
 	ed->alpha			= ENTALPHA_DEFAULT; //johnfitz -- reset alpha for next entity
 
-	Math_VectorCopy(vec3_origin,ed->v.origin);
-	Math_VectorCopy(vec3_origin,ed->v.angles);
+	Math_VectorCopy(mv3Origin,ed->v.origin);
+	Math_VectorCopy(mv3Origin,ed->v.angles);
 
 	ed->freetime = sv.time;
 }

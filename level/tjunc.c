@@ -91,9 +91,9 @@ bool CanonicalVector (vec3_t vec)
 	vec[1] *= length;
 	vec[2] *= length;
 
-	if (vec[0] > EQUAL_EPSILON)
+	if (vec[0] > pMath_EPSILON_EQUAL)
 		return true;
-	else if (vec[0] < -EQUAL_EPSILON)
+	else if (vec[0] < -pMath_EPSILON_EQUAL)
 	{
 		VectorNegate (vec, vec);
 		return true;
@@ -101,9 +101,9 @@ bool CanonicalVector (vec3_t vec)
 	else
 		vec[0] = 0;
 
-	if (vec[1] > EQUAL_EPSILON)
+	if (vec[1] > pMath_EPSILON_EQUAL)
 		return true;
-	else if (vec[1] < -EQUAL_EPSILON)
+	else if (vec[1] < -pMath_EPSILON_EQUAL)
 	{
 		VectorNegate (vec, vec);
 		return true;
@@ -111,9 +111,9 @@ bool CanonicalVector (vec3_t vec)
 	else
 		vec[1] = 0;
 
-	if (vec[2] > EQUAL_EPSILON)
+	if (vec[2] > pMath_EPSILON_EQUAL)
 		return true;
-	else if (vec[2] < -EQUAL_EPSILON)
+	else if (vec[2] < -pMath_EPSILON_EQUAL)
 	{
 		VectorNegate (vec, vec);
 		return true;
@@ -159,23 +159,23 @@ wedge_t	*FindEdge (vec3_t p1, vec3_t p2, vec_t *t1, vec_t *t2)
 	for (w = wedge_hash[h] ; w ; w=w->next)
 	{
 		temp = w->origin[0] - origin[0];
-		if (temp < -EQUAL_EPSILON || temp > EQUAL_EPSILON)
+		if (temp < -pMath_EPSILON_EQUAL || temp > pMath_EPSILON_EQUAL)
 			continue;
 		temp = w->origin[1] - origin[1];
-		if (temp < -EQUAL_EPSILON || temp > EQUAL_EPSILON)
+		if (temp < -pMath_EPSILON_EQUAL || temp > pMath_EPSILON_EQUAL)
 			continue;
 		temp = w->origin[2] - origin[2];
-		if (temp < -EQUAL_EPSILON || temp > EQUAL_EPSILON)
+		if (temp < -pMath_EPSILON_EQUAL || temp > pMath_EPSILON_EQUAL)
 			continue;
 
 		temp = w->dir[0] - dir[0];
-		if (temp < -EQUAL_EPSILON || temp > EQUAL_EPSILON)
+		if (temp < -pMath_EPSILON_EQUAL || temp > pMath_EPSILON_EQUAL)
 			continue;
 		temp = w->dir[1] - dir[1];
-		if (temp < -EQUAL_EPSILON || temp > EQUAL_EPSILON)
+		if (temp < -pMath_EPSILON_EQUAL || temp > pMath_EPSILON_EQUAL)
 			continue;
 		temp = w->dir[2] - dir[2];
-		if (temp < -EQUAL_EPSILON || temp > EQUAL_EPSILON)
+		if (temp < -pMath_EPSILON_EQUAL || temp > pMath_EPSILON_EQUAL)
 			continue;
 
 		return w;

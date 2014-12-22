@@ -398,7 +398,7 @@ static unsigned int GetVertex( vec3_t in, int planenum )
 	vec3_t		vert;
 
 	for( i = 0; i < 3; i++ ) {
-		h = Q_rint( in[i] );
+		h = Q_rint(in[i]);
 
 		if( fabs( in[i] - h ) < 0.001 )
 			vert[i] = h;

@@ -41,6 +41,6 @@ typedef struct
 	int		iVersion;
 } EngineImport_t;
 
-#define ENGINE_INTERFACE	(sizeof(EngineImport_t)+sizeof(EngineExport_t))
+#define ENGINE_VERSION	(sizeof(EngineImport_t)+sizeof(EngineExport_t))
 
 #endif

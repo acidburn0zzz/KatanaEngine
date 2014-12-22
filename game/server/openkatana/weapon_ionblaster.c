@@ -195,7 +195,7 @@ void IonBlaster_PrimaryAttack(edict_t *ent)
 		orig[2] += 25.0f;
 
 		Entity_SetModel(eIonBall,"models/ionball.md2");
-		Entity_SetSizeVector(eIonBall,vec3_origin,vec3_origin);
+		Entity_SetSizeVector(eIonBall,mv3Origin,mv3Origin);
 		Entity_SetOrigin(eIonBall,orig);
 
 		eIonBall->v.TouchFunction	= IonBlaster_IonBallTouch;

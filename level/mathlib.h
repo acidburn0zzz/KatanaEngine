@@ -31,7 +31,7 @@ typedef vec_t vec3_t[3];
 # define ZERO_EPSILON       ((vec_t)0.0001)
 # define POINT_EPSILON      ((vec_t)0.0001)
 # define ON_EPSILON         ((vec_t)0.0001)
-# define EQUAL_EPSILON      ((vec_t)0.0001)
+# define pMath_EPSILON_EQUAL      ((vec_t)0.0001)
 # define CONTINUOUS_EPSILON ((vec_t)0.0001)
 # define T_EPSILON          ((vec_t)0.0001)
 #else
@@ -41,12 +41,12 @@ typedef vec_t vec3_t[3];
 # define ZERO_EPSILON       ((vec_t)0.001)
 # define POINT_EPSILON      ((vec_t)0.01)
 # define ON_EPSILON         ((vec_t)0.05)
-# define EQUAL_EPSILON      ((vec_t)0.001)
+# define pMath_EPSILON_EQUAL      ((vec_t)0.001)
 # define CONTINUOUS_EPSILON ((vec_t)0.001)
 # define T_EPSILON          ((vec_t)0.01)
 #endif
 
-extern vec3_t vec3_origin;
+extern vec3_t mv3Origin;
 
 typedef struct
 {
@@ -97,9 +97,9 @@ typedef struct
 #define VectorSubtract(a,b,c) ((c)[0]=(a)[0]-(b)[0],(c)[1]=(a)[1]-(b)[1],(c)[2]=(a)[2]-(b)[2])
 #define VectorAdd(a,b,c) ((c)[0]=(a)[0]+(b)[0],(c)[1]=(a)[1]+(b)[1],(c)[2]=(a)[2]+(b)[2])
 #define VectorLength(v) (sqrt(((v)[0]*v[0]) + ((v)[1]*v[1]) + ((v)[2]*(v)[2])))
-#define VectorCompare(v1, v2) (fabs((v1)[0]-(v2)[0]) < EQUAL_EPSILON && \
-				fabs((v1)[1]-(v2)[1]) < EQUAL_EPSILON && \
-				fabs((v1)[2]-(v2)[2]) < EQUAL_EPSILON)
+#define VectorCompare(v1, v2) (fabs((v1)[0]-(v2)[0]) < pMath_EPSILON_EQUAL && \
+				fabs((v1)[1]-(v2)[1]) < pMath_EPSILON_EQUAL && \
+				fabs((v1)[2]-(v2)[2]) < pMath_EPSILON_EQUAL)
 #define VectorMA(va, scale, vb, vc) ((vc)[0]=(va)[0]+(scale)*(vb)[0],(vc)[1]=(va)[1]+(scale)*(vb)[1],(vc)[2]=(va)[2]+(scale)*(vb)[2])
 #define CrossProduct(v1, v2, cross) ((cross)[0]=(v1)[1]*(v2)[2]-(v1)[2]*(v2)[1],(cross)[1]=(v1)[2]*(v2)[0]-(v1)[0]*(v2)[2],(cross)[2]=(v1)[0]*(v2)[1]-(v1)[1]*(v2)[0])
 #define VectorClear(v) ((v)[0]=(v)[1]=(v)[2]=0)
@@ -112,7 +112,7 @@ typedef struct
 
 vec_t VectorNormalize( vec3_t v );
 
-vec_t Q_rint( vec_t n );
+vec_t Q_rint(vec_t n);
 
 void ClearBounds( vec3_t mins, vec3_t maxs );
 void AddPointToBounds( vec3_t v, vec3_t mins, vec3_t maxs );

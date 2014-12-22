@@ -59,7 +59,7 @@ void projectile_arrow(edict_t *ent)
 		Engine.MakeVectors(eArrow->v.v_angle);
 
 		Entity_SetModel(eArrow,"models/arrow.md2");
-		Entity_SetSizeVector(eArrow,vec3_origin,vec3_origin);
+		Entity_SetSizeVector(eArrow,mv3Origin,mv3Origin);
 
 		// [25/6/2012] Simplified ~hogsy
 		Math_VectorCopy(ent->v.origin,eArrow->v.origin);

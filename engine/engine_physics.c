@@ -166,7 +166,7 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 		if(trace.bAllSolid)
 		{
 			// Entity is trapped in another solid
-			Math_VectorCopy (vec3_origin, ent->v.velocity);
+			Math_VectorCopy(mv3Origin, ent->v.velocity);
 			return 3;
 		}
 
@@ -215,7 +215,7 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 		if(numplanes >= MAX_CLIP_PLANES)
 		{
 			// This shouldn't really happen
-			Math_VectorCopy (vec3_origin, ent->v.velocity);
+			Math_VectorCopy(mv3Origin, ent->v.velocity);
 			return 3;
 		}
 
@@ -243,7 +243,7 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 			// Go along the crease
 			if (numplanes != 2)
 			{
-				Math_VectorCopy (vec3_origin, ent->v.velocity);
+				Math_VectorCopy(mv3Origin, ent->v.velocity);
 				return 7;
 			}
 
@@ -256,7 +256,7 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 		// to avoid tiny occilations in sloping corners
 		if(Math_DotProduct(ent->v.velocity,primal_velocity) <= 0)
 		{
-			Math_VectorCopy(vec3_origin,ent->v.velocity);
+			Math_VectorCopy(mv3Origin,ent->v.velocity);
 			return blocked;
 		}
 	}
@@ -790,7 +790,7 @@ int SV_TryUnstick (edict_t *ent, vec3_t oldvel)
 	trace_t	steptrace;
 
 	Math_VectorCopy (ent->v.origin, oldorg);
-	Math_VectorCopy (vec3_origin, dir);
+	Math_VectorCopy (mv3Origin, dir);
 
 	for (i=0 ; i<8 ; i++)
 	{
@@ -838,7 +838,7 @@ int SV_TryUnstick (edict_t *ent, vec3_t oldvel)
 		Math_VectorCopy (oldorg, ent->v.origin);
 	}
 
-	Math_VectorCopy(vec3_origin,ent->v.velocity);
+	Math_VectorCopy(mv3Origin,ent->v.velocity);
 	return 7;		// still not moving
 }
 
@@ -873,8 +873,8 @@ void SV_WalkMove(edict_t *ent)
 	// Try moving up and forward to go up a step
 	Math_VectorCopy (oldorg, ent->v.origin);	// back to start pos
 
-	Math_VectorCopy (vec3_origin, upmove);
-	Math_VectorCopy (vec3_origin, downmove);
+	Math_VectorCopy (mv3Origin, upmove);
+	Math_VectorCopy (mv3Origin, downmove);
 
 	upmove[2]	= cvPhysicsStepSize.value;
 	downmove[2] = -cvPhysicsStepSize.value + oldvel[2]*host_frametime;
@@ -1038,8 +1038,8 @@ void Physics_Toss(edict_t *ent)
 			ent->v.flags		= ent->v.flags | FL_ONGROUND;
 			ent->v.groundentity = trace.ent;
 
-			Math_VectorCopy(vec3_origin,ent->v.velocity);
-			Math_VectorCopy(vec3_origin,ent->v.avelocity);
+			Math_VectorCopy(mv3Origin,ent->v.velocity);
+			Math_VectorCopy(mv3Origin,ent->v.avelocity);
 		}
 
 	Game->Physics_CheckWaterTransition(ent);
@@ -1097,7 +1097,7 @@ void Physics_AddFriction(edict_t *eEntity,vec3_t vVelocity,vec3_t vOrigin)
 	start[2] = vOrigin[2] + eEntity->v.mins[2];
 	stop[2] = start[2] - 34;
 
-	trace = SV_Move(start,vec3_origin,vec3_origin,stop,true,eEntity);
+	trace = SV_Move(start,mv3Origin,mv3Origin,stop,true,eEntity);
 	if(trace.fraction == 1.0f)
 		friction = eEntity->Physics.fFriction*sv_edgefriction.value;
 	else

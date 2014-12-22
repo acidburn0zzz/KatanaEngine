@@ -12,16 +12,10 @@
     <Filter Include="Source Files\Shared">
       <UniqueIdentifier>{15016726-7ce8-4272-a3df-d8cfbc48da54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Shared\Common">
-      <UniqueIdentifier>{29bee682-4432-4b6f-b037-f15019f15b64}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="menu_script.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\shared_math.c">
-      <Filter>Source Files\Shared</Filter>
     </ClCompile>
     <ClCompile Include="menu_main.c">
       <Filter>Source Files</Filter>
@@ -41,9 +35,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\shared_menu.h">
-      <Filter>Source Files\Shared</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\shared_math.h">
       <Filter>Source Files\Shared</Filter>
     </ClInclude>
     <ClInclude Include="menu_script.h">

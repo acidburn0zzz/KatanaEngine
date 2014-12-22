@@ -462,7 +462,7 @@ bool Host_FilterTime(float time)
 	realtime += time;
 
 	//johnfitz -- max fps cvar
-	fMaxFrameRate = CLAMP(10.0f,host_maxfps.value,1000.0f);
+	fMaxFrameRate = Math_Clamp(10.0f, host_maxfps.value, 1000.0f);
 	if(!cls.timedemo && realtime-dOldRealTime < 1.0f/fMaxFrameRate)
 		return false; // framerate is too high
 	//johnfitz
@@ -473,7 +473,7 @@ bool Host_FilterTime(float time)
 	if (host_timescale.value > 0)
 		host_frametime *= host_timescale.value;
 	else // Don't allow really long or short frames
-		host_frametime = CLAMP(0.001f,host_frametime,0.1f); //johnfitz -- use CLAMP
+		host_frametime = Math_Clamp(0.001f, host_frametime, 0.1f); //johnfitz -- use CLAMP
 
 	return true;
 }

@@ -69,7 +69,7 @@ void R_RocketTrail(vec3_t start, vec3_t end, int type)
 
 		p = Client_AllocateParticle();
 
-		Math_VectorCopy (vec3_origin, p->vel);
+		Math_VectorCopy (mv3Origin, p->vel);
 		p->die = cl.time + 2;
 
 		switch (type)
@@ -243,7 +243,7 @@ void Draw_Shadow(entity_t *ent)
 	{
 		VideoObject_t voShadow[4]=
 		{
-			{	{	-fShadowScale[0],	fShadowScale[1],	0	},	{	{	0,		0		}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	},
+			{	{	-fShadowScale[0],	fShadowScale[1],	0	},	{	{	0,		0,		}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	},
 			{	{	fShadowScale[0],	fShadowScale[1],	0	},	{	{	1.0f,	0		}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	},
 			{	{	fShadowScale[0],	-fShadowScale[1],	0	},	{	{	1.0f,	1.0f	}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	},
 			{	{	-fShadowScale[0],	-fShadowScale[1],	0	},	{	{	0,		1.0f	}	},	{	1.0f,	1.0f,	1.0f,	1.0f	}	}

@@ -142,7 +142,7 @@ void Area_CreateGib(edict_t *eArea,const char *cModel)
 
 		Entity_SetModel(eGib,(char*)cModel);
 		Entity_SetOrigin(eGib,eArea->v.oldorigin);
-		Entity_SetSizeVector(eGib,vec3_origin,vec3_origin);
+		Entity_SetSizeVector(eGib,mv3Origin,mv3Origin);
 	}
 }
 

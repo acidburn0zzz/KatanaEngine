@@ -255,7 +255,7 @@ static void SCR_CalcRefdef (void)
 
 	//johnfitz -- rewrote this section
 	size = scr_viewsize.value;
-	scale = CLAMP (1.0, scr_sbarscale.value, (float)glwidth / 320.0);
+	scale = Math_Clamp(1.0, scr_sbarscale.value, (float)glwidth / 320.0);
 
 	if (size >= 120 || cl.intermission || scr_sbaralpha.value < 1) //johnfitz -- scr_sbaralpha.value
 		sb_lines = 0;
@@ -301,7 +301,7 @@ void SCR_SizeDown_f (void)
 void SCR_Conwidth_f (void)
 {
 	vid.conwidth = (scr_conwidth.value > 0) ? (int)scr_conwidth.value : (scr_conscale.value > 0) ? (int)(Video.iWidth/scr_conscale.value) : Video.iWidth;
-	vid.conwidth = CLAMP (320, vid.conwidth,Video.iWidth);
+	vid.conwidth = Math_Clamp(320, vid.conwidth, Video.iWidth);
 	vid.conwidth &= 0xFFFFFFF8;
 	vid.conheight = vid.conwidth *Video.iHeight/Video.iWidth;
 }

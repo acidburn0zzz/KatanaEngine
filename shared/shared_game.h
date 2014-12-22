@@ -5,7 +5,7 @@
 
 #ifndef KATANA
 #include "platform.h"
-#include "shared_math.h"
+#include "platform_math.h"
 
 typedef struct link_s
 {
@@ -417,7 +417,7 @@ typedef struct
 
 	// Weapons
 	int	iBarrelCount;			// For cycling barrel animations.
-} ServerVariables_t;
+} GameVariables_t;
 
 //----------------------------
 
@@ -458,15 +458,12 @@ typedef struct edict_s
 	bool				bSendInterval;
 	float				freetime;
 	entvars_t			v;
-	ModelVariables_t	Model;
-	PhysicsVariables_t	Physics;
 
-	// Server
-	ServerVariables_t	local;		// [12/4/2013] TODO: Rename to Server! ~hogsy
-	MonsterVariables_t	monster;
-	VehicleVariables_t	Vehicle;
-
-	// Client (todo: merge with entity_t?)
+	ModelVariables_t	Model;		// Variables that affect the model used for the entity.
+	PhysicsVariables_t	Physics;	// Variables affecting how the entity is physically treated.
+	GameVariables_t		local;		// All variables specific towards the game, that aren't used by the engine.
+	MonsterVariables_t	monster;	// Specific towards AI/monsters.
+	VehicleVariables_t	Vehicle;	// Vehicle variables.
 } edict_t;
 
 // [13/1/2013] Revised ~hogsy
@@ -550,6 +547,12 @@ typedef struct
 
 typedef struct
 {
+	int		iVersion;
+
+	void	(*Initialize)(void);
+	void	(*Shutdown)(void);
+	void	(*Draw)(void);			// Called during video processing.
+
 	//	Game
 	char	*Name;																						// Name of the currently active game (used as the name for the window).
 	bool	(*Game_Init)(int state,edict_t *ent,double dTime);											// For both server-side and client-side entry
@@ -572,14 +575,8 @@ typedef struct
 	void	(*Physics_SetGravity)(edict_t *eEntity);			// Sets the current gravity for the given entity.
 	void	(*Physics_CheckWaterTransition)(edict_t *eEntity);
 	void	(*Physics_CheckVelocity)(edict_t *ent);				// Checks the velocity of physically simulated entities.
+} GameExport_t;
 
-	/*	Shared
-	*/
-	int		Version;				// Used to get the version of the module.
-
-	void	(*Initialize)(void);	// Called when the module is initialized.
-	void	(*Draw)(void);			// Called during video processing.
-	void	(*Shutdown)(void);		// Called when the engine begins to uninitialize.
-} ModuleExport_t;
+#define GAME_VERSION	(sizeof(GameExport_t)+sizeof(ModuleImport_t)+sizeof(edict_t*))	// Version check that's used for Menu and Launcher.
 
 #endif

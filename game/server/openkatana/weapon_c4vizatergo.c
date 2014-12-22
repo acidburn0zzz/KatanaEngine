@@ -170,7 +170,7 @@ void C4Vizatergo_PrimaryAttack(edict_t *eOwner)
 	// [26/8/2012] Simplified ~hogsy
 	Math_VectorScale(Engine.Aim(eOwner),C4VIZATERGO_MAX_RANGE,c4ball->v.velocity);
 
-	c4ball->v.velocity[Y] += 20.0f;
+	c4ball->v.velocity[pY] += 20.0f;
 
 	Engine.MakeVectors(c4ball->v.v_angle);
 
@@ -178,7 +178,7 @@ void C4Vizatergo_PrimaryAttack(edict_t *eOwner)
 	Math_VectorCopy(eOwner->v.origin,vOrigin);
 
 	Entity_SetModel(c4ball,"models/c4ammo.md2");
-	Entity_SetSizeVector(c4ball,vec3_origin,vec3_origin);
+	Entity_SetSizeVector(c4ball,mv3Origin,mv3Origin);
 	Entity_SetOrigin(c4ball,vOrigin);
 
 	c4ball->v.TouchFunction	= C4Vizatergo_C4BallTouch;

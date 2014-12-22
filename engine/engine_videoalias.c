@@ -309,7 +309,7 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 			iVert++;
         }
 
-	//Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,iVert);
+	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,iVert);
 }
 
 void Alias_SetupFrame(MD2_t *mModel,lerpdata_t *ldLerp)
@@ -381,9 +381,9 @@ void Alias_SetupEntityTransform(lerpdata_t *lerpdata)
 	if(r_lerpmove.value && currententity != &cl.viewent && currententity->lerpflags & LERP_MOVESTEP)
 	{
 		if(currententity->lerpflags & LERP_FINISH)
-			blend = CLAMP(0,(cl.time-currententity->movelerpstart)/(currententity->lerpfinish-currententity->movelerpstart),1);
+			blend = Math_Clamp(0, (cl.time - currententity->movelerpstart) / (currententity->lerpfinish - currententity->movelerpstart), 1);
 		else
-			blend = CLAMP(0,(cl.time-currententity->movelerpstart)/0.1,1);
+			blend = Math_Clamp(0, (cl.time - currententity->movelerpstart) / 0.1, 1);
 
 		//translation
 		Math_VectorSubtract(currententity->currentorigin,currententity->previousorigin,d);

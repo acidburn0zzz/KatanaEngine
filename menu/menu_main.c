@@ -308,10 +308,10 @@ void Menu_DrawCheckBox(int x,int y,bool bOn)
 // [13/8/2013] Fixed ~hogsy
 bool Menu_IsMouseOver(int iPosition[2],int fWidth,int fHeight)
 {
-	if(	iMousePosition[0] >= iPosition[X] &&
-		iMousePosition[0] <= (iPosition[X]+fWidth) &&
-		iMousePosition[1] >= iPosition[Y] &&
-		iMousePosition[1] <= (iPosition[Y]+fHeight))
+	if(	iMousePosition[0] >= iPosition[pX] &&
+		iMousePosition[0] <= (iPosition[pX]+fWidth) &&
+		iMousePosition[1] >= iPosition[pY] &&
+		iMousePosition[1] <= (iPosition[pY]+fHeight))
 		return true;
 
 	return false;
@@ -335,7 +335,7 @@ void Menu_Draw(void)
 
 	// [3/8/2012] Find out the current position of our mouse on each frame ~hogsy
 	// [3/10/2012] Updated to use what's provided by the engine instead ~hogsy
-	Engine.GetCursorPosition(&iMousePosition[X],&iMousePosition[Y]);
+	Engine.GetCursorPosition(&iMousePosition[pX],&iMousePosition[pY]);
 
 #if 1
 	if(iMenuState & MENU_STATE_LOADING)
@@ -688,7 +688,7 @@ pMODULE_EXPORT MenuExport_t *Menu_Main(ModuleImport_t *Import)
 	Engine.Client_GetStat			= Import->Client_GetStat;
 	Engine.Client_SetMenuCanvas		= Import->Client_SetMenuCanvas;
 
-	Export.iVersion		= MODULE_VERSION;
+	Export.iVersion		= MENU_VERSION;
 	Export.Initialize	= Menu_Initialize;
 	Export.Shutdown		= Menu_Shutdown;
 	Export.Draw			= Menu_Draw;

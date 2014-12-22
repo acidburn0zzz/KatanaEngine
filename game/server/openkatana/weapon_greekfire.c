@@ -53,7 +53,7 @@ void GreekFire_Throw(edict_t *ent)
 	// [4/7/2012] Simplified ~hogsy
 	Math_VectorCopy(ent->v.origin,greekfire->v.origin);
 
-	Entity_SetSizeVector(greekfire,vec3_origin,vec3_origin);
+	Entity_SetSizeVector(greekfire,mv3Origin,mv3Origin);
 
 	Engine.LinkEntity(greekfire,false);
 

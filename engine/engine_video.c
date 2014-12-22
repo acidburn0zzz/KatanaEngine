@@ -36,7 +36,6 @@ static unsigned int	iSavedCapabilites[VIDEO_MAX_UNITS+1][2];
 
 cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",		"0",			true,   false,  "Changes the number of samples."						},
 		cvMultisampleMaxSamples = { "video_multisamplemaxsamples",	"16",			true,	false,	"Sets the maximum number of allowed samples."			},
-		cvMultisampleBuffers	= {	"video_multisamplebuffers",		"1",			true,   false,  "Changes the number of buffers."						},
 		cvFullscreen			= {	"video_fullscreen",				"0",			true,   false,  "1: Fullscreen, 0: Windowed"							},
 		cvWidth					= {	"video_width",					"640",			true,   false,  "Sets the width of the window."							},
 		cvHeight				= {	"video_height",					"480",			true,   false,  "Sets the height of the window."						},
@@ -85,7 +84,6 @@ void Video_Initialize(void)
 	Video_AllocateArrays(uiVideoArraySize);
 	
 	Cvar_RegisterVariable(&cvMultisampleSamples,NULL);
-	Cvar_RegisterVariable(&cvMultisampleBuffers,NULL);
 	Cvar_RegisterVariable(&cvVideoDrawModels,NULL);
 	Cvar_RegisterVariable(&cvFullscreen,NULL);
 	Cvar_RegisterVariable(&cvWidth,NULL);
@@ -106,8 +104,7 @@ void Video_Initialize(void)
 	Video.bInitialized = true;
 
 	// [9/7/2013] TEMP: Should honestly be called from the launcher (in a perfect world) ~hogsy
-	if(!Video_CreateWindow())
-		Sys_Error("Failed to create window!\n");
+	Video_CreateWindow();
 
 	if (!SDL_GetWindowWMInfo(sMainWindow, &Video.sSystemInfo))
 		Sys_Error("Failed to get WM information!\n");
@@ -214,7 +211,7 @@ void Video_GetGamma(unsigned short *usRamp,int iRampSize)
 
 /*	Create our window.
 */
-bool Video_CreateWindow(void)
+void Video_CreateWindow(void)
 {
 	int			iFlags =
 		SDL_WINDOW_RESIZABLE	|
@@ -228,10 +225,7 @@ bool Video_CreateWindow(void)
 	iFlags &= ~SDL_WINDOW_RESIZABLE;
 
 	if(!Video.bInitialized)
-	{
-		Con_Warning("Attempted to create window before video initialization!\n");
-		return false;
-	}
+		Sys_Error("Attempted to create window before video initialization!\n");
 
 	// [15/8/2012] Figure out what resolution we're going to use ~hogsy
 	if(COM_CheckParm("-window"))
@@ -275,6 +269,7 @@ bool Video_CreateWindow(void)
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,8);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE,8);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
@@ -395,8 +390,6 @@ bool Video_CreateWindow(void)
 	vid.conwidth		&= 0xFFFFFFF8;
 	vid.conheight		= vid.conwidth*Video.iHeight/Video.iWidth;
 	Video.bVerticalSync	= cvVerticalSync.bValue;
-
-	return true;
 }
 
 void Video_UpdateWindow(void)
@@ -439,6 +432,15 @@ void Video_UpdateWindow(void)
 		else
 			Video.bFullscreen = cvFullscreen.bValue;
 	}
+
+#if 0
+	if (Video.uiMSAASamples != cvMultisampleSamples.iValue)
+	{
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, cvMultisampleSamples.iValue);
+
+		Video.uiMSAASamples = cvMultisampleSamples.iValue;
+	}
+#endif
 
 	if(!cvFullscreen.value)
 		// [15/7/2013] Center the window ~hogsy
@@ -488,11 +490,11 @@ void Video_SetTexture(gltexture_t *gTexture)
 /*  Changes the active blending mode.
     This should be used in conjunction with the VIDEO_BLEND mode.
 */
-void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
+void Video_SetBlend(VideoBlend_t voBlendMode, VideoDepth_t vdDepthMode)
 {
-    if(iDepthType != VIDEO_DEPTH_IGNORE)
+	if (vdDepthMode != VIDEO_DEPTH_IGNORE)
     {
-        glDepthMask(iDepthType);
+		glDepthMask(vdDepthMode);
 
         sbVideoIgnoreDepth = false;
     }
@@ -519,7 +521,7 @@ void Video_SetBlend(VideoBlend_t voBlendMode,int iDepthType)
     }
 
 	if(bVideoDebug)
-		Console_WriteToLog(cvVideoDebugLog.string,"Video: Setting blend mode (%i) (%i)\n",(int)voBlendMode,iDepthType);
+		Console_WriteToLog(cvVideoDebugLog.string, "Video: Setting blend mode (%i) (%i)\n", voBlendMode, vdDepthMode);
 }
 
 /*
@@ -569,24 +571,6 @@ void Video_SelectTexture(unsigned int uiTarget)
 		Console_WriteToLog(cvVideoDebugLog.string,"Video: Texture Unit %i\n",Video.uiActiveUnit);
 }
 
-/*	Disable multi-texturing.
-	Obsolete!
-*/
-void Video_DisableMultitexture(void)
-{
-//  Video_DisableCapabilities(VIDEO_TEXTURE_2D);
-    Video_SelectTexture(0);
-}
-
-/*	Enable multi-texturing.
-	Obsolete!
-*/
-void Video_EnableMultitexture(void)
-{
-    Video_SelectTexture(1);
-    Video_EnableCapabilities(VIDEO_TEXTURE_2D);
-}
-
 /*
     Drawing
 */
@@ -605,16 +589,16 @@ void Video_AllocateArrays(int iSize)
 	if (vVideoTextureArray)
 		free(vVideoTextureArray);
 
-	vVideoTextureArray	= (vec2_t**)Hunk_AllocName(iSize*sizeof(vec3_t),"video_texturearray");
-	for(i = 0; i < iSize; i++)
-		vVideoTextureArray[i] = (vec2_t*)Hunk_Alloc((VIDEO_MAX_UNITS+1)*sizeof(vec2_t));
+	vVideoTextureArray = (MathVector2_t**)Hunk_AllocName((VIDEO_MAX_UNITS + 1)*sizeof(MathVector2_t), "video_texturearray");
+	for (i = 0; i < (VIDEO_MAX_UNITS + 1); i++)
+		vVideoTextureArray[i] = (MathVector2_t*)Hunk_Alloc(iSize*sizeof(MathVector2_t));
 
-	vVideoVertexArray	= (vec3_t*)Hunk_AllocName(iSize*sizeof(vec3_t),"video_vertexarray");
-	vVideoColourArray	= (vec4_t*)Hunk_AllocName(iSize*sizeof(vec4_t),"video_colourarray");
+	vVideoVertexArray = (MathVector3_t*)Hunk_AllocName(iSize*sizeof(MathVector3_t), "video_vertexarray");
+	vVideoColourArray = (MathVector4_t*)Hunk_AllocName(iSize*sizeof(MathVector4_t), "video_colourarray");
 
 	if(!vVideoColourArray || !vVideoTextureArray || !vVideoVertexArray)
 		Sys_Error("Failed to allocate video arrays!\n");
-
+	
 	// Keep this up to date.
 	uiVideoArraySize = iSize;
 }
@@ -644,70 +628,66 @@ void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,u
 
 	if(!cvVideoDraw.bValue)
 		return;
+	else if (!voObject)
+	{
+		Sys_Error("Invalid video object!\n");
+		return;
+	}
+	else if (!uiVerts)
+	{
+		Sys_Error("Invalid number of vertices for video object! (%i)\n", uiVerts);
+		return;
+	}
 
 	if(bVideoDebug)
 		Console_WriteToLog(cvVideoDebugLog.string,"Video: Drawing object (%i) (%i)\n",uiVerts,vpPrimitiveType);
 
-	if(!voObject)
-	{
-        Sys_Error("Invalid video object!\n");
-		return;
-	}
-    else if(!uiVerts)
-	{
-        Sys_Error("Invalid number of vertices for video object! (%i)\n",uiVerts);
-		return;
-	}
-
-    // [8/5/2014] Ignore any additional changes ~hogsy
+    // Ignore any additional changes.
     bVideoIgnoreCapabilities = true;
-
-	if(r_showtris.bValue)
-		// [29/10/2013] Disable crap for tris view ~hogsy
-		Video_DisableCapabilities(VIDEO_TEXTURE_2D);
-
-    // [11/3/2014] Support different primitive types; TODO: Move into its own function? ~hogsy
-    switch(vpPrimitiveType)
-    {
-    case VIDEO_PRIMITIVE_TRIANGLES:
-		if(r_showtris.bValue)
-			gPrimitive = GL_LINES;
-		else
-			gPrimitive = GL_TRIANGLES;
-        break;
-    case VIDEO_PRIMITIVE_TRIANGLE_FAN:
-		if(r_showtris.bValue)
-			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-
-        gPrimitive = GL_TRIANGLE_FAN;
-        break;
-    default:
-        // [16/3/2014] Anything else and give us an error ~hogsy
-        Sys_Error("Unknown object primitive type! (%i)\n",vpPrimitiveType);
-        // Return to resolve VS warning.
-        return;
-    }
 
 	// Vertices count is too high for this object, bump up array sizes to manage it.
 	if(uiVerts > uiVideoArraySize)
 		// Double the array size to cope.
 		Video_AllocateArrays(uiVerts*2);
 
+	// Copy everything over...
 	for(i = 0; i < uiVerts; i++)
 	{
 		if(!r_showtris.value)
 		{
 			Math_Vector4Copy(voObject[i].vColour,vVideoColourArray[i]);
 
-			// Copy over coords for each TMU.
-			for(j = 0; j < VIDEO_MAX_UNITS; j++)
-				if(iSavedCapabilites[j][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
-					Math_Vector2Copy(voObject[i].vTextureCoord[j],vVideoTextureArray[j][i]);
+			// Copy over coords for each active TMU.
+			for (j = 0; j < VIDEO_MAX_UNITS; j++)
+				if (j == 0 || (iSavedCapabilites[j][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D))
+					Math_Vector2Copy(voObject[i].vTextureCoord[j], vVideoTextureArray[j][i]);
 		}		
 		else
 			Math_Vector4Set(1.0f,vVideoColourArray[i]);
 
 		Math_VectorCopy(voObject[i].vVertex,vVideoVertexArray[i]);
+	}
+
+	// Handle different primitive types...
+	switch (vpPrimitiveType)
+	{
+	case VIDEO_PRIMITIVE_TRIANGLES:
+		if (r_showtris.bValue)
+			gPrimitive = GL_LINES;
+		else
+			gPrimitive = GL_TRIANGLES;
+		break;
+	case VIDEO_PRIMITIVE_TRIANGLE_FAN:
+		if (r_showtris.bValue)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		gPrimitive = GL_TRIANGLE_FAN;
+		break;
+	default:
+		// [16/3/2014] Anything else and give us an error ~hogsy
+		Sys_Error("Unknown object primitive type! (%i)\n", vpPrimitiveType);
+		// Return to resolve VS warning.
+		return;
 	}
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -716,19 +696,22 @@ void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,u
 	glEnableClientState(GL_COLOR_ARRAY);
 	glColorPointer(4,GL_FLOAT,0,vVideoColourArray);
 
-	if(!r_showtris.bValue)
-	{
-		//for(i = 0; i > VIDEO_MAX_UNITS; i++)
-		{
-			//if(iSavedCapabilites[i][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
-			{
-				glClientActiveTexture(VIDEO_TEXTURE0);
-				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-				glTexCoordPointer(2,GL_FLOAT,0,vVideoTextureArray[0]);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-				glClientActiveTexture(VIDEO_TEXTURE1);
-				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-				glTexCoordPointer(2,GL_FLOAT,0,vVideoTextureArray[1]);
+	for (i = 0; i < VIDEO_MAX_UNITS; i++)
+	{
+		if (i == 0 || (iSavedCapabilites[i][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D))
+		{
+			if (!r_showtris.bValue)
+			{
+				glClientActiveTexture(VIDEO_TEXTURE0 + i);
+				glTexCoordPointer(2, GL_FLOAT, 0, vVideoTextureArray[i]);
+			}
+			else
+			{
+				Video_SelectTexture(i);
+				// Disable textures per TMU for wireframe view.
+				Video_DisableCapabilities(VIDEO_TEXTURE_2D);
 			}
 		}
 	}
@@ -737,26 +720,21 @@ void Video_DrawObject(VideoObject_t *voObject,VideoPrimitive_t vpPrimitiveType,u
 
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
+#if 0
 	if(r_showtris.bValue)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
-		Video_EnableCapabilities(VIDEO_TEXTURE_2D);
-	}
-	else
-	{
 		for (i = 0; i < VIDEO_MAX_UNITS; i++)
-		{
-			//if(iSavedCapabilites[i][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D)
+			if (i == 0 || (iSavedCapabilites[j][VIDEO_STATE_ENABLE] & VIDEO_TEXTURE_2D))
 			{
-				glClientActiveTexture(VIDEO_TEXTURE0+i);
-				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+				Video_SelectTexture(i);
+				Video_EnableCapabilities(VIDEO_TEXTURE_2D);
 			}
-		}
-
-		glClientActiveTexture(VIDEO_TEXTURE0);
 	}
+#endif
 
 	bVideoIgnoreCapabilities = false;
 }

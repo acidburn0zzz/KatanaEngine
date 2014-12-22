@@ -219,8 +219,8 @@ void TurnVector (vec3_t out, const vec3_t forward, const vec3_t side, float angl
 {
 	float scale_forward, scale_side;
 
-	scale_forward = cos(DEG2RAD(angle));
-	scale_side = sin(DEG2RAD(angle));
+	scale_forward = cos(pMath_DEG2RAD(angle));
+	scale_side = sin(pMath_DEG2RAD(angle));
 
 	out[0] = scale_forward*forward[0] + scale_side*side[0];
 	out[1] = scale_forward*forward[1] + scale_side*side[1];
@@ -341,8 +341,8 @@ void R_SetupView (void)
 		if (contents == BSP_CONTENTS_WATER || contents == BSP_CONTENTS_SLIME || contents == BSP_CONTENTS_LAVA)
 		{
 			//variance is a percentage of width, where width = 2 * tan(fov / 2) otherwise the effect is too dramatic at high FOV and too subtle at low FOV.  what a mess!
-			r_fovx = atan(tan(DEG2RAD(r_refdef.fov_x) / 2) * (0.97 + sin(cl.time * 1.5) * 0.03)) * 2 / M_PI_DIV_180;
-			r_fovy = atan(tan(DEG2RAD(r_refdef.fov_y) / 2) * (1.03 - sin(cl.time * 1.5) * 0.03)) * 2 / M_PI_DIV_180;
+			r_fovx = atan(tan(pMath_DEG2RAD(r_refdef.fov_x) / 2) * (0.97 + sin(cl.time * 1.5) * 0.03)) * 2 / pMath_PI_DIV180;
+			r_fovy = atan(tan(pMath_DEG2RAD(r_refdef.fov_y) / 2) * (1.03 - sin(cl.time * 1.5) * 0.03)) * 2 / pMath_PI_DIV180;
 		}
 	}
 	//johnfitz
@@ -665,8 +665,8 @@ void R_RenderView (void)
 	//johnfitz -- stereo rendering -- full of hacky goodness
 	if (r_stereo.value)
 	{
-		float	eyesep = CLAMP(-8.0f,r_stereo.value,8.0f),
-				fdepth = CLAMP(32.0f,r_stereodepth.value,1024.0f);
+		float	eyesep = Math_Clamp(-8.0f, r_stereo.value, 8.0f),
+			fdepth = Math_Clamp(32.0f, r_stereodepth.value, 1024.0f);
 
 		Math_AngleVectors(r_refdef.viewangles, vpn, vright, vup);
 

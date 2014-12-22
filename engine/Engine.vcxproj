@@ -604,7 +604,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\external\glee\GLee.c" />
-    <ClCompile Include="..\shared\shared_math.c" />
     <ClCompile Include="..\shared\shared_png.c" />
     <ClCompile Include="engine_clientchase.c" />
     <ClCompile Include="engine_clientdemo.c" />
@@ -693,7 +692,6 @@
     <ClInclude Include="..\shared\shared_formats.h" />
     <ClInclude Include="..\shared\shared_game.h" />
     <ClInclude Include="..\shared\shared_input.h" />
-    <ClInclude Include="..\shared\shared_math.h" />
     <ClInclude Include="..\shared\shared_menu.h" />
     <ClInclude Include="..\shared\shared_module.h" />
     <ClInclude Include="..\shared\shared_png.h" />

@@ -322,7 +322,7 @@ void Player_CheckFootsteps(edict_t *ePlayer)
 		fForce = vStep[0]+vStep[1];
 
 		// [9/6/2013] Base this on our velocity ~hogsy
-		dDelay = CLAMP(0.1,(double)(1.0f/(fForce/100.0f)),1.0);
+		dDelay = Math_Clamp(0.1, (double)(1.0f / (fForce / 100.0f)), 1.0);
 
 		// [9/6/2013] TODO: Check if we're in water or not and change this accordingly :) ~hogsy
 		Sound(ePlayer,CHAN_VOICE,va("physics/concrete%i_footstep.wav",rand()%4),35,ATTN_NORM);
@@ -467,31 +467,31 @@ void Player_PreThink(edict_t *ePlayer)
 		Math_AngleVectors(ePlayer->v.angles,ePlayer->v.vForward,ePlayer->local.vRight,ePlayer->local.vUp);
 		Math_VectorCopy(ePlayer->v.origin,vStart);
 
-		vStart[Z] += 8.0f;
+		vStart[pZ] += 8.0f;
 
-		ePlayer->v.vForward[Z] = 0;
+		ePlayer->v.vForward[pZ] = 0;
 
 		Math_VectorNormalize(ePlayer->v.vForward);
 
 		for(i = 0; i < 3; i++)
 			vEnd[i]	= vStart[i]+ePlayer->v.vForward[i]*24.0f;
 
-		tTrace = Engine.Server_Move(vStart,vEnd,vec3_origin,vec3_origin,true,ePlayer);
+		tTrace = Engine.Server_Move(vStart,vEnd,mv3Origin,mv3Origin,true,ePlayer);
 		if(tTrace.fraction < 1.0f)
 		{
-			vStart[Z] += ePlayer->v.maxs[Z]-8.0f;
+			vStart[pZ] += ePlayer->v.maxs[pZ]-8.0f;
 
 			for(i = 0; i < 3; i++)
 				vEnd[i]	= vStart[i]+ePlayer->v.vForward[i]*24.0f;
 
 			Math_VectorSubtractValue(tTrace.plane.normal,50.0f,ePlayer->v.movedir);
 
-			tTrace = Engine.Server_Move(vStart,vEnd,vec3_origin,vec3_origin,true,ePlayer);
+			tTrace = Engine.Server_Move(vStart,vEnd,mv3Origin,mv3Origin,true,ePlayer);
 			if(tTrace.fraction == 1.0f)
 			{
 				ePlayer->v.flags		|= FL_WATERJUMP;
 				ePlayer->v.flags		-= (ePlayer->v.flags & FL_JUMPRELEASED);
-				ePlayer->v.velocity[Z]	= 225.0f;
+				ePlayer->v.velocity[pZ]	= 225.0f;
 			}
 		}
 	}
@@ -522,13 +522,7 @@ void Player_PreThink(edict_t *ePlayer)
 		if(ePlayer->v.flags & FL_ONGROUND)
 			// [20/12/2012] Create a waypoint at our current position ~hogsy
 			Waypoint_Spawn(ePlayer->v.origin,WAYPOINT_DEFAULT);
-		/*	[10/1/2013] Create waypoints underwater.
-			Why do we check if we're on the ground underwater? This is
-			done to prevent us from creating waypoints too close to
-			surfaces while underwater which would cause issues for
-			any monster navigation. ~hogsy
-		*/
-		else if((ePlayer->v.flags & FL_SWIM) && !(ePlayer->v.flags & FL_ONGROUND))
+		else if((ePlayer->v.flags & FL_SWIM) /*&& !(ePlayer->v.flags & FL_ONGROUND)*/)
 			Waypoint_Spawn(ePlayer->v.origin,WAYPOINT_SWIM);
 		// [10/4/2013] Create waypoints in the air.
 		else if(!(ePlayer->v.flags & FL_ONGROUND))
@@ -586,6 +580,7 @@ void Player_Die(edict_t *ePlayer,edict_t *other)
 		ThrowGib(ePlayer->v.origin,ePlayer->v.velocity,PHYSICS_MODEL_GIB0,(float)ePlayer->v.iHealth*-1,true);
 		ThrowGib(ePlayer->v.origin,ePlayer->v.velocity,PHYSICS_MODEL_GIB1,(float)ePlayer->v.iHealth*-1,true);
 		ThrowGib(ePlayer->v.origin,ePlayer->v.velocity,PHYSICS_MODEL_GIB2,(float)ePlayer->v.iHealth*-1,true);
+		ThrowGib(ePlayer->v.origin, ePlayer->v.velocity, PHYSICS_MODEL_GIB3, (float)ePlayer->v.iHealth*-1, true);
 
 		Engine.Particle(ePlayer->v.origin,ePlayer->v.velocity,10.0f,"blood",20);
 
@@ -660,7 +655,7 @@ void Player_Spawn(edict_t *ePlayer)
 	ePlayer->v.fixangle		= true;
 	ePlayer->v.view_ofs[2]	= 30.0f; // [10/05/2013] Was 22.0f ~eukos
 
-	ePlayer->monster.iState		= STATE_AWAKE;
+	ePlayer->monster.iState		= STATE_AWAKE;	// TODO: Is this necessary? ~hogsy
 	ePlayer->monster.think_die	= Player_Die;
 	ePlayer->monster.think_pain = Player_Pain;
 

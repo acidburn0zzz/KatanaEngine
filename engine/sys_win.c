@@ -35,6 +35,9 @@
 #endif
 #include "errno.h"
 #include "resource.h"
+#ifdef _DEBUG
+#include <assert.h>
+#endif
 
 #include "engine_editor.h"
 #include "engine_console.h"
@@ -216,6 +219,10 @@ void Sys_Error(char *error, ...)
 				in_sys_error1 = 0,
 				in_sys_error2 = 0,
 				in_sys_error3 = 0;
+
+#ifdef _DEBUG
+	assert(error);
+#endif
 
 	if(!in_sys_error3)
 		in_sys_error3 = 1;

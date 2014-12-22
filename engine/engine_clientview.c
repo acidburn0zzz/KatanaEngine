@@ -11,8 +11,6 @@
 #include "engine_video.h"
 #include "engine_modgame.h"
 
-#include "shared_math.h"
-
 cvar_t	scr_ofsx			= { "scr_ofsx",				"0",		false													};
 cvar_t	scr_ofsy			= { "scr_ofsy",				"0",		false													};
 cvar_t	scr_ofsz			= { "scr_ofsz",				"0",		false													};
@@ -703,7 +701,7 @@ void V_CalcRefdef (void)
 	if(v_gunkick.value) //lerped kick
 	{
 		for(i = 0; i < 3; i++)
-			if(vec3_origin[i] != v_punchangles[0][i])
+			if(mv3Origin[i] != v_punchangles[0][i])
 			{
 				// Speed determined by how far we need to lerp in 1/10th of a second
 				delta = (v_punchangles[0][i]-v_punchangles[1][i])*host_frametime*10.0f;

@@ -137,7 +137,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Shared\shared_math.c" />
     <ClCompile Include="menu_button.c" />
     <ClCompile Include="menu_hud.c" />
     <ClCompile Include="menu_input.c" />
@@ -150,7 +149,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\shared_client.h" />
-    <ClInclude Include="..\Shared\shared_math.h" />
     <ClInclude Include="..\Shared\shared_menu.h" />
     <ClInclude Include=".\menu_main.h" />
     <ClInclude Include="menu_button.h" />

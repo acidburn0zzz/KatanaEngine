@@ -114,7 +114,7 @@ void CreateBrushFaces (void)
 			for (k = 0;k < 3;k++)
 			{
 				point[k] = w->points[j][k] - offset[k];
-				r = Q_rint( point[k] );
+				r = Q_rint(point[k]);
 				if ( fabs( point[k] - r ) < ZERO_EPSILON)
 					w->points[j][k] = r;
 				else
@@ -449,7 +449,7 @@ void ExpandBrush (int hullnum)
 			for (k = 0;k < 3;k++)
 			{
 				point[k] = w->points[j][k];
-				r = Q_rint( point[k] );
+				r = Q_rint(point[k]);
 				if ( fabs( point[k] - r ) < ZERO_EPSILON)
 					w->points[j][k] = r;
 				else

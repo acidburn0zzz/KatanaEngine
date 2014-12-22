@@ -47,8 +47,8 @@ void Menu_Initialize(void)
 	Menu = (MenuExport_t*)pModule_LoadInterface(hMenuInstance,va("%s/%s",com_gamedir,MODULE_MENU),"Menu_Main",&mImport);
 	if(!Menu)
 		Con_Warning(pError_Get(),com_gamedir,MODULE_MENU);
-	else if(Menu->iVersion != MODULE_VERSION)
-		Con_Warning("Size mismatch (recieved %i, expected %i)!\n",Menu->iVersion,MODULE_VERSION);
+	else if (Menu->iVersion != MENU_VERSION)
+		Con_Warning("Size mismatch (recieved %i, expected %i)!\n", Menu->iVersion, MENU_VERSION);
 	else
 		bMenuLoaded = true;
 

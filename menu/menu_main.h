@@ -4,11 +4,11 @@
 #define __MENUMAIN__
 
 #include "platform.h"
+#include "platform_math.h"
 
 #include "shared_flags.h"
 #include "shared_menu.h"
 #include "shared_module.h"
-#include "shared_math.h"
 #include "shared_engine.h"
 #include "shared_game.h"
 

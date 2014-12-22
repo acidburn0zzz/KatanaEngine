@@ -239,7 +239,7 @@ void Key_Console (int key)
 					break;
 			}
 
-			con_backscroll = CLAMP(0, con_current-i%con_totallines-2, con_totallines-(glheight>>3)-1);
+			con_backscroll = Math_Clamp(0, con_current - i%con_totallines - 2, con_totallines - (glheight >> 3) - 1);
 		}
 		else
 			key_linepos = 1;

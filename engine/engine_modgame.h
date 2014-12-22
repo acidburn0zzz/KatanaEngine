@@ -5,7 +5,7 @@
 
 #include "quakedef.h"
 
-extern ModuleExport_t	*Game;
+extern GameExport_t	*Game;
 
 /*	Global					*/
 void Game_Initialize(void);

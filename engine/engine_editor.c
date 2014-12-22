@@ -31,8 +31,6 @@ cvar_t	cvEditorLightPreview	= {	"editor_lightpreview",	"0",	false,	false,	"Enabl
 
 pINSTANCE hToolInstance;
 
-ModuleEditor_t	*mToolModule;
-
 typedef enum
 {
 	EDITOR_MODE_CAMERA,	// Default 3D camera view.
@@ -115,38 +113,6 @@ void Editor_Launch(void)
 		pFileSystem_ScanDirectory(va("./%s/textures/",com_gamedir),Editor_LoadTexture);
 	}
 
-#if 0
-	{
-		ModuleImport_t	Import;
-
-		if(mToolModule)
-			GIPLm_Unload(hToolInstance);
-
-		Import.Con_DPrintf				= Con_DPrintf;
-		Import.Con_Printf				= Con_Printf;
-		Import.Con_Warning				= Con_Warning;
-		Import.Cvar_RegisterVariable	= Cvar_RegisterVariable;
-
-		mToolModule = (ModuleEditor_t*)pModule_LoadInterface(hToolInstance,MODULE_EDITOR,"Toolkit_Main",&Import);
-		if(!mToolModule)
-		{
-			Console_ErrorMessage(false,MODULE_EDITOR,"Failed to find "MODULE_EDITOR".");
-
-			GIPLm_Unload(hToolInstance);
-			return;
-		}
-		else if(mToolModule->iVersion != MODULE_VERSION)
-		{
-			Console_ErrorMessage(false,MODULE_EDITOR,va("Size mismatch (recieved %i, expected %i).",mToolModule->iVersion,MODULE_VERSION));
-
-			GIPLm_Unload(hToolInstance);
-			return;
-		}
-
-		Con_Printf(" Tools loaded!\n")
-	}
-#endif
-
 	Input_ActivateMouse();
 
 	Editor.bEnabled = true;
@@ -183,12 +149,12 @@ void Editor_Draw(void)
 
 	Draw_Fill(0,0,Video.iWidth,20,0,0,0,1.0f);
 	R_DrawString(10,10,va("Camera: origin(%i %i %i), angles(%i %i %i)",
-		(int)r_refdef.vieworg[X],
-		(int)r_refdef.vieworg[Y],
-		(int)r_refdef.vieworg[Z],
-		(int)r_refdef.viewangles[X],
-		(int)r_refdef.viewangles[Y],
-		(int)r_refdef.viewangles[Z]));
+		(int)r_refdef.vieworg[pX],
+		(int)r_refdef.vieworg[pY],
+		(int)r_refdef.vieworg[pZ],
+		(int)r_refdef.viewangles[pX],
+		(int)r_refdef.viewangles[pY],
+		(int)r_refdef.viewangles[pZ]));
 
 	// [1/12/2013] TODO: Draw cursor... ~hogsy
 }

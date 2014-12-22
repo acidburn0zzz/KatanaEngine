@@ -119,7 +119,7 @@ void Discus_SpawnProjectile(edict_t *ent,vec3_t org)
 	Math_MVToVector(Math_VectorToAngles(discus->v.velocity),discus->v.angles);
 
 	Entity_SetModel(discus,"models/w_daedalus.md2");
-	Entity_SetSizeVector(discus,vec3_origin,vec3_origin);
+	Entity_SetSizeVector(discus,mv3Origin,mv3Origin);
 	Entity_SetOrigin(discus, org);
 
 	Engine.LinkEntity(discus,false);

@@ -54,7 +54,7 @@ bool Prisoner_CheckCell(edict_t *ePrisoner)
 	if(wCellDoorWaypoint)
 	{
 		// [27/9/2012] End point set to the waypoints position, meaning we expect it to be inside / in-front of the door ~hogsy
-		tDoorTrace = Engine.Server_Move(ePrisoner->v.view_ofs,vec3_origin,vec3_origin,wCellDoorWaypoint->position,MOVE_NOMONSTERS,ePrisoner);
+		tDoorTrace = Engine.Server_Move(ePrisoner->v.view_ofs,mv3Origin,mv3Origin,wCellDoorWaypoint->position,MOVE_NOMONSTERS,ePrisoner);
 		if(tDoorTrace.ent)
 		{
 			// [20/9/2012] I hate doing shit like this here but if we're not already there, we should be! ~hogsy
@@ -83,10 +83,8 @@ void Prisoner_Think(edict_t *ePrisoner)
 	{
 	case THINK_IDLE:
 		if(ePrisoner->monster.iCommandList[COMMAND_CHECK_CELL] && !Prisoner_CheckCell(ePrisoner))
-		{
 			if(rand()%200 == 1)
 				Sound(ePrisoner,CHAN_VOICE,PRISONER_SOUND_HELP,255,ATTN_NORM);
-		}
 		break;
 	case THINK_WANDERING:
 		break;

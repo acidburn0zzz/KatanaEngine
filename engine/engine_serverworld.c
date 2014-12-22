@@ -322,6 +322,68 @@ void SV_TouchLinks ( edict_t *ent, areanode_t *node )
 		SV_TouchLinks ( ent, node->children[1] );
 }
 
+int World_BoxOnPlaneSide(vec3_t emins, vec3_t emaxs, mplane_t *p)
+{
+	float	dist1, dist2;
+	int		sides;
+
+	// Fast axial cases
+	if (p->type < 3)
+	{
+		if (p->dist <= emins[p->type])
+			return 1;
+		if (p->dist >= emaxs[p->type])
+			return 2;
+		return 3;
+	}
+
+	switch (p->signbits)
+	{
+	case 0:
+		dist1 = p->normal[0] * emaxs[0] + p->normal[1] * emaxs[1] + p->normal[2] * emaxs[2];
+		dist2 = p->normal[0] * emins[0] + p->normal[1] * emins[1] + p->normal[2] * emins[2];
+		break;
+	case 1:
+		dist1 = p->normal[0] * emins[0] + p->normal[1] * emaxs[1] + p->normal[2] * emaxs[2];
+		dist2 = p->normal[0] * emaxs[0] + p->normal[1] * emins[1] + p->normal[2] * emins[2];
+		break;
+	case 2:
+		dist1 = p->normal[0] * emaxs[0] + p->normal[1] * emins[1] + p->normal[2] * emaxs[2];
+		dist2 = p->normal[0] * emins[0] + p->normal[1] * emaxs[1] + p->normal[2] * emins[2];
+		break;
+	case 3:
+		dist1 = p->normal[0] * emins[0] + p->normal[1] * emins[1] + p->normal[2] * emaxs[2];
+		dist2 = p->normal[0] * emaxs[0] + p->normal[1] * emaxs[1] + p->normal[2] * emins[2];
+		break;
+	case 4:
+		dist1 = p->normal[0] * emaxs[0] + p->normal[1] * emaxs[1] + p->normal[2] * emins[2];
+		dist2 = p->normal[0] * emins[0] + p->normal[1] * emins[1] + p->normal[2] * emaxs[2];
+		break;
+	case 5:
+		dist1 = p->normal[0] * emins[0] + p->normal[1] * emaxs[1] + p->normal[2] * emins[2];
+		dist2 = p->normal[0] * emaxs[0] + p->normal[1] * emins[1] + p->normal[2] * emaxs[2];
+		break;
+	case 6:
+		dist1 = p->normal[0] * emaxs[0] + p->normal[1] * emins[1] + p->normal[2] * emins[2];
+		dist2 = p->normal[0] * emins[0] + p->normal[1] * emaxs[1] + p->normal[2] * emaxs[2];
+		break;
+	case 7:
+		dist1 = p->normal[0] * emins[0] + p->normal[1] * emins[1] + p->normal[2] * emins[2];
+		dist2 = p->normal[0] * emaxs[0] + p->normal[1] * emaxs[1] + p->normal[2] * emaxs[2];
+		break;
+	default:
+		dist1 = dist2 = 0;
+	}
+
+	sides = 0;
+	if (dist1 >= p->dist)
+		sides = 1;
+	if (dist2 < p->dist)
+		sides |= 2;
+
+	return sides;
+}
+
 void SV_FindTouchedLeafs (edict_t *ent, mnode_t *node)
 {
 	mplane_t	*splitplane;
@@ -350,7 +412,7 @@ void SV_FindTouchedLeafs (edict_t *ent, mnode_t *node)
 // NODE_MIXED
 
 	splitplane = node->plane;
-	sides = Math_BoxOnPlaneSide(ent->v.absmin, ent->v.absmax, splitplane);
+	sides = World_BoxOnPlaneSide(ent->v.absmin, ent->v.absmax, splitplane);
 
 // recurse down the contacted sides
 	if (sides & 1)
@@ -615,7 +677,7 @@ bool SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec3_t 
 	}
 	else
 	{
-		Math_VectorSubtract (vec3_origin, plane->normal, trace->plane.normal);
+		Math_VectorSubtract (mv3Origin, plane->normal, trace->plane.normal);
 		trace->plane.dist = -plane->dist;
 	}
 

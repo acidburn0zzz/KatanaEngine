@@ -533,29 +533,21 @@ void GL_SetCanvas (int newcanvas)
 		break;
 	case CANVAS_MENU:
 		s = Math_Min((float)glwidth / 320.0, (float)glheight / 200.0);
-		s = CLAMP (1.0, scr_menuscale.value, s);
+		s = Math_Clamp(1.0, scr_menuscale.value, s);
 		glOrtho (0, 320, 200, 0, -99999, 99999);
 		glViewport (glx, gly, glwidth, glheight);
 		break;
 	case CANVAS_SBAR:
-		s = CLAMP (1.0, scr_sbarscale.value, (float)glwidth / 320.0);
-		if (cl.gametype == GAME_DEATHMATCH)
-		{
-			glOrtho (0, glwidth / s, 48, 0, -99999, 99999);
-			glViewport (glx, gly, glwidth, 48*s);
-		}
-		else
-		{
-			glOrtho (0, 320, 48, 0, -99999, 99999);
-			glViewport (glx + (glwidth - 320*s) / 2, gly, 320*s, 48*s);
-		}
+		s = Math_Clamp(1.0, scr_sbarscale.value, (float)glwidth / 320.0);
+		glOrtho (0, 320, 48, 0, -99999, 99999);
+		glViewport (glx + (glwidth - 320*s) / 2, gly, 320*s, 48*s);
 		break;
 	case CANVAS_WARPIMAGE:
 		glOrtho (0, 128, 0, 128, -99999, 99999);
 		glViewport (glx, gly+glheight-gl_warpimagesize, gl_warpimagesize, gl_warpimagesize);
 		break;
 	case CANVAS_CROSSHAIR: //0,0 is center of viewport
-		s = CLAMP (1.0, scr_crosshairscale.value, 10.0);
+		s = Math_Clamp(1.0, scr_crosshairscale.value, 10.0);
 		glOrtho (scr_vrect.width/-2/s, scr_vrect.width/2/s, scr_vrect.height/2/s, scr_vrect.height/-2/s, -99999, 99999);
 		glViewport (scr_vrect.x, glheight - scr_vrect.y - scr_vrect.height, scr_vrect.width & ~1, scr_vrect.height & ~1);
 		break;

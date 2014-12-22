@@ -160,7 +160,7 @@ void IonRifle_PrimaryAttack(edict_t *eOwner)
 				vOrigin[2] += 25.0f;
 
 				Entity_SetModel(eIonBall,"models/ionball.md2");
-				Entity_SetSizeVector(eIonBall,vec3_origin,vec3_origin);
+				Entity_SetSizeVector(eIonBall,mv3Origin,mv3Origin);
 				Entity_SetOrigin(eIonBall,vOrigin);
 
 				{
@@ -234,7 +234,7 @@ void IonRifle_PrimaryAttack(edict_t *eOwner)
 				vOrigin[2] += 25.0f;
 
 				Entity_SetModel(eIonBall,"models/ionball.md2");
-				Entity_SetSizeVector(eIonBall,vec3_origin,vec3_origin);
+				Entity_SetSizeVector(eIonBall,mv3Origin,mv3Origin);
 				Entity_SetOrigin(eIonBall,vOrigin);
 
 				{

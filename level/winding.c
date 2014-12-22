@@ -595,8 +595,8 @@ winding_t *TryMergeWinding( winding_t *w1, winding_t *w2, vec3_t planenormal )
 			p4 = w2->points[(j + 1) % w2->numpoints];
 
 			for( k = 0; k < 3; k++ ) {
-				if( fabs( p1[k] - p4[k] ) > EQUAL_EPSILON ||
-					fabs( p2[k] - p3[k] ) > EQUAL_EPSILON )
+				if( fabs( p1[k] - p4[k] ) > pMath_EPSILON_EQUAL ||
+					fabs( p2[k] - p3[k] ) > pMath_EPSILON_EQUAL )
 					break;
 			}
 

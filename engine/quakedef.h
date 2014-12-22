@@ -21,6 +21,7 @@
 #define QUAKEDEF_H
 
 #include "platform.h"
+#include "platform_math.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable:4115)
@@ -63,7 +64,6 @@
 #include "sys.h"
 #include "zone.h"
 
-#include "shared_math.h"
 #include "shared_client.h"
 #include "shared_engine.h"
 #include "shared_formats.h"

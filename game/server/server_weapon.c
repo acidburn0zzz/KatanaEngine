@@ -278,7 +278,7 @@ void Weapon_BulletProjectile(edict_t *eEntity,float fSpread,int iDamage,vec_t *v
 
 			PARTICLE_SMOKE(cSmoke);
 
-			Engine.Particle(tTrace.endpos,vec3_origin,15,cSmoke,15);
+			Engine.Particle(tTrace.endpos,mv3Origin,15,cSmoke,15);
 		}
 	}
 }

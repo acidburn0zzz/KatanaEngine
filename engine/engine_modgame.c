@@ -21,7 +21,7 @@
 
 pINSTANCE hGameInstance;
 
-ModuleExport_t *Game;
+GameExport_t *Game;
 
 void Server_ChangeLevel(const char *ccNewLevel)
 {
@@ -138,7 +138,7 @@ float *Game_Aim(edict_t *ent)
 
 #if 1
 	// [5/3/2013] BUG: Results in fucked up aim vectors ~hogsy
-	tr = SV_Move(start,vec3_origin,vec3_origin,end,false,ent);
+	tr = SV_Move(start,mv3Origin,mv3Origin,end,false,ent);
 	if(tr.ent && tr.ent->v.bTakeDamage	&&
 	(!teamplay.value || ent->local.pTeam <= 0 || ent->local.pTeam != tr.ent->local.pTeam) )
 	{
@@ -172,7 +172,7 @@ float *Game_Aim(edict_t *ent)
 		if (dist < bestdist)
 			continue;	// to far to turn
 
-		tr = SV_Move(start,vec3_origin,vec3_origin,end,false,ent);
+		tr = SV_Move(start,mv3Origin,mv3Origin,end,false,ent);
 		if (tr.ent == check)
 		{
 			// Can shoot at this one
@@ -220,7 +220,7 @@ void Server_SetModel(edict_t *ent,char *m)
 	if(mod && mod->mType == MODEL_TYPE_BSP)
 		Game->Server_SetSizeVector(ent,mod->clipmins,mod->clipmaxs);
 	else
-		Game->Server_SetSizeVector(ent,vec3_origin,vec3_origin);
+		Game->Server_SetSizeVector(ent,mv3Origin,mv3Origin);
 }
 
 void Game_AmbientSound(vec_t *vPosition,const char *cPath,int iVolume,int iAttenuation)
@@ -626,11 +626,11 @@ void Game_Initialize(void)
 	Import.Server_GetLevelName		= Server_GetLevelName;
 	Import.Server_GetFrameTime		= Server_GetFrameTime;
 
-	Game = (ModuleExport_t*)pModule_LoadInterface(hGameInstance,va("%s/"MODULE_GAME,com_gamedir),"Game_Main",&Import);
+	Game = (GameExport_t*)pModule_LoadInterface(hGameInstance, va("%s/"MODULE_GAME, com_gamedir), "Game_Main", &Import);
 	if(!Game)
 		Con_Warning("Failed to find %s/"MODULE_GAME"!\n",com_gamedir,MODULE_GAME);
-	else if(Game->Version != MODULE_VERSION2)
-		Con_Warning("Size mismatch (recieved %i, expected %i)!\n",Game->Version,MODULE_VERSION2);
+	else if (Game->iVersion != GAME_VERSION)
+		Con_Warning("Size mismatch (recieved %i, expected %i)!\n", Game->iVersion, GAME_VERSION);
 	else
 		bGameLoaded = true;
 
