@@ -112,7 +112,6 @@ typedef struct
 
 	// [20/10/2013] Changed from a float to an integer ~hogsy
 	int			frame;
-	float		skin;
 	int			effects;
 	vec3_t		mins,maxs;
 	vec3_t		size;
@@ -180,6 +179,8 @@ typedef struct
 typedef struct
 {
 	float	fScale;
+
+	int	iSkin;
 } ModelVariables_t;
 
 typedef struct

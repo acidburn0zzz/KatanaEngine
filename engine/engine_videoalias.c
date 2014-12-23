@@ -299,10 +299,12 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 					voModel[iVert].vColour[j] = 1.0f;
             }
 
-			voModel[iVert].vTextureCoord[1][0]	=
-			voModel[iVert].vTextureCoord[0][0]	= (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].S/(float)mModel->skinwidth;
-			voModel[iVert].vTextureCoord[1][1]	=
-			voModel[iVert].vTextureCoord[0][1]	= (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].T/(float)mModel->skinheight;
+			// This is dumb... TODO: Come up with a better solution for automatically copying over texture coords for each unit ~hogsy
+			for (j = 0; j < VIDEO_MAX_UNITS+1; j++)
+			{
+				voModel[iVert].vTextureCoord[j][0] = (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].S / (float)mModel->skinwidth;
+				voModel[iVert].vTextureCoord[j][1] = (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].T / (float)mModel->skinheight;
+			}
 
 			voModel[iVert].vColour[3] = fAlpha;
 
@@ -446,12 +448,14 @@ void Alias_Draw(entity_t *eEntity)
 
     Video_ResetCapabilities(false);
 
+#if 0
 	// Simulate overbright...
 	glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE);
 	glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB,GL_MODULATE);
 	glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_RGB,GL_TEXTURE);
 	glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_RGB,GL_PRIMARY_COLOR);
 	glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE,4);
+#endif
 
 	Material_Draw(Material_Get(eEntity->model->iAssignedMaterials[0]),eEntity->skinnum);
 

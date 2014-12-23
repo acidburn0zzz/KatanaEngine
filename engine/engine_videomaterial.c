@@ -212,6 +212,7 @@ extern cvar_t gl_fullbrights;
 */
 void Material_Draw(Material_t *mMaterial,int iSkin)
 {
+	int				iLayers = 1;
 	MaterialSkin_t	*msCurrentSkin;
 
 	if (!cvMaterialDraw.bValue)
@@ -237,23 +238,46 @@ void Material_Draw(Material_t *mMaterial,int iSkin)
 
 	Video_SetTexture(msCurrentSkin->gDiffuseTexture);
 
+#if 0	// TODO: Finish implementing this at some point... Meh ~hogsy
+	if (msCurrentSkin->gSpecularTexture)
+	{
+		Video_SelectTexture(iLayers);
+		Video_SetTexture(msCurrentSkin->gSpecularTexture);
+		Video_EnableCapabilities(VIDEO_TEXTURE_2D|VIDEO_BLEND);
+
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
+
+		iLayers++;
+	}
+#endif
+
 	if(msCurrentSkin->gSphereTexture)
 	{
-		Video_SelectTexture(1);
-		Video_GenerateSphereCoordinates();
+		Video_SelectTexture(iLayers);
 		Video_SetTexture(msCurrentSkin->gSphereTexture);
+		Video_GenerateSphereCoordinates();
 		Video_EnableCapabilities(VIDEO_TEXTURE_2D | VIDEO_BLEND | VIDEO_TEXTURE_GEN_S | VIDEO_TEXTURE_GEN_T);
 
-		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+#if 0
+		if (msCurrentSkin->gSpecularTexture)
+			Video_SetBlend(VIDEO_BLEND_ONE, VIDEO_DEPTH_IGNORE);
+#endif
+
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+
+		iLayers++;
 	}
-	// Can't have both sphere and fullbright, it's one or the other.
-	else if(msCurrentSkin->gFullbrightTexture && gl_fullbrights.bValue)
+
+	if(msCurrentSkin->gFullbrightTexture && gl_fullbrights.bValue)
 	{
-		Video_SelectTexture(1);
+		Video_SelectTexture(iLayers);
 		Video_EnableCapabilities(VIDEO_TEXTURE_2D|VIDEO_BLEND);
 		Video_SetTexture(msCurrentSkin->gFullbrightTexture);
 
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
+
+		iLayers++;
 	}
 }
 
@@ -289,7 +313,11 @@ void _Material_SetDiffuseTexture(Material_t *mCurrentMaterial,char *cArg)
 		0,
 		TEXPREF_ALPHA);
 	else
+	{
 		Con_Warning("Failed to load texture %s!\n", cArg);
+
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins - 1].gDiffuseTexture = notexture;
+	}
 }
 
 void _Material_SetFullbrightTexture(Material_t *mCurrentMaterial,char *cArg)
@@ -309,7 +337,11 @@ void _Material_SetFullbrightTexture(Material_t *mCurrentMaterial,char *cArg)
 		0,
 		TEXPREF_ALPHA);
 	else
-		Con_Warning("Failed to load texture %s!\n",cArg);
+	{
+		Con_Warning("Failed to load texture %s!\n", cArg);
+
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins - 1].gFullbrightTexture = notexture;
+	}
 }
 
 void _Material_SetSphereTexture(Material_t *mCurrentMaterial,char *cArg)
@@ -329,7 +361,35 @@ void _Material_SetSphereTexture(Material_t *mCurrentMaterial,char *cArg)
 		0,
 		TEXPREF_ALPHA);
 	else
-		Con_Warning("Failed to load texture %s!\n",cArg);
+	{
+		Con_Warning("Failed to load texture %s!\n", cArg);
+
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins - 1].gSphereTexture = notexture;
+	}
+}
+
+void _Material_SetSpecularTexture(Material_t *mCurrentMaterial, char *cArg)
+{
+	byte *bSpecularMap = Image_LoadImage(cArg,
+		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins - 1].iTextureWidth,
+		&mCurrentMaterial->msSkin[mCurrentMaterial->iSkins - 1].iTextureHeight);
+	if (bSpecularMap)
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins - 1].gSpecularTexture = TexMgr_LoadImage(
+		NULL,
+		cArg,
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins - 1].iTextureWidth,
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins - 1].iTextureHeight,
+		SRC_RGBA,
+		bSpecularMap,
+		cArg,
+		0,
+		TEXPREF_ALPHA);
+	else
+	{
+		Con_Warning("Failed to load texture %s!\n", cArg);
+
+		mCurrentMaterial->msSkin[mCurrentMaterial->iSkins - 1].gSpecularTexture = notexture;
+	}
 }
 
 void _Material_SetFlags(Material_t *mCurrentMaterial,char *cArg)
@@ -347,6 +407,7 @@ MaterialKey_t	mkMaterialFunctions[]=
 {
 	{	"SetType",				_Material_SetType				},	// Sets the type of material.
 	{	"SetDiffuseTexture",	_Material_SetDiffuseTexture		},	// Sets the diffuse texture.
+	{ "SetSpecularTexture", _Material_SetSpecularTexture },		// Sets the specular map.
 	{	"SetSphereTexture",		_Material_SetSphereTexture		},	// Sets the spheremap texture.
 	{	"SetFullbrightTexture",	_Material_SetFullbrightTexture	},	// Sets the fullbright texture.
 	{	"SetFlags",				_Material_SetFlags				},	// Sets seperate flags for the material; e.g. persist etc.

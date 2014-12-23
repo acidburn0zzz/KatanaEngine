@@ -89,7 +89,7 @@ void ED_Free (edict_t *ed)
 	ed->v.bTakeDamage	= false;
 	ed->v.modelindex	= 0;
 	ed->v.colormap		= 0;
-	ed->v.skin			= 0;
+	ed->Model.iSkin		= 0;
 	ed->v.frame			= 0;
 	ed->v.dNextThink	= -1;
 	ed->Physics.iSolid	= 0;

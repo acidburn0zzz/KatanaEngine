@@ -472,7 +472,7 @@ void SV_WriteEntitiesToClient (edict_t	*clent, sizebuf_t *msg)
 		if (ent->baseline.colormap != ent->v.colormap)
 			bits |= U_COLORMAP;
 
-		if (ent->baseline.skin != ent->v.skin)
+		if (ent->baseline.skin != ent->Model.iSkin)
 			bits |= U_SKIN;
 
 		if (ent->baseline.frame != ent->v.frame)
@@ -542,7 +542,7 @@ void SV_WriteEntitiesToClient (edict_t	*clent, sizebuf_t *msg)
 			MSG_WriteByte (msg, ent->v.colormap);
 
 		if (bits & U_SKIN)
-			MSG_WriteByte (msg, ent->v.skin);
+			MSG_WriteByte(msg, ent->Model.iSkin);
 
 		if (bits & U_EFFECTS)
 			// [21/12/2013] Fixed this not being sent over in full form ~hogsy
@@ -940,7 +940,7 @@ void SV_CreateBaseline (void)
 		Math_VectorCopy(svent->v.angles,svent->baseline.angles);
 
 		svent->baseline.frame		= svent->v.frame;
-		svent->baseline.skin		= svent->v.skin;
+		svent->baseline.skin		= svent->Model.iSkin;
 		svent->baseline.colormap	= 0;
 		svent->baseline.modelindex	= SV_ModelIndex(svent->v.model);
 		svent->baseline.fScale		= 1.0f;

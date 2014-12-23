@@ -10,9 +10,12 @@ extern cvar_t	cvVideoDrawModels,	// Should we draw models?
 				cvWidth,			// The width of our window (not reliable).
 				cvHeight,			// The height of our window (not reliable).
 				cvFullscreen,		// Should we be fullscreen?
+				cvVideoAlphaTrick,
 				cvLitParticles;		// Should particles be lit or not?
 
 #define	VIDEO_MAX_UNITS	4
+
+extern bool	bVideoIgnoreCapabilities;
 
 typedef struct
 {

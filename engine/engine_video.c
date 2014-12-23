@@ -34,17 +34,18 @@ static unsigned int	iSavedCapabilites[VIDEO_MAX_UNITS+1][2];
 #define VIDEO_STATE_ENABLE   0
 #define VIDEO_STATE_DISABLE  1
 
-cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",		"0",			true,   false,  "Changes the number of samples."						},
-		cvMultisampleMaxSamples = { "video_multisamplemaxsamples",	"16",			true,	false,	"Sets the maximum number of allowed samples."			},
-		cvFullscreen			= {	"video_fullscreen",				"0",			true,   false,  "1: Fullscreen, 0: Windowed"							},
-		cvWidth					= {	"video_width",					"640",			true,   false,  "Sets the width of the window."							},
-		cvHeight				= {	"video_height",					"480",			true,   false,  "Sets the height of the window."						},
-		cvVerticalSync			= {	"video_verticalsync",			"0",			true																	},
-		cvVideoDraw				= {	"video_draw",					"1",			false,	false,	"If disabled, nothing is drawn."						},
-		cvVideoDrawModels		= {	"video_drawmodels",				"1",			false,  false,  "Toggles models."										},
-		cvVideoDrawDepth		= {	"video_drawdepth",				"0",			false,	false,	"If enabled, previews the debth buffer."				},
-		cvVideoFinish			= { "video_finish",					"0",			true,	false,	"If enabled, calls glFinish at the end of the frame."	},
-		cvVideoDebugLog			= {	"video_debuglog",				"log_video",	true,	false,	"The name of the output log for video debugging."		};
+cvar_t	cvMultisampleSamples	= {	"video_multisamplesamples",		"0",			true,   false,  "Changes the number of samples."									},
+		cvMultisampleMaxSamples = { "video_multisamplemaxsamples",	"16",			true,	false,	"Sets the maximum number of allowed samples."						},
+		cvFullscreen			= {	"video_fullscreen",				"0",			true,   false,  "1: Fullscreen, 0: Windowed"										},
+		cvWidth					= {	"video_width",					"640",			true,   false,  "Sets the width of the window."										},
+		cvHeight				= {	"video_height",					"480",			true,   false,  "Sets the height of the window."									},
+		cvVerticalSync			= {	"video_verticalsync",			"0",			true																				},
+		cvVideoDraw				= {	"video_draw",					"1",			false,	false,	"If disabled, nothing is drawn."									},
+		cvVideoDrawModels		= {	"video_drawmodels",				"1",			false,  false,  "Toggles models."													},
+		cvVideoDrawDepth		= {	"video_drawdepth",				"0",			false,	false,	"If enabled, previews the debth buffer."							},
+		cvVideoAlphaTrick		= { "video_alphatrick",				"1",			true,	false,	"If enabled, draws alpha-tested surfaces twice for extra quality."	},
+		cvVideoFinish			= { "video_finish",					"0",			true,	false,	"If enabled, calls glFinish at the end of the frame."				},
+		cvVideoDebugLog			= {	"video_debuglog",				"log_video",	true,	false,	"The name of the output log for video debugging."					};
 
 #define VIDEO_MIN_WIDTH		640
 #define VIDEO_MIN_HEIGHT	480
@@ -93,6 +94,7 @@ void Video_Initialize(void)
 	Cvar_RegisterVariable(&cvVideoDraw,NULL);
 	Cvar_RegisterVariable(&cvVideoDrawDepth,NULL);
 	Cvar_RegisterVariable(&cvVideoFinish, NULL);
+	Cvar_RegisterVariable(&cvVideoAlphaTrick, NULL);
 
 	Cmd_AddCommand("video_restart",Video_UpdateWindow);
 	Cmd_AddCommand("video_debug",Video_DebugCommand);
@@ -367,13 +369,13 @@ void Video_CreateWindow(void)
 #endif
 	}
 
-	Video_EnableCapabilities(VIDEO_TEXTURE_2D|VIDEO_ALPHA_TEST|VIDEO_NORMALIZE);
+	Video_EnableCapabilities(VIDEO_TEXTURE_2D|VIDEO_NORMALIZE);
 	Video_SetBlend(VIDEO_BLEND_TWO,VIDEO_DEPTH_IGNORE);
 
 	glClearColor(0,0,0,0);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
-	glAlphaFunc(GL_GREATER,0.25f);
+	glAlphaFunc(GL_GREATER,0.5f);
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	glShadeModel(GL_SMOOTH);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
@@ -843,14 +845,14 @@ void Video_ResetCapabilities(bool bClearActive)
 
         // [7/5/2014] Disable/Enable old states by unit... Ugh ~hogsy
 		// Go through each TMU that we support.
-		for(i = VIDEO_MAX_UNITS; i > -1; i--)
+		for(i = 0; i < VIDEO_MAX_UNITS; i++)
 		{
 			Video_SelectTexture(i);
 			Video_DisableCapabilities(iSavedCapabilites[i][VIDEO_STATE_ENABLE]);
 			Video_EnableCapabilities(iSavedCapabilites[i][VIDEO_STATE_DISABLE]);
 
 			// Set this back too...
-			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+			glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 		}
 
         if(sbVideoIgnoreDepth)
@@ -862,6 +864,8 @@ void Video_ResetCapabilities(bool bClearActive)
         // [28/3/2014] Set defaults ~hogsy
         sbVideoIgnoreDepth  = true;
 		sbVideoCleanup      = false;
+
+		Video_SelectTexture(0);
 
 		if(bVideoDebug)
             Console_WriteToLog(cvVideoDebugLog.string,"Video: Finished clearing capabilities.\n");

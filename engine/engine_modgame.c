@@ -105,7 +105,7 @@ void Server_MakeStatic(edict_t *ent)
 
 	MSG_WriteByte(&sv.signon,ent->Model.fScale);
 	MSG_WriteByte(&sv.signon,ent->v.colormap);
-	MSG_WriteByte(&sv.signon,ent->v.skin);
+	MSG_WriteByte(&sv.signon,ent->Model.iSkin);
 	for (i=0 ; i<3 ; i++)
 	{
 		MSG_WriteCoord(&sv.signon, ent->v.origin[i]);

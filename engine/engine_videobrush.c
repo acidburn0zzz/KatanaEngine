@@ -227,6 +227,30 @@ void R_DrawSequentialPoly(msurface_t *s)
 			}
 
 			Video_DrawObject(voBrush,VIDEO_PRIMITIVE_TRIANGLE_FAN,s->polys->numverts);
+
+#if 1
+			if (fAlpha == 1.0f && cvVideoAlphaTrick.bValue)
+			{
+				Video_SelectTexture(0);
+
+				Video_SetBlend(VIDEO_BLEND_IGNORE, VIDEO_DEPTH_FALSE);
+
+				Video_EnableCapabilities(VIDEO_BLEND);
+
+				/*	HACKY
+					We enabled this above, so after resetting we would normally then disable this,
+					but disabling it here undoes that and then causes the pipeline to instead enable
+					it again. Not wanted behaviour, so we just ignore it.
+				*/
+				bVideoIgnoreCapabilities = true;
+				Video_DisableCapabilities(VIDEO_ALPHA_TEST);
+				bVideoIgnoreCapabilities = false;
+
+				Video_DrawObject(voBrush, VIDEO_PRIMITIVE_TRIANGLE_FAN, s->polys->numverts);
+
+				Video_SelectTexture(1);
+			}
+#endif
 		}
 
         glTexEnvf(GL_TEXTURE_ENV,GL_RGB_SCALE,1.0f);
