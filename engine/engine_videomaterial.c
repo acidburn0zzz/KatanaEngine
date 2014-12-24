@@ -5,7 +5,6 @@
 #include "engine_videomaterial.h"
 
 #include "engine_script.h"
-#include "engine_video.h"
 
 bool	bInitialized = false;
 
@@ -210,9 +209,9 @@ extern cvar_t gl_fullbrights;
 
 /*	Routine for applying each of our materials.
 */
-void Material_Draw(Material_t *mMaterial,int iSkin)
+void Material_Draw(Material_t *mMaterial, int iSkin, VideoObject_t *voObject, int iSize)
 {
-	int				iLayers = 1;
+	int				i,iLayers = 1;
 	MaterialSkin_t	*msCurrentSkin;
 
 	if (!cvMaterialDraw.bValue)
@@ -274,6 +273,13 @@ void Material_Draw(Material_t *mMaterial,int iSkin)
 		Video_SelectTexture(iLayers);
 		Video_EnableCapabilities(VIDEO_TEXTURE_2D|VIDEO_BLEND);
 		Video_SetTexture(msCurrentSkin->gFullbrightTexture);
+
+		for (i = 0; i < iSize; i++)
+		{
+			// Texture coordinates remain the same for fullbright layers.
+			voObject[i].vTextureCoord[iLayers][0] = voObject[i].vTextureCoord[0][0];
+			voObject[i].vTextureCoord[iLayers][1] = voObject[i].vTextureCoord[0][1];
+		}
 
 		glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_ADD);
 

@@ -3,6 +3,8 @@
 
 #include "quakedef.h"
 
+#include "engine_video.h"
+
 typedef enum
 {
 	MATERIAL_TYPE_NONE,		// No assigned property, used as default.
@@ -61,8 +63,8 @@ typedef struct
 
 extern Material_t	mMaterials[MATERIALS_MAX_ALLOCATED];	// Global array.
 
-void	Material_Initialize(void);
-void	Material_Draw(Material_t *mMaterial,int iSkin);
+void Material_Initialize(void);
+void Material_Draw(Material_t *mMaterial, int iSkin, VideoObject_t *voObject, int iSize);
 
 Material_t *Material_Load(/*const */char *ccPath);
 Material_t *Material_Get(int iMaterialID);

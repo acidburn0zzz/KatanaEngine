@@ -319,7 +319,7 @@ void Draw_Shadow(entity_t *ent)
 		glRotatef(ent->angles[2],1,0,0);
 		glStencilOp(GL_KEEP,GL_KEEP,GL_INCR);
 
-		Alias_DrawModelFrame(pmd2,lerpdata);
+		Alias_DrawModelFrame(pmd2,ent,lerpdata);
 
 		glColor3f(1.0f,1.0f,1.0f);
 

@@ -405,7 +405,7 @@ void View_PolyBlend(void)
 
 	{
 		int				i;
-		VideoObject_t	voScreenPoly[4];
+		VideoObject_t	voScreenPoly[4] = { 0 };
 
 		for(i = 0; i < 4; i++)
 			Math_Vector4Copy(vViewBlend,voScreenPoly[i].vColour);

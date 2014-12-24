@@ -154,7 +154,7 @@ void Draw_ExternPic(char *path,float alpha,int x,int y,int w,int h)
 		}
 
 	{
-		VideoObject_t	voPicture[4];
+		VideoObject_t	voPicture[4] = { 0 };
 
 		for(i = 0; i < 4; i++)
 		{

@@ -86,7 +86,7 @@ texture_t *R_TextureAnimation (texture_t *base, int frame)
 
 void DrawGLPoly(glpoly_t *p)
 {
-	VideoObject_t	voObject[512];
+	VideoObject_t	voObject[512] = { 0 };
 	float			*v;
 	int				i;
 

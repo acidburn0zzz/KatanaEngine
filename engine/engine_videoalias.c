@@ -250,11 +250,11 @@ void R_SetupModelLighting(vec3_t vOrigin)
 		shadedots[i] += (vLightColour[0]*vLightColour[1]*vLightColour[2]);
 }
 
-void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
+void Alias_DrawModelFrame(MD2_t *mModel,entity_t *eEntity,lerpdata_t lLerpData)
 {
 	int					i,j,k,iVert;
 	float               fAlpha;
-	VideoObject_t		voModel[MD2_MAX_VERTICES];
+	VideoObject_t		voModel[MD2_MAX_VERTICES] = { 0 };
 	MD2TriangleVertex_t	*mtvVertices,
 						*mtvLerpVerts;
 	MD2Triangle_t		*mtTriangles;
@@ -299,17 +299,17 @@ void Alias_DrawModelFrame(MD2_t *mModel,lerpdata_t lLerpData)
 					voModel[iVert].vColour[j] = 1.0f;
             }
 
-			// This is dumb... TODO: Come up with a better solution for automatically copying over texture coords for each unit ~hogsy
-			for (j = 0; j < VIDEO_MAX_UNITS+1; j++)
-			{
-				voModel[iVert].vTextureCoord[j][0] = (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].S / (float)mModel->skinwidth;
-				voModel[iVert].vTextureCoord[j][1] = (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].T / (float)mModel->skinheight;
-			}
+			voModel[iVert].vTextureCoord[0][0] = (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].S / (float)mModel->skinwidth;
+			voModel[iVert].vTextureCoord[0][1] = (float)mModel->mtcTextureCoord[mtTriangles->index_st[k]].T / (float)mModel->skinheight;
 
 			voModel[iVert].vColour[3] = fAlpha;
 
 			iVert++;
         }
+
+	if (bShading)
+		// Deal with materials...
+		Material_Draw(Material_Get(eEntity->model->iAssignedMaterials[0]), eEntity->skinnum, voModel, iVert);
 
 	Video_DrawObject(voModel,VIDEO_PRIMITIVE_TRIANGLES,iVert);
 }
@@ -457,9 +457,7 @@ void Alias_Draw(entity_t *eEntity)
 	glTexEnvi(GL_TEXTURE_ENV,GL_RGB_SCALE,4);
 #endif
 
-	Material_Draw(Material_Get(eEntity->model->iAssignedMaterials[0]),eEntity->skinnum);
-
-	Alias_DrawModelFrame(mModel,lLerpData);
+	Alias_DrawModelFrame(mModel,eEntity,lLerpData);
 
 	if(r_drawflat_cheatsafe)
 	{
